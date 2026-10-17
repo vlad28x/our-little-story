@@ -1,0 +1,37 @@
+import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';
+import { initialState } from '../state/initialState';
+import { reduceSave, type Action } from '../state/reducer';
+import { load, persist, storageKey, type Loaded, type StorageLike } from '../persistence/storage';
+import type { SaveV1 } from '../state/types';
+export const DEV_SANDBOX=import.meta.env.DEV && new URLSearchParams(location.search).get('dev')==='1';
+export const activeStorageKey=DEV_SANDBOX?storageKey.replace(':save',':dev:save'):storageKey;
+const storage:StorageLike={getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v),removeItem:k=>localStorage.removeItem(k)};
+type GameContextValue={save:SaveV1;send:(a:Action)=>void;loaded:Loaded;recovery:boolean;storageError:string|null;conflict:boolean;reload:()=>void;restore:()=>void;reset:()=>void};
+const GameContext=createContext<GameContextValue|null>(null);
+export function GameProvider({children}:{children:ReactNode}) {
+  const [loaded]=useState(()=>load(storage,activeStorageKey));
+  const [save,dispatch]=useReducer(reduceSave,loaded.save);
+  const [recovery,setRecovery]=useState(loaded.recovery);
+  const [storageError,setStorageError]=useState(loaded.error);
+  const [conflict,setConflict]=useState(false);
+  const savedRevision=useRef(loaded.save.revision);
+  const dirty=useRef(false);
+  function send(action:Action) {
+    if(conflict || (recovery&&action.type!=='replace') || (action.type==='dev-jump'&&!DEV_SANDBOX))return;
+    if(action.type==='replace'){setRecovery(false);setStorageError(null);}
+    dirty.current=true;dispatch(action);
+  }
+  useEffect(()=>{
+    if(!dirty.current||recovery||conflict||save.revision===savedRevision.current)return;
+    try {const result=persist(storage,save,savedRevision.current,activeStorageKey);if(result==='conflict'){setConflict(true);return;}savedRevision.current=save.revision;dirty.current=false;setStorageError(null);}
+    catch {setStorageError('В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.');}
+  },[save,recovery,conflict]);
+  useEffect(()=>{
+    function check(){try{const raw=storage.getItem(activeStorageKey);if(raw){const v=JSON.parse(raw) as {revision?:number};if(typeof v.revision==='number'&&v.revision>savedRevision.current)setConflict(true);}}catch{/* Failure already handled by persistence. */}}
+    function onStorage(e:StorageEvent){if(e.key===activeStorageKey)check();}
+    window.addEventListener('storage',onStorage);window.addEventListener('focus',check);
+    return()=>{window.removeEventListener('storage',onStorage);window.removeEventListener('focus',check);};
+  },[]);
+  return <GameContext.Provider value={{save,send,loaded,recovery,storageError,conflict,reload:()=>location.reload(),restore:()=>{if(loaded.backup)send({type:'replace',save:loaded.backup});},reset:()=>send({type:'replace',save:initialState()})}}>{children}</GameContext.Provider>;
+}
+export function useGame(){const c=useContext(GameContext);if(!c)throw new Error('GameProvider missing');return c;}

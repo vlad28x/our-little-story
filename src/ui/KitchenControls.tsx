@@ -1,0 +1,3 @@
+export function KitchenControls({ready=false}:{ready?:boolean}){
+  return <div className="controller-pair" aria-hidden="true">{[true,ready].map((lit,i)=><svg key={i} viewBox="0 0 140 100"><path d="M32 22Q70 11 108 22Q124 31 130 74Q129 99 109 80L94 65H46L31 80Q10 99 11 74Q15 32 32 22Z" fill="#655c64" stroke="#403844" strokeWidth="3"/><path d="M38 29V52M27 40H50" stroke="#eee5dc" strokeWidth="6" strokeLinecap="round"/><circle cx="96" cy="32" r="4" fill="#c8d8ca"/><circle cx="109" cy="43" r="4" fill="#f3cbd9"/><circle cx="84" cy="43" r="4" fill="#ddd4ef"/><circle cx="96" cy="54" r="4" fill="#f9dfa3"/><circle cx="60" cy="55" r="9" fill="#413b45"/><circle cx="70" cy="28" r="4" fill={lit?'#d7edbe':'#403844'}/></svg>)}</div>;
+}

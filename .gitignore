@@ -1,0 +1,13 @@
+node_modules/
+dist/
+work/
+test-results/
+playwright-report/
+*.local
+.env*
+!.env.example
+outputs/OWNER_CHAPTER_CODES.md
+outputs/*.png
+!outputs/VLAD_APPROVED_MODEL.png
+**/voice_profile*.md
+**/codex-clipboard*
