@@ -69,7 +69,7 @@ export function App(){
       <span className="eyebrow">ПЯТЬ ПОВОДОВ УЛЫБНУТЬСЯ</span><h1>Каждая встреча —<br/>маленькая история</h1><p className="small">Влад присылает коды продолжений лично.</p>
       <section className="code-entry" aria-labelledby="chapter-code-title">
         <div className="code-entry-heading"><Illustration kind="envelope"/><h2 id="chapter-code-title">Есть код от Влада?</h2></div>
-        <p id="chapter-code-hint">Вставь код из сообщения, чтобы открыть следующую встречу.</p>
+        <p id="chapter-code-hint">Введи код из сообщения Влада.</p>
         <form onSubmit={e=>{e.preventDefault();submitCode();}}><label htmlFor="chapter-access-code">Код<input ref={codeInput} id="chapter-access-code" name="chapter-code" value={code} placeholder="Код из сообщения" maxLength={64} onChange={e=>{setCode(e.target.value);setCodeMessage('');setCodeError(false);setCodeChapter(null);}} autoComplete="off" autoCapitalize="characters" autoCorrect="off" spellCheck={false} enterKeyHint="go" aria-invalid={codeError} aria-describedby="chapter-code-hint chapter-code-message"/></label><button className="primary" disabled={!code.trim()}>Открыть встречу</button></form>
         <p id="chapter-code-message" className="code-entry-status" role="status">{codeMessage}</p>
         {codeChapter&&(save.campaign.completed.includes(codeChapter)||save.campaign.active?.chapter===codeChapter||canStart(save,codeChapter)&&!save.campaign.active)&&<button className="code-open-chapter full" onClick={()=>openChapter(codeChapter)}>{save.campaign.completed.includes(codeChapter)?'Открыть мой финал':save.campaign.active?.chapter===codeChapter?'Продолжить встречу':`Начать встречу ${codeChapter}`} →</button>}
