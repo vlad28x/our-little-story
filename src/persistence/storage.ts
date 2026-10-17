@@ -8,6 +8,11 @@ export type Loaded={save:SaveV1;recovery:boolean;backup:SaveV1|null;raw:string|n
 export function load(storage:StorageLike, key=storageKey):Loaded {
   let raw:string|null=null;
   try {
+    // Only this published rename shares progress; dev and other games stay isolated.
+    // Read the old snapshot without changing it, including its recovery state.
+    if(key==='five-meetings:/our-little-story/:save'&&storage.getItem(key)===null&&storage.getItem(key.replace(/:save$/,':backup'))===null){
+      return load(storage,'five-meetings:/little-projects/:save');
+    }
     raw=storage.getItem(key);
     if(raw!==null)return {save:parseSave(raw),recovery:false,backup:null,raw,error:null};
     const spare=storage.getItem(key.replace(/:save$/,':backup'));

@@ -7,6 +7,27 @@ import { chapter,commandFor,completeSave,defaultPath } from './helpers';
 class MemoryStorage implements StorageLike { data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
 const key='test:save';
 describe('save and restore',()=>{
+  it('resumes the renamed Pages site without changing the old snapshot and writes subsequent progress to the new key',()=>{
+    const s=new MemoryStorage(),oldKey='five-meetings:/little-projects/:save',newKey='five-meetings:/our-little-story/:save';
+    const before=reduceSave(initialState(),{type:'start'}),raw=JSON.stringify(before);s.setItem(oldKey,raw);
+    const loaded=load(s,newKey);expect(loaded.save).toEqual(before);expect(loaded.recovery).toBe(false);expect(s.getItem(newKey)).toBeNull();
+    const after=reduceSave(loaded.save,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});
+    expect(persist(s,after,before.revision,newKey)).toBe('saved');expect(load(s,newKey).save).toEqual(after);expect(s.getItem(oldKey)).toBe(raw);
+  });
+  it('preserves old damaged data and backup recovery across the rename',()=>{
+    const s=new MemoryStorage(),newKey='five-meetings:/our-little-story/:save',good=completeSave();
+    s.setItem('five-meetings:/little-projects/:save','{broken');s.setItem('five-meetings:/little-projects/:backup',JSON.stringify(good));
+    const result=load(s,newKey);expect(result.recovery).toBe(true);expect(result.backup).toEqual(good);expect(result.raw).toBe('{broken');expect(s.getItem(newKey)).toBeNull();
+    s.removeItem('five-meetings:/little-projects/:save');expect(load(s,newKey).backup).toEqual(good);
+  });
+  it('prefers any existing new-site data and never imports legacy progress into another base or sandbox',()=>{
+    const s=new MemoryStorage(),newKey='five-meetings:/our-little-story/:save',good=completeSave();
+    s.setItem('five-meetings:/little-projects/:save',JSON.stringify(good));
+    for(const other of ['five-meetings:/:save','five-meetings:/preview-test/:save','five-meetings:/our-little-story/:dev:save'])expect(load(s,other).save).toEqual(initialState());
+    s.setItem(newKey,JSON.stringify(initialState()));expect(load(s,newKey).save).toEqual(initialState());
+    s.setItem(newKey,'{broken');expect(load(s,newKey).recovery).toBe(true);expect(load(s,newKey).backup).toBeNull();
+    s.removeItem(newKey);s.setItem(newKey.replace(':save',':backup'),JSON.stringify(initialState()));expect(load(s,newKey).backup).toEqual(initialState());
+  });
   it('every visible cursor round trips with consistent journal and effects',()=>{let s=reduceSave(initialState(),{type:'start'});let steps=0;while(s.campaign.active){expect(parseSave(JSON.stringify(s))).toEqual(s);expect(chapter.nodes[s.campaign.active.nodeId].kind).not.toBe('route');s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active,defaultPath)});if(++steps>180)throw Error('loop');}expect(steps).toBeGreaterThan(60);expect(parseSave(JSON.stringify(s))).toEqual(s);});
   it('stores one consistent envelope and rotates a valid previous snapshot',()=>{const storage=new MemoryStorage();const a=reduceSave(initialState(),{type:'start'});expect(persist(storage,a,0,key)).toBe('saved');const b=reduceSave(a,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});expect(persist(storage,b,a.revision,key)).toBe('saved');expect(parseSave(storage.getItem('test:backup')!)).toEqual(a);expect(load(storage,key).save).toEqual(b);});
   it('keeps corrupt main intact and offers valid backup',()=>{const storage=new MemoryStorage();const good=completeSave();storage.setItem(key,'{broken');storage.setItem('test:backup',JSON.stringify(good));const result=load(storage,key);expect(result.recovery).toBe(true);expect(result.backup).toEqual(good);expect(storage.getItem(key)).toBe('{broken');});
