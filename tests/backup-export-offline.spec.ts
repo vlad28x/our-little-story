@@ -63,3 +63,12 @@ test('malformed or missing transfer stays outside the game, with no imports or e
   expect(()=>backupTransferUrl({...file,raw:'я'.repeat(50000)},'https://example.test/')).toThrow('ссылка слишком длинная');
   const bad=btoa(JSON.stringify({name:'bad.html',raw:'<script>alert(1)</script>'}));expect(readBackupRequest('#/export-backup/'+bad.replaceAll('+','-').replaceAll('/','_').replace(/=+$/,''))).toEqual({file:null});
 });
+
+test('reusing an existing browser game tab also downloads the transferred copy instead of its own progress',async({page})=>{
+  const browserSave=initialState(),telegramSave=reduceSave(browserSave,{type:'start'});
+  await openOffline(page,browserSave,'/chapters');await expect(page.getByRole('heading',{name:'Каждая встреча — маленькая история',exact:true})).toBeVisible();
+  const url=backupTransferUrl({name:'five-meetings-save.json',raw:JSON.stringify(telegramSave)},'https://example.test/');
+  await page.evaluate(hash=>{location.hash=hash;},new URL(url).hash);
+  await expect(page.getByRole('heading',{name:'Копия из Telegram',exact:true})).toBeVisible();expect(await page.evaluate(()=>location.hash)).toBe('#/export-backup');expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(JSON.stringify(browserSave));
+  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Скачать файл',exact:true}).click();const download=await pending;expect(JSON.parse(fs.readFileSync((await download.path())!,'utf8'))).toEqual(telegramSave);
+});
