@@ -1,14 +1,28 @@
 import { it,expect } from 'vitest';
-import { starReduce,starResult,type StarState } from '../src/minigames/constellationModel';
-it('accepts all 24 orders and all three chosen shapes without an astronomy test',()=>{
-  let count=0;for(let a=0;a<4;a++)for(let b=0;b<4;b++)for(let c=0;c<4;c++)for(let d=0;d<4;d++){
-    if(new Set([a,b,c,d]).size!==4)continue;let s:StarState={order:[],shape:null};for(const id of [a,b,c,d])s=starReduce(s,{type:'star',id});
-    for(const shape of ['cat','controllers','teapot'] as const){const named=starReduce(s,{type:'shape',shape});expect(starResult(named)).toEqual({kind:'constellation',outcome:shape,usedPreset:false});}count++;
-  }expect(count).toBe(24);
+import { constellationDrawings,drawingStars,drawingSegments,initialStars,skyShapes,starReduce,starResult } from '../src/minigames/constellationModel';
+it('completes the three approved drawings with one tap per unique star and unchanged saved outcome IDs',()=>{
+  const counts={cat:17,controllers:12,teapot:16};
+  for(const shape of skyShapes){
+    let s=starReduce(initialStars,{type:'shape',shape});const stars=drawingStars(shape);expect(stars).toHaveLength(counts[shape]);expect(starResult(s)).toBeNull();
+    for(const star of stars){expect(starResult(s)).toBeNull();s=starReduce(s,{type:'star',id:star.id});}
+    expect(starResult(s)).toEqual({kind:'constellation',outcome:shape,usedPreset:false});expect(starReduce(s,{type:'star',id:s.progress})).toBe(s);
+    const original=s;s=starReduce(s,{type:'undo'});expect(starResult(s)).toBeNull();expect(starReduce(s,{type:'star',id:s.progress})).toEqual(original);
+  }
 });
-it('ignores duplicates and invalid stars, supports undo, and requires an explicit shape',()=>{
-  let s:StarState={order:[],shape:null};expect(starResult(s)).toBeNull();expect(starReduce(s,{type:'shape',shape:'cat'})).toEqual(s);
-  for(const id of [-1,4,NaN,1.5])expect(starReduce(s,{type:'star',id})).toEqual(s);
-  s=starReduce(s,{type:'star',id:2});expect(starReduce(s,{type:'star',id:2})).toEqual(s);
-  for(const id of [0,3,1])s=starReduce(s,{type:'star',id});expect(starResult(s)).toBeNull();s=starReduce(s,{type:'shape',shape:'controllers'});s=starReduce(s,{type:'undo'});expect(s).toEqual({order:[2,0,3],shape:null});expect(starResult(s)).toBeNull();
+it('rejects out-of-order and stale taps; undo and switching drawings never submit an incomplete result',()=>{
+  expect(starReduce(initialStars,{type:'star',id:0})).toBe(initialStars);let s=starReduce(initialStars,{type:'shape',shape:'cat'});
+  for(const id of [-1,1,17,NaN,1.5])expect(starReduce(s,{type:'star',id})).toBe(s);
+  s=starReduce(s,{type:'star',id:0});expect(starReduce(s,{type:'star',id:0})).toBe(s);expect(starReduce(s,{type:'shape',shape:'cat'})).toBe(s);
+  expect(starReduce(s,{type:'shape',shape:'teapot'})).toEqual({shape:'teapot',progress:0});expect(starReduce(s,{type:'reset'})).toEqual(initialStars);
+});
+it('uses only authored contour edges, closes contours automatically, and never draws a bridge between separate strokes',()=>{
+  for(const shape of skyShapes){
+    const drawing=constellationDrawings[shape],stars=drawingStars(shape),segments=drawingSegments(shape);
+    for(const segment of segments){const points=drawing.strokes[segment.stroke].points;const adjacent=points.some((point,i)=>point===segment.from&&points[i+1]===segment.to);expect(adjacent||!!drawing.strokes[segment.stroke].closed&&points.at(-1)===segment.from&&points[0]===segment.to).toBe(true);}
+    expect(drawingSegments(shape,0)).toEqual([]);expect(new Set(stars.map(s=>s.point.join(','))).size).toBe(stars.length);
+    for(const star of stars){expect(star.point[0]).toBeGreaterThanOrEqual(24);expect(star.point[0]).toBeLessThanOrEqual(264);expect(star.point[1]).toBeGreaterThanOrEqual(24);expect(star.point[1]).toBeLessThanOrEqual(240);}
+  }
+  const cat=drawingSegments('cat',13);expect(cat.filter(s=>s.stroke===1)).toHaveLength(1);expect(cat.find(s=>s.stroke===1)?.from).toEqual([170,210]);
+  expect(cat.some(s=>s.from.join(',')==='102,130'&&s.to.join(',')==='211,210')).toBe(false);
+  expect(drawingSegments('teapot').filter(s=>s.stroke===2)).toHaveLength(3);
 });

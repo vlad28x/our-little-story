@@ -11,7 +11,7 @@
 | `characters/cat.webp`, `characters/nina.webp` | Встроенный Imagegen, вымышленные персонажи по CHARACTER_BIBLE | Generated, integrated |
 | `backgrounds/home-living.webp` | Встроенный Imagegen, стиль кафе использован как reference, новый вымышленный интерьер квартиры | Generated, integrated |
 | `backgrounds/river-evening.webp` | Встроенный Imagegen со стилистическим референсом кафе, вымышленная освещённая набережная | Generated, integrated |
-| Созвездия и четыре звезды | Оригинальная SVG-графика ConstellationArt/Constellation; контуры переиспользуются Canvas-экспортом | Original vector |
+| Созвездия: кот 17 звёзд, один геймпад 12, чайник 16 | Оригинальные SVG-эскизы, согласованные автором 19 октября; единая геометрия constellationModel/ConstellationArt для игры и открытки | Original vector, approved and integrated |
 | `characters/vlad/casual-{smile,awkward,laugh}.webp` | Встроенный Imagegen по одобренной chibi-модели, новая домашняя одежда; прозрачность сохранена при сжатии в WebP | Generated, integrated; три отдельные эмоции |
 | Кухня, продукты, повара, два геймпада | Оригинальная SVG-графика в Kitchen.tsx и KitchenControls.tsx; интерфейс создан специально для игры | Original vector |
 | Предметы, жетон, конверт, значки открыток | Оригинальная SVG-графика проекта в `src/ui/Illustration.tsx` | Original vector |

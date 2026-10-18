@@ -23,7 +23,7 @@ export function ResultScreen({route}:{route:string}){
     {chapter===1&&save.collection.achievements.includes('cat-supervisor')&&<p className="achievement-ribbon">✧ Начальник найден · Пончик одобряет перерыв</p>}
     {chapter===2&&save.collection.achievements.includes('dry-plan')&&<p className="achievement-ribbon">✧ Прогноз без дыр · зонтик для витрины спасён</p>}
     {chapter===3&&save.collection.achievements.includes('full-table')&&<p className="achievement-ribbon">✧ Стол на всех · девять подач вместе</p>}
-    {chapter===4&&!card.usedPreset&&save.collection.achievements.includes('own-sky')&&<p className="achievement-ribbon">✧ Своё небо · четыре звезды в своём порядке</p>}
+    {chapter===4&&!card.usedPreset&&save.collection.achievements.includes('own-sky')&&<p className="achievement-ribbon">✧ Своё небо · рисунок из звёзд</p>}
     {chapter===5&&save.collection.achievements.includes('five-meetings')&&<p className="achievement-ribbon">✧ Пять встреч · история останется с тобой</p>}
     <div className="result-actions"><button className="primary" onClick={()=>go('/chapters')}>К главам</button></div>
     <button className="text-button" onClick={()=>{send({type:'trial',chapter:card.chapter});go(`/play/${save.trial?.chapter??card.chapter}?mode=trial`);}}>{save.trial&&save.trial.chapter!==card.chapter?`Продолжить пробную главу ${save.trial.chapter} →`:'Посмотреть другой вариант →'}</button>
