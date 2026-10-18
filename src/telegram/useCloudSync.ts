@@ -1,10 +1,11 @@
 import { useEffect,useRef,useState } from 'react';
 import type { SaveV1 } from '../state/types';
-import { CloudConflict,type CloudSession } from './cloud';
+import { CloudConflict,cloudErrorText,type CloudSession } from './cloud';
 import type { TelegramApp } from './bridge';
 export type CloudStatus='none'|'local'|'saving'|'saved'|'error'|'conflict';
 export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,app?:TelegramApp){
   const [status,setStatus]=useState<CloudStatus>(session?'saving':app?'local':'none');
+  const [errorText,setErrorText]=useState('');
   const latest=useRef(save);latest.current=save;
   const failed=useRef(false),mounted=useRef(false),pending=useRef(0);
   const [syncedRevision,setSyncedRevision]=useState(-1);
@@ -12,7 +13,7 @@ export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,ap
   useEffect(()=>{
     if(!session||paused)return;
     app?.enableClosingConfirmation?.();
-    function failure(error:unknown){if(failed.current)return;failed.current=true;if(mounted.current)setStatus(error instanceof CloudConflict?'conflict':'error');app?.enableClosingConfirmation?.();}
+    function failure(error:unknown){if(failed.current)return;failed.current=true;if(mounted.current){setStatus(error instanceof CloudConflict?'conflict':'error');setErrorText(cloudErrorText(error));}app?.enableClosingConfirmation?.();}
     function flush(){
       if(failed.current)return;pending.current++;if(mounted.current)setStatus('saving');app?.enableClosingConfirmation?.();
       const snapshot=latest.current;
@@ -26,5 +27,5 @@ export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,ap
   },[save,paused,session,app]);
   // Mark an unsent action immediately, including during the debounce window.
   const visibleStatus=status==='saved'&&syncedRevision!==save.revision?'saving':status;
-  return {status:visibleStatus,blocked:status==='conflict'};
+  return {status:visibleStatus,blocked:status==='conflict',errorText};
 }

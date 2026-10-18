@@ -37,11 +37,23 @@ test('different local and cloud stories require a choice before any cloud write'
 test('offline startup preserves local progress and another Telegram account does not inherit it',async({page,context})=>{
   const save=reduceSave(initialState(),{type:'start'}),data=await cloudData(save);
   await openOffline(page,initialState(),'/play/1',{seedBrowser:false,local:{[key]:JSON.stringify(save)},telegram:{id:42,data,failReads:true}});
-  await expect(page.getByRole('alert')).toContainText('облаком');expect(await remote(page)).toEqual(data);
+  await expect(page.getByRole('alert')).toContainText('Чтение состояния облака');expect(await remote(page)).toEqual(data);
   await page.getByRole('button',{name:'Продолжить на этом устройстве',exact:true}).click();await page.locator('[data-node="c1.entry"]').waitFor();
   await page.getByRole('button',{name:/Дальше/}).click();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).revision,key)).toBe(save.revision+1);
   const other=await context.newPage();await openOffline(other,initialState(),'/start',{seedBrowser:false,local:{[key]:JSON.stringify(save)},telegram:{id:43,data:{}}});
   await expect(other.getByRole('button',{name:'Начать с сохранением в Telegram',exact:true})).toBeVisible();await expect(other.getByRole('button',{name:/Продолжить с этого устройства/})).toHaveCount(0);
+});
+test('a rejected native write shows a safe reason and preserves both copies after choosing the device',async({page})=>{
+  await page.setViewportSize({width:320,height:568});
+  const cloudSave=reduceSave(initialState(),{type:'start'}),local=reduceSave(cloudSave,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}}),data=await cloudData(cloudSave),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await openOffline(page,initialState(),'/play/1',{seedBrowser:false,local:{[key]:JSON.stringify(local)},telegram:{id:42,data,failWrites:'STORAGE_VALUE_TOO_LONG'}});
+  await page.getByRole('button',{name:/Продолжить с этого устройства/}).click();
+  await expect(page.locator('.telegram-sync')).toContainText('Сохранение в Telegram не подтверждено');
+  const reason=page.getByText('Почему не сохранилось?',{exact:true});await reason.focus();await page.keyboard.press('Enter');
+  await expect(page.locator('.telegram-sync-reason p')).toBeVisible();await expect(page.locator('.telegram-sync-reason p')).toContainText('Запись части сохранения');await expect(page.locator('.telegram-sync-reason p')).toContainText('STORAGE_VALUE_TOO_LONG');
+  expect(await remote(page)).toEqual(data);expect(JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!)).toEqual(local);
+  await page.getByRole('button',{name:/Дальше/}).click();expect(await remote(page)).toEqual(data);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).revision,key)).toBe(local.revision+1);expect(errors).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'outputs/TELEGRAM_SYNC_REASON_320.png',fullPage:true,animations:'disabled'});
 });
 test('a remote change pauses the game and preserves a download of the current device',async({page})=>{
   const save=reduceSave(initialState(),{type:'start'}),data=await cloudData(save);

@@ -18,7 +18,7 @@ import { downloadBlob } from '../sharing/cards';
 import type { ChapterId } from '../engine/types';
 
 export function App(){
-  const {save,send,recovery,loaded,restore,reset,storageError,conflict,reload,cloudStatus,cloudBlocked,telegramApp}=useGame();
+  const {save,send,recovery,loaded,restore,reset,storageError,conflict,reload,cloudStatus,cloudError,cloudBlocked,telegramApp}=useGame();
   const route=useRoute();
   const [menu,setMenu]=useState(false),[journal,setJournal]=useState(false),[rewrite,setRewrite]=useState<ChapterId|null>(null),[code,setCode]=useState(''),[codeMessage,setCodeMessage]=useState('');
   const codeInput=useRef<HTMLInputElement>(null);
@@ -57,7 +57,7 @@ export function App(){
       <button className="icon-button menu-toggle" aria-label="Открыть меню" onClick={()=>setMenu(true)}><span/><span/></button>
     </header>
     {DEV_SANDBOX&&<div className="dev-banner">Режим разработчика · отдельный тестовый прогресс</div>}
-    {cloudStatus!=='none'&&<div className={`telegram-sync ${cloudStatus==='error'||cloudBlocked?'sync-warning':''}`} role="status">{cloudStatus==='saved'?'✓ История сохранена в Telegram':cloudStatus==='saving'?'Сохраняем историю в Telegram…':cloudStatus==='local'?'Пока сохраняем только на этом устройстве':cloudBlocked?'В Telegram появилась другая копия истории.':'Облако не ответило. Прогресс остаётся на устройстве.'}{(cloudStatus==='local'||cloudStatus==='error')&&<button onClick={reload}>Проверить облако</button>}</div>}
+    {cloudStatus!=='none'&&<div className={`telegram-sync ${cloudStatus==='error'||cloudBlocked?'sync-warning':''}`} role="status">{cloudStatus==='saved'?'✓ История сохранена в Telegram':cloudStatus==='saving'?'Сохраняем историю в Telegram…':cloudStatus==='local'?'Пока сохраняем только на этом устройстве':cloudBlocked?'В Telegram появилась другая копия истории.':'Сохранение в Telegram не подтверждено. Прогресс остаётся на устройстве.'}{(cloudStatus==='local'||cloudStatus==='error')&&<button onClick={reload}>Проверить облако</button>}{cloudStatus==='error'&&cloudError&&<details className="telegram-sync-reason"><summary>Почему не сохранилось?</summary><p>{cloudError}</p></details>}</div>}
     {storageError&&!recovery&&<div role="status" className="storage-notice">{storageError} <button onClick={()=>go('/settings')}>К копии</button></div>}
     {recovery?<section className="page-content recovery">
       <Illustration kind="envelope"/><h1>Сохраним эту историю</h1><p>{loaded.error}</p><p>Текущий файл не изменён. Резервная копия может отставать на один шаг.</p>

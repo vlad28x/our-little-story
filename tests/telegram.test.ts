@@ -1,6 +1,6 @@
 import { describe,it,expect,vi } from 'vitest';
 import type { CloudAPI } from '../src/telegram/bridge';
-import { TelegramCloud,CloudSession,CloudConflict,cloudRaw,splitCloudText } from '../src/telegram/cloud';
+import { TelegramCloud,CloudSession,CloudConflict,cloudRaw,splitCloudText,cloudErrorText } from '../src/telegram/cloud';
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
 import { finishFive } from './chapter5Helpers';
@@ -46,8 +46,27 @@ describe('Telegram cloud snapshots',()=>{
   });
   it('times out an unresponsive client rather than hanging on startup',async()=>{
     vi.useFakeTimers();try{
-      const api=new FakeCloud();api.getItem=()=>{};const read=new TelegramCloud(api).read();const rejected=expect(read).rejects.toThrow('вовремя');await vi.advanceTimersByTimeAsync(8001);await rejected;
+      const api=new FakeCloud();api.getItem=()=>{};const read=new TelegramCloud(api).read();const rejected=expect(read).rejects.toThrow('вовремя');await vi.advanceTimersByTimeAsync(20001);await rejected;
     }finally{vi.useRealTimers();}
+  });
+  it('accepts a native response slower than eight seconds without retrying or clearing the cloud',async()=>{
+    vi.useFakeTimers();try{
+      const api=new FakeCloud();let calls=0;api.getItem=(_key,done)=>{calls++;setTimeout(()=>done(null,''),12000);};
+      const read=new TelegramCloud(api).read();await vi.advanceTimersByTimeAsync(12001);expect(await read).toMatchObject({head:'',damaged:false});expect(calls).toBe(1);expect(api.setCalls).toEqual([]);
+    }finally{vi.useRealTimers();}
+  });
+  it('reports the failed write phase and safe native code, never arbitrary error payloads',async()=>{
+    const api=new FakeCloud();api.setItem=(_key,_value,done)=>done('STORAGE_VALUE_TOO_LONG',false);
+    const error=await new TelegramCloud(api).write(initialState(),'').catch(e=>e);expect(cloudErrorText(error)).toContain('Запись части сохранения');expect(cloudErrorText(error)).toContain('STORAGE_VALUE_TOO_LONG');expect(api.data.has(HEAD)).toBe(false);
+    api.setItem=(_key,_value,done)=>done('private user=42 initData=secret',false);
+    const privateError=await new TelegramCloud(api).write(initialState(),'').catch(e=>e);expect(cloudErrorText(privateError)).toContain('API_ERROR');expect(cloudErrorText(privateError)).not.toMatch(/private|42|secret|initData/);
+    expect(cloudErrorText(new Error('private token'))).toContain('CHECK_FAILED');expect(cloudErrorText(new Error('private token'))).not.toContain('private');
+  });
+  it('does not label a committed snapshot as damaged when the WebView cannot hash it',async()=>{
+    const api=new FakeCloud(),cloud=new TelegramCloud(api);await cloud.write(initialState(),'');const data=new Map(api.data),calls=api.setCalls.length;
+    vi.stubGlobal('crypto',{subtle:undefined});try{
+      const error=await cloud.read().catch(e=>e);expect(cloudErrorText(error)).toContain('HASH_UNAVAILABLE');expect(api.data).toEqual(data);expect(api.setCalls).toHaveLength(calls);
+    }finally{vi.unstubAllGlobals();}
   });
   it('validates imports before sending bytes and bounds the cloud key count over repeated saves',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),save=finishFive();let head='';

@@ -9,7 +9,7 @@ import type { TelegramApp } from '../telegram/bridge';
 export const DEV_SANDBOX=import.meta.env.DEV && new URLSearchParams(location.search).get('dev')==='1';
 export const activeStorageKey=DEV_SANDBOX?storageKey.replace(':save',':dev:save'):storageKey;
 const storage:StorageLike={getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v),removeItem:k=>localStorage.removeItem(k)};
-type GameContextValue={save:SaveV1;send:(a:Action)=>void;loaded:Loaded;recovery:boolean;storageError:string|null;conflict:boolean;cloudStatus:CloudStatus;cloudBlocked:boolean;telegramApp?:TelegramApp;reload:()=>void;restore:()=>void;reset:()=>void};
+type GameContextValue={save:SaveV1;send:(a:Action)=>void;loaded:Loaded;recovery:boolean;storageError:string|null;conflict:boolean;cloudStatus:CloudStatus;cloudError:string;cloudBlocked:boolean;telegramApp?:TelegramApp;reload:()=>void;restore:()=>void;reset:()=>void};
 const GameContext=createContext<GameContextValue|null>(null);
 export function GameProvider({children,storageId=activeStorageKey,initialLoaded,cloudSession,telegramApp}:{children:ReactNode;storageId?:string;initialLoaded?:Loaded;cloudSession?:CloudSession;telegramApp?:TelegramApp}) {
   const [loaded]=useState(()=>initialLoaded??load(storage,storageId));
@@ -36,6 +36,6 @@ export function GameProvider({children,storageId=activeStorageKey,initialLoaded,
     window.addEventListener('storage',onStorage);window.addEventListener('focus',check);
     return()=>{window.removeEventListener('storage',onStorage);window.removeEventListener('focus',check);};
   },[storageId]);
-  return <GameContext.Provider value={{save,send,loaded,recovery,storageError,conflict,cloudStatus:cloud.status,cloudBlocked:cloud.blocked,telegramApp,reload:()=>location.reload(),restore:()=>{if(loaded.backup)send({type:'replace',save:loaded.backup});},reset:()=>send({type:'replace',save:initialState()})}}>{children}</GameContext.Provider>;
+  return <GameContext.Provider value={{save,send,loaded,recovery,storageError,conflict,cloudStatus:cloud.status,cloudError:cloud.errorText,cloudBlocked:cloud.blocked,telegramApp,reload:()=>location.reload(),restore:()=>{if(loaded.backup)send({type:'replace',save:loaded.backup});},reset:()=>send({type:'replace',save:initialState()})}}>{children}</GameContext.Provider>;
 }
 export function useGame(){const c=useContext(GameContext);if(!c)throw new Error('GameProvider missing');return c;}

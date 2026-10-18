@@ -7,7 +7,24 @@ type Part={slot:'a'|'b';count:number;length:number;hash:string};
 type Head={version:1;current:Part;previous:Part|null};
 export type CloudSnapshot={head:string;save:SaveV1|null;backup:SaveV1|null;damaged:boolean};
 export class CloudConflict extends Error {constructor(){super('В Telegram появилась другая копия истории.');}}
-class CloudTransportError extends Error {}
+type CloudOperation='read-head'|'read-parts'|'write-part'|'write-head';
+const operations:Record<CloudOperation,string>={'read-head':'Чтение состояния облака','read-parts':'Чтение сохранения','write-part':'Запись части сохранения','write-head':'Подтверждение сохранения'};
+class CloudTransportError extends Error {
+  constructor(operation:CloudOperation,code:string){
+    super(`${operations[operation]}: ${code==='TIMEOUT'?'Telegram не ответил вовремя':code==='INVALID_RESPONSE'?'Telegram прислал неожиданный ответ':'Telegram не подтвердил запрос'} (${code}).`);
+  }
+}
+class CloudCryptoError extends Error {constructor(){super('Не удалось проверить сохранение в этом окне Telegram (HASH_UNAVAILABLE).');}}
+// Only a short machine code is retained. Never echo native error bodies, keys,
+// launch data or save contents into the UI or console.
+function nativeCode(error:unknown){
+  const value=error instanceof Error?error.message:error;
+  if(value==='WebAppMethodUnsupported')return 'METHOD_UNSUPPORTED';
+  return typeof value==='string'&&/^[A-Z][A-Z0-9_]{0,63}$/.test(value)?value:'API_ERROR';
+}
+export function cloudErrorText(error:unknown){
+  return error instanceof CloudTransportError||error instanceof CloudCryptoError||error instanceof CloudConflict?error.message:'Не удалось проверить или подтвердить облачную копию (CHECK_FAILED).';
+}
 export function cloudRaw(save:SaveV1){return JSON.stringify({...save,continuation:null});}
 export function splitCloudText(raw:string){
   const chunks:string[]=[];
@@ -18,9 +35,9 @@ export function splitCloudText(raw:string){
     chunks.push(raw.slice(start,end));start=end;
   }return chunks;
 }
-function request<T>(run:(done:(error:string|null,value:T)=>void)=>unknown):Promise<T>{
-  return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new CloudTransportError('Telegram не ответил вовремя.')),8000);
-    try{run((error,value)=>{clearTimeout(timer);if(error)reject(new CloudTransportError('Не удалось связаться с облаком Telegram.'));else resolve(value);});}catch{clearTimeout(timer);reject(new CloudTransportError('Не удалось связаться с облаком Telegram.'));}
+function request<T>(operation:CloudOperation,run:(done:(error:string|null,value:T)=>void)=>unknown):Promise<T>{
+  return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new CloudTransportError(operation,'TIMEOUT')),20000);
+    try{run((error,value)=>{clearTimeout(timer);if(error)reject(new CloudTransportError(operation,nativeCode(error)));else resolve(value);});}catch(error){clearTimeout(timer);reject(new CloudTransportError(operation,nativeCode(error)));}
   });
 }
 function part(value:unknown):Part{
@@ -33,14 +50,18 @@ function header(raw:string):Head{
   if(previous?.slot===current.slot)throw new Error('Повреждено описание облачной копии.');
   return {version:1,current,previous};
 }
-async function digest(raw:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw))),n=>n.toString(16).padStart(2,'0')).join('');}
+async function digest(raw:string){
+  if(!globalThis.crypto?.subtle)throw new CloudCryptoError();
+  try{return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw))),n=>n.toString(16).padStart(2,'0')).join('');}catch{throw new CloudCryptoError();}
+}
 function chunkKey(slot:string,index:number){return `five_meetings_v1_${slot}_${index}`;}
 export class TelegramCloud {
   constructor(private api:CloudAPI){}
-  private async getHead(){const raw=await request<string>(done=>this.api.getItem(HEAD,done));if(typeof raw!=='string')throw new CloudTransportError('Telegram не подтвердил состояние облака.');return raw;}
+  private async getHead(){const raw=await request<string>('read-head',done=>this.api.getItem(HEAD,done));if(typeof raw!=='string')throw new CloudTransportError('read-head','INVALID_RESPONSE');return raw;}
   private async readPart(p:Part){
     const keys=Array.from({length:p.count},(_,i)=>chunkKey(p.slot,i));
-    const values=await request<Record<string,string>>(done=>this.api.getItems(keys,done));
+    const values=await request<Record<string,string>>('read-parts',done=>this.api.getItems(keys,done));
+    if(!values||typeof values!=='object'||Array.isArray(values))throw new CloudTransportError('read-parts','INVALID_RESPONSE');
     if(keys.some(k=>typeof values[k]!=='string'||!values[k]||values[k].length>CHUNK))throw new Error('Облачная копия неполная.');
     const raw=keys.map(k=>values[k]).join('');if(raw.length!==p.length||await digest(raw)!==p.hash)throw new Error('Облачная копия повреждена.');return parseSave(raw);
   }
@@ -50,8 +71,8 @@ export class TelegramCloud {
     // Transport errors must not be mistaken for an empty cloud. A bad snapshot is
     // always shown for explicit recovery, never silently replaced by a new game.
     let save:SaveV1|null=null,backup:SaveV1|null=null;
-    try{save=await this.readPart(h.current);}catch(error){if(error instanceof CloudTransportError)throw error;}
-    if(!save&&h.previous){try{backup=await this.readPart(h.previous);}catch(error){if(error instanceof CloudTransportError)throw error;}}
+    try{save=await this.readPart(h.current);}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}
+    if(!save&&h.previous){try{backup=await this.readPart(h.previous);}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}}
     if(await this.getHead()!==raw)throw new CloudConflict();
     return {head:raw,save,backup,damaged:!save};
   }
@@ -63,21 +84,21 @@ export class TelegramCloud {
       let h:Head|null=null;try{h=header(expectedHead);}catch{/* Explicit recovery can replace a malformed head. */}
       if(h){
         try{await this.readPart(h.current);previous=h.current;}catch(error){
-          if(error instanceof CloudTransportError)throw error;
-          if(h.previous){try{await this.readPart(h.previous);previous=h.previous;}catch(e){if(e instanceof CloudTransportError)throw e;}}
+          if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;
+          if(h.previous){try{await this.readPart(h.previous);previous=h.previous;}catch(e){if(e instanceof CloudTransportError||e instanceof CloudCryptoError)throw e;}}
         }
       }
     }
     const slot=previous?.slot==='a'?'b':'a';const chunks=splitCloudText(raw),count=chunks.length;
     for(let i=0;i<count;i++){
-      const ok=await request<boolean>(done=>this.api.setItem(chunkKey(slot,i),chunks[i],done));if(!ok)throw new Error('Telegram не подтвердил сохранение.');
+      const ok=await request<boolean>('write-part',done=>this.api.setItem(chunkKey(slot,i),chunks[i],done));if(ok!==true)throw new CloudTransportError('write-part','NOT_STORED');
     }
     const current:Part={slot,count,length:raw.length,hash:await digest(raw)};
     // Verify all chunks before publishing the pointer. Last committed bank stays intact.
     await this.readPart(current);
     if(await this.getHead()!==expectedHead)throw new CloudConflict();
     const next=JSON.stringify({version:1,current,previous} satisfies Head);
-    if(!await request<boolean>(done=>this.api.setItem(HEAD,next,done)))throw new Error('Telegram не подтвердил сохранение.');
+    if(await request<boolean>('write-head',done=>this.api.setItem(HEAD,next,done))!==true)throw new CloudTransportError('write-head','NOT_STORED');
     if(await this.getHead()!==next)throw new CloudConflict();return next;
   }
 }
