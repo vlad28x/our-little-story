@@ -85,7 +85,7 @@ npm run preview
 
 ## GitHub Pages — опубликовано
 
-Игра: https://vlad28x.github.io/our-little-story/. Публичный репозиторий: https://github.com/vlad28x/our-little-story. Первая публикация — 18 октября 2026. Успешный деплой: [GitHub Actions run39074595271](https://github.com/vlad28x/our-little-story/actions/runs/39074595271); отчёт — outputs/GITHUB_PAGES_RELEASE.md.
+Игра: https://vlad28x.github.io/our-little-story/. Публичный репозиторий: https://github.com/vlad28x/our-little-story. Первая публикация — 18 октября 2026. Успешный деплой: [GitHub Actions run39146875007](https://github.com/vlad28x/our-little-story/actions/runs/39146875007); отчёт — outputs/GITHUB_PAGES_RELEASE.md.
 
 Изменения, отправленные в main, автоматически проходят typecheck/lint, логику, контент, production-сборку и оба набора браузерных проверок, затем размещаются на Pages. Workflow можно запустить вручную. Проверки PR не публикуют сайт. Для правок только документации допустим коммит с [skip ci], чтобы не пересобирать неизменившуюся игру.
 

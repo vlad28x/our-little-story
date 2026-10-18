@@ -37,3 +37,7 @@ CloudStorage не предоставляет compare-and-swap: поддержи�
 Изолированные browser-тесты используют заглушку SDK и памяти CloudStorage, а SHA-256 about:blank делегируется Node (в HTTPS production работает настоящий WebCrypto). Это проверка протокола и UI, не фактический вход в Telegram. После настройки BotFather владелец должен запустить Mini App на телефоне, дождаться «История сохранена в Telegram», затем открыть у того же бота с тем же аккаунтом на втором устройстве. Проверить файл JSON, перенос старого прогресса и ручной повтор при отсутствии сети. Тесты настоящего Telegram и состояние настроек BotFather нельзя считать подтверждёнными по заглушке.
 
 Источники: [CloudStorage](https://core.telegram.org/bots/webapps#cloudstorage), [кнопка меню](https://core.telegram.org/bots/webapps#launching-mini-apps-from-the-menu-button), [Main Mini App](https://core.telegram.org/bots/webapps#launching-the-main-mini-app), [инициализация](https://core.telegram.org/bots/webapps#initializing-mini-apps).
+
+## Публикация
+
+Изменение d5db1fe2a13f68fc8a63d40aa72259bdc67c887b опубликовано: [GitHub Actions 39146875007](https://github.com/vlad28x/our-little-story/actions/runs/39146875007). Все проверки и deploy прошли. На HTTPS production проверены обычная игра, старые сохранения, изображения и облачное восстановление двумя тестовыми SDK-клиентами с настоящим WebCrypto; реальный Telegram-аккаунт и BotFather при этом не использовались.
