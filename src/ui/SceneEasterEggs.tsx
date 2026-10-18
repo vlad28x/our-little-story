@@ -1,11 +1,10 @@
 import { useEffect,useRef,useState,type RefObject } from 'react';
 import { easterEggs,type EasterEggId } from '../content/easterEggs';
 type Box={left:number;top:number;width:number;height:number};
-type Props={stage:RefObject<HTMLDivElement|null>;context:string;hair:boolean;cat:boolean;cookie:boolean;reduced:boolean;onSound?:()=>void};
-export function SceneEasterEggs({stage,context,hair,cat,cookie,reduced,onSound}:Props){
+type Props={stage:RefObject<HTMLDivElement|null>;context:string;hair:boolean;cat:boolean;cookie:boolean;cookieTaken:boolean;onTakeCookie:()=>void;reduced:boolean;onSound?:()=>void};
+export function SceneEasterEggs({stage,context,hair,cat,cookie,cookieTaken,onTakeCookie,reduced,onSound}:Props){
   const [boxes,setBoxes]=useState<{hair?:Box;cat?:Box}>({});
   const [reaction,setReaction]=useState<{id:EasterEggId;context:string}|null>(null);
-  const [cookieTaken,setCookieTaken]=useState(false);
   const buttons=useRef(new Map<EasterEggId,HTMLButtonElement>());
   const active=reaction?.context===context?reaction.id:null;
   useEffect(()=>{
@@ -32,7 +31,7 @@ export function SceneEasterEggs({stage,context,hair,cat,cookie,reduced,onSound}:
   },[stage,context,hair,cat]);
   function trigger(id:EasterEggId){
     if(active===id||id==='cookie'&&cookieTaken)return;
-    if(id==='cookie')setCookieTaken(true);
+    if(id==='cookie')onTakeCookie();
     setReaction({id,context});onSound?.();
   }
   function dismiss(){
