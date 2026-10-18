@@ -1,4 +1,5 @@
 import { test,expect,type Page } from '@playwright/test';
+import { expectSimpleResult } from './resultActions';
 import { openOffline } from './offlineApp';
 import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
 import { fourthCode,startFour,command4 } from './chapter4Helpers';
@@ -8,7 +9,7 @@ async function until(page:Page,id:string){for(let i=0;i<150;i++){if(await page.l
 async function wishAndEnd(page:Page,wish:'calm'|'adventure'='calm'){
   await until(page,'c4.wish');await page.getByRole('button',{name:wish==='calm'?'Больше спокойных вечеров':'Больше маленьких приключений'}).click();await until(page,'c4.end');for(let i=0;i<6;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.postcard')).toBeVisible();
 }
-test('author code, inherited callbacks, custom sky, friendship, PNG and trial work without any network',async({page})=>{
+test('author code, inherited callbacks, custom sky, friendship, result and trial work without any network',async({page})=>{
   const base=finishThree(completeTwo(),{...defaultThird,team:'dumpling',after:'rematch'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await openOffline(page,{...base,contentVersion:3} as unknown as typeof base);await expect(page.getByLabel('Код',{exact:true})).toBeVisible();await page.getByLabel('Код',{exact:true}).fill('ZVEZDY');await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await expect(page.getByRole('status')).toContainText('Код не подошёл');
   await page.getByLabel('Код',{exact:true}).fill(fourthCode.toLowerCase());await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await page.locator('.chapter-list li').nth(3).getByRole('button',{name:'Начать встречу'}).click();await expect(page.locator('[data-node="c4.walk"]')).toBeVisible();
@@ -19,7 +20,7 @@ test('author code, inherited callbacks, custom sky, friendship, PNG and trial wo
   await until(page,'c4.bond');await page.getByRole('button',{name:'Мне хорошо дружить с тобой'}).click();await expect(page.getByText('мне тоже хорошо. давай так и оставим.')).toBeVisible();await wishAndEnd(page);
   await expect(page.getByRole('heading',{name:'Созвездие передышки'})).toBeVisible();await expect(page.getByText('Два геймпада',{exact:true})).toBeVisible();
   const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.contentVersion).toBe(5);expect(main.campaign.completed).toEqual([1,2,3,4]);for(const id of [1,2,3] as const)expect(main.campaign.records[id]).toEqual(base.campaign.records[id]);expect(main.campaign.records[4].story).toMatchObject({bench:'space',constellation:'controllers',bond:'friendly',wish:'calm'});
-  await page.screenshot({path:'outputs/CHAPTER_04_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Сохранить открытку',exact:true}).click();const download=await pending;expect(download.suggestedFilename()).toBe('five-meetings-chapter-4.png');await download.saveAs('outputs/CHAPTER_04_EXAMPLE_CARD.png');
+  await page.screenshot({path:'outputs/CHAPTER_04_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});await expectSimpleResult(page);
   await page.getByRole('button',{name:'Посмотреть другой вариант',exact:false}).click();await until(page,'c4.distance');await page.getByRole('button',{name:'Посижу рядом'}).click();await until(page,'c4.stars');await page.getByRole('button',{name:'Выбрать готовый чайник'}).click();await until(page,'c4.bond');await page.getByRole('button',{name:'Мне нравится быть с тобой'}).click();await expect(page.getByText('мне с тобой тоже. даже когда ничего не происходит.')).toBeVisible();await wishAndEnd(page,'adventure');await expect(page.getByRole('heading',{name:'Созвездие приключений'})).toBeVisible();await expect(page.getByText('Выбрали готовую картинку · Чайник')).toBeVisible();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,key)).toEqual(main.campaign);expect(errors).toEqual([]);
 });
 test('320px layout, keyboard, preset, undecided bond and reconstruction from saved cursor',async({page,context})=>{

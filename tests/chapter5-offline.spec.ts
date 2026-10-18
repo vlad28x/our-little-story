@@ -1,4 +1,5 @@
 import { test,expect,type Page } from '@playwright/test';
+import { expectSimpleResult } from './resultActions';
 import { openOffline } from './offlineApp';
 import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
 import { defaultFourth,finishFour } from './chapter4Helpers';
@@ -20,7 +21,7 @@ test('fifth code, exact memories, comic finale, editable optional invitation and
   await page.getByRole('button',{name:'Вспомнить: Игровой вечер',exact:true}).click();await expect(page.getByText('Тарелки были почти пустыми, зато настоящие вкусняшки — на месте.')).toBeVisible();await expect(page.getByText('«пельмень и партнёры» — хорошее название. я его запомнил.')).toBeVisible();await page.screenshot({path:'outputs/CHAPTER_05_MEMORIES_PREVIEW.png',fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:'Закрыть альбом',exact:false}).click();await toTone(page);await expect(page.getByRole('button',{name:endingLabels.romantic,exact:false})).toBeVisible();await expect(page.locator('.choices button')).toHaveCount(4);await end(page,'comic');
   const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.campaign.completed).toEqual([1,2,3,4,5]);expect(main.continuation).toBeNull();for(const id of [1,2,3,4] as const)expect(main.campaign.records[id]).toEqual(prior.campaign.records[id]);
-  await page.screenshot({path:'outputs/CHAPTER_05_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Сохранить открытку',exact:true}).click();const download=await pending;expect(download.suggestedFilename()).toBe('five-meetings-chapter-5.png');await download.saveAs('outputs/CHAPTER_05_EXAMPLE_CARD.png');
+  await page.screenshot({path:'outputs/CHAPTER_05_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});await expectSimpleResult(page);
   await expect(page.getByRole('region',{name:'Разговор о следующей встрече'})).toBeVisible();await expect(page.locator('.invitation-options button')).toHaveCount(5);expect(await page.locator('.invitation-options [aria-pressed=true]').count()).toBe(0);await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await expect(page.getByText('скамейка запасных сегодня пустует',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).continuation,key)).toBeNull();
   await page.getByRole('button',{name:'Отказаться',exact:true}).click();await expect(page.getByRole('button',{name:'Копировать сообщение',exact:true})).toHaveCount(0);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).continuation,key)).toBe('decline');
   await page.getByRole('button',{name:'Встретиться в кафе',exact:true}).click();await page.getByLabel('Сообщение Владу',{exact:true}).fill('Мой личный текст для проверки.');

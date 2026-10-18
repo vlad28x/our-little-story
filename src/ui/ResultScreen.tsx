@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useGame } from '../app/GameProvider';
 import { go } from '../app/router';
 import { assetUrl } from '../content/assetManifest';
-import { cards, cardFromStory, cardText, cardDetail, cardTeam, cardCharacter } from '../content/cards';
-import { downloadBlob, renderCard, shareCard } from '../sharing/cards';
+import { cards, cardFromStory, cardDetail, cardTeam, cardCharacter } from '../content/cards';
 import type { CardId,ChapterId } from '../engine/types';
 import { ConstellationArt } from './ConstellationArt';
 import type { ConstellationResult } from '../engine/types';
@@ -15,13 +13,9 @@ export function ResultScreen({route}:{route:string}){
   const isTrial=!wanted&&save.lastResult?.chapter===chapter&&save.lastResult?.source==='trial'&&params.get('source')!=='campaign';
   const canonical=save.campaign.records[chapter];
   const card=wanted?save.collection.cards.find(c=>c.id===wanted&&c.chapter===chapter):isTrial?save.collection.cards.find(c=>c.id===save.lastResult?.cardId):canonical?cardFromStory(canonical.story,chapter,canonical.results):undefined;
-  const [blob,setBlob]=useState<Blob|null>(null);const [preview,setPreview]=useState('');const [message,setMessage]=useState('');const [manual,setManual]=useState(false);
-  const id=card?.id,variant=card?.variant,team=card?.teamName,preset=card?.usedPreset;
-  useEffect(()=>{let cancelled=false;let url='';setBlob(null);setPreview('');if(card)void renderCard(card).then(b=>{if(!cancelled){setBlob(b);url=URL.createObjectURL(b);setPreview(url);}}).catch(()=>{if(!cancelled)setMessage('Изображение не подготовилось. Текст открытки можно скопировать.');});return()=>{cancelled=true;if(url)URL.revokeObjectURL(url);};},[id,variant,team,preset]); // the renderer consumes only immutable card fields
   if(!card)return <div className="page-content"><h2>Этот финал ещё впереди</h2><button onClick={()=>go('/chapters')}>К главам</button></div>;
   const c=cards[card.id];
   const showInvitation=chapter===5&&!wanted&&!save.trial&&canonical&&save.campaign.completed.includes(5);
-  async function copy(){try{await navigator.clipboard.writeText(cardText(card!.id));setMessage('Текст скопирован. Отправь его, если захочешь.');}catch{setManual(true);}}
   return <div className={`result-screen ${showInvitation?'has-final-conversation':''}`}>
     {showInvitation&&<InvitationPanel story={isTrial?{...canonical.story,ending:card.id==='c5.romantic'?'romantic':card.id==='c5.gaming'?'gaming':card.id==='c5.comic'?'comic':'friendly'}:canonical.story}/>}
     <p className="eyebrow">{isTrial?'ДРУГОЙ ВАРИАНТ · ОСНОВНАЯ ИСТОРИЯ СОХРАНЕНА':chapter===1?'ПЕРВАЯ ВСТРЕЧА ОСТАНЕТСЯ С ТОБОЙ':chapter===2?'У КАЖДОЙ ПОГОДЫ ЕСТЬ СВОЯ ИСТОРИЯ':chapter===3?'ХОРОШАЯ КОМАНДА · ТЁПЛЫЙ ВЕЧЕР':chapter===4?'У ЭТОГО ВЕЧЕРА СВОЁ СОЗВЕЗДИЕ':'ПЯТЬ ВСТРЕЧ · СВОЯ ИСТОРИЯ'}</p>
@@ -31,10 +25,7 @@ export function ResultScreen({route}:{route:string}){
     {chapter===3&&save.collection.achievements.includes('full-table')&&<p className="achievement-ribbon">✧ Стол на всех · девять подач вместе</p>}
     {chapter===4&&!card.usedPreset&&save.collection.achievements.includes('own-sky')&&<p className="achievement-ribbon">✧ Своё небо · четыре звезды в своём порядке</p>}
     {chapter===5&&save.collection.achievements.includes('five-meetings')&&<p className="achievement-ribbon">✧ Пять встреч · история останется с тобой</p>}
-    <div className="result-actions"><button className="primary" disabled={!blob} onClick={()=>{if(blob)downloadBlob(blob,`five-meetings-chapter-${card.chapter}.png`);}}>Сохранить открытку</button><button onClick={()=>{void shareCard(card,blob).then(result=>{if(result==='unsupported'){setManual(true);setMessage('Здесь недоступна отправка. Можно скачать изображение или скопировать текст.');}else if(result==='opened')setMessage('Меню отправки открыто. Получателя выбираешь ты.');});}}>Поделиться</button><button onClick={()=>void copy()}>Копировать текст</button><button onClick={()=>go('/chapters')}>К главам</button></div>
-    {message&&<p role="status" className="small">{message}</p>}
-    {manual&&<label className="manual-copy">Можно выделить текст и скопировать вручную<textarea readOnly value={cardText(card.id)} onFocus={e=>e.target.select()}/></label>}
-    {preview&&<details className="small"><summary>Не получается скачать изображение?</summary><p>Открой открытку ниже и удерживай её, чтобы сохранить. Можно также открыть игру во внешнем браузере; для переноса прогресса понадобится копия из настроек.</p><img className="png-preview" src={preview} alt={`Открытка: ${c.title}`}/></details>}
+    <div className="result-actions"><button className="primary" onClick={()=>go('/chapters')}>К главам</button></div>
     <button className="text-button" onClick={()=>{send({type:'trial',chapter:card.chapter});go(`/play/${save.trial?.chapter??card.chapter}?mode=trial`);}}>{save.trial&&save.trial.chapter!==card.chapter?`Продолжить пробную главу ${save.trial.chapter} →`:'Посмотреть другой вариант →'}</button>
     {chapter<5&&<button className="primary full" onClick={()=>go('/chapters')}>{chapter===1?'Ко второй встрече':chapter===2?'К третьей встрече':chapter===3?'К четвёртой встрече':'К пятой встрече'} →</button>}
     <p className="tiny">{chapter<5?'Продолжение ждёт на карте встреч — понадобится код Влада.':'Это твой финал. К другим вариантам можно вернуться без изменения основной истории.'} Здесь ничего не отправляется автоматически.</p>

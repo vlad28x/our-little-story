@@ -23,7 +23,6 @@ export const kitchenCaptions={feast:'Целый пир на экране',snack:
 export function cardDetail(card:CardRecord){return card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===3?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
 export function cardCharacter(id:CardId){const chapter=cards[id].chapter;return chapter===3?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
 export function cardTeam(card:CardRecord){return card.teamName?teamNames[card.teamName]:'';}
-export function cardText(id:CardId) {const c=cards[id];return `Пять случайных встреч · Глава ${c.chapter}. Мой финал: ${c.title}. ${c.caption}.`;}
 export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run['results']):CardRecord {
   let id:CardId;let variant:CardRecord['variant'];
   if(chapter===1&&story.plan&&story.searchResult){id=`c1.${story.plan}`;variant=story.searchResult;}

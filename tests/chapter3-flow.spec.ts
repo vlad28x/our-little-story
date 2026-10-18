@@ -1,4 +1,5 @@
 import { test,expect,type Page } from '@playwright/test';
+import { expectSimpleResult } from './resultActions';
 import { completeTwo,thirdCode } from './chapter3Helpers';
 import { ingredientNames,recipes,type Recipe } from '../src/minigames/kitchenModel';
 const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
@@ -13,7 +14,7 @@ async function toKitchen(page:Page,reaction:'tease'|'help'|'absurd'='absurd'){
 async function dish(page:Page,recipe:Recipe){const info=recipes[recipe];await page.locator('.kitchen-orders').getByRole('button',{name:new RegExp('^'+info.title)}).click();await page.getByRole('button',{name:ingredientNames[info.ingredients[0]],exact:true}).click();await page.getByRole('button',{name:'Передать Владу',exact:true}).click();await page.clock.runFor(2500);await expect(page.getByRole('button',{name:'Подать',exact:true})).toBeEnabled();await page.getByRole('button',{name:'Подать',exact:true}).click();}
 async function train(page:Page){await dish(page,'toast');await dish(page,'salad');await expect(page.getByRole('heading',{name:'Пробные заказы готовы'})).toBeVisible();}
 async function finish(page:Page){await until(page,'c3.support');await page.getByRole('button',{name:'Я хочу реванш'}).click();await until(page,'c3.end');for(let i=0;i<6;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.getByRole('heading',{name:'Ужин по обстоятельствам'})).toBeVisible();}
-test('chapter three preserves memories, repairs controllers, cooks nine dishes, exports and replays independently',async({page})=>{
+test('chapter three preserves memories, repairs controllers, cooks nine dishes, shows result and replays independently',async({page})=>{
   const base=await seed(page),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.url());});
   await open(page);await page.clock.install();await until(page,'c3.pad.press');await expect(page.locator('.scene-cat')).toHaveCount(0);
   await page.screenshot({path:'outputs/CHAPTER_03_HOME_PREVIEW.png',fullPage:true,animations:'disabled'});
@@ -24,7 +25,7 @@ test('chapter three preserves memories, repairs controllers, cooks nine dishes, 
   await expect(page.getByText('Стол на всех · девять подач вместе')).toBeVisible();await expect(page.locator('.card-team')).toHaveText('Пельмень и партнёры');
   const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.campaign.records[1]).toEqual(base.campaign.records[1]);expect(main.campaign.records[2]).toEqual(base.campaign.records[2]);expect(main.campaign.completed).toEqual([1,2,3]);expect(main.campaign.records[3].story.controllerReaction).toBe('absurd');
   await page.screenshot({path:'outputs/CHAPTER_03_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});
-  const download=page.waitForEvent('download');await page.getByRole('button',{name:'Сохранить открытку',exact:true}).click();const file=await download;expect(file.suggestedFilename()).toBe('five-meetings-chapter-3.png');await file.saveAs('outputs/CHAPTER_03_EXAMPLE_CARD.png');
+  await expectSimpleResult(page);
   await page.getByRole('button',{name:'Посмотреть другой вариант',exact:false}).click();await toKitchen(page,'tease');await page.getByRole('button',{name:'Продолжить историю без кухни'}).click();await finish(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,key)).toEqual(main.campaign);expect(errors).toEqual([]);
 });
 test('timed kitchen pauses with menu and page hidden, resumes deliberately, then can switch to calm; reload restarts only the game',async({page})=>{

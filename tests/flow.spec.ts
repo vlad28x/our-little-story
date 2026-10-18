@@ -1,15 +1,16 @@
 import { test,expect,type Page } from '@playwright/test';
+import { expectSimpleResult } from './resultActions';
 const prefix=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
 async function advanceUntil(page:Page,target:string){for(let i=0;i<110;i++){if(await page.locator(`[data-node="${target}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error(`Did not reach ${target}`);}
 async function start(page:Page){await page.goto('./');await page.getByRole('button',{name:'Начать первую встречу'}).click();await advanceUntil(page,'c1.approach');await page.getByRole('button',{name:'Давай сначала освободим проход'}).click();await advanceUntil(page,'c1.search');}
 async function finish(page:Page,ending:'tea'|'banter'|'coop'){await advanceUntil(page,'c1.pace');await page.getByRole('button',{name:'Есть пять минут. Только давай спокойно'}).click();await advanceUntil(page,'c1.detail');await page.getByRole('button',{name:'На минуту отвлечься на окно'}).click();await advanceUntil(page,'c1.plan');await page.getByRole('button',{name:ending==='tea'?'Давай всё-таки возьмём чай':ending==='banter'?'У меня ещё пять минут на твою авторскую методику':'В следующий раз покажешь эту игру?'}).click();for(let i=0;i<8;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.postcard')).toBeVisible();}
-test('complete chapter, secret, reload, PNG, trial, export and restore',async({page})=>{
+test('complete chapter, secret, reload, result navigation, trial, export and restore',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
   await start(page);await page.getByRole('button',{name:'Осмотреть: Кот',exact:true}).click();await page.waitForTimeout(280);await page.getByRole('button',{name:'Собрать вместе с Владом'}).click();await finish(page,'tea');
   await expect(page.getByRole('heading',{name:'Маленькая пауза'})).toBeVisible();await expect(page.getByText('Начальник найден · Пончик одобряет перерыв')).toBeVisible();
   const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,prefix);
   await page.reload();await expect(page.locator('.postcard')).toBeVisible();
-  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Сохранить открытку',exact:true}).click();const download=await downloadPromise;expect(download.suggestedFilename()).toMatch(/\.png$/);
+  await expectSimpleResult(page);
   await page.getByRole('button',{name:'Посмотреть другой вариант →'}).click();await advanceUntil(page,'c1.approach');await page.getByRole('button',{name:'Это настолка или эффектное знакомство?'}).click();await advanceUntil(page,'c1.search');
   for(const area of ['Сумка','Листок','Стакан']){await page.getByRole('button',{name:`Осмотреть: ${area}`,exact:true}).click();await page.waitForTimeout(280);}await expect(page.getByText('3 / 3')).toBeVisible();await page.getByRole('button',{name:'Готово · все жетоны на месте'}).click();await finish(page,'coop');
   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,prefix)).toEqual(main);
