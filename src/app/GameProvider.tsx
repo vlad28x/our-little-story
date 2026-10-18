@@ -3,35 +3,39 @@ import { initialState } from '../state/initialState';
 import { reduceSave, type Action } from '../state/reducer';
 import { load, persist, storageKey, type Loaded, type StorageLike } from '../persistence/storage';
 import type { SaveV1 } from '../state/types';
+import { useCloudSync,type CloudStatus } from '../telegram/useCloudSync';
+import type { CloudSession } from '../telegram/cloud';
+import type { TelegramApp } from '../telegram/bridge';
 export const DEV_SANDBOX=import.meta.env.DEV && new URLSearchParams(location.search).get('dev')==='1';
 export const activeStorageKey=DEV_SANDBOX?storageKey.replace(':save',':dev:save'):storageKey;
 const storage:StorageLike={getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v),removeItem:k=>localStorage.removeItem(k)};
-type GameContextValue={save:SaveV1;send:(a:Action)=>void;loaded:Loaded;recovery:boolean;storageError:string|null;conflict:boolean;reload:()=>void;restore:()=>void;reset:()=>void};
+type GameContextValue={save:SaveV1;send:(a:Action)=>void;loaded:Loaded;recovery:boolean;storageError:string|null;conflict:boolean;cloudStatus:CloudStatus;cloudBlocked:boolean;telegramApp?:TelegramApp;reload:()=>void;restore:()=>void;reset:()=>void};
 const GameContext=createContext<GameContextValue|null>(null);
-export function GameProvider({children}:{children:ReactNode}) {
-  const [loaded]=useState(()=>load(storage,activeStorageKey));
+export function GameProvider({children,storageId=activeStorageKey,initialLoaded,cloudSession,telegramApp}:{children:ReactNode;storageId?:string;initialLoaded?:Loaded;cloudSession?:CloudSession;telegramApp?:TelegramApp}) {
+  const [loaded]=useState(()=>initialLoaded??load(storage,storageId));
   const [save,dispatch]=useReducer(reduceSave,loaded.save);
   const [recovery,setRecovery]=useState(loaded.recovery);
   const [storageError,setStorageError]=useState(loaded.error);
   const [conflict,setConflict]=useState(false);
+  const cloud=useCloudSync(save,recovery||conflict,cloudSession,telegramApp);
   const savedRevision=useRef(loaded.save.revision);
   const dirty=useRef(false);
   function send(action:Action) {
-    if(conflict || (recovery&&action.type!=='replace') || (action.type==='dev-jump'&&!DEV_SANDBOX))return;
+    if(conflict || cloud.blocked || (recovery&&action.type!=='replace') || (action.type==='dev-jump'&&!DEV_SANDBOX))return;
     if(action.type==='replace'){setRecovery(false);setStorageError(null);}
     dirty.current=true;dispatch(action);
   }
   useEffect(()=>{
     if(!dirty.current||recovery||conflict||save.revision===savedRevision.current)return;
-    try {const result=persist(storage,save,savedRevision.current,activeStorageKey);if(result==='conflict'){setConflict(true);return;}savedRevision.current=save.revision;dirty.current=false;setStorageError(null);}
+    try {const result=persist(storage,save,savedRevision.current,storageId);if(result==='conflict'){setConflict(true);return;}savedRevision.current=save.revision;dirty.current=false;setStorageError(null);}
     catch {setStorageError('В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.');}
-  },[save,recovery,conflict]);
+  },[save,recovery,conflict,storageId]);
   useEffect(()=>{
-    function check(){try{const raw=storage.getItem(activeStorageKey);if(raw){const v=JSON.parse(raw) as {revision?:number};if(typeof v.revision==='number'&&v.revision>savedRevision.current)setConflict(true);}}catch{/* Failure already handled by persistence. */}}
-    function onStorage(e:StorageEvent){if(e.key===activeStorageKey)check();}
+    function check(){try{const raw=storage.getItem(storageId);if(raw){const v=JSON.parse(raw) as {revision?:number};if(typeof v.revision==='number'&&v.revision>savedRevision.current)setConflict(true);}}catch{/* Failure already handled by persistence. */}}
+    function onStorage(e:StorageEvent){if(e.key===storageId)check();}
     window.addEventListener('storage',onStorage);window.addEventListener('focus',check);
     return()=>{window.removeEventListener('storage',onStorage);window.removeEventListener('focus',check);};
-  },[]);
-  return <GameContext.Provider value={{save,send,loaded,recovery,storageError,conflict,reload:()=>location.reload(),restore:()=>{if(loaded.backup)send({type:'replace',save:loaded.backup});},reset:()=>send({type:'replace',save:initialState()})}}>{children}</GameContext.Provider>;
+  },[storageId]);
+  return <GameContext.Provider value={{save,send,loaded,recovery,storageError,conflict,cloudStatus:cloud.status,cloudBlocked:cloud.blocked,telegramApp,reload:()=>location.reload(),restore:()=>{if(loaded.backup)send({type:'replace',save:loaded.backup});},reset:()=>send({type:'replace',save:initialState()})}}>{children}</GameContext.Provider>;
 }
 export function useGame(){const c=useContext(GameContext);if(!c)throw new Error('GameProvider missing');return c;}

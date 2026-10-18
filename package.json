@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test:unit": "vitest run tests/engine.test.ts tests/save.test.ts tests/chapter2.test.ts tests/chapter3.test.ts tests/kitchen.test.ts tests/chapter3-render.test.tsx tests/chapter4.test.ts tests/constellation.test.ts tests/chapter4-render.test.tsx tests/chapter5.test.ts tests/chapter5-render.test.tsx",
+    "test:unit": "vitest run tests/engine.test.ts tests/save.test.ts tests/telegram.test.ts tests/chapter2.test.ts tests/chapter3.test.ts tests/kitchen.test.ts tests/chapter3-render.test.tsx tests/chapter4.test.ts tests/constellation.test.ts tests/chapter4-render.test.tsx tests/chapter5.test.ts tests/chapter5-render.test.tsx",
     "validate:content": "vitest run tests/content.test.ts",
     "test:smoke": "playwright test",
     "test:offline": "playwright test --config=playwright.offline.config.ts",

@@ -1,4 +1,4 @@
-import { useRef,useState } from 'react';
+import { useEffect,useRef,useState } from 'react';
 import { useGame,DEV_SANDBOX } from './GameProvider';
 import { go,useRoute } from './router';
 import { DeveloperPanel } from './DeveloperPanel';
@@ -18,7 +18,7 @@ import { downloadBlob } from '../sharing/cards';
 import type { ChapterId } from '../engine/types';
 
 export function App(){
-  const {save,send,recovery,loaded,restore,reset,storageError,conflict,reload}=useGame();
+  const {save,send,recovery,loaded,restore,reset,storageError,conflict,reload,cloudStatus,cloudBlocked,telegramApp}=useGame();
   const route=useRoute();
   const [menu,setMenu]=useState(false),[journal,setJournal]=useState(false),[rewrite,setRewrite]=useState<ChapterId|null>(null),[code,setCode]=useState(''),[codeMessage,setCodeMessage]=useState('');
   const codeInput=useRef<HTMLInputElement>(null);
@@ -28,6 +28,12 @@ export function App(){
   const isPlay=route.startsWith('/play/')&&!!getChapter(routeChapter);
   const currentRun=mode==='trial'?save.trial?.run:save.campaign.active;
   const lastCompleted=save.campaign.completed.at(-1);
+  useEffect(()=>{
+    const back=telegramApp?.BackButton;if(!back)return;
+    const handle=()=>{if(isPlay)setMenu(true);else go('/chapters');};
+    if(route==='/start'||route==='/chapters')back.hide();else back.show();back.onClick(handle);
+    return()=>{back.offClick(handle);back.hide();};
+  },[telegramApp,route,isPlay]);
   function focusCode(){codeInput.current?.scrollIntoView({block:'center'});codeInput.current?.focus({preventScroll:true});}
   function submitCode(){
     const found=checkCode(code);setCodeChapter(null);
@@ -51,12 +57,13 @@ export function App(){
       <button className="icon-button menu-toggle" aria-label="Открыть меню" onClick={()=>setMenu(true)}><span/><span/></button>
     </header>
     {DEV_SANDBOX&&<div className="dev-banner">Режим разработчика · отдельный тестовый прогресс</div>}
+    {cloudStatus!=='none'&&<div className={`telegram-sync ${cloudStatus==='error'||cloudBlocked?'sync-warning':''}`} role="status">{cloudStatus==='saved'?'✓ История сохранена в Telegram':cloudStatus==='saving'?'Сохраняем историю в Telegram…':cloudStatus==='local'?'Пока сохраняем только на этом устройстве':cloudBlocked?'В Telegram появилась другая копия истории.':'Облако не ответило. Прогресс остаётся на устройстве.'}{(cloudStatus==='local'||cloudStatus==='error')&&<button onClick={reload}>Проверить облако</button>}</div>}
     {storageError&&!recovery&&<div role="status" className="storage-notice">{storageError} <button onClick={()=>go('/settings')}>К копии</button></div>}
     {recovery?<section className="page-content recovery">
       <Illustration kind="envelope"/><h1>Сохраним эту историю</h1><p>{loaded.error}</p><p>Текущий файл не изменён. Резервная копия может отставать на один шаг.</p>
       <div className="stack">{loaded.backup&&<button className="primary" onClick={()=>{restore();go('/chapters');}}>Восстановить резервную копию</button>}{loaded.raw&&<button onClick={()=>downloadBlob(new Blob([loaded.raw!],{type:'application/json'}),'five-meetings-recovery.json')}>Скачать исходную копию</button>}<button onClick={()=>setRewrite(1)}>Начать заново</button></div><SettingsPanel/>
     </section>:
-    isPlay?<StoryScreen mode={mode} chapterId={routeChapter} suspended={menu||journal||!!rewrite||conflict}/>:
+    isPlay?<StoryScreen mode={mode} chapterId={routeChapter} suspended={menu||journal||!!rewrite||conflict||cloudBlocked}/>:
     route.startsWith('/play/')?<section className="page-content"><h1>Такой встречи нет на карте</h1><p>Все пять встреч уже здесь. Выбери главу на карте.</p><button onClick={()=>go('/chapters')}>К главам</button></section>:
     route.startsWith('/result/')?<ResultScreen key={route.split('?')[0]} route={route}/>:
     route==='/settings'?<section className="page-content"><button className="back-link" onClick={()=>go('/chapters')}>← К главам</button><SettingsPanel/></section>:
@@ -89,10 +96,11 @@ export function App(){
       })}</ol>
       {DEV_SANDBOX&&<DeveloperPanel/>}
     </section>:
-    <section className="start-screen"><div className="cover-art"><SceneStage showCat emotion="smile"/><div className="cover-caption">Осень. Кафе. Одна маленькая случайность.</div></div><div className="cover-copy"><span className="eyebrow">ИНТЕРАКТИВНАЯ ИСТОРИЯ</span><h1>Пять случайных<br/><em>встреч</em><span className="title-spark">✧</span></h1><p>Иногда всё начинается с неловкости.<br/>А потом почему-то не хочется уходить.</p><button className="primary start-button" onClick={continueGame}>{save.campaign.active?'Продолжить историю':lastCompleted&&lastCompleted<5?'К следующей встрече':lastCompleted?'Вернуться к воспоминанию':'Начать первую встречу'} <span>→</span></button>{save.trial&&<button className="text-button" onClick={()=>go(`/play/${save.trial!.chapter}?mode=trial`)}>Продолжить пробный вариант</button>}<div className="cover-meta"><span>5–7 минут на главу</span><span>В твоём темпе</span><span>Со звуком или без</span></div><p className="privacy-note">Прогресс сохраняется в этом браузере.<br/>Никаких автоматических сообщений.</p></div></section>}
+    <section className="start-screen"><div className="cover-art"><SceneStage showCat emotion="smile"/><div className="cover-caption">Осень. Кафе. Одна маленькая случайность.</div></div><div className="cover-copy"><span className="eyebrow">ИНТЕРАКТИВНАЯ ИСТОРИЯ</span><h1>Пять случайных<br/><em>встреч</em><span className="title-spark">✧</span></h1><p>Иногда всё начинается с неловкости.<br/>А потом почему-то не хочется уходить.</p><button className="primary start-button" onClick={continueGame}>{save.campaign.active?'Продолжить историю':lastCompleted&&lastCompleted<5?'К следующей встрече':lastCompleted?'Вернуться к воспоминанию':'Начать первую встречу'} <span>→</span></button>{save.trial&&<button className="text-button" onClick={()=>go(`/play/${save.trial!.chapter}?mode=trial`)}>Продолжить пробный вариант</button>}<div className="cover-meta"><span>5–7 минут на главу</span><span>В твоём темпе</span><span>Со звуком или без</span></div><p className="privacy-note">{cloudStatus==='none'?'Прогресс сохраняется в этом браузере.':cloudStatus==='local'?'Прогресс пока сохраняется на устройстве.':'История сохраняется в Telegram, когда есть связь.'}<br/>Никаких автоматических сообщений.</p></div></section>}
     {menu&&<Modal title="Маленькая пауза" onClose={()=>setMenu(false)}><nav className="stack"><button className="primary" onClick={()=>setMenu(false)}>Вернуться к истории</button><button onClick={()=>{setMenu(false);go('/chapters');}}>Пять встреч</button><button onClick={()=>{setMenu(false);go('/album');}}>Альбом и секреты</button>{currentRun&&<button onClick={()=>{setMenu(false);setJournal(true);}}>Прочитанные реплики</button>}<button onClick={()=>{setMenu(false);go('/settings');}}>Настройки и резервная копия</button>{save.trial&&<button onClick={()=>{send({type:'discard-trial'});setMenu(false);go('/chapters');}}>Закрыть пробный вариант</button>}{import.meta.env.DEV&&!DEV_SANDBOX&&<button onClick={()=>{location.href=`${location.pathname}?dev=1#/chapters`;}}>Режим разработчика</button>}{DEV_SANDBOX&&<button onClick={()=>{location.href=`${location.pathname}#/start`;}}>Вернуться к обычной игре</button>}</nav></Modal>}
     {journal&&<Modal title="Уже сказанное" onClose={()=>setJournal(false)}><div className="journal">{currentRun?.journal.map(e=><p key={e.key}><b>{e.speaker==='vlad'?'Влад':e.speaker==='heroine'?'Ты':e.speaker==='nina'?'Нина':'История'}</b>{e.text}</p>)}</div></Modal>}
     {rewrite&&<Modal title={recovery?'Начать новую историю?':`Изменить историю с главы ${rewrite}?`} onClose={()=>setRewrite(null)}><p>{recovery?'Текущая повреждённая копия будет заменена. При необходимости сначала скачай её.':`Результаты глав ${rewrite}–5 в основной истории будут заменены. Альбом, достижения и открытые главы сохранятся.`}</p><div className="stack"><button className="primary" onClick={()=>{if(recovery){reset();go('/chapters');}else{send({type:'rewrite',chapter:rewrite});go(`/play/${rewrite}`);}setRewrite(null);}}>Начать заново</button><button onClick={()=>setRewrite(null)}>Отмена</button></div></Modal>}
     {conflict&&<Modal title="История открыта в другой вкладке" onClose={()=>{}}><p>В другой вкладке появился новый прогресс. Здесь изменения приостановлены, чтобы ничего не затереть.</p><div className="stack"><button className="primary" onClick={reload}>Загрузить обновлённый прогресс</button><button onClick={()=>downloadBlob(new Blob([JSON.stringify(save)],{type:'application/json'}),'five-meetings-this-tab.json')}>Скачать копию этой вкладки</button></div></Modal>}
+    {cloudBlocked&&<Modal title="Нашлась другая копия истории" onClose={()=>{}}><p>Прогресс в Telegram изменился на другом устройстве. Сначала сохрани эту копию, затем выбери историю для продолжения.</p><div className="stack"><button onClick={()=>downloadBlob(new Blob([JSON.stringify(save)],{type:'application/json'}),'five-meetings-this-device.json')}>Скачать эту копию</button><button className="primary" onClick={reload}>Сравнить сохранения</button></div></Modal>}
   </main>;
 }

@@ -23,10 +23,10 @@ describe('save and restore',()=>{
   it('prefers any existing new-site data and never imports legacy progress into another base or sandbox',()=>{
     const s=new MemoryStorage(),newKey='five-meetings:/our-little-story/:save',good=completeSave();
     s.setItem('five-meetings:/little-projects/:save',JSON.stringify(good));
-    for(const other of ['five-meetings:/:save','five-meetings:/preview-test/:save','five-meetings:/our-little-story/:dev:save'])expect(load(s,other).save).toEqual(initialState());
-    s.setItem(newKey,JSON.stringify(initialState()));expect(load(s,newKey).save).toEqual(initialState());
+    for(const other of ['five-meetings:/:save','five-meetings:/preview-test/:save','five-meetings:/our-little-story/:dev:save'])expect(load(s,other).save).toEqual({...initialState(),updatedAt:expect.any(String)});
+    const fresh=initialState();s.setItem(newKey,JSON.stringify(fresh));expect(load(s,newKey).save).toEqual(fresh);
     s.setItem(newKey,'{broken');expect(load(s,newKey).recovery).toBe(true);expect(load(s,newKey).backup).toBeNull();
-    s.removeItem(newKey);s.setItem(newKey.replace(':save',':backup'),JSON.stringify(initialState()));expect(load(s,newKey).backup).toEqual(initialState());
+    s.removeItem(newKey);s.setItem(newKey.replace(':save',':backup'),JSON.stringify(fresh));expect(load(s,newKey).backup).toEqual(fresh);
   });
   it('every visible cursor round trips with consistent journal and effects',()=>{let s=reduceSave(initialState(),{type:'start'});let steps=0;while(s.campaign.active){expect(parseSave(JSON.stringify(s))).toEqual(s);expect(chapter.nodes[s.campaign.active.nodeId].kind).not.toBe('route');s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active,defaultPath)});if(++steps>180)throw Error('loop');}expect(steps).toBeGreaterThan(60);expect(parseSave(JSON.stringify(s))).toEqual(s);});
   it('stores one consistent envelope and rotates a valid previous snapshot',()=>{const storage=new MemoryStorage();const a=reduceSave(initialState(),{type:'start'});expect(persist(storage,a,0,key)).toBe('saved');const b=reduceSave(a,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});expect(persist(storage,b,a.revision,key)).toBe('saved');expect(parseSave(storage.getItem('test:backup')!)).toEqual(a);expect(load(storage,key).save).toEqual(b);});
