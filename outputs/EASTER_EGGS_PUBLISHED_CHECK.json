@@ -1,0 +1,50 @@
+[
+  {
+    "chapter": 1,
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "saveUnchanged": true,
+    "keyboard": true,
+    "pause": true,
+    "pageErrors": [],
+    "failedResources": []
+  },
+  {
+    "chapter": 3,
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "saveUnchanged": true,
+    "keyboard": true,
+    "pause": true,
+    "pageErrors": [],
+    "failedResources": []
+  },
+  {
+    "chapter": 1,
+    "viewport": {
+      "width": 785,
+      "height": 600
+    },
+    "saveUnchanged": true,
+    "keyboard": true,
+    "pause": true,
+    "pageErrors": [],
+    "failedResources": []
+  },
+  {
+    "chapter": 3,
+    "viewport": {
+      "width": 785,
+      "height": 600
+    },
+    "saveUnchanged": true,
+    "keyboard": true,
+    "pause": true,
+    "pageErrors": [],
+    "failedResources": []
+  }
+]
