@@ -6,6 +6,7 @@ import { reduceSave } from '../src/state/reducer';
 import { finishFive } from './chapter5Helpers';
 import { runTo } from './helpers';
 import { createHash } from 'node:crypto';
+import { withLegacyJournal,legacyCloudData } from './legacySave';
 class FakeCloud implements CloudAPI {
   data=new Map<string,string>();failKey='';failReads=false;setCalls:string[]=[];
   getItem(key:string,done:(error:string|null,value:string)=>void){done(this.failReads?'offline':null,this.data.get(key)??'');}
@@ -20,24 +21,26 @@ describe('Telegram cloud snapshots',()=>{
   });
   it('reproduces DATA_TOO_LONG with the old Cyrillic chunk and saves the same active chapter with byte-sized chunks',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'}),save={...base,campaign:{...base.campaign,active:runTo('c1.plan')}};
-    const raw=cloudRaw(save);expect(raw.length).toBeGreaterThan(3500);
+    const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw.length).toBeGreaterThan(3500);
     await new Promise<void>(resolve=>api.setItem('old_chunk',raw.slice(0,3500),error=>{expect(error).toBe('DATA_TOO_LONG');resolve();}));
-    await cloud.write(save,'');expect((await cloud.read()).save).toEqual(save);
+    await cloud.write(legacy,'');expect((await cloud.read()).save).toEqual(save);expect(cloudRaw(legacy)).not.toContain('journal');
   });
   it('reads legacy 3500-unit banks, preserves them on interrupted migration and commits a new bank without losing progress',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'}),save={...base,campaign:{...base.campaign,active:runTo('c1.plan')}};
-    const raw=cloudRaw(save),chunks=raw.match(/[\s\S]{1,3500}/g)!;chunks.forEach((value,i)=>api.data.set(`five_meetings_v1_a_${i}`,value));
-    const part={slot:'a',count:chunks.length,length:raw.length,hash:createHash('sha256').update(raw).digest('hex')},head=JSON.stringify({version:1,current:part,previous:null});api.data.set(HEAD,head);
-    expect((await cloud.read()).save).toEqual(save);const original=new Map(api.data),next={...save,revision:save.revision+1};
+    for(const [key,value] of Object.entries(legacyCloudData(save)))api.data.set(key,value);
+    const head=api.data.get(HEAD)!,part=JSON.parse(head).current;
+    expect(await cloud.read()).toMatchObject({save,needsRewrite:true});const original=new Map(api.data),next={...save,revision:save.revision+1};
     api.failKey=HEAD;await expect(cloud.write(next,head)).rejects.toThrow();expect(api.data.get(HEAD)).toBe(head);expect((await cloud.read()).save).toEqual(save);for(const [key,value] of original)expect(api.data.get(key)).toBe(value);
     api.failKey='';await cloud.write(next,head);expect((await cloud.read()).save).toEqual(next);expect(JSON.parse(api.data.get(HEAD)!).previous).toEqual(part);
   });
-  it('round trips a large valid import with JSON escapes and reads the bank in bounded batches',async()=>{
+  it('reads a large legacy journal in bounded batches, then writes only the compact progress',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'});
     const journal=Array.from({length:100},(_,i)=>({key:`large-import:${i}`,nodeId:'c1.entry' as const,speaker:'narrator' as const,text:'"\\'.repeat(500)}));
     const save={...base,campaign:{...base.campaign,active:{...base.campaign.active!,journal}}};
-    const head=await cloud.write(save,'');expect(JSON.parse(head).current.count).toBeGreaterThan(32);expect((await cloud.read()).save).toEqual(save);
-    const next={...save,revision:save.revision+1};await cloud.write(next,head);expect((await cloud.read()).save).toEqual(next);expect(api.data.size).toBeLessThanOrEqual(353);
+    const raw=JSON.stringify(save),chunks=splitCloudText(raw);chunks.forEach((value,i)=>api.data.set(`five_meetings_v1_a_${i}`,value));
+    const head=JSON.stringify({version:1,current:{slot:'a',count:chunks.length,length:raw.length,hash:createHash('sha256').update(raw).digest('hex')},previous:null});api.data.set(HEAD,head);
+    expect(chunks.length).toBeGreaterThan(32);expect(await cloud.read()).toMatchObject({save:base,needsRewrite:true});
+    const next={...base,revision:base.revision+1};await cloud.write(next,head);expect(await cloud.read()).toMatchObject({save:next,needsRewrite:false});expect(api.data.size).toBeLessThanOrEqual(353);
   });
   it('round trips the entire five-chapter story in legal chunks without the real-life preference',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),save=reduceSave(finishFive(),{type:'continuation',value:'game'});

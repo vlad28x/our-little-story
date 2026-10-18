@@ -11,15 +11,13 @@ function settle(chapter:Chapter, run:Run):StepResult {
     if (node.kind === 'dialogue') {
       const line = node.lines[run.lineIndex];
       if (!line) return {kind:'rejected',reason:'Реплика недоступна.'};
-      const key = `${node.id}:${run.lineIndex}`;
-      if (!run.journal.some(e => e.key === key)) run.journal = [...run.journal, {...line,key,nodeId:node.id}].slice(-150);
     }
     return {kind:'ready',run};
   }
   return {kind:'rejected',reason:'Сценарий зациклился.'};
 }
 export function startRun(chapter:Chapter, story:StoryState = {}):Run {
-  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story},journal:[],results:{},earned:[]});
+  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story},results:{},earned:[]});
   if (result.kind !== 'ready') throw new Error('Глава должна начинаться с доступной сцены');
   return result.run;
 }
@@ -36,8 +34,6 @@ export function step(chapter:Chapter, current:Run, command:Command):StepResult {
     const choice = node.choices.find(c => c.id === command.choiceId && matches(run.story,c.when));
     if (!choice) return {kind:'rejected',reason:'Этот ответ недоступен.'};
     for (const effect of choice.effects ?? []) run.story = {...run.story,[effect.key]:effect.value};
-    run.journal.push({key:`${node.id}:${choice.id}`,nodeId:node.id,speaker:'heroine',text:choice.text});
-    run.journal = run.journal.slice(-150);
     run.nodeId = choice.next; run.lineIndex = 0;
   } else if (command.kind === 'game-result' && node.kind === 'minigame') {
     const r = command.result;

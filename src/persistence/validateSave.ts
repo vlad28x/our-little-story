@@ -89,7 +89,12 @@ export function validateRun(x:unknown,maxChapter=5):Run{
     if(stage==='c5.tone.friendly'&&s.bond!=='friendly'||stage==='c5.tone.open'&&s.bond==='friendly')fail();
     for(const [prefix,value] of [['c5.rain.',s.rainRoute],['c5.souvenir.',s.umbrella],['c5.cat.',s.catApproach],['c5.approach.',s.approach]])if(stage.startsWith(prefix!)&&stage!==prefix!+value)fail();
   }
-  for(const e of arr(r.journal,150)){const j=obj(e);keys(j,['key','nodeId','speaker','text','emotion']);if(typeof j.key!=='string'||j.key.length>100||!chapter?.nodes[j.nodeId as keyof typeof chapter.nodes])fail();one(j.speaker,['narrator','vlad','heroine','nina']);if(typeof j.text!=='string'||j.text.length>2000)fail();if(j.emotion!==undefined)one(j.emotion,['neutral','smile','awkward','thinking','laugh','warm','surprised']);}
+  // Legacy saves may carry the removed reading journal. Validate its old bounded
+  // format, then discard only that optional field; all progress stays unchanged.
+  if(Object.hasOwn(r,'journal')){
+    for(const e of arr(r.journal,150)){const j=obj(e);keys(j,['key','nodeId','speaker','text','emotion']);if(typeof j.key!=='string'||j.key.length>100||!chapter?.nodes[j.nodeId as keyof typeof chapter.nodes])fail();one(j.speaker,['narrator','vlad','heroine','nina']);if(typeof j.text!=='string'||j.text.length>2000)fail();if(j.emotion!==undefined)one(j.emotion,['neutral','smile','awkward','thinking','laugh','warm','surprised']);}
+    delete r.journal;
+  }
   const earned=arr(r.earned,1),achievement=['cat-supervisor','dry-plan','full-table','own-sky','five-meetings'][id-1];
   const gameResults=obj(r.results);
   const shouldEarn=id===1?!!s.catNoticed:id===2?s.umbrella==='patched':id===3?gameResults.kitchen!==undefined&&obj(gameResults.kitchen).served===9&&s.kitchenResult!=='skipped':id===4?gameResults.constellation!==undefined&&!obj(gameResults.constellation).usedPreset:false;

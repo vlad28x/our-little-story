@@ -32,7 +32,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
           const save=local.raw?local.save:snapshot.save;
           let error:string|null=null;
           if(!local.raw){try{if(persist(storage,save,local.save.revision,key)==='conflict')throw new Error('conflict');}catch{error='Не удалось записать копию на устройстве. Скачай резервный файл в настройках.';}}
-          setReady({key,loaded:{save,recovery:false,backup:null,raw:JSON.stringify(save),error},session:new CloudSession(cloud,snapshot.head,cloudRaw(snapshot.save)),app});return;
+          setReady({key,loaded:{save,recovery:false,backup:null,raw:JSON.stringify(save),error},session:new CloudSession(cloud,snapshot.head,snapshot.needsRewrite?null:cloudRaw(snapshot.save)),app});return;
         }
         setChoice({app,key,local,browser:load(storage,storageKey),snapshot,cloud});setError('');
       }catch(e){if(alive)setError(e instanceof Error?e.message:'Не удалось проверить облачную копию.');}
@@ -40,7 +40,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
   },[attempt]);
   function choose(save:SaveV1,useCloud=true){
     if(!choice)return;
-    const session=useCloud?new CloudSession(choice.cloud,choice.snapshot.head,choice.snapshot.save?cloudRaw(choice.snapshot.save):null):undefined;
+    const session=useCloud?new CloudSession(choice.cloud,choice.snapshot.head,choice.snapshot.save&&!choice.snapshot.needsRewrite?cloudRaw(choice.snapshot.save):null):undefined;
     let localError:string|null=null;
     try{
       const old=load(storage,choice.key);

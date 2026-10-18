@@ -24,7 +24,7 @@ export function load(storage:StorageLike, key=storageKey):Loaded {
   }
 }
 export function persist(storage:StorageLike,save:SaveV1,expectedRevision:number,key=storageKey):'saved'|'conflict' {
-  const raw=JSON.stringify(save);parseSave(raw);
+  const raw=JSON.stringify(parseSave(JSON.stringify(save)));
   const old=storage.getItem(key);let previous:SaveV1|null=null;
   try {if(old)previous=parseSave(old);}catch{/* Do not rotate corrupt data into backup. */}
   if(previous&&previous.revision!==expectedRevision)return 'conflict';

@@ -8,7 +8,7 @@ const HEAD='five_meetings_v1_head',LEGACY_CHUNK_UNITS=3500,CHUNK_JSON_BYTES=3000
 const MAX_CHUNKS=Math.ceil(MAX_SAVE_BYTES*2/(CHUNK_JSON_BYTES-8));
 type Part={slot:'a'|'b';count:number;length:number;hash:string};
 type Head={version:1;current:Part;previous:Part|null};
-export type CloudSnapshot={head:string;save:SaveV1|null;backup:SaveV1|null;damaged:boolean};
+export type CloudSnapshot={head:string;save:SaveV1|null;backup:SaveV1|null;damaged:boolean;needsRewrite:boolean};
 export class CloudConflict extends Error {constructor(){super('В Telegram появилась другая копия истории.');}}
 type CloudOperation='read-head'|'read-parts'|'write-part'|'write-head';
 const operations:Record<CloudOperation,string>={'read-head':'Чтение состояния облака','read-parts':'Чтение сохранения','write-part':'Запись части сохранения','write-head':'Подтверждение сохранения'};
@@ -28,7 +28,7 @@ function nativeCode(error:unknown){
 export function cloudErrorText(error:unknown){
   return error instanceof CloudTransportError||error instanceof CloudCryptoError||error instanceof CloudConflict?error.message:'Не удалось проверить или подтвердить облачную копию (CHECK_FAILED).';
 }
-export function cloudRaw(save:SaveV1){return JSON.stringify({...save,continuation:null});}
+export function cloudRaw(save:SaveV1){return JSON.stringify(parseSave(JSON.stringify({...save,continuation:null})));}
 export function splitCloudText(raw:string){
   const chunks:string[]=[];let start=0,end=0,bytes=2;
   // Bound the encoded JSON string, not JS string.length. Cyrillic, emoji,
@@ -73,21 +73,22 @@ export class TelegramCloud {
       if(batch.some(k=>typeof values[k]!=='string'||!values[k]||values[k].length>LEGACY_CHUNK_UNITS))throw new Error('Облачная копия неполная.');
       parts.push(...batch.map(k=>values[k]));
     }
-    const raw=parts.join('');if(raw.length!==p.length||await digest(raw)!==p.hash)throw new Error('Облачная копия повреждена.');return parseSave(raw);
+    const raw=parts.join('');if(raw.length!==p.length||await digest(raw)!==p.hash)throw new Error('Облачная копия повреждена.');
+    const save=parseSave(raw);return {save,needsRewrite:cloudRaw(save)!==raw};
   }
   async read():Promise<CloudSnapshot>{
-    const raw=await this.getHead();if(!raw)return {head:'',save:null,backup:null,damaged:false};
-    let h:Head;try{h=header(raw);}catch{return {head:raw,save:null,backup:null,damaged:true};}
+    const raw=await this.getHead();if(!raw)return {head:'',save:null,backup:null,damaged:false,needsRewrite:false};
+    let h:Head;try{h=header(raw);}catch{return {head:raw,save:null,backup:null,damaged:true,needsRewrite:false};}
     // Transport errors must not be mistaken for an empty cloud. A bad snapshot is
     // always shown for explicit recovery, never silently replaced by a new game.
-    let save:SaveV1|null=null,backup:SaveV1|null=null;
-    try{save=await this.readPart(h.current);}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}
-    if(!save&&h.previous){try{backup=await this.readPart(h.previous);}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}}
+    let save:SaveV1|null=null,backup:SaveV1|null=null,needsRewrite=false;
+    try{const current=await this.readPart(h.current);save=current.save;needsRewrite=current.needsRewrite;}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}
+    if(!save&&h.previous){try{backup=(await this.readPart(h.previous)).save;}catch(error){if(error instanceof CloudTransportError||error instanceof CloudCryptoError)throw error;}}
     if(await this.getHead()!==raw)throw new CloudConflict();
-    return {head:raw,save,backup,damaged:!save};
+    return {head:raw,save,backup,damaged:!save,needsRewrite};
   }
   async write(save:SaveV1,expectedHead:string):Promise<string>{
-    const raw=cloudRaw(save);parseSave(raw);if(raw.length>MAX_SAVE_BYTES)throw new Error('Сохранение слишком большое для облака.');
+    const raw=cloudRaw(save);
     if(await this.getHead()!==expectedHead)throw new CloudConflict();
     let previous:Part|null=null;
     if(expectedHead){

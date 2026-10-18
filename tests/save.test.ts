@@ -4,6 +4,11 @@ import { parseSave } from '../src/persistence/validateSave';
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
 import { chapter,commandFor,completeSave,defaultPath } from './helpers';
+import { withLegacyJournal } from './legacySave';
+import { completeTwo,finishThree } from './chapter3Helpers';
+import { finishFour } from './chapter4Helpers';
+import { chapters } from '../src/content/chapters/manifest';
+import type { ChapterId } from '../src/engine/types';
 class MemoryStorage implements StorageLike { data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
 const key='test:save';
 describe('save and restore',()=>{
@@ -28,7 +33,17 @@ describe('save and restore',()=>{
     s.setItem(newKey,'{broken');expect(load(s,newKey).recovery).toBe(true);expect(load(s,newKey).backup).toBeNull();
     s.removeItem(newKey);s.setItem(newKey.replace(':save',':backup'),JSON.stringify(fresh));expect(load(s,newKey).backup).toEqual(fresh);
   });
-  it('every visible cursor round trips with consistent journal and effects',()=>{let s=reduceSave(initialState(),{type:'start'});let steps=0;while(s.campaign.active){expect(parseSave(JSON.stringify(s))).toEqual(s);expect(chapter.nodes[s.campaign.active.nodeId].kind).not.toBe('route');s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active,defaultPath)});if(++steps>180)throw Error('loop');}expect(steps).toBeGreaterThan(60);expect(parseSave(JSON.stringify(s))).toEqual(s);});
+  it('every visible cursor round trips without accumulating a journal and preserves effects',()=>{let s=reduceSave(initialState(),{type:'start'});let steps=0;while(s.campaign.active){expect(parseSave(JSON.stringify(s))).toEqual(s);expect(parseSave(JSON.stringify(withLegacyJournal(s)))).toEqual(s);expect(JSON.stringify(s)).not.toContain('"journal"');expect(chapter.nodes[s.campaign.active.nodeId].kind).not.toBe('route');s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active,defaultPath)});if(++steps>180)throw Error('loop');}expect(steps).toBeGreaterThan(60);expect(parseSave(JSON.stringify(s))).toEqual(s);});
+  it('migrates active and trial journals in all five chapters without changing any other field',()=>{
+    const bases=[initialState(),completeSave(),completeTwo(),finishThree(),finishFour()];
+    for(const [index,base] of bases.entries()){
+      const chapter=(index+1) as ChapterId,code=chapters.find(c=>c.id===chapter)?.code;
+      let save=reduceSave(code?reduceSave(base,{type:'unlock',code}):base,{type:'start',chapter});save=reduceSave(save,{type:'trial',chapter});
+      const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw).toContain('"journal"');expect(parseSave(raw)).toEqual(save);expect(parseSave(JSON.stringify({...legacy,contentVersion:chapter}))).toEqual(save);expect(JSON.stringify(legacy)).toBe(raw);
+      const storage=new MemoryStorage();storage.setItem(key,raw);expect(load(storage,key).save).toEqual(save);expect(storage.getItem(key)).toBe(raw);
+      expect(persist(storage,legacy,save.revision,key)).toBe('saved');expect(storage.getItem(key)).not.toContain('"journal"');expect(parseSave(storage.getItem('test:backup')!)).toEqual(save);
+    }
+  });
   it('stores one consistent envelope and rotates a valid previous snapshot',()=>{const storage=new MemoryStorage();const a=reduceSave(initialState(),{type:'start'});expect(persist(storage,a,0,key)).toBe('saved');const b=reduceSave(a,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});expect(persist(storage,b,a.revision,key)).toBe('saved');expect(parseSave(storage.getItem('test:backup')!)).toEqual(a);expect(load(storage,key).save).toEqual(b);});
   it('keeps corrupt main intact and offers valid backup',()=>{const storage=new MemoryStorage();const good=completeSave();storage.setItem(key,'{broken');storage.setItem('test:backup',JSON.stringify(good));const result=load(storage,key);expect(result.recovery).toBe(true);expect(result.backup).toEqual(good);expect(storage.getItem(key)).toBe('{broken');});
   it('also recovers when main is missing but backup remains',()=>{const s=new MemoryStorage();s.setItem('test:backup',JSON.stringify(completeSave()));expect(load(s,key).recovery).toBe(true);});

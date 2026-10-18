@@ -47,7 +47,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       if(!import.meta.env.DEV)return current;
       const id=Number(action.nodeId[1]) as ChapterId,chapter=getChapter(id),node=chapter?.nodes[action.nodeId];
       if(!chapter||!node||node.kind==='route'||node.kind==='end')return current;
-      const run=startRun(chapter);run.nodeId=action.nodeId;run.story=action.story;run.journal=[];
+      const run=startRun(chapter);run.nodeId=action.nodeId;run.story=action.story;
       if(id===1&&run.story.searchResult){run.results['token-search']={kind:'token-search',outcome:run.story.searchResult,catNoticed:!!run.story.catNoticed};if(run.story.catNoticed)run.earned=['cat-supervisor'];}
       if(id===2&&run.story.umbrella){run.results['umbrella-patch']={kind:'umbrella-patch',outcome:run.story.umbrella};if(run.story.umbrella==='patched')run.earned=['dry-plan'];}
       if(id===1)s.campaign={completed:[],startStates:{1:{}},records:{},active:run};
