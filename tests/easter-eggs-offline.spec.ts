@@ -31,6 +31,9 @@ test('hair and cat react on a small screen without changing saved story, then cl
   await hair.focus();await page.keyboard.press('Enter');await expect(page.getByRole('status')).toContainText('я их укладывал. у них другое мнение');
   await page.screenshot({path:'outputs/EASTER_HAIR_MOBILE.png',fullPage:true,animations:'disabled'});
   expect(await stored(page)).toBe(raw);await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(hair).toBeFocused();
+  const hairBox=(await hair.boundingBox())!;expect(hairBox.width).toBeGreaterThanOrEqual(64);expect(hairBox.height).toBeGreaterThanOrEqual(64);
+  await hair.click({position:{x:8,y:hairBox.height/2}});await expect(page.getByRole('status')).toContainText('я их укладывал. у них другое мнение');expect(await stored(page)).toBe(raw);
+  await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();
   await cat.click();await expect(page.getByRole('status')).toContainText('так. теперь он уверен, что ты пришла к нему');expect(await stored(page)).toBe(raw);
   await page.screenshot({path:'outputs/EASTER_CAT_MOBILE.png',fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await page.setViewportSize({width:785,height:600});

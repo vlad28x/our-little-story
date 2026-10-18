@@ -15,9 +15,9 @@ export function SceneEasterEggs({stage,context,hair,cat,cookie,cookieTaken,onTak
         const img=root!.querySelector<HTMLImageElement>(selector);
         if(!img?.complete||!img.naturalWidth||getComputedStyle(img).display==='none')return;
         const b=img.getBoundingClientRect();
-        const width=Math.max(48,isHair?b.width*.42:b.width),height=Math.max(48,isHair?b.height*.18:b.height);
-        const left=Math.max(2,b.left-r.left+(isHair?b.width*.29:0));
-        const top=Math.max(2,b.top-r.top+(isHair?b.height*.02:0));
+        const width=Math.max(isHair?64:48,isHair?b.width*.64:b.width),height=Math.max(isHair?64:48,isHair?b.height*.24:b.height);
+        const left=Math.max(2,b.left-r.left+(isHair?b.width*.18:0));
+        const top=Math.max(2,b.top-r.top);
         const visibleWidth=Math.min(width,r.width-left-2),visibleHeight=Math.min(height,r.height-top-28);
         if(visibleWidth<48||visibleHeight<48)return;
         return {left,top,width:visibleWidth,height:visibleHeight};

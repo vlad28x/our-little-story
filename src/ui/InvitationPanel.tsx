@@ -13,7 +13,6 @@ export function InvitationPanel({story}:{story:StoryState}){
   const reply=answer?invitationReplies[answer]:undefined;
   function choose(value:MeetingChoice){send({type:'continuation',value});setDraft(continuationDraft(value));setMessage('Ответ сохранён только на этом устройстве.');}
   async function copy(){try{await navigator.clipboard.writeText(draft);setMessage('Текст скопирован. Если захочешь, вставь его в ваш чат.');}catch{setMessage('Здесь не получилось скопировать автоматически. Выдели текст в поле и скопируй вручную.');}}
-  async function share(){if(!navigator.share){setMessage('Меню отправки недоступно. Можно скопировать текст из поля и вернуться в ваш чат.');return;}try{await navigator.share({title:'Продолжить знакомство',text:draft});setMessage('Меню отправки открыто. Получателя выбираешь сама.');}catch(error){if(error instanceof DOMException&&error.name==='AbortError')return;setMessage('Не получилось открыть отправку. Текст можно скопировать вручную.');}}
   return <section ref={section} className="final-conversation" aria-label="Разговор о следующей встрече">
     <SceneStage background="bg.cafe.sunset" emotion={answer==='movie'?'laugh':'smile'} showCat={false} bench={story.bench}/>
     <div className="story-panel invitation-panel">
@@ -26,7 +25,7 @@ export function InvitationPanel({story}:{story:StoryState}){
       <p className="invitation-privacy">Это приглашение в реальную жизнь. Ответ остаётся здесь — Влад его не увидит, пока ты сама не напишешь ему.</p>
       {answer&&answer!=='decline'&&<>
         <details className="taxi-note"><summary>Если хочется обсудить дорогу</summary><p>с дорогой тоже могу помочь — например, оплатить такси туда и обратно, если тебе так удобнее</p></details>
-        <div className="invitation-draft"><label htmlFor="continuation-message">Сообщение Владу</label><textarea id="continuation-message" value={draft} maxLength={2000} onChange={e=>setDraft(e.target.value)}/><p className="tiny">Текст можно отредактировать. Он не сохраняется после закрытия страницы.</p><div className="stack"><button disabled={!draft.trim()} onClick={()=>void copy()}>Копировать сообщение</button><button disabled={!draft.trim()} onClick={()=>void share()}>Открыть меню отправки</button></div></div>
+        <div className="invitation-draft"><label htmlFor="continuation-message">Сообщение Владу</label><textarea id="continuation-message" value={draft} maxLength={2000} onChange={e=>setDraft(e.target.value)}/><p className="tiny">Текст можно отредактировать. Он не сохраняется после закрытия страницы.</p><div className="stack"><button disabled={!draft.trim()} onClick={()=>void copy()}>Копировать сообщение</button></div></div>
       </>}
       {message&&<p role="status" className="small">{message}</p>}
       <p className="tiny">Можно выбрать любой ответ независимо от финала истории. Открытка и завершение главы уже сохранены.</p>
