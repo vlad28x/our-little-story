@@ -15,7 +15,7 @@ export function offlineScript(){
     });}}]});return result.outputFiles[0].text;
   })();
 }
-type OfflineOptions={telegram?:{id:number;data:Record<string,string>;failReads?:boolean;failWrites?:string;maxRequestBytes?:number};local?:Record<string,string>;seedBrowser?:boolean};
+type OfflineOptions={telegram?:{id:number;data:Record<string,string>;failReads?:boolean;failWrites?:string;maxRequestBytes?:number;presentation?:{version?:string;fullscreen:'success'|'failed'|'throws'|'already';expandCalls?:number;fullscreenCalls?:number}};local?:Record<string,string>;seedBrowser?:boolean};
 export async function openOffline(page:Page,save:SaveV1,hash='/chapters',options:OfflineOptions={}){
   if(options.telegram)await page.exposeFunction('offlineDigest',(bytes:number[])=>Array.from(createHash('sha256').update(Buffer.from(bytes)).digest()));
   await page.route('**/*',route=>route.abort());
@@ -37,6 +37,20 @@ export async function openOffline(page:Page,save:SaveV1,hash='/chapters',options
         getItems(keys,done){setTimeout(()=>{const tooLarge=remote.maxRequestBytes&&new TextEncoder().encode(JSON.stringify({keys})).length>remote.maxRequestBytes;done(remote.failReads?'offline':tooLarge?'DATA_TOO_LONG':null,Object.fromEntries(keys.map(k=>[k,remote.data[k]??''])));},0);},
         setItem(key,value,done){setTimeout(()=>{const tooLarge=remote.maxRequestBytes&&new TextEncoder().encode(JSON.stringify({key,value})).length>remote.maxRequestBytes;if(remote.failWrites||tooLarge){done(remote.failWrites||'DATA_TOO_LONG',false);return;}remote.data[key]=value;done(null,true);},0);}
       }}};
+      if(remote.presentation){
+        const presentation=remote.presentation,app=window.Telegram.WebApp!,handlers=new Map<string,Set<()=>void>>();
+        app.version=presentation.version??'9.0';app.isFullscreen=presentation.fullscreen==='already';
+        app.expand=()=>{presentation.expandCalls=(presentation.expandCalls??0)+1;};
+        app.onEvent=(event,handler)=>{if(!handlers.has(event))handlers.set(event,new Set());handlers.get(event)!.add(handler);};
+        app.offEvent=(event,handler)=>{handlers.get(event)?.delete(handler);};
+        app.requestFullscreen=()=>{
+          presentation.fullscreenCalls=(presentation.fullscreenCalls??0)+1;
+          if(presentation.fullscreen==='throws')throw new Error('WebAppMethodUnsupported');
+          if(presentation.fullscreen==='failed'){queueMicrotask(()=>handlers.get('fullscreenFailed')?.forEach(h=>h()));return;}
+          app.isFullscreen=true;
+          for(const [key,value] of Object.entries({'safe-area-inset-top':47,'safe-area-inset-bottom':34,'content-safe-area-inset-top':56}))document.documentElement.style.setProperty(`--tg-${key}`,`${value}px`);
+        };
+      }
     }
   },{raw:JSON.stringify(save),hash,options});
   await page.addScriptTag({content:await offlineScript()});

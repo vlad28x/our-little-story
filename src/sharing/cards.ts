@@ -17,7 +17,7 @@ export async function renderCard(card:CardRecord):Promise<Blob>{
   ctx.fillStyle='#65586b';ctx.font='25px system-ui';ctx.fillText(cardDetail(card),540,1230);ctx.fillStyle='#75425f';ctx.font='34px system-ui';ctx.font=card.chapter===3?'23px system-ui':'34px system-ui';ctx.fillText(cardTeam(card)||'●  ●',540,1290);
   return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Не удалось сохранить изображение')),'image/png'));
 }
-export function downloadBlob(blob:Blob,name:string){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+export function downloadBlob(blob:Blob,name:string){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);try{a.click();}finally{a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}}
 export async function shareCard(card:CardRecord,blob:Blob|null){
   const file=blob?new File([blob],`${card.id}.png`,{type:'image/png'}):null;
   const url=new URL(import.meta.env.BASE_URL,location.origin).href;

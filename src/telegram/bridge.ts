@@ -6,11 +6,18 @@ export type CloudAPI={
 export type TelegramApp={initData:string;initDataUnsafe?:{user?:{id:number}};CloudStorage?:CloudAPI;version:string;
   ready:()=>void;expand:()=>void;setHeaderColor?:(color:string)=>void;setBackgroundColor?:(color:string)=>void;
   enableClosingConfirmation?:()=>void;disableClosingConfirmation?:()=>void;
+  openLink?:(url:string,options?:{try_instant_view?:boolean})=>void;
+  requestFullscreen?:()=>void;isFullscreen?:boolean;
   onEvent?:(event:string,handler:()=>void)=>void;offEvent?:(event:string,handler:()=>void)=>void;
   BackButton?:{show:()=>void;hide:()=>void;onClick:(handler:()=>void)=>void;offClick:(handler:()=>void)=>void};
 };
 declare global {interface Window{Telegram?:{WebApp?:TelegramApp}}}
 export const BOT_URL='https://t.me/our_little_story_game_bot/story';
+function expandSafely(app:TelegramApp){try{app.expand();}catch{/* Presentation must not prevent playing or restoring progress. */}}
+function requestFullscreen(app:TelegramApp){
+  if(Number(app.version.split('.')[0])<8||!app.requestFullscreen||app.isFullscreen)return;
+  try{app.onEvent?.('fullscreenFailed',()=>expandSafely(app));app.requestFullscreen();}catch{expandSafely(app);}
+}
 let preparation:Promise<TelegramApp|null>|undefined;
 export function prepareTelegram():Promise<TelegramApp|null>{
   if(preparation)return preparation;
@@ -31,8 +38,9 @@ export function prepareTelegram():Promise<TelegramApp|null>{
     const id=app.initDataUnsafe?.user?.id;
     if(!Number.isSafeInteger(id)||!id||id<0)throw new Error('Telegram не передал данные аккаунта. Открой игру заново у бота.');
     if(params.has('tgWebAppData'))history.replaceState(null,'','#/start');
-    app.ready();app.expand();app.setHeaderColor?.('#fff7ed');app.setBackgroundColor?.('#fff7ed');
+    app.ready();expandSafely(app);app.setHeaderColor?.('#fff7ed');app.setBackgroundColor?.('#fff7ed');
     document.documentElement.dataset.telegram='true';
+    requestFullscreen(app);
     return app;
   })().catch(error=>{preparation=undefined;throw error;});
   return preparation;

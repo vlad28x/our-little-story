@@ -3,7 +3,7 @@ import { GameProvider,DEV_SANDBOX,activeStorageKey } from '../app/GameProvider';
 import { load,persist,type Loaded,type StorageLike,storageKey } from '../persistence/storage';
 import { initialState } from '../state/initialState';
 import type { SaveV1 } from '../state/types';
-import { downloadBlob } from '../sharing/cards';
+import { SaveExportButton } from '../ui/SaveExportButton';
 import { prepareTelegram,type TelegramApp } from './bridge';
 import { TelegramCloud,CloudSession,cloudRaw,type CloudSnapshot } from './cloud';
 
@@ -63,8 +63,8 @@ export function TelegramEntry({children}:{children:ReactNode}){
         {choice.local.recovery&&choice.local.backup&&<SaveChoice title="Восстановить копию этого устройства" save={choice.local.backup} onChoose={()=>choose(choice.local.backup!)}/>}
         {!choice.local.raw&&choice.browser.raw&&!choice.browser.recovery&&<SaveChoice title="Перенести историю из этого браузера" save={choice.browser.save} onChoose={()=>choose(choice.browser.save)}/>}
         {!choice.snapshot.save&&!choice.snapshot.damaged&&!choice.local.raw&&<button className="primary" onClick={()=>choose(initialState())}>Начать с сохранением в Telegram</button>}
-        {choice.local.raw&&<button onClick={()=>downloadBlob(new Blob([choice.local.raw!],{type:'application/json'}),'five-meetings-device.json')}>Скачать копию устройства</button>}
-        {(choice.snapshot.save||choice.snapshot.backup)&&<button onClick={()=>downloadBlob(new Blob([JSON.stringify(choice.snapshot.save??choice.snapshot.backup)],{type:'application/json'}),'five-meetings-telegram.json')}>Скачать копию Telegram</button>}
+        {choice.local.raw&&<SaveExportButton raw={choice.local.raw} name="five-meetings-device.json" app={choice.app}>Скачать копию устройства</SaveExportButton>}
+        {(choice.snapshot.save||choice.snapshot.backup)&&<SaveExportButton raw={JSON.stringify(choice.snapshot.save??choice.snapshot.backup)} name="five-meetings-telegram.json" app={choice.app}>Скачать копию Telegram</SaveExportButton>}
         <button className="text-button" onClick={()=>setReady({key:choice.key,loaded:choice.local,app:choice.app})}>Пока играть только на этом устройстве</button>
       </div><p className="small">Выбранная история станет основной в Telegram; копии не объединяются. Если они отличаются, сначала скачай нужные резервные файлы.</p>
     </>:<><h1>Находим твою историю…</h1><p role="status">Проверяем сохранения перед встречей.</p></>}
