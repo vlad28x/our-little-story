@@ -33,6 +33,8 @@ test('hair and cat react on a small screen without changing saved story, then cl
   expect(await stored(page)).toBe(raw);await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(hair).toBeFocused();
   await cat.click();await expect(page.getByRole('status')).toContainText('так. теперь он уверен, что ты пришла к нему');expect(await stored(page)).toBe(raw);
   await page.screenshot({path:'outputs/EASTER_CAT_MOBILE.png',fullPage:true,animations:'disabled'});
+  await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await page.setViewportSize({width:785,height:600});
+  await cat.click();await expect(page.getByRole('status')).toContainText('пришла к нему');expect(await stored(page)).toBe(raw);
   await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.getByLabel('Маленькая реакция',{exact:true})).toHaveCount(0);
   const result=JSON.parse((await stored(page))!);expect(result.collection.achievements).not.toContain('cat-supervisor');expect(errors).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
