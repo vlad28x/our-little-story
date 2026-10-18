@@ -15,7 +15,7 @@ export function offlineScript(){
     });}}]});return result.outputFiles[0].text;
   })();
 }
-type OfflineOptions={telegram?:{id:number;data:Record<string,string>;failReads?:boolean;failWrites?:string};local?:Record<string,string>;seedBrowser?:boolean};
+type OfflineOptions={telegram?:{id:number;data:Record<string,string>;failReads?:boolean;failWrites?:string;maxRequestBytes?:number};local?:Record<string,string>;seedBrowser?:boolean};
 export async function openOffline(page:Page,save:SaveV1,hash='/chapters',options:OfflineOptions={}){
   if(options.telegram)await page.exposeFunction('offlineDigest',(bytes:number[])=>Array.from(createHash('sha256').update(Buffer.from(bytes)).digest()));
   await page.route('**/*',route=>route.abort());
@@ -34,8 +34,8 @@ export async function openOffline(page:Page,save:SaveV1,hash='/chapters',options
       (window as unknown as {testCloud:typeof remote}).testCloud=remote;
       window.Telegram={WebApp:{initData:`user=${remote.id}`,initDataUnsafe:{user:{id:remote.id}},version:'9.0',ready(){},expand(){},setHeaderColor(){},setBackgroundColor(){},enableClosingConfirmation(){},disableClosingConfirmation(){},CloudStorage:{
         getItem(key,done){setTimeout(()=>done(remote.failReads?'offline':null,remote.data[key]??''),0);},
-        getItems(keys,done){setTimeout(()=>done(remote.failReads?'offline':null,Object.fromEntries(keys.map(k=>[k,remote.data[k]??'']))),0);},
-        setItem(key,value,done){setTimeout(()=>{if(remote.failWrites){done(remote.failWrites,false);return;}remote.data[key]=value;done(null,true);},0);}
+        getItems(keys,done){setTimeout(()=>{const tooLarge=remote.maxRequestBytes&&new TextEncoder().encode(JSON.stringify({keys})).length>remote.maxRequestBytes;done(remote.failReads?'offline':tooLarge?'DATA_TOO_LONG':null,Object.fromEntries(keys.map(k=>[k,remote.data[k]??''])));},0);},
+        setItem(key,value,done){setTimeout(()=>{const tooLarge=remote.maxRequestBytes&&new TextEncoder().encode(JSON.stringify({key,value})).length>remote.maxRequestBytes;if(remote.failWrites||tooLarge){done(remote.failWrites||'DATA_TOO_LONG',false);return;}remote.data[key]=value;done(null,true);},0);}
       }}};
     }
   },{raw:JSON.stringify(save),hash,options});

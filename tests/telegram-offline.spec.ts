@@ -4,11 +4,20 @@ import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
 import { TelegramCloud } from '../src/telegram/cloud';
 import type { SaveV1 } from '../src/state/types';
+import { runTo } from './helpers';
 const key='five-meetings:/:telegram:our_little_story_game_bot:42:save';
 async function cloudData(save:SaveV1){
   const data:Record<string,string>={};const cloud=new TelegramCloud({getItem(k,done){done(null,data[k]??'');},getItems(keys,done){done(null,Object.fromEntries(keys.map(k=>[k,data[k]??''])));},setItem(k,v,done){data[k]=v;done(null,true);}});await cloud.write(save,'');return data;
 }
 function remote(page:Page){return page.evaluate(()=>(window as unknown as {testCloud:{data:Record<string,string>}}).testCloud.data);}
+test('a long Cyrillic chapter syncs through the native byte limit after choosing the device, then restores on another client',async({page,context})=>{
+  const base=reduceSave(initialState(),{type:'start'}),local={...base,campaign:{...base.campaign,active:runTo('c1.plan')}},data=await cloudData(base);
+  await openOffline(page,initialState(),'/play/1',{seedBrowser:false,local:{[key]:JSON.stringify(local)},telegram:{id:42,data,maxRequestBytes:4096}});
+  await page.getByRole('button',{name:/Продолжить с этого устройства/}).click();await expect(page.locator('[data-node="c1.plan"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
+  const committed=await remote(page);for(const [key,value] of Object.entries(committed))expect(new TextEncoder().encode(JSON.stringify({key,value})).length).toBeLessThanOrEqual(4096);
+  const second=await context.newPage();await openOffline(second,initialState(),'/play/1',{seedBrowser:false,telegram:{id:42,data:committed,maxRequestBytes:4096}});
+  await expect(second.locator('[data-node="c1.plan"]')).toBeVisible();await expect(second.locator('.telegram-sync')).toContainText('История сохранена в Telegram');expect(JSON.parse((await second.evaluate(k=>localStorage.getItem(k),key))!)).toEqual(local);
+});
 test('Telegram saves actual actions and resumes the same cursor on a second device',async({page,context})=>{
   await page.setViewportSize({width:320,height:568});
   await openOffline(page,initialState(),'/start',{seedBrowser:false,telegram:{id:42,data:{}}});

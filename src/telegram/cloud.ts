@@ -2,7 +2,10 @@ import type { CloudAPI } from './bridge';
 import { parseSave,MAX_SAVE_BYTES } from '../persistence/validateSave';
 import type { SaveV1 } from '../state/types';
 
-const HEAD='five_meetings_v1_head',CHUNK=3500,MAX_CHUNKS=Math.ceil(MAX_SAVE_BYTES/CHUNK);
+const HEAD='five_meetings_v1_head',LEGACY_CHUNK_UNITS=3500,CHUNK_JSON_BYTES=3000,READ_BATCH=32;
+// JSON quoting can at most double the UTF-8 bytes of a valid save. Reserve the
+// two string quotes and the largest escaped code point when bounding bank size.
+const MAX_CHUNKS=Math.ceil(MAX_SAVE_BYTES*2/(CHUNK_JSON_BYTES-8));
 type Part={slot:'a'|'b';count:number;length:number;hash:string};
 type Head={version:1;current:Part;previous:Part|null};
 export type CloudSnapshot={head:string;save:SaveV1|null;backup:SaveV1|null;damaged:boolean};
@@ -27,13 +30,16 @@ export function cloudErrorText(error:unknown){
 }
 export function cloudRaw(save:SaveV1){return JSON.stringify({...save,continuation:null});}
 export function splitCloudText(raw:string){
-  const chunks:string[]=[];
-  for(let start=0;start<raw.length;){
-    let end=Math.min(start+CHUNK,raw.length);
-    // Keep emoji and other non-BMP characters intact across the native bridge.
-    if(end<raw.length&&/[\uD800-\uDBFF]/.test(raw[end-1])&&/[\uDC00-\uDFFF]/.test(raw[end]))end--;
-    chunks.push(raw.slice(start,end));start=end;
-  }return chunks;
+  const chunks:string[]=[];let start=0,end=0,bytes=2;
+  // Bound the encoded JSON string, not JS string.length. Cyrillic, emoji,
+  // quotes and backslashes all consume different amounts on the native bridge.
+  for(const symbol of raw){
+    const code=symbol.codePointAt(0)!;
+    const size=code===34||code===92?2:code<32?([8,9,10,12,13].includes(code)?2:6):code<128?1:code<2048?2:code>=0xd800&&code<=0xdfff?6:code<=0xffff?3:4;
+    if(bytes+size>CHUNK_JSON_BYTES){chunks.push(raw.slice(start,end));start=end;bytes=2;}
+    bytes+=size;end+=symbol.length;
+  }
+  if(end>start)chunks.push(raw.slice(start,end));return chunks;
 }
 function request<T>(operation:CloudOperation,run:(done:(error:string|null,value:T)=>void)=>unknown):Promise<T>{
   return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new CloudTransportError(operation,'TIMEOUT')),20000);
@@ -41,7 +47,7 @@ function request<T>(operation:CloudOperation,run:(done:(error:string|null,value:
   });
 }
 function part(value:unknown):Part{
-  const p=value as Part;if(!p||!['a','b'].includes(p.slot)||!Number.isInteger(p.count)||p.count<1||p.count>MAX_CHUNKS||!Number.isInteger(p.length)||p.length<1||p.length>MAX_SAVE_BYTES||p.count<Math.ceil(p.length/CHUNK)||p.count>Math.ceil(p.length/(CHUNK-1))||!/^[a-f0-9]{64}$/.test(p.hash))throw new Error('Повреждено описание облачной копии.');return p;
+  const p=value as Part;if(!p||!['a','b'].includes(p.slot)||!Number.isInteger(p.count)||p.count<1||p.count>MAX_CHUNKS||!Number.isInteger(p.length)||p.length<1||p.length>MAX_SAVE_BYTES||p.count<Math.ceil(p.length/LEGACY_CHUNK_UNITS)||p.count>p.length||!/^[a-f0-9]{64}$/.test(p.hash))throw new Error('Повреждено описание облачной копии.');return p;
 }
 function header(raw:string):Head{
   if(raw.length>1024)throw new Error('Повреждено описание облачной копии.');
@@ -60,10 +66,14 @@ export class TelegramCloud {
   private async getHead(){const raw=await request<string>('read-head',done=>this.api.getItem(HEAD,done));if(typeof raw!=='string')throw new CloudTransportError('read-head','INVALID_RESPONSE');return raw;}
   private async readPart(p:Part){
     const keys=Array.from({length:p.count},(_,i)=>chunkKey(p.slot,i));
-    const values=await request<Record<string,string>>('read-parts',done=>this.api.getItems(keys,done));
-    if(!values||typeof values!=='object'||Array.isArray(values))throw new CloudTransportError('read-parts','INVALID_RESPONSE');
-    if(keys.some(k=>typeof values[k]!=='string'||!values[k]||values[k].length>CHUNK))throw new Error('Облачная копия неполная.');
-    const raw=keys.map(k=>values[k]).join('');if(raw.length!==p.length||await digest(raw)!==p.hash)throw new Error('Облачная копия повреждена.');return parseSave(raw);
+    const parts:string[]=[];
+    for(let offset=0;offset<keys.length;offset+=READ_BATCH){
+      const batch=keys.slice(offset,offset+READ_BATCH),values=await request<Record<string,string>>('read-parts',done=>this.api.getItems(batch,done));
+      if(!values||typeof values!=='object'||Array.isArray(values))throw new CloudTransportError('read-parts','INVALID_RESPONSE');
+      if(batch.some(k=>typeof values[k]!=='string'||!values[k]||values[k].length>LEGACY_CHUNK_UNITS))throw new Error('Облачная копия неполная.');
+      parts.push(...batch.map(k=>values[k]));
+    }
+    const raw=parts.join('');if(raw.length!==p.length||await digest(raw)!==p.hash)throw new Error('Облачная копия повреждена.');return parseSave(raw);
   }
   async read():Promise<CloudSnapshot>{
     const raw=await this.getHead();if(!raw)return {head:'',save:null,backup:null,damaged:false};
