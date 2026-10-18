@@ -10,7 +10,7 @@ export type TelegramApp={initData:string;initDataUnsafe?:{user?:{id:number}};Clo
   BackButton?:{show:()=>void;hide:()=>void;onClick:(handler:()=>void)=>void;offClick:(handler:()=>void)=>void};
 };
 declare global {interface Window{Telegram?:{WebApp?:TelegramApp}}}
-export const BOT_URL='https://t.me/our_little_story_game_bot';
+export const BOT_URL='https://t.me/our_little_story_game_bot/story';
 let preparation:Promise<TelegramApp|null>|undefined;
 export function prepareTelegram():Promise<TelegramApp|null>{
   if(preparation)return preparation;
