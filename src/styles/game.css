@@ -49,3 +49,33 @@ dialog{width:calc(100% - 32px);max-width:560px;max-height:85svh;border:1px solid
 .telegram-sync-reason{max-width:520px;margin:4px auto 0;text-align:left}.telegram-sync-reason summary{cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:center;text-decoration:underline;text-underline-offset:3px}.telegram-sync-reason p{font-size:13px;line-height:1.5;padding:0 8px 8px;overflow-wrap:anywhere;user-select:text}
 html[data-telegram=true]{--app-safe-top:calc(max(env(safe-area-inset-top,0px),var(--tg-safe-area-inset-top,0px)) + var(--tg-content-safe-area-inset-top,0px));--app-safe-bottom:calc(max(env(safe-area-inset-bottom,0px),var(--tg-safe-area-inset-bottom,0px)) + var(--tg-content-safe-area-inset-bottom,0px));--app-safe-left:calc(max(env(safe-area-inset-left,0px),var(--tg-safe-area-inset-left,0px)) + var(--tg-content-safe-area-inset-left,0px));--app-safe-right:calc(max(env(safe-area-inset-right,0px),var(--tg-safe-area-inset-right,0px)) + var(--tg-content-safe-area-inset-right,0px))}html[data-telegram=true] .game-shell{padding:var(--app-safe-top) var(--app-safe-right) var(--app-safe-bottom) var(--app-safe-left)}html[data-telegram=true] .topbar{padding-top:10px}html[data-telegram=true] dialog{position:fixed;inset:var(--app-safe-top) var(--app-safe-right) var(--app-safe-bottom) var(--app-safe-left);margin:auto;width:calc(100vw - var(--app-safe-left) - var(--app-safe-right) - 32px);max-height:min(85svh,calc(100svh - var(--app-safe-top) - var(--app-safe-bottom) - 32px))}
 .telegram-entry{max-width:620px;margin:auto}.telegram-entry h1{font-size:30px;line-height:1.2}.telegram-entry p{line-height:1.6}.telegram-save-choice{display:flex;flex-direction:column;gap:7px;text-align:left;padding:16px}.telegram-save-choice span,.telegram-save-choice small{font-weight:400;font-size:14px}.telegram-sync{font-size:12px;color:var(--action);text-align:center;padding:6px 12px;line-height:1.4;background:#f3e7ed}.telegram-sync button{min-height:36px;font-size:12px;padding:5px 10px;margin-left:8px}.sync-warning{background:#fff0d8;color:#6c493b}@media(max-width:480px){html[data-telegram=true] .chapter-map{padding-top:14px}html[data-telegram=true] .chapter-map>h1{font-size:26px}html[data-telegram=true] .telegram-sync{padding-top:4px;padding-bottom:4px}}
+
+/* Optional scene props: transparent touch areas around small diegetic drawings. */
+.easter-prop{border-radius:12px;z-index:1;filter:drop-shadow(0 3px 3px #392b3330)}
+.easter-prop>svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+.easter-mug>svg{transform:translateY(-14px)}
+.tv-player{position:absolute;left:8%;right:8%;bottom:12%;font-size:9px;line-height:1.05;color:#fff7ed;background:#554652ee;border-radius:3px;padding:3px 1px;pointer-events:none}
+.easter-star{right:3%;top:12%;width:56px;height:56px;filter:drop-shadow(0 0 7px #ffe7a870)}
+.easter-sign{left:3%;top:50px;width:120px;height:60px}
+.scene-easter-note{z-index:3}
+.scene-stage:has(.scene-easter-note) .location-tag{opacity:0}
+.easter-controller{z-index:1;border-radius:18px}
+.controller-glow{position:absolute;left:50%;top:35%;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);background:#e1ffbc;box-shadow:0 0 10px 6px #d6fca58c;animation:controller-check .65s ease both;pointer-events:none}
+.blanket-fold{transform-origin:80% 45%}
+.blanket-fold.is-lifted{animation:blanket-lift .8s ease both}
+.tea-heart{animation:tea-heart 1.5s ease both}
+.tv-cat{animation:player-join .4s ease both;transform-origin:center}
+.wish-star.is-falling{animation:wish-fall .9s ease both}
+.sign-normal.is-replaced{animation:sign-normal 3s ease both}
+.sign-secret{animation:sign-secret 3s ease both}
+@keyframes blanket-lift{0%,100%{transform:rotate(0)}45%,75%{transform:rotate(-13deg) translateY(-4px)}}
+@keyframes controller-check{0%,100%{opacity:.65}45%{opacity:1;box-shadow:0 0 16px 9px #d6fca5ba}}
+@keyframes tea-heart{0%{opacity:0;transform:translateY(8px) scale(.85)}25%,65%{opacity:1}100%{opacity:0;transform:translateY(-9px)}}
+@keyframes player-join{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wish-fall{0%{opacity:1;transform:translate(0,0)}75%{opacity:1}100%{opacity:0;transform:translate(-45px,55px)}}
+@keyframes sign-normal{0%,85%{opacity:0}100%{opacity:1}}
+@keyframes sign-secret{0%,85%{opacity:1}100%{opacity:0}}
+.scene-easter[data-reduced=true] .easter-prop *, .scene-easter[data-reduced=true] .controller-glow{animation:none!important;transition:none!important}
+.scene-easter[data-reduced=true] .sign-normal.is-replaced{opacity:0}
+.scene-easter-note[data-egg=blanket],.scene-easter-note[data-egg=mug],.scene-easter-note[data-egg=controller]{top:6px;bottom:auto}
+@media(max-width:600px){.tv-player{font-size:8px}.easter-sign{width:112px;height:56px}}

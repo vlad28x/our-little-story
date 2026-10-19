@@ -5,6 +5,8 @@ import { reduceSave } from '../src/state/reducer';
 import { commandFor } from './helpers';
 import { completeTwo,thirdCode,command3 } from './chapter3Helpers';
 import type { SaveV1 } from '../src/state/types';
+import { startFour } from './chapter4Helpers';
+import { startFive } from './chapter5Helpers';
 const key='five-meetings:/:save';
 const stored=(page:Page)=>page.evaluate(k=>localStorage.getItem(k),key);
 function firstAt(id?:string){
@@ -87,4 +89,39 @@ test('scene eggs leave minigames, controller props and pause controls alone',asy
   await dead.getByRole('button',{name:'Потрогать кудри Влада'}).click();await dead.getByRole('button',{name:'Открыть меню',exact:true}).click();await expect(dead.getByRole('heading',{name:'Маленькая пауза'})).toBeVisible();await expect(dead.locator('.scene-easter')).toHaveCount(0);
   await dead.getByRole('button',{name:'Вернуться к истории'}).click();await expect(dead.getByLabel('Маленькая реакция',{exact:true})).toHaveCount(0);
   const kitchen=await context.newPage();await open(kitchen,thirdAt('c3.kitchen'),3);await expect(kitchen.locator('.kitchen-game')).toBeVisible();await expect(kitchen.locator('.scene-easter')).toHaveCount(0);
+});
+
+test('blanket, TV and tea are optional touch reactions before the game, TV disappears after it',async({page,context})=>{
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+  const objects=[['Приподнять край пледа','это тебе. я даже плед положил'],['Посмотреть на телевизор','он вообще без приглашения'],['Коснуться кружки','это чай. он сам']];
+  await page.screenshot({path:'outputs/EASTER_HOME_PROPS_320.png',fullPage:true,animations:'disabled'});
+  for(const [name,text] of objects){
+    const button=page.getByRole('button',{name,exact:true});const box=(await button.boundingBox())!;expect(box.width).toBeGreaterThanOrEqual(48);expect(box.height).toBeGreaterThanOrEqual(48);
+    await button.click();await expect(page.getByRole('status')).toContainText(text);expect(await stored(page)).toBe(raw);
+    if(name==='Коснуться кружки')expect(await page.locator('.tea-heart').evaluate(el=>getComputedStyle(el).animationName)).toBe('tea-heart');
+    if(name==='Посмотреть на телевизор'){await expect(button.getByText('Игрок 3 подключился')).toBeVisible();await page.screenshot({path:'outputs/EASTER_TV_PLAYER_320.png',fullPage:true,animations:'disabled'});}
+    await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(button).toBeFocused();
+  }
+  await page.getByRole('button',{name:'Взять печеньку'}).click();await expect(page.getByRole('status')).toContainText('план был дожить до начала игры');expect(await stored(page)).toBe(raw);
+  const after=await context.newPage();await open(after,thirdAt('c3.support'),3);await expect(after.getByRole('button',{name:'Посмотреть на телевизор',exact:true})).toHaveCount(0);await expect(after.getByRole('button',{name:'Приподнять край пледа',exact:true})).toBeVisible();expect(errors).toEqual([]);
+});
+
+test('only the repaired second controller reacts, keyboard focus returns and pause disables it',async({page,context})=>{
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c3.pad.ready'),3),raw=await stored(page);
+  const pad=page.getByRole('button',{name:'Проверить второй геймпад',exact:true});await expect(pad).toBeVisible();const box=(await pad.boundingBox())!;
+  expect(box.width).toBeGreaterThanOrEqual(48);expect(box.height).toBeGreaterThanOrEqual(48);
+  await pad.focus();await page.keyboard.press('Enter');await expect(page.getByRole('status')).toContainText('проверяешь? справедливо');await expect(page.locator('.controller-glow')).toBeVisible();expect(await stored(page)).toBe(raw);
+  await page.screenshot({path:'outputs/EASTER_REPAIRED_PAD_320.png',fullPage:true,animations:'disabled'});await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(pad).toBeFocused();
+  await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await expect(pad).toHaveCount(0);await page.getByRole('button',{name:'Вернуться к истории'}).click();await expect(pad).toBeVisible();
+  const broken=await context.newPage();await open(broken,thirdAt('c3.pad.dead'),3);await expect(broken.getByRole('button',{name:'Проверить второй геймпад',exact:true})).toHaveCount(0);expect(errors).toEqual([]);
+});
+
+test('riverside star and fifth-chapter sign react without advancing; reduced motion leaves readable static details',async({page,context})=>{
+  await page.setViewportSize({width:320,height:568});await page.emulateMedia({reducedMotion:'reduce'});const errors=await open(page,startFour(),4),raw=await stored(page);
+  await page.getByRole('button',{name:'Коснуться звезды над набережной',exact:true}).click();await expect(page.getByRole('status')).toContainText('успела? говорить не обязательно');expect(await stored(page)).toBe(raw);
+  expect(await page.locator('.wish-star').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');await expect(page.locator('.wish-star')).toBeVisible();await page.screenshot({path:'outputs/EASTER_WISH_STAR_320.png',fullPage:true,animations:'disabled'});
+  const fifth=await context.newPage();await fifth.setViewportSize({width:320,height:568});await fifth.emulateMedia({reducedMotion:'reduce'});await open(fifth,startFive(),5);const before=await stored(fifth);
+  const sign=fifth.getByRole('button',{name:'Посмотреть на вывеску кафе',exact:true});await sign.click();await expect(fifth.getByRole('status')).toContainText('ну, вывеска явно что-то знает');await expect(sign.getByText('Продолжение',{exact:true})).toBeVisible();expect(await stored(fifth)).toBe(before);
+  await fifth.screenshot({path:'outputs/EASTER_CAFE_SIGN_320.png',fullPage:true,animations:'disabled'});await fifth.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(sign.getByText('Продолжение',{exact:true})).toHaveCount(0);
+  await fifth.getByRole('button',{name:'Дальше',exact:false}).click();await expect(fifth.getByLabel('Маленькая реакция',{exact:true})).toHaveCount(0);expect(errors).toEqual([]);expect(await fifth.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

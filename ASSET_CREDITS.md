@@ -14,6 +14,7 @@
 | Созвездия: кот 17 звёзд, один геймпад 12, чайник 16 | Оригинальные SVG-эскизы, согласованные автором 19 октября; единая геометрия constellationModel/ConstellationArt для игры и открытки | Original vector, approved and integrated |
 | `characters/vlad/casual-{smile,awkward,laugh}.webp` | Встроенный Imagegen по одобренной chibi-модели, новая домашняя одежда; прозрачность сохранена при сжатии в WebP | Generated, integrated; три отдельные эмоции |
 | Кухня, продукты, повара, два геймпада | Оригинальная SVG-графика в Kitchen.tsx и KitchenControls.tsx; интерфейс создан специально для игры | Original vector |
+| Пасхалки сцены: завиток, печенье, край пледа, кот на ТВ, сердце из пара, звезда, вывеска | Оригинальные SVG в SceneEasterEggs.tsx и SceneEasterPropArt.tsx, созданные специально для игры; индикатор использует существующий KitchenControls | Original vector |
 | Предметы, жетон, конверт, значки открыток | Оригинальная SVG-графика проекта в `src/ui/Illustration.tsx` | Original vector |
 | Звуки действий | Оригинальные синтезированные сигналы через Web Audio API в `src/ui/useSound.ts` | Original synthesis |
 | Шрифты | Системный шрифтовой стек устройства | Не загружаются извне |

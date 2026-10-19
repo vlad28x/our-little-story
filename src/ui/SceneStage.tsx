@@ -5,6 +5,7 @@ import type { Emotion } from '../engine/types';
 import { Illustration } from './Illustration';
 import { KitchenControls } from './KitchenControls';
 import { SceneEasterEggs } from './SceneEasterEggs';
+import { sceneEggProps } from '../content/easterEggs';
 export function SceneStage({background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',reserveRemote=false,bench,souvenir,catAtCounter=false,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onEasterSound}:{background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;reserveRemote?:boolean;bench?:'near'|'space';souvenir?:'patched'|'borrowed'|'skipped';catAtCounter?:boolean;easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onEasterSound?:()=>void}){
   const stage=useRef<HTMLDivElement>(null);
   // Keep the plate while its optional hotspots unmount during the kitchen or pause.
@@ -40,7 +41,7 @@ export function SceneStage({background='bg.cafe.entry',emotion='smile',speaker,s
       onLoad={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous.filter(url=>url!==layer.url):previous)}/>;
   }
   return <div ref={stage} className={`scene-stage ${bench?`bench-${bench}`:''}`} aria-label={location}>
-    {easterEggs&&currentFailures.length===0&&<SceneEasterEggs stage={stage} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c3.pad.dead','c3.pad.ready'].includes(sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} reduced={reducedMotion} onSound={onEasterSound}/>}
+    {easterEggs&&currentFailures.length===0&&<SceneEasterEggs stage={stage} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c3.pad.dead','c3.pad.ready'].includes(sceneId)} controller={sceneId==='c3.pad.ready'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} reduced={reducedMotion} onSound={onEasterSound}/>}
     {renderLayer('background')}
     <div className="scene-light"/>
     {renderLayer('character')}
