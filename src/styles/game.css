@@ -57,7 +57,8 @@ html[data-telegram=true]{--app-safe-top:calc(max(env(safe-area-inset-top,0px),va
 .tv-player{position:absolute;left:8%;right:8%;bottom:12%;font-size:9px;line-height:1.05;color:#fff7ed;background:#554652ee;border-radius:3px;padding:3px 1px;pointer-events:none}
 .easter-star{right:3%;top:12%;width:56px;height:56px;filter:drop-shadow(0 0 7px #ffe7a870)}
 .easter-sign{left:3%;top:50px;width:120px;height:60px}
-.scene-easter-note{z-index:3}
+.scene-easter-note{z-index:3;pointer-events:none}
+.scene-easter-dismiss{pointer-events:auto}
 .scene-stage:has(.scene-easter-note) .location-tag{opacity:0}
 .easter-controller{z-index:1;border-radius:18px}
 .controller-glow{position:absolute;left:50%;top:35%;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);background:#e1ffbc;box-shadow:0 0 10px 6px #d6fca58c;animation:controller-check .65s ease both;pointer-events:none}

@@ -106,6 +106,18 @@ test('blanket, TV and tea are optional touch reactions before the game, TV disap
   const after=await context.newPage();await open(after,thirdAt('c3.support'),3);await expect(after.getByRole('button',{name:'Посмотреть на телевизор',exact:true})).toHaveCount(0);await expect(after.getByRole('button',{name:'Приподнять край пледа',exact:true})).toBeVisible();expect(errors).toEqual([]);
 });
 
+test('each visible cookie accepts a real tap even underneath another scene reaction',async({context})=>{
+  for(const [width,height] of [[320,568],[375,667]])for(let index=0;index<3;index++){
+    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+    await page.getByRole('button',{name:index===1?'Потрогать кудри Влада':'Посмотреть на телевизор',exact:true}).click();
+    const cookie=page.getByRole('button',{name:'Взять печеньку',exact:true}),pieces=cookie.locator('svg>g').first().locator('circle');
+    const point=(await pieces.nth(index).boundingBox())!,count=await pieces.count();
+    await page.mouse.click(point.x+point.width/2,point.y+point.height/2);
+    await expect(cookie).toBeDisabled();await expect(page.getByRole('status')).toContainText('план был дожить до начала игры');await expect(pieces).toHaveCount(count-1);
+    expect(await stored(page)).toBe(raw);expect(errors).toEqual([]);await page.close();
+  }
+});
+
 test('only the repaired second controller reacts, keyboard focus returns and pause disables it',async({page,context})=>{
   await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c3.pad.ready'),3),raw=await stored(page);
   const pad=page.getByRole('button',{name:'Проверить второй геймпад',exact:true});await expect(pad).toBeVisible();const box=(await pad.boundingBox())!;
