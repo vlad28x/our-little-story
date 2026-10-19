@@ -1,3 +1,4 @@
+import { legacyContent } from './legacySave';
 import { it,expect } from 'vitest';
 import { chapter4 } from '../src/content/chapters/ch04';
 import { validateContent } from '../src/engine/validateContent';
@@ -27,9 +28,9 @@ it('waits for the fourth code and all three previous endings; old public code do
 it('migrates every chapter-three campaign/trial cursor without changing it and rejects new data labelled as old',()=>{
   for(const trial of [false,true]){
     let s=trial?reduceSave(finishThree(),{type:'trial',chapter:3}):reduceSave(reduceSave(completeTwo(),{type:'unlock',code:thirdCode}),{type:'start',chapter:3});
-    for(let i=0;i<180;i++){expect(parseSave(JSON.stringify({...s,contentVersion:3}))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command3(r)});}
+    for(let i=0;i<180;i++){expect(parseSave(JSON.stringify(legacyContent(s,3)))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command3(r)});}
   }
-  expect(()=>parseSave(JSON.stringify({...finishFour(),contentVersion:3}))).toThrow();
+  expect(()=>parseSave(JSON.stringify(legacyContent(finishFour(),3)))).toThrow();
 });
 it('preserves canon and preset captions across trial; rewrites affect only the selected suffix',()=>{
   const main=finishFour(undefined,{...defaultFourth,result:{kind:'constellation',outcome:'teapot',usedPreset:true}});const replay=finishFour(main,defaultFourth,true,true);expect(replay.campaign).toEqual(main.campaign);

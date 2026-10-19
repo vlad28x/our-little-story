@@ -1,5 +1,7 @@
 # Происхождение ассетов
 
+Глава6 (19 октября2026): `public/assets/characters/advisers/angel.webp`, `devil.webp`, `public/assets/backgrounds/shop-window-evening.webp` созданы встроенным Imagegen по уже одобренным city-smile/river-evening. Без исходных фото; alpha советчиков сохранён. Точные промпты, размеры и происхождение — [outputs/CHAPTER_06_ART.md](outputs/CHAPTER_06_ART.md). Карта маршрута/искры — оригинальная векторная графика проекта. Статус: Generated, integrated; автор одобрил визуальный результат и публикацию после увеличения советчиков.
+
 17 октября 2026. Runtime-ресурсы находятся только в `public/assets/`. Оригинальные фотографии и личные переписки в поставку не включены.
 
 | Ресурс | Происхождение | Статус |

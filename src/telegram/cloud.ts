@@ -28,7 +28,7 @@ function nativeCode(error:unknown){
 export function cloudErrorText(error:unknown){
   return error instanceof CloudTransportError||error instanceof CloudCryptoError||error instanceof CloudConflict?error.message:'Не удалось проверить или подтвердить облачную копию (CHECK_FAILED).';
 }
-export function cloudRaw(save:SaveV1){return JSON.stringify(parseSave(JSON.stringify({...save,continuation:null})));}
+export function cloudRaw(save:SaveV1){const normalized=parseSave(JSON.stringify(save));return JSON.stringify({...normalized,continuation:null,privateNotes:{},localNoteRevision:0});}
 export function splitCloudText(raw:string){
   const chunks:string[]=[];let start=0,end=0,bytes=2;
   // Bound the encoded JSON string, not JS string.length. Cyrillic, emoji,

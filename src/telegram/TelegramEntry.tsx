@@ -6,6 +6,7 @@ import type { SaveV1 } from '../state/types';
 import { SaveExportButton } from '../ui/SaveExportButton';
 import { prepareTelegram,type TelegramApp } from './bridge';
 import { TelegramCloud,CloudSession,cloudRaw,type CloudSnapshot } from './cloud';
+import { preserveLocalNotes } from '../persistence/notes';
 
 const storage:StorageLike={getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v),removeItem:k=>localStorage.removeItem(k)};
 type Ready={key:string;loaded:Loaded;session?:CloudSession;app?:TelegramApp};
@@ -40,6 +41,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
   },[attempt]);
   function choose(save:SaveV1,useCloud=true){
     if(!choice)return;
+    if(save===choice.snapshot.save||save===choice.snapshot.backup)save=preserveLocalNotes(save,choice.local.recovery&&choice.local.backup?choice.local.backup:choice.local.save);
     const session=useCloud?new CloudSession(choice.cloud,choice.snapshot.head,choice.snapshot.save&&!choice.snapshot.needsRewrite?cloudRaw(choice.snapshot.save):null):undefined;
     let localError:string|null=null;
     try{
@@ -55,7 +57,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
     {error?<><h1>Проверим сохранение</h1><p role="alert">{error}</p><p>Облако не изменено. Без проверки можно продолжить с копией на этом устройстве; синхронизация останется на паузе.</p><div className="stack"><button className="primary" onClick={()=>{setError('');setAttempt(n=>n+1);}}>Проверить ещё раз</button><button onClick={()=>setReady({key:localKey,loaded:load(storage,localKey),app:launchApp})}>Продолжить на этом устройстве</button></div></>:
     choice?<><h1>{choice.snapshot.damaged?'Сохраним эту историю':choice.snapshot.save?'Какую историю продолжить?':'История будет с тобой 💗'}</h1>
       <p>{choice.snapshot.damaged?'Облачная копия повреждена. Можно восстановить предыдущую или явно заменить её выбранной историей.':'В Telegram можно сохранять главы, ответы, альбом и настройки и продолжать на другом устройстве с тем же аккаунтом.'}</p>
-      <p className="small">Реальный выбор встречи и черновик сообщения в облако не отправляются. В обычном браузере прогресс хранится отдельно. Игра не отправляет сообщений.</p>
+      <p className="small">Реальный выбор встречи, личные заметки и черновики в облако не отправляются. В обычном браузере прогресс хранится отдельно. Игра не отправляет сообщений.</p>
       <div className="stack">
         {choice.snapshot.save&&<SaveChoice title="Продолжить из Telegram" save={choice.snapshot.save} onChoose={()=>choose(choice.snapshot.save!)}/>}
         {choice.snapshot.backup&&<SaveChoice title="Восстановить резервную копию Telegram" save={choice.snapshot.backup} onChoose={()=>choose(choice.snapshot.backup!)}/>}

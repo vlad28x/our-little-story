@@ -3,11 +3,13 @@ import { checkCode } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
 import { startRun, step } from '../engine/step';
 import type { ChapterId,Command,NodeId,StoryState } from '../engine/types';
-import type { SaveV1,Settings } from './types';
+import type { ChapterRecord,SaveV1,Settings } from './types';
+import { normalizeNote,validNote } from '../persistence/notes';
 export type Action =
-  | {type:'start';chapter?:ChapterId}|{type:'trial';chapter?:ChapterId}|{type:'discard-trial'}|{type:'rewrite';chapter?:ChapterId}
+  | {type:'start'|'trial'|'rewrite';chapter?:ChapterId;attemptId?:string}|{type:'discard-trial'}
   | {type:'unlock';code:string}
-  | {type:'command';target:'campaign'|'trial';command:Command}
+  | {type:'command';target:'campaign'|'trial';command:Command;noteText?:string}
+  | {type:'note-edit';target:'campaign'|'trial';attemptId:string;text?:string;remove?:boolean}
   | {type:'settings';settings:Settings}
   | {type:'continuation';value:SaveV1['continuation']}
   | {type:'replace';save:SaveV1}
@@ -21,31 +23,44 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       if(!chapter||!canStart(s,id)||s.campaign.active||s.campaign.completed.includes(id))return current;
       const prior=id===1?{}:s.campaign.records[(id-1) as ChapterId]?.story;
       if(!prior)return current;
-      s.campaign.startStates[id]=structuredClone(prior);s.campaign.active=startRun(chapter,prior);s.lastResult=null;break;
+      if(id===6&&!action.attemptId)return current;
+      s.campaign.startStates[id]=structuredClone(prior);s.campaign.active=startRun(chapter,prior,action.attemptId);s.lastResult=null;
+      if(id===6)delete s.privateNotes.campaign;break;
     }
     case 'unlock':{
       const found=checkCode(action.code);
       if(!found?.available||!getChapter(found.id)||s.unlocked.includes(found.id))return current;
-      s.unlocked.push(found.id);s.unlocked.sort();break;
+      s.unlocked.push(found.id);s.unlocked.sort((a,b)=>a-b);break;
     }
     case 'trial':{
       const id=action.chapter??1,chapter=getChapter(id),start=s.campaign.startStates[id];
       if(!chapter||!start||s.trial)return current;
-      s.trial={chapter:id,run:startRun(chapter,start)};s.lastResult=null;break;
+      if(id===6&&(!action.attemptId||!s.campaign.completed.includes(6)||action.attemptId===s.campaign.records[6]?.attemptId))return current;
+      s.trial={chapter:id,run:startRun(chapter,start,action.attemptId)};s.lastResult=null;if(id===6)delete s.privateNotes.trial;break;
     }
-    case 'discard-trial':s.trial=null;break;
+    case 'discard-trial':if(s.trial?.chapter===6)delete s.privateNotes.trial;s.trial=null;break;
     case 'rewrite':{
       const id=action.chapter??1,chapter=getChapter(id),start=id===1?{}:s.campaign.startStates[id];
       if(!chapter||!start||!canStart(s,id))return current;
-      for(const key of [1,2,3,4,5] as ChapterId[])if(key>=id){delete s.campaign.records[key];delete s.campaign.startStates[key];}
-      s.campaign.completed=s.campaign.completed.filter(n=>n<id);s.campaign.startStates[id]=structuredClone(start);s.campaign.active=startRun(chapter,start);s.trial=null;s.lastResult=null;s.continuation=null;break;
+      if(id===6&&(!action.attemptId||action.attemptId===s.campaign.records[6]?.attemptId))return current;
+      for(const key of Object.keys(s.campaign.startStates).map(Number) as ChapterId[])if(key>=id){delete s.campaign.records[key];delete s.campaign.startStates[key];}
+      s.campaign.completed=s.campaign.completed.filter(n=>n<id);s.campaign.startStates[id]=structuredClone(start);s.campaign.active=startRun(chapter,start,action.attemptId);s.trial=null;s.lastResult=null;s.privateNotes={};if(id<=5)s.continuation=null;break;
+    }
+    case 'note-edit':{
+      const record=action.target==='campaign'?s.campaign.records[6]:s.lastResult?.source==='trial'&&s.lastResult.chapter===6?s.lastResult.episodeRecord:undefined;
+      if(!record||record.attemptId!==action.attemptId||record.story.c6Note!=='saved')return current;
+      const text=normalizeNote(action.text??'').trim();
+      if(!action.remove&&!validNote(text))return current;
+      s.privateNotes[action.target]={chapter:6,questionId:'s2.q6',attemptId:action.attemptId,status:action.remove?'deleted':'saved',text:action.remove?'':text};
+      s.localNoteRevision++;return s;
     }
     case 'settings':s.settings={...action.settings};break;
     case 'continuation':if(!s.campaign.completed.includes(5)||s.trial||![null,'game','movie','cafe','walk','decline','public','chat','later'].includes(action.value)||s.continuation===action.value)return current;s.continuation=action.value;break;
     case 'replace':s=structuredClone(action.save);break;
     case 'dev-jump':{
       if(!import.meta.env.DEV)return current;
-      const id=Number(action.nodeId[1]) as ChapterId,chapter=getChapter(id),node=chapter?.nodes[action.nodeId];
+      const id=Number(action.nodeId.match(/^c(\d+)\./)?.[1]) as ChapterId,chapter=getChapter(id),node=chapter?.nodes[action.nodeId];
+      if(id>=6)return current; // Chapter six is exercised through isolated full-save fixtures.
       if(!chapter||!node||node.kind==='route'||node.kind==='end')return current;
       const run=startRun(chapter);run.nodeId=action.nodeId;run.story=action.story;
       if(id===1&&run.story.searchResult){run.results['token-search']={kind:'token-search',outcome:run.story.searchResult,catNoticed:!!run.story.catNoticed};if(run.story.catNoticed)run.earned=['cat-supervisor'];}
@@ -81,15 +96,27 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     case 'command':{
       const run=action.target==='trial'?s.trial?.run:s.campaign.active;
       if(!run)return current;const chapter=getChapter(run.chapter);if(!chapter)return current;
+      if(action.command.kind==='note-result'){
+        const text=normalizeNote(action.noteText??'').trim();
+        if(action.command.status==='saved'&&!validNote(text))return current;
+      }
       const result=step(chapter,run,action.command);if(result.kind==='rejected')return current;
+      if(action.command.kind==='note-result'&&run.attemptId){
+        if(action.command.status==='saved')s.privateNotes[action.target]={chapter:6,questionId:'s2.q6',attemptId:run.attemptId,status:'saved',text:normalizeNote(action.noteText!).trim()};
+        else delete s.privateNotes[action.target];
+        s.localNoteRevision++;
+      }
       if(result.kind==='ready'){if(action.target==='trial')s.trial={chapter:run.chapter,run:result.run};else s.campaign.active=result.run;}
       else {
-        const card=cardFromStory(result.run.story,run.chapter,result.run.results);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card.id),card];s.collection.achievements=[...new Set([...s.collection.achievements,...result.run.earned])];s.lastResult={chapter:run.chapter,cardId:result.cardId,source:action.target};
+        const card=cardFromStory(result.run.story,run.chapter,result.run.results);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card.id),card];s.collection.achievements=[...new Set([...s.collection.achievements,...result.run.earned])];
+        const record:ChapterRecord={endingId:result.endingId,cardId:result.cardId,story:result.run.story,results:result.run.results,...(run.chapter===6?{attemptId:result.run.attemptId,episode:result.run.episode}:{})};
+        if(result.run.episode?.bonus)s.collection.bonuses=[...new Set([...s.collection.bonuses,result.run.episode.bonus])];
+        s.lastResult={chapter:run.chapter,cardId:result.cardId,source:action.target,...(run.chapter===6&&action.target==='trial'?{episodeRecord:record}:{})};
         if(action.target==='trial')s.trial=null;
-        else {s.campaign.completed=[...new Set([...s.campaign.completed,run.chapter])];s.campaign.records[run.chapter]={endingId:result.endingId,cardId:result.cardId,story:result.run.story,results:result.run.results};s.campaign.active=null;}
+        else {s.campaign.completed=[...new Set([...s.campaign.completed,run.chapter])];s.campaign.records[run.chapter]=record;s.campaign.active=null;}
       }
       break;
     }
   }
-  s.contentVersion=5;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
+  s.contentVersion=6;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
 }

@@ -6,13 +6,15 @@ import { Illustration } from './Illustration';
 import { KitchenControls } from './KitchenControls';
 import { SceneEasterEggs } from './SceneEasterEggs';
 import { sceneEggProps } from '../content/easterEggs';
-export function SceneStage({background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',reserveRemote=false,bench,souvenir,catAtCounter=false,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onEasterSound}:{background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;reserveRemote?:boolean;bench?:'near'|'space';souvenir?:'patched'|'borrowed'|'skipped';catAtCounter?:boolean;easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onEasterSound?:()=>void}){
+import { AdviserPortrait } from './AdviserPortrait';
+import { ShopBreakSign } from './ShopBreakSign';
+export function SceneStage({background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',reserveRemote=false,bench,souvenir,catAtCounter=false,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onEasterSound,advisers}:{background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;reserveRemote?:boolean;bench?:'near'|'space';souvenir?:'patched'|'borrowed'|'skipped';catAtCounter?:boolean;easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onEasterSound?:()=>void;advisers?:'angel'|'devil'|'both'}){
   const stage=useRef<HTMLDivElement>(null);
   // Keep the plate while its optional hotspots unmount during the kitchen or pause.
   const [cookieTaken,setCookieTaken]=useState(false);
   const [failedUrls,setFailedUrls]=useState<string[]>([]);
   const [attempts,setAttempts]=useState<Record<string,number>>({});
-  const location=background==='bg.cafe.sunset'?'Снова в «Паузе» · закат':background==='bg.river.evening'?'Набережная · тихий вечер':background==='bg.home.living'?'Дома у Влада · игровой вечер':background==='bg.rain.awning'?'Под навесом · осенний дождь':background==='bg.rain.arcade'?'Под аркой · короткий путь':background.endsWith('entry')?'Кафе «Пауза»':'У окна · маленькая пауза';
+  const location=background==='bg.s2.window.evening'?'У витрины · вечерний перерыв':background==='bg.cafe.sunset'?'Снова в «Паузе» · закат':background==='bg.river.evening'?'Набережная · тихий вечер':background==='bg.home.living'?'Дома у Влада · игровой вечер':background==='bg.rain.awning'?'Под навесом · осенний дождь':background==='bg.rain.arcade'?'Под аркой · короткий путь':background.endsWith('entry')?'Кафе «Пауза»':'У окна · маленькая пауза';
   const layers=[
     {id:'background',url:assetUrl(background),className:'scene-background',alt:''},
     {id:'character',url:assetUrl(speaker==='nina'?'nina.neutral':`vlad.${background==='bg.home.living'?'casual':background==='bg.cafe.sunset'?'elegant':'city'}.${emotion}`),className:`character emotion-${emotion} ${speaker==='nina'?'nina':''}`,alt:speaker==='nina'?'Нина':'Влад'},
@@ -40,9 +42,11 @@ export function SceneStage({background='bg.cafe.entry',emotion='smile',speaker,s
       onError={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous:[...previous,layer.url])}
       onLoad={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous.filter(url=>url!==layer.url):previous)}/>;
   }
-  return <div ref={stage} className={`scene-stage ${bench?`bench-${bench}`:''}`} aria-label={location}>
+  return <div ref={stage} className={`scene-stage ${advisers?'has-advisers':''} ${bench?`bench-${bench}`:''}`} aria-label={location}>
     {easterEggs&&currentFailures.length===0&&<SceneEasterEggs stage={stage} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c3.pad.dead','c3.pad.ready'].includes(sceneId)} controller={sceneId==='c3.pad.ready'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} reduced={reducedMotion} onSound={onEasterSound}/>}
+    {advisers&&<div className="adviser-council" aria-label="Советчики этой истории"><AdviserPortrait kind="angel" active={advisers==='angel'||advisers==='both'}/><AdviserPortrait kind="devil" active={advisers==='devil'||advisers==='both'}/></div>}
     {renderLayer('background')}
+    {background==='bg.s2.window.evening'&&currentFailures.length===0&&<ShopBreakSign stage={stage}/>}
     <div className="scene-light"/>
     {renderLayer('character')}
     {renderLayer('cat')}

@@ -1,3 +1,4 @@
+import { legacyContent } from './legacySave';
 import { describe,it,expect } from 'vitest';
 import { load,persist,type StorageLike } from '../src/persistence/storage';
 import { parseSave } from '../src/persistence/validateSave';
@@ -39,7 +40,7 @@ describe('save and restore',()=>{
     for(const [index,base] of bases.entries()){
       const chapter=(index+1) as ChapterId,code=chapters.find(c=>c.id===chapter)?.code;
       let save=reduceSave(code?reduceSave(base,{type:'unlock',code}):base,{type:'start',chapter});save=reduceSave(save,{type:'trial',chapter});
-      const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw).toContain('"journal"');expect(parseSave(raw)).toEqual(save);expect(parseSave(JSON.stringify({...legacy,contentVersion:chapter}))).toEqual(save);expect(JSON.stringify(legacy)).toBe(raw);
+      const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw).toContain('"journal"');expect(parseSave(raw)).toEqual(save);expect(parseSave(JSON.stringify(legacyContent(legacy,chapter)))).toEqual(save);expect(JSON.stringify(legacy)).toBe(raw);
       const storage=new MemoryStorage();storage.setItem(key,raw);expect(load(storage,key).save).toEqual(save);expect(storage.getItem(key)).toBe(raw);
       expect(persist(storage,legacy,save.revision,key)).toBe('saved');expect(storage.getItem(key)).not.toContain('"journal"');expect(parseSave(storage.getItem('test:backup')!)).toEqual(save);
     }

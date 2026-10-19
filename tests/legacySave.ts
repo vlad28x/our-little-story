@@ -3,6 +3,15 @@ import type { Run } from '../src/engine/types';
 import type { SaveV1 } from '../src/state/types';
 import { createHash } from 'node:crypto';
 
+// Build an actual old envelope: changing only the version label would leave
+// fields that the old client never wrote, and should be rejected by validation.
+export function legacyContent(save:SaveV1,version:number):SaveV1{
+  const legacy=structuredClone(save) as unknown as Record<string,unknown>;
+  delete legacy.privateNotes;delete legacy.localNoteRevision;
+  delete (legacy.collection as Record<string,unknown>).bonuses;legacy.contentVersion=version;
+  return legacy as unknown as SaveV1;
+}
+
 // Synthetic pre-removal format. No player exports or personal choices are fixtures.
 export function withLegacyJournal(save:SaveV1){
   function attach(run:Run){

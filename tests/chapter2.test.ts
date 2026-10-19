@@ -1,3 +1,4 @@
+import { legacyContent } from './legacySave';
 import { chapters as chapterManifest } from '../src/content/chapters/manifest';
 const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
 import { describe,it,expect } from 'vitest';
@@ -65,14 +66,14 @@ describe('chapter two',()=>{
   it('migrates every first chapter cursor and its completed/trial state without changing progress',()=>{
     let s=reduceSave(initialState(),{type:'start'});
     for(let i=0;i<180;i++){
-      const legacy={...s,contentVersion:1};expect(parseSave(JSON.stringify(legacy))).toEqual(s);
+      const legacy=legacyContent(s,1);expect(parseSave(JSON.stringify(legacy))).toEqual(s);
       if(!s.campaign.active)break;s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active)});
     }
-    s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify({...s,contentVersion:1}))).toEqual(s);
+    s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify(legacyContent(s,1)))).toEqual(s);
   });
   it('rejects contradictory inherited decisions and forged completed prefixes',()=>{
     const main=finish2(completeSave());const wrong=structuredClone(main);wrong.campaign.records[2]!.story.plan='coop';expect(()=>parseSave(JSON.stringify(wrong))).toThrow();const prefix=structuredClone(main);prefix.campaign.completed=[2];expect(()=>parseSave(JSON.stringify(prefix))).toThrow();
-    const fakeLegacy={...main,contentVersion:1};expect(()=>parseSave(JSON.stringify(fakeLegacy))).toThrow();
+    const fakeLegacy=legacyContent(main,1);expect(()=>parseSave(JSON.stringify(fakeLegacy))).toThrow();
   });
   it('rejects a result from the wrong game without changing the run',()=>{let s=reduceSave(reduceSave(completeSave(),{type:'unlock',code:chapterTwoCode}),{type:'start',chapter:2});for(let i=0;i<150&&s.campaign.active?.nodeId!=='c2.umbrella';i++){const r=s.campaign.active!;s=reduceSave(s,{type:'command',target:'campaign',command:command2(r,default2)});}const r=s.campaign.active!;expect(step(chapter2,r,{kind:'game-result',expectedTurn:r.turn,result:{kind:'token-search',outcome:'skipped',catNoticed:false}}).kind).toBe('rejected');});
 });

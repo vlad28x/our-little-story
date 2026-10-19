@@ -1,9 +1,10 @@
+import { legacyContent } from './legacySave';
 import { test,expect,type Page } from '@playwright/test';
 import { expectSimpleResult } from './resultActions';
 import { completeTwo,thirdCode } from './chapter3Helpers';
 import { ingredientNames,recipes,type Recipe } from '../src/minigames/kitchenModel';
 const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
-async function seed(page:Page){const save=completeTwo();await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({...save,contentVersion:2}));},{key,save});return save;}
+async function seed(page:Page){const save=legacyContent(completeTwo(),2);await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({...save,contentVersion:2}));},{key,save});return save;}
 async function until(page:Page,id:string){for(let i=0;i<150;i++){if(await page.locator(`[data-node="${id}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error('Not reached '+id);}
 async function open(page:Page){await page.goto('./#/chapters');await expect(page.getByText('Ждёт своего маленького приглашения')).toBeVisible();await expect(page.getByLabel('Код',{exact:true})).toBeVisible();await page.getByLabel('Код',{exact:true}).fill(thirdCode);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await page.locator('.chapter-list li').nth(2).getByRole('button',{name:'Начать встречу'}).click();await expect(page.locator('[data-node="c3.sofa"]')).toBeVisible();}
 async function toKitchen(page:Page,reaction:'tease'|'help'|'absurd'='absurd'){

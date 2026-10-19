@@ -1,23 +1,36 @@
 import type { Chapter, Command, Condition, Run, StepResult, StoryState } from './types';
 import { kitchenOutcome } from '../minigames/kitchenModel';
+import { acceptsRouteResult,initialRoute,routeReduce } from '../minigames/eveningRouteModel';
+import { allSparks,bonusFor } from '../content/season2';
 
-export function matches(story:StoryState, conditions:Condition[] = []) { return conditions.every(c => story[c.key] === c.equals); }
+export function matches(story:StoryState, conditions:Condition[] = [],run?:Run) {
+  return conditions.every(c=>{
+    if('key' in c)return story[c.key]===c.equals;
+    const route=run?.results['evening-route'];
+    if(c.kind==='route-mode')return route?.mode===c.equals;
+    if(c.kind==='route-stop')return route?.stops[c.index]===c.equals;
+    if(c.kind==='route-includes')return !!route?.stops.some(s=>s===c.stop);
+    return !!run&&allSparks(run);
+  });
+}
 function settle(chapter:Chapter, run:Run):StepResult {
   for (let hop = 0; hop < 32; hop++) {
     const node = chapter.nodes[run.nodeId];
     if (!node) return {kind:'rejected',reason:'Не удалось найти сцену.'};
-    if (node.kind === 'route') { run.nodeId = node.cases.find(c => matches(run.story,c.all))?.next ?? node.fallback; continue; }
+    if (node.kind === 'route') { run.nodeId = node.cases.find(c => matches(run.story,c.all,run))?.next ?? node.fallback; continue; }
     if (node.kind === 'end') {if(chapter.id===5)run.earned=[...new Set([...run.earned,'five-meetings'])];return {kind:'complete',run,endingId:node.endingId,cardId:node.cardId};}
     if (node.kind === 'dialogue') {
       const line = node.lines[run.lineIndex];
       if (!line) return {kind:'rejected',reason:'Реплика недоступна.'};
     }
+    if(node.kind==='minigame'&&node.game==='evening-route'&&!run.activity)run.activity=initialRoute();
     return {kind:'ready',run};
   }
   return {kind:'rejected',reason:'Сценарий зациклился.'};
 }
-export function startRun(chapter:Chapter, story:StoryState = {}):Run {
-  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story},results:{},earned:[]});
+export function startRun(chapter:Chapter, story:StoryState = {},attemptId?:string):Run {
+  if(chapter.id===6&&!attemptId)throw new Error('Для новой встречи нужен ID попытки');
+  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story},results:{},earned:[],...(chapter.id===6?{attemptId,episode:{sparks:[]}}:{})});
   if (result.kind !== 'ready') throw new Error('Глава должна начинаться с доступной сцены');
   return result.run;
 }
@@ -31,9 +44,16 @@ export function step(chapter:Chapter, current:Run, command:Command):StepResult {
     if (run.lineIndex + 1 < node.lines.length) run.lineIndex++;
     else { run.nodeId = node.next; run.lineIndex = 0; }
   } else if (command.kind === 'choose' && node.kind === 'choice') {
-    const choice = node.choices.find(c => c.id === command.choiceId && matches(run.story,c.when));
+    const choice = node.choices.find(c => c.id === command.choiceId && matches(run.story,c.when,run));
     if (!choice) return {kind:'rejected',reason:'Этот ответ недоступен.'};
-    for (const effect of choice.effects ?? []) run.story = {...run.story,[effect.key]:effect.value};
+    for (const effect of choice.effects ?? []){
+      if(effect.kind==='set')run.story={...run.story,[effect.key]:effect.value};
+      else if(effect.kind==='spark'&&run.episode)run.episode.sparks=[...new Set([...run.episode.sparks,effect.id])];
+      else if(effect.kind==='open-bonus'){
+        if(!run.episode||!allSparks(run))return {kind:'rejected',reason:'Конверт ещё не открыт.'};
+        run.episode.bonus=bonusFor(run.story.c6Guide);
+      }
+    }
     run.nodeId = choice.next; run.lineIndex = 0;
   } else if (command.kind === 'game-result' && node.kind === 'minigame') {
     const r = command.result;
@@ -54,11 +74,21 @@ export function step(chapter:Chapter, current:Run, command:Command):StepResult {
       if(!['cat','controllers','teapot'].includes(r.outcome)||typeof r.usedPreset!=='boolean'||(r.usedPreset&&r.outcome!=='teapot'))return {kind:'rejected',reason:'Неизвестный рисунок созвездия.'};
       run.results.constellation={...r};run.story.constellation=r.outcome;
       if(!r.usedPreset)run.earned=[...new Set([...run.earned,'own-sky'])];
-    }else{
+    }else if(r.kind==='memories'){
       if(!['viewed','skipped'].includes(r.outcome))return {kind:'rejected',reason:'Неизвестный результат воспоминаний.'};
       run.results.memories={...r};
+    }else{
+      if(!run.activity||!run.episode||!acceptsRouteResult(run.activity,r))return {kind:'rejected',reason:'Маршрут не подтверждён.'};
+      run.results['evening-route']=structuredClone(r);delete run.activity;
+      if(r.mode!=='skipped')run.episode.sparks=[...new Set([...run.episode.sparks,'c6.spark.route' as const])];
     }
     run.nodeId = node.next; run.lineIndex = 0;
+  } else if(command.kind==='game-action'&&node.kind==='minigame'&&node.game==='evening-route'&&command.game==='evening-route'&&run.activity){
+    const activity=routeReduce(run.activity,command.action);
+    if(activity===run.activity)return {kind:'rejected',reason:'Маршрут не изменился.'};
+    run.activity=activity;
+  } else if(command.kind==='note-result'&&node.kind==='note'&&['saved','skipped'].includes(command.status)){
+    run.story.c6Note=command.status;run.nodeId=node.next;run.lineIndex=0;
   } else return {kind:'rejected',reason:'Действие не подходит к этой сцене.'};
   run.turn++;
   return settle(chapter,run);

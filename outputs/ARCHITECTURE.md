@@ -1,5 +1,7 @@
 # ARCHITECTURE — статическая игра, редакция документа 1.1
 
+Второй сезон (19 октября, глава6 **реализована локально**): [SEASON_02_IMPLEMENTATION_BRIEF.md](SEASON_02_IMPLEMENTATION_BRIEF.md) фиксирует расширение прежнего движка: contentVersion6/schemaVersion1, три искры, checkpoint карты, note-узел, privateNotes и localNoteRevision, исключённые из CloudStorage. Факт/проверки — [CHAPTER_06_IMPLEMENTATION_REPORT.md](CHAPTER_06_IMPLEMENTATION_REPORT.md). Маршрутизация читает полное число главы, registry metadata до10, playable только1–6. Старые контракты1–5 сохранены; active6/record6 валидируются достижимостью через чистый граф. Trial6 имеет отдельный lastResult.episodeRecord. Backend/нового движка/аналитики нет; упоминания runtime content5 ниже исторические.
+
 Дополнение 19 октября: sceneEggProps(background,sceneId) в content/easterEggs.ts задаёт шесть новых косметических реакций. SceneEasterPropArt — чистый SVG-рендер; активный id/контекст и focus остаются в SceneEasterEggs. Плед/кружка/телевизор привязаны к натуральным координатам bg.home.living, с cover/center38% и пересчётом при resize; печенье по уточнению автора остаётся в прежней позиции CSS внизу слева, поверх области пледа (z-index2 против1), без boxes.cookie; второй геймпад измеряется по существующему SVG только в c3.pad.ready. Звезда/табличка — отдельные небольшие SVG; все цели≥48px. Новых engine commands/полей, таймеров сохранения, зависимостей и сетевых ресурсов нет. Reduced motion оставляет статические детали.
 
 

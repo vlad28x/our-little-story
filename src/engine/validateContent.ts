@@ -12,7 +12,7 @@ export function validateContent(chapter:Chapter):string[] {
     if(n.kind==='dialogue'){if(!n.lines.length)errors.push(`No lines ${id}`);next=[n.next];}
     if(n.kind==='choice'){if(!n.choices.length||n.choices.every(c=>c.when?.length))errors.push(`No default choice ${id}`);if(new Set(n.choices.map(c=>c.id)).size!==n.choices.length)errors.push(`Duplicate choice ${id}`);next=n.choices.map(c=>c.next);}
     if(n.kind==='route')next=[...n.cases.map(c=>c.next),n.fallback];
-    if(n.kind==='minigame')next=[n.next];
+    if(n.kind==='minigame'||n.kind==='note')next=[n.next];
     for(const target of next)walk(target,[...stack,id]);
   }
   walk(chapter.entry,[]);

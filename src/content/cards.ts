@@ -16,12 +16,15 @@ export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string
   'c5.comic': {chapter:5,title:'Продлено котом',caption:'Бюро случайных встреч продолжает работу. Руководитель одобряет',quote:'руководитель утвердил. не читая.',motif:'token',background:'bg.cafe.sunset'},
   'c5.gaming': {chapter:5,title:'Второй игрок остаётся',caption:'Состав команды сохранён. Новое приключение выберем вместе',quote:'финальный босс — выбрать, во что играть.',motif:'controller',background:'bg.cafe.sunset'},
   'c5.friendly': {chapter:5,title:'Хорошо, что встретились',caption:'Можно просто быть собой и находить время для хороших встреч',quote:'мне нравится, что здесь не надо ничего изображать.',motif:'tea',background:'bg.cafe.sunset'},
+  'c6.hand':{chapter:6,title:'Рука в руке',caption:'Короткая дорога подождёт',quote:'маршрут теперь можешь вообще не объяснять.',motif:'star',background:'bg.river.evening'},
+  'c6.lap':{chapter:6,title:'Ещё один круг',caption:'Вечер, которому не нужен большой план',quote:'договорились. теперь расскажу, почему керамический кот выглядит успешнее меня.',motif:'star',background:'bg.river.evening'},
+  'c6.home':{chapter:6,title:'До следующего вечера',caption:'Хорошее прощание тоже часть встречи',quote:'мне понравился этот вечер. спасибо, что свернула со мной.',motif:'star',background:'bg.river.evening'},
 };
 export const searchCaptions = {tidy:'Три точных находки',detour:'Провели расследование',skipped:'Собрали вместе'};
 export const umbrellaCaptions={patched:'Облако-нашивка на память',borrowed:'Сухой чехол для зонтика',skipped:'Просто хороший перерыв'};
 export const kitchenCaptions={feast:'Целый пир на экране',snack:'Один большой бутерброд',chaos:'Зато красиво сервировали',skipped:'Печенье без обучения'};
-export function cardDetail(card:CardRecord){return card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===3?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
-export function cardCharacter(id:CardId){const chapter=cards[id].chapter;return chapter===3?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
+export function cardDetail(card:CardRecord){return card.chapter===6?'После титров · первая встреча':card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===3?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
+export function cardCharacter(id:CardId){const chapter=cards[id].chapter;return chapter===6?'vlad.city.smile':chapter===3?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
 export function cardTeam(card:CardRecord){return card.teamName?teamNames[card.teamName]:'';}
 export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run['results']):CardRecord {
   let id:CardId;let variant:CardRecord['variant'];
@@ -30,6 +33,7 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
   else if(chapter===3&&story.kitchenResult&&story.teamName){id='c3.dinner';variant=story.kitchenResult;}
   else if(chapter===4&&story.wish&&story.constellation){id=`c4.${story.wish}`;variant=story.constellation;}
   else if(chapter===5&&story.ending&&story.wish){id=`c5.${story.ending}`;variant=story.wish;}
+  else if(chapter===6&&story.c6Ending){id=`c6.${story.c6Ending}`;variant='evening';}
   else throw new Error('История ещё не завершена');
   return {id,chapter,endingId:id,variant,captionId:`${id}.${variant}`,...(chapter===3?{teamName:story.teamName}:{}),...(chapter===4?{usedPreset:results?.constellation?.usedPreset??false}:{})};
 }

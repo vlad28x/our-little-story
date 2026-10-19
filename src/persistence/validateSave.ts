@@ -3,6 +3,11 @@ import { kitchenOutcome } from '../minigames/kitchenModel';
 import { cards,cardFromStory } from '../content/cards';
 import type { ChapterId,Run,StoryState } from '../engine/types';
 import type { SaveV1 } from '../state/types';
+import { validRouteResult,routeStops } from '../minigames/eveningRouteModel';
+import { bonusIds,sparkIds } from '../content/season2';
+import { noteLength,normalizeNote,validNote } from './notes';
+import { reachableEpisode } from './validateEpisode';
+import type { EpisodeProgress } from '../engine/types';
 export const MAX_SAVE_BYTES=256*1024;
 function fail(message='Файл сохранения повреждён или не соответствует этой версии игры.'):never{throw new Error(message);}
 function obj(x:unknown):Record<string,unknown>{if(!x||typeof x!=='object'||Array.isArray(x))fail();return x as Record<string,unknown>;}
@@ -14,8 +19,9 @@ const firstFields=['approach','searchResult','catNoticed','pace','plan'];
 const secondFields=['rainRoute','catApproach','umbrella','eveningMood'];
 const thirdFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
 const fourthFields=['bench','constellation','bond','wish'];
-const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['ending']].slice(0,id).flat();
-const storyEnums={approach:['joke','help','space'],searchResult:['tidy','detour','skipped'],catNoticed:[true,false],pace:['quiet','playful','flirt'],plan:['tea','banter','coop'],rainRoute:['shelter','arcade'],catApproach:['wait','help'],umbrella:['patched','borrowed','skipped'],eveningMood:['quiet','playful'],controllerReaction:['tease','help','absurd'],teamName:['dumpling','calm','accident'],kitchenStyle:['planner','improv'],kitchenResult:['feast','snack','chaos','skipped'],gameAftercare:['team','rematch'],bench:['near','space'],constellation:['cat','controllers','teapot'],bond:['romantic','friendly','undecided'],wish:['adventure','calm'],ending:['romantic','comic','gaming','friendly']};
+const sixthFields=['c6Guide','c6Thought','c6Voice','c6Contact','c6Note','c6Ending'];
+const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['ending'],sixthFields].slice(0,id).flat();
+const storyEnums={approach:['joke','help','space'],searchResult:['tidy','detour','skipped'],catNoticed:[true,false],pace:['quiet','playful','flirt'],plan:['tea','banter','coop'],rainRoute:['shelter','arcade'],catApproach:['wait','help'],umbrella:['patched','borrowed','skipped'],eveningMood:['quiet','playful'],controllerReaction:['tease','help','absurd'],teamName:['dumpling','calm','accident'],kitchenStyle:['planner','improv'],kitchenResult:['feast','snack','chaos','skipped'],gameAftercare:['team','rematch'],bench:['near','space'],constellation:['cat','controllers','teapot'],bond:['romantic','friendly','undecided'],wish:['adventure','calm'],ending:['romantic','comic','gaming','friendly'],c6Guide:['angel','devil','none'],c6Thought:['linger','tease','quiet'],c6Voice:['stay','tease','quiet'],c6Contact:['her','asked','none'],c6Note:['saved','skipped'],c6Ending:['hand','lap','home']};
 function requireFields(s:StoryState,fields:string[]){if(fields.some(k=>s[k as keyof StoryState]===undefined))fail();}
 function story(x:unknown,id:ChapterId,complete=false):StoryState{
   const o=obj(x);keys(o,fields(id));
@@ -28,6 +34,7 @@ function sameStory(a:StoryState,b:StoryState){return Object.keys(a).length===Obj
 function keepPrior(s:StoryState,prior:StoryState){if(Object.keys(prior).some(k=>s[k as keyof StoryState]!==prior[k as keyof StoryState]))fail('Копия содержит противоречащие друг другу решения глав.');}
 function results(x:unknown,s:StoryState,id:ChapterId){
   const o=obj(x);
+  if(id===6){keys(o,['evening-route']);if(o['evening-route']!==undefined&&!validRouteResult(o['evening-route']))fail();return;}
   if(id===5){keys(o,['memories']);if(o.memories!==undefined){const r=obj(o.memories);keys(r,['kind','outcome']);one(r.kind,['memories']);one(r.outcome,['viewed','skipped']);}return;}
   const game=id===1?'token-search':id===2?'umbrella-patch':id===3?'kitchen':'constellation',outcome=id===1?s.searchResult:id===2?s.umbrella:id===3?s.kitchenResult:s.constellation;
   keys(o,[game]);if(outcome===undefined){if(o[game]!==undefined)fail();return;}
@@ -36,8 +43,22 @@ function results(x:unknown,s:StoryState,id:ChapterId){
   if(id===4){one(r.usedPreset,[true,false]);if(r.usedPreset&&r.outcome!=='teapot')fail();}
   if(r.kind!==game||r.outcome!==outcome||(id===1&&r.catNoticed!==s.catNoticed))fail();
 }
-export function validateRun(x:unknown,maxChapter=5):Run{
-  const r=obj(x);keys(r,['chapter','nodeId','lineIndex','turn','story','journal','results','earned']);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));
+function attemptId(x:unknown):asserts x is string {if(typeof x!=='string'||!x.length||x.length>64||!/^[a-zA-Z0-9_-]+$/.test(x))fail();}
+function episode(x:unknown):EpisodeProgress{
+  const p=obj(x);keys(p,['sparks','bonus']);const sparks=arr(p.sparks,3);sparks.forEach(s=>one(s,sparkIds));if(new Set(sparks).size!==sparks.length)fail();
+  if(p.bonus!==undefined)one(p.bonus,bonusIds);return p as EpisodeProgress;
+}
+function record(x:unknown,id:ChapterId){
+  const r=obj(x);keys(r,['endingId','cardId','story','results',...(id===6?['attemptId','episode']:[])]);
+  const st=story(r.story,id,true);results(r.results,st,id);
+  const card=cardFromStory(st,id,r.results as Run['results']);if(r.cardId!==card.id||r.endingId!==card.id)fail();
+  if(id===5&&obj(r.results).memories===undefined)fail();
+  if(id===6){attemptId(r.attemptId);const p=episode(r.episode);if(!reachableEpisode({attemptId:r.attemptId,episode:p,story:st,results:r.results as Run['results']}))fail();}
+  return r;
+}
+export function validateRun(x:unknown,maxChapter=6):Run{
+  const r=obj(x);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));
+  keys(r,['chapter','nodeId','lineIndex','turn','story','journal','results','earned',...(r.chapter===6?['attemptId','episode','activity']:[])]);
   const id=r.chapter as ChapterId,chapter=getChapter(id),node=chapter?.nodes[r.nodeId as keyof typeof chapter.nodes];
   if(!node||node.kind==='end'||node.kind==='route')fail('Сцена этой копии недоступна. Восстановите резервную копию или начните главу заново.');
   integer(r.lineIndex,node.kind==='dialogue'?node.lines.length-1:0);integer(r.turn);
@@ -89,6 +110,14 @@ export function validateRun(x:unknown,maxChapter=5):Run{
     if(stage==='c5.tone.friendly'&&s.bond!=='friendly'||stage==='c5.tone.open'&&s.bond==='friendly')fail();
     for(const [prefix,value] of [['c5.rain.',s.rainRoute],['c5.souvenir.',s.umbrella],['c5.cat.',s.catApproach],['c5.approach.',s.approach]])if(stage.startsWith(prefix!)&&stage!==prefix!+value)fail();
   }
+  if(id===6){
+    requireFields(s,fields(5));attemptId(r.attemptId);const p=episode(r.episode);
+    if(stage==='c6.map'){
+      const a=obj(r.activity);keys(a,['kind','phase','selected']);one(a.kind,['evening-route']);one(a.phase,['select','suggestion']);
+      const selected=arr(a.selected,2);selected.forEach(stop=>one(stop,routeStops));if(new Set(selected).size!==selected.length)fail();
+    }else if(r.activity!==undefined)fail();
+    if(!reachableEpisode({attemptId:r.attemptId,story:s,results:r.results as Run['results'],episode:p},{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене. Исходная копия сохранена.');
+  }
   // Legacy saves may carry the removed reading journal. Validate its old bounded
   // format, then discard only that optional field; all progress stays unchanged.
   if(Object.hasOwn(r,'journal')){
@@ -104,37 +133,53 @@ export function validateRun(x:unknown,maxChapter=5):Run{
 export function parseSave(raw:string):SaveV1{
   if(new TextEncoder().encode(raw).length>MAX_SAVE_BYTES)fail('Копия слишком большая. Максимум 256 КБ.');
   const s=obj(JSON.parse(raw,(key,value:unknown)=>{if(['__proto__','prototype','constructor'].includes(key))fail();return value;}));
-  keys(s,['appId','schemaVersion','contentVersion','revision','updatedAt','settings','unlocked','campaign','trial','lastResult','collection','continuation']);
+  keys(s,['appId','schemaVersion','contentVersion','revision','updatedAt','settings','unlocked','campaign','trial','lastResult','collection','continuation',...(s.contentVersion===6?['privateNotes','localNoteRevision']:[])]);
   if(s.appId!=='five-meetings')fail('Это сохранение другой игры.');
-  if(s.schemaVersion!==1||![1,2,3,4,5].includes(s.contentVersion as number))fail('Эта копия создана другой версией игры. Текущий прогресс не изменён.');
+  if(s.schemaVersion!==1||![1,2,3,4,5,6].includes(s.contentVersion as number))fail('Эта копия создана другой версией игры. Обновите страницу или сохраните исходную копию. Текущий прогресс не изменён.');
   const maxChapter=s.contentVersion as number,chapterIds=Array.from({length:maxChapter},(_,i)=>i+1) as ChapterId[];
   integer(s.revision);if(typeof s.updatedAt!=='string'||s.updatedAt.length>40||!Number.isFinite(Date.parse(s.updatedAt)))fail();
   const settings=obj(s.settings);keys(settings,['sound','volume','textMode','motion']);one(settings.sound,[true,false]);one(settings.textMode,['instant','type']);one(settings.motion,['system','reduced','full']);if(typeof settings.volume!=='number'||!Number.isFinite(settings.volume)||settings.volume<0||settings.volume>1)fail();
-  const unlocked=arr(s.unlocked,5);unlocked.forEach(n=>one(n,[1,2,3,4,5]));if(!unlocked.includes(1)||new Set(unlocked).size!==unlocked.length)fail();
+  const unlocked=arr(s.unlocked,maxChapter===6?6:5);unlocked.forEach(n=>one(n,maxChapter===6?[1,2,3,4,5,6]:[1,2,3,4,5]));if(!unlocked.includes(1)||new Set(unlocked).size!==unlocked.length)fail();
   const c=obj(s.campaign);keys(c,['completed','startStates','records','active']);const done=arr(c.completed,maxChapter);done.forEach((id,i)=>{if(id!==i+1)fail();});
   const allowed=chapterIds.map(String);const starts=obj(c.startStates),records=obj(c.records);keys(starts,allowed);keys(records,allowed);
   if(starts['1']!==undefined&&Object.keys(story(starts['1'],1)).length)fail();
   for(const id of chapterIds){
     if(id>maxChapter)continue;
     if(done.includes(id)){
-      const r=obj(records[id]);keys(r,['endingId','cardId','story','results']);const st=story(r.story,id,true),card=cardFromStory(st,id,r.results as Run['results']);
-      if(r.cardId!==card.id||r.endingId!==card.id||!starts[id])fail();results(r.results,st,id);if(id===5&&obj(r.results).memories===undefined)fail();
+      const r=record(records[id],id);const st=r.story as StoryState;
+      if(!starts[id])fail();
       if(id>1)keepPrior(st,story(obj(records[id-1]).story,(id-1) as ChapterId,true));
     }else if(records[id]!==undefined)fail();
   }
   for(const id of chapterIds.filter(id=>id>1))if(starts[id]!==undefined){const prev=(id-1) as ChapterId;if(!done.includes(prev))fail();const prior=story(obj(records[prev]).story,prev,true);if(!sameStory(story(starts[id],prev,true),prior))fail();}
   if(c.active!==null){const run=validateRun(c.active,maxChapter);if(run.chapter!==done.length+1||!starts[run.chapter]||!unlocked.includes(run.chapter))fail();if(run.chapter>1)keepPrior(run.story,story(starts[run.chapter],(run.chapter-1) as ChapterId,true));}
   if(s.trial!==null){const t=obj(s.trial);keys(t,['chapter','run']);one(t.chapter,chapterIds);const run=validateRun(t.run,maxChapter);if(t.chapter!==run.chapter||!starts[run.chapter])fail();if(run.chapter>1)keepPrior(run.story,story(starts[run.chapter],(run.chapter-1) as ChapterId,true));}
-  const collection=obj(s.collection);keys(collection,['cards','achievements']);const cs=arr(collection.cards,maxChapter===1?3:maxChapter===2?5:maxChapter===3?6:maxChapter===4?8:12),ids:string[]=[];
-  for(const item of cs){const card=obj(item);keys(card,['id','chapter','endingId','variant','captionId',...(maxChapter>=3?['teamName']:[]),...(maxChapter>=4?['usedPreset']:[])]);if(typeof card.id!=='string'||!Object.hasOwn(cards,card.id))fail();const meta=cards[card.id as keyof typeof cards];if(card.endingId!==card.id||card.chapter!==meta.chapter||meta.chapter>maxChapter)fail();one(card.variant,meta.chapter===1?['tidy','detour','skipped']:meta.chapter===2?['patched','borrowed','skipped']:meta.chapter===3?['feast','snack','chaos','skipped']:meta.chapter===4?['cat','controllers','teapot']:['adventure','calm']);if(card.captionId!==`${card.id}.${card.variant}`)fail();if(meta.chapter===3)one(card.teamName,storyEnums.teamName);else if(card.teamName!==undefined)fail();if(meta.chapter===4){one(card.usedPreset,[true,false]);if(card.usedPreset&&card.variant!=='teapot')fail();}else if(card.usedPreset!==undefined)fail();ids.push(card.id);}
+  const collection=obj(s.collection);keys(collection,['cards','achievements',...(maxChapter===6?['bonuses']:[])]);const cs=arr(collection.cards,maxChapter===1?3:maxChapter===2?5:maxChapter===3?6:maxChapter===4?8:maxChapter===5?12:15),ids:string[]=[];
+  for(const item of cs){const card=obj(item);keys(card,['id','chapter','endingId','variant','captionId',...(maxChapter>=3?['teamName']:[]),...(maxChapter>=4?['usedPreset']:[])]);if(typeof card.id!=='string'||!Object.hasOwn(cards,card.id))fail();const meta=cards[card.id as keyof typeof cards];if(card.endingId!==card.id||card.chapter!==meta.chapter||meta.chapter>maxChapter)fail();one(card.variant,meta.chapter===1?['tidy','detour','skipped']:meta.chapter===2?['patched','borrowed','skipped']:meta.chapter===3?['feast','snack','chaos','skipped']:meta.chapter===4?['cat','controllers','teapot']:meta.chapter===6?['evening']:['adventure','calm']);if(card.captionId!==`${card.id}.${card.variant}`)fail();if(meta.chapter===3)one(card.teamName,storyEnums.teamName);else if(card.teamName!==undefined)fail();if(meta.chapter===4){one(card.usedPreset,[true,false]);if(card.usedPreset&&card.variant!=='teapot')fail();}else if(card.usedPreset!==undefined)fail();ids.push(card.id);}
   if(new Set(ids).size!==ids.length)fail();const earned=arr(collection.achievements,maxChapter);earned.forEach(a=>one(a,['cat-supervisor','dry-plan','full-table','own-sky','five-meetings'].slice(0,maxChapter)));if(new Set(earned).size!==earned.length)fail();
   for(const id of done)if(!ids.includes(String(obj(records[id as string]).cardId)))fail();
-  if(s.lastResult!==null){const r=obj(s.lastResult);keys(r,['chapter','cardId','source']);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));one(r.source,['campaign','trial']);if(!ids.includes(String(r.cardId))||cards[r.cardId as keyof typeof cards].chapter!==r.chapter)fail();if(r.source==='campaign'&&obj(records[r.chapter as string]).cardId!==r.cardId)fail();}
+  if(s.lastResult!==null){const r=obj(s.lastResult);keys(r,['chapter','cardId','source',...(maxChapter===6?['episodeRecord']:[])]);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));one(r.source,['campaign','trial']);if(!ids.includes(String(r.cardId))||cards[r.cardId as keyof typeof cards].chapter!==r.chapter)fail();if(r.source==='campaign'&&obj(records[r.chapter as string]).cardId!==r.cardId)fail();
+    if(r.chapter===6&&r.source==='trial'){
+      const rec=record(r.episodeRecord,6);if(rec.cardId!==r.cardId||rec.attemptId===obj(records['6']).attemptId||!done.includes(6))fail();
+      keepPrior(rec.story as StoryState,story(starts['6'],5,true));
+    }else if(r.episodeRecord!==undefined)fail();
+  }
   if(earned.includes('five-meetings')&&!ids.some(id=>id.startsWith('c5.')))fail();
   if(done.includes(5)&&!earned.includes('five-meetings'))fail();
-  one(s.continuation,maxChapter===5?[null,'game','movie','cafe','walk','decline','public','chat','later']:[null]);if(s.continuation!==null&&!done.includes(5))fail();
+  one(s.continuation,maxChapter>=5?[null,'game','movie','cafe','walk','decline','public','chat','later']:[null]);if(s.continuation!==null&&!done.includes(5))fail();
+  if(maxChapter===6){
+    const found=arr(collection.bonuses,3);found.forEach(b=>one(b,bonusIds));if(new Set(found).size!==found.length)fail();
+    if(records['6']){const b=obj(obj(records['6']).episode).bonus;if(b!==undefined&&!found.includes(b))fail();}
+    if(s.lastResult!==null){const last=obj(s.lastResult);if(last.episodeRecord){const b=obj(obj(last.episodeRecord).episode).bonus;if(b!==undefined&&!found.includes(b))fail();}}
+    if(s.trial!==null&&obj(s.trial).chapter===6){if(!done.includes(6)||obj(obj(s.trial).run).attemptId===obj(records['6']).attemptId)fail();}
+    const notes=obj(s.privateNotes);keys(notes,['campaign','trial']);integer(s.localNoteRevision);
+    for(const value of Object.values(notes)){
+      const n=obj(value);keys(n,['chapter','questionId','attemptId','status','text']);one(n.chapter,[6]);one(n.questionId,['s2.q6']);attemptId(n.attemptId);one(n.status,['saved','deleted']);
+      if(typeof n.text!=='string'||noteLength(n.text)>280||normalizeNote(n.text)!==n.text||n.status==='deleted'&&n.text!==''||n.status==='saved'&&!validNote(n.text))fail();
+    }
+  }else{collection.bonuses=[];s.privateNotes={};s.localNoteRevision=0;}
   // The envelope has not changed. Version 1 contains only chapter one; upgrading
   // its content version preserves every cursor, choice, card, setting and right.
-  s.contentVersion=5;
+  s.contentVersion=6;
   return s as unknown as SaveV1;
 }

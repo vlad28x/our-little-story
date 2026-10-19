@@ -1,11 +1,12 @@
 import { chapters as chapterManifest } from '../src/content/chapters/manifest';
 const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
 import { test,expect,type Page } from '@playwright/test';
+import { legacyContent } from './legacySave';
 import { expectSimpleResult } from './resultActions';
 import { completeSave,defaultPath } from './helpers';
 import type { SaveV1 } from '../src/state/types';
 const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
-async function seed(page:Page,save:SaveV1,legacy=true){await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify({...save,contentVersion:legacy?1:2})});}
+async function seed(page:Page,save:SaveV1,legacy=true){await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify(legacyContent(save,legacy?1:2))});}
 async function until(page:Page,id:string){for(let i=0;i<150;i++){if(await page.locator(`[data-node="${id}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw new Error('Did not reach '+id);}
 async function openSecond(page:Page){await page.goto('./#/chapters');await expect(page.getByRole('button',{name:'Открыть встречу 2',exact:true})).toHaveCount(0);await expect(page.getByLabel('Код',{exact:true})).toBeVisible();await page.getByLabel('Код',{exact:true}).fill(chapterTwoCode);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await expect(page.getByText(/Открыта встреча 2/)).toBeVisible();await page.locator('.chapter-list li').nth(1).getByRole('button',{name:'Начать встречу'}).click();await expect(page.locator('[data-node="c2.arrival"]')).toBeVisible();}
 async function toPuzzle(page:Page,rain:'shelter'|'arcade'='shelter',cat:'wait'|'help'='wait'){await until(page,'c2.rain');await page.getByRole('button',{name:rain==='shelter'?'Вернёмся под навес. Здесь вполне уютно':'Давай добежим до соседней арки'}).click();await until(page,'c2.cat');await page.getByRole('button',{name:cat==='wait'?'Пусть сам подойдёт. Подождём рядом':'Попросим Нину помочь'}).click();await until(page,'c2.umbrella');}
@@ -13,7 +14,7 @@ async function finish(page:Page,mood:'quiet'|'playful'='quiet'){await until(page
 test('old save opens chapter two by code, preserves memories, solves the puzzle and shows its result',async({page})=>{
   const old=completeSave({...defaultPath,plan:'coop',pace:'flirt',search:{kind:'token-search',outcome:'detour',catNoticed:true}});await seed(page,old);
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.url());});
-  await openSecond(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(5);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k.replace(':save',':backup'))!).contentVersion,key)).toBe(5);
+  await openSecond(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(6);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k.replace(':save',':backup'))!).contentVersion,key)).toBe(6);
   await until(page,'c2.plan.coop');await expect(page.getByText('Влад достаёт маленькую коробку карманной игры и кладёт её на стол под навесом.')).toBeVisible();
   await until(page,'c2.rain');await page.getByRole('button',{name:'Давай добежим до соседней арки'}).click();await until(page,'c2.cat.known');await expect(page.getByText('С начальником вы уже знакомы. Сегодня он отвечает за забытые вещи.')).toBeVisible();
   await until(page,'c2.cat');await page.getByRole('button',{name:'Попросим Нину помочь'}).click();await until(page,'c2.umbrella');

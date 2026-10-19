@@ -6,7 +6,9 @@ import { Modal } from './Modal';
 
 export function SaveExportButton({raw,name,app,children,className}:{raw:string;name:string;app?:TelegramApp;children:ReactNode;className?:string}){
   const [file,setFile]=useState<BackupFile|null>(null);
-  return <><button className={className} onClick={()=>{
+  let hasNotes=false;
+  try{const value=JSON.parse(raw) as {privateNotes?:Record<string,{text?:string}>};hasNotes=Object.values(value.privateNotes??{}).some(n=>!!n.text);}catch{/* Recovery may export damaged bytes. */}
+  return <>{hasNotes&&<p className="tiny">В копии будут твои личные заметки.</p>}<button className={className} onClick={()=>{
     if(app)setFile({raw,name});
     else downloadBlob(new Blob([raw],{type:'application/json'}),name);
   }}>{children}</button>{file&&<Modal title="Сохранить копию прогресса" onClose={()=>setFile(null)}><BackupExportOptions file={file} app={app}/></Modal>}</>;

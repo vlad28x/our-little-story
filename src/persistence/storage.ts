@@ -23,11 +23,12 @@ export function load(storage:StorageLike, key=storageKey):Loaded {
     return {save:initialState(),recovery:raw!==null||backup!==null,backup,raw,error:raw!==null?String(error instanceof Error?error.message:error):'В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.'};
   }
 }
-export function persist(storage:StorageLike,save:SaveV1,expectedRevision:number,key=storageKey):'saved'|'conflict' {
+export function persist(storage:StorageLike,save:SaveV1,expectedRevision:number,key=storageKey,expectedLocalNoteRevision?:number):'saved'|'conflict' {
   const raw=JSON.stringify(parseSave(JSON.stringify(save)));
   const old=storage.getItem(key);let previous:SaveV1|null=null;
   try {if(old)previous=parseSave(old);}catch{/* Do not rotate corrupt data into backup. */}
   if(previous&&previous.revision!==expectedRevision)return 'conflict';
+  if(previous&&expectedLocalNoteRevision!==undefined&&previous.localNoteRevision!==expectedLocalNoteRevision)return 'conflict';
   if(old&&previous){try{storage.setItem(key.replace(/:save$/,':backup'),old);}catch{/* Main write may still succeed. */}}
   storage.setItem(key,raw);return 'saved';
 }

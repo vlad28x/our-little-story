@@ -1,3 +1,4 @@
+import { legacyContent } from './legacySave';
 import { it,expect } from 'vitest';
 import { chapter5 } from '../src/content/chapters/ch05';
 import { validateContent } from '../src/engine/validateContent';
@@ -33,8 +34,8 @@ it('uses canonical chapter memories and makes all callback variants readable',()
   const friendly=chapter5.nodes['c5.tone.friendly'];expect(friendly.kind).toBe('choice');if(friendly.kind==='choice'){expect(friendly.choices).toHaveLength(4);expect(friendly.choices[0].text).toBe('Кажется, сейчас я хочу попробовать свидание');}
 });
 it('migrates active, trial and completed fourth-chapter saves at each cursor',()=>{
-  for(const trial of [false,true]){let s=trial?startFour(finishFour(),true):startFour();for(let i=0;i<180;i++){expect(parseSave(JSON.stringify({...s,contentVersion:4}))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command4(r)});}}
-  expect(()=>parseSave(JSON.stringify({...finishFive(),contentVersion:4}))).toThrow();
+  for(const trial of [false,true]){let s=trial?startFour(finishFour(),true):startFour();for(let i=0;i<180;i++){expect(parseSave(JSON.stringify(legacyContent(s,4)))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command4(r)});}}
+  expect(()=>parseSave(JSON.stringify(legacyContent(finishFive(),4)))).toThrow();
 });
 it('keeps the final and continuation through trial; rewrite clears only the required suffix and preference',()=>{
   const main=reduceSave(finishFive(),{type:'continuation',value:'public'}),replay=finishFive(main,{memory:'skipped',ending:'romantic'},true,true);expect(replay.campaign).toEqual(main.campaign);expect(replay.continuation).toBe('public');expect(replay.lastResult?.source).toBe('trial');
