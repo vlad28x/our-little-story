@@ -23,17 +23,17 @@ export function SceneEasterEggs({stage,context,hair,cat,cookie,controller,extras
         if(visibleWidth<48||visibleHeight<48)return;
         return {left,top,width:visibleWidth,height:visibleHeight};
       }
-      function backgroundBox(cx:number,cy:number,w:number,h:number):Box|undefined{
+      function backgroundBox(cx:number,cy:number,w:number,h:number,minHeight=48):Box|undefined{
         const bg=root!.querySelector<HTMLImageElement>('.scene-background');if(!bg?.naturalWidth)return;
         // Match object-fit:cover / object-position:center 38% in game.css.
         const scale=Math.max(r.width/bg.naturalWidth,r.height/bg.naturalHeight),iw=bg.naturalWidth*scale,ih=bg.naturalHeight*scale;
         const x=(r.width-iw)/2+cx*iw,y=(r.height-ih)*.38+cy*ih;
         if(x<0||x>r.width||y<0||y>r.height-28)return;
-        const width=Math.min(Math.max(48,w*iw),r.width-4),height=Math.min(Math.max(48,h*ih),r.height-30);
+        const width=Math.min(Math.max(48,w*iw),r.width-4),height=Math.min(Math.max(minHeight,h*ih),r.height-30);
         return {left:Math.max(2,Math.min(x-width/2,r.width-width-2)),top:Math.max(2,Math.min(y-height/2,r.height-height-28)),width,height};
       }
       setBoxes({hair:hair?box('.character:not(.nina)',true):undefined,cat:cat?box('.scene-cat'):undefined,controller:controller?box('.controller-scene svg:last-child'):undefined,
-        blanket:backgroundBox(.12,.49,.18,.13),mug:backgroundBox(.28,.53,.08,.055),tv:backgroundBox(.89,.32,.21,.17),cookie:backgroundBox(.51,.57,.24,.15)});
+        blanket:backgroundBox(.12,.52,.26,.13,112),mug:backgroundBox(.28,.53,.08,.055),tv:backgroundBox(.89,.32,.21,.17)});
     }
     const frame=requestAnimationFrame(measure),observer=new ResizeObserver(measure);
     observer.observe(root);root.querySelectorAll('img').forEach(img=>observer.observe(img));
@@ -58,7 +58,7 @@ export function SceneEasterEggs({stage,context,hair,cat,cookie,controller,extras
       {active==='hair'&&<svg className="hair-spring" viewBox="0 0 52 56" aria-hidden="true"><path d="M26 53C10 43 10 31 24 25C41 18 42 39 28 37C15 35 19 14 33 9C42 6 44 13 40 17" fill="none" stroke="#805b40" strokeWidth="7" strokeLinecap="round"/><path d="M26 52C13 42 13 32 26 26C39 20 39 35 28 34C19 32 23 16 34 11" fill="none" stroke="#c39a6d" strokeWidth="3" strokeLinecap="round"/></svg>}
     </button>}
     {boxes.cat&&<button ref={buttonRef('cat')} className="scene-easter-target easter-cat" style={boxes.cat} aria-label={easterEggs.cat.label} onClick={e=>{e.stopPropagation();trigger('cat');}}><span className="easter-spark" aria-hidden="true">✧</span></button>}
-    {cookie&&<button ref={buttonRef('cookie')} className="scene-easter-target easter-cookie" style={boxes.cookie} aria-label={easterEggs.cookie.label} disabled={cookieTaken} onClick={e=>{e.stopPropagation();trigger('cookie');}}>
+    {cookie&&<button ref={buttonRef('cookie')} className="scene-easter-target easter-cookie" aria-label={easterEggs.cookie.label} disabled={cookieTaken} onClick={e=>{e.stopPropagation();trigger('cookie');}}>
       <svg viewBox="0 0 110 80" aria-hidden="true"><ellipse cx="55" cy="62" rx="49" ry="14" fill="#fff7ed" stroke="#a4818c" strokeWidth="2"/><ellipse cx="55" cy="61" rx="39" ry="8" fill="#f3cbd9"/>
         <g fill="#d4aa75" stroke="#8e664d" strokeWidth="1.8"><circle cx="37" cy="49" r="18"/><circle cx="72" cy="48" r="18"/>{!cookieTaken&&<circle cx="54" cy="29" r="18"/>}</g>
         <g fill="#795240"><circle cx="30" cy="43" r="2.5"/><circle cx="43" cy="51" r="3"/><circle cx="31" cy="56" r="2"/><circle cx="67" cy="42" r="3"/><circle cx="77" cy="51" r="2.5"/><circle cx="65" cy="55" r="2"/>{!cookieTaken&&<><circle cx="49" cy="24" r="3"/><circle cx="60" cy="31" r="2.5"/><circle cx="48" cy="36" r="2"/></>}</g>

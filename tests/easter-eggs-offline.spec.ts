@@ -1,4 +1,4 @@
-import { test,expect,type Page } from '@playwright/test';
+import { test,expect,type Page,type Locator } from '@playwright/test';
 import { openOffline } from './offlineApp';
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
@@ -9,6 +9,10 @@ import { startFour } from './chapter4Helpers';
 import { startFive } from './chapter5Helpers';
 const key='five-meetings:/:save';
 const stored=(page:Page)=>page.evaluate(k=>localStorage.getItem(k),key);
+async function tapExposed(page:Page,target:Locator){
+  const point=await target.evaluate(el=>{const r=el.getBoundingClientRect();for(let y=r.top+8;y<r.bottom-8;y+=8)for(let x=r.left+8;x<r.right-8;x+=8)if(document.elementFromPoint(x,y)?.closest('button')===el)return {x,y};return null;});
+  expect(point).not.toBeNull();await page.mouse.click(point!.x,point!.y);
+}
 function firstAt(id?:string){
   let s=reduceSave(initialState(),{type:'start'});
   for(let i=0;id&&s.campaign.active?.nodeId!==id&&i<180;i++)s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active!)});
@@ -97,7 +101,7 @@ test('blanket, TV and tea are optional touch reactions before the game, TV disap
   await page.screenshot({path:'outputs/EASTER_HOME_PROPS_320.png',fullPage:true,animations:'disabled'});
   for(const [name,text] of objects){
     const button=page.getByRole('button',{name,exact:true});const box=(await button.boundingBox())!;expect(box.width).toBeGreaterThanOrEqual(48);expect(box.height).toBeGreaterThanOrEqual(48);
-    await button.click();await expect(page.getByRole('status')).toContainText(text);expect(await stored(page)).toBe(raw);
+    await tapExposed(page,button);await expect(page.getByRole('status')).toContainText(text);expect(await stored(page)).toBe(raw);
     if(name==='Коснуться кружки')expect(await page.locator('.tea-heart').evaluate(el=>getComputedStyle(el).animationName)).toBe('tea-heart');
     if(name==='Посмотреть на телевизор'){await expect(button.getByText('Игрок 3 подключился')).toBeVisible();await page.screenshot({path:'outputs/EASTER_TV_PLAYER_320.png',fullPage:true,animations:'disabled'});}
     await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(button).toBeFocused();
@@ -115,6 +119,21 @@ test('each visible cookie accepts a real tap even underneath another scene react
     await page.mouse.click(point.x+point.width/2,point.y+point.height/2);
     await expect(cookie).toBeDisabled();await expect(page.getByRole('status')).toContainText('план был дожить до начала игры');await expect(pieces).toHaveCount(count-1);
     expect(await stored(page)).toBe(raw);expect(errors).toEqual([]);await page.close();
+  }
+});
+
+test('plate stays bottom left and wins overlapping taps while the exposed blanket still reacts',async({context})=>{
+  for(const [width,height] of [[320,568],[375,667],[870,850],[960,900]]){
+    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+    const cookie=page.getByRole('button',{name:'Взять печеньку',exact:true}),blanket=page.getByRole('button',{name:'Приподнять край пледа',exact:true});
+    await expect(blanket).toBeVisible();const plate=(await cookie.boundingBox())!,fold=(await blanket.boundingBox())!,stage=(await page.locator('.scene-stage').boundingBox())!;
+    expect(plate.x-stage.x).toBeCloseTo(stage.width*.06,0);expect(stage.y+stage.height-plate.y-plate.height).toBeCloseTo(width<=600?28:34,0);expect(plate.width).toBeLessThanOrEqual(105);
+    const overlap={left:Math.max(plate.x,fold.x),top:Math.max(plate.y,fold.y),right:Math.min(plate.x+plate.width,fold.x+fold.width),bottom:Math.min(plate.y+plate.height,fold.y+fold.height)};
+    expect(overlap.right-overlap.left).toBeGreaterThan(10);expect(overlap.bottom-overlap.top).toBeGreaterThan(10);
+    await page.mouse.click((overlap.left+overlap.right)/2,(overlap.top+overlap.bottom)/2);await expect(cookie).toBeDisabled();await expect(page.getByRole('status')).toContainText('план был дожить до начала игры');
+    await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();
+    await tapExposed(page,blanket);await expect(page.getByRole('status')).toContainText('это тебе. я даже плед положил');expect(await stored(page)).toBe(raw);expect(errors).toEqual([]);
+    await page.screenshot({path:`outputs/COOKIE_BLANKET_OVERLAP_${width}.png`,fullPage:true,animations:'disabled'});await page.close();
   }
 });
 
