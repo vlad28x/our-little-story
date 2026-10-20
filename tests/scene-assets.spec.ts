@@ -10,7 +10,7 @@ async function expectLoaded(image:Locator) {
 
 async function startScene(page:Page) {
   await page.goto('./');
-  await page.getByRole('button',{name:'Начать первую встречу'}).click();
+  await page.getByRole('button',{name:'К встречам',exact:true}).click();await page.locator('.chapter-list li').first().getByRole('button',{name:'Начать встречу',exact:false}).click();
   await expect(page.locator('[data-node="c1.entry"]')).toBeVisible();
 }
 

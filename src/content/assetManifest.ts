@@ -3,6 +3,11 @@ type Asset={file:string;alt:string;status:'generated'|'original-vector'};
 // Register each shipped asset before the manifest is exported. Scene rendering
 // must never depend on later mutations that can be stale across a dev update.
 export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
+  'bg.s2.kitchen.morning':{file:'backgrounds/s2-kitchen-morning.webp',alt:'',status:'generated'},
+  'bg.s2.gallery.evening':{file:'backgrounds/gallery-evening.webp',alt:'',status:'generated'},
+  'bg.s2.kitchen.evening':{file:'backgrounds/s2-kitchen-evening.webp',alt:'',status:'generated'},
+  'bg.s2.cinema.courtyard':{file:'backgrounds/s2-cinema-courtyard.webp',alt:'',status:'generated'},
+  'bg.s2.cafe.terrace':{file:'backgrounds/s2-cafe-terrace.webp',alt:'',status:'generated'},
   'bg.cafe.entry':{file:'backgrounds/cafe-entry.webp',alt:'',status:'generated'},
   'bg.cafe.sunset':{file:'backgrounds/cafe-sunset.webp',alt:'',status:'generated'},
   'vlad.elegant.smile':{file:'characters/vlad/elegant-smile.webp',alt:'Влад в чёрном пиджаке и водолазке',status:'generated'},
@@ -17,8 +22,11 @@ export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
   'bg.rain.arcade':{file:'backgrounds/rain-arcade.webp',alt:'',status:'generated'},
   'bg.river.evening':{file:'backgrounds/river-evening.webp',alt:'',status:'generated'},
   'bg.s2.window.evening':{file:'backgrounds/shop-window-evening.webp',alt:'',status:'generated'},
+  'adviser.angel.peek':{file:'characters/advisers/angel-peek-r3.webp',alt:'Ангел выглядывает слева и держится за край',status:'generated'},
   'adviser.angel':{file:'characters/advisers/angel.webp',alt:'Ангел — советчик этой истории',status:'generated'},
   'adviser.devil':{file:'characters/advisers/devil.webp',alt:'Дьяволёнок — советчик этой истории',status:'generated'},
+  'adviser.devil.peek':{file:'characters/advisers/devil-peek-cropped.webp',alt:'Дьяволёнок выглядывает из-за открытки и держится рукой за край',status:'generated'},
+  'adviser.devil.lean':{file:'characters/advisers/devil-lean.webp',alt:'Дьяволёнок опирается на рамку диалога',status:'generated'},
   'vlad.city.warm':{file:'characters/vlad/city-smile.webp',alt:'Влад в сером пальто и шарфе',status:'generated'},
   'bg.home.living':{file:'backgrounds/home-living.webp',alt:'',status:'generated'},
   'cat.idle':{file:'characters/cat.webp',alt:'Пончик — кремовый полосатый кот',status:'generated'},

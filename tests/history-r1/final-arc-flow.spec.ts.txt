@@ -1,0 +1,17 @@
+import { test,expect } from '@playwright/test';
+import { arcAt } from './finalArcHelpers';
+import type { ArcChapter } from './finalArcHelpers';
+import { getChapter } from '../src/content/chapters';
+const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
+for(const place of ['home','cafe'] as const)test(`chapter8 dance saves and reloads its ${place} scene in production`,async({page})=>{
+ const save=arcAt(8,'c8.dance',{place});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify(save)});await page.goto('./#/play/8');
+ await expect(page.locator('[data-node="c8.dance"]')).toBeVisible();await page.getByRole('button',{name:'Сегодня веду я. Давай руку',exact:false}).click();
+ await expect(page.locator('[data-node="c8.dance.lead"]')).toBeVisible();const active=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active,key);
+ await page.reload();await expect(page.locator('[data-node="c8.dance.lead"]')).toBeVisible();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active,key)).toEqual(active);
+ await expect.poll(()=>page.locator('.character').evaluate(el=>(el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);expect(errors).toEqual([]);
+});
+for(const chapter of [8,9,10] as ArcChapter[])test(`chapter${chapter} serves home and public art and restores its production preview`,async({page})=>{
+ const n=Object.values(getChapter(chapter)!.nodes).find(v=>v.kind==='minigame')!;const save=arcAt(chapter,n.id,{place:chapter===8?'home':chapter===9?'courtyard':'terrace'});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify(save)});await page.goto(`./#/play/${chapter}`);await expect.poll(()=>page.locator('.scene-background').evaluate(el=>(el as HTMLImageElement).naturalWidth)).toBe(1400);
+ if(chapter===8)await page.getByRole('button',{name:'Ягоды',exact:true}).click();if(chapter===9)await page.getByRole('button',{name:'Какао',exact:true}).click();if(chapter===10)await page.getByRole('button',{name:'Приглушить',exact:true}).click();const active=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active,key);await page.reload();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active,key)).toEqual(active);await expect(page.locator('.cozy-game [aria-pressed=true]')).toHaveCount(1);expect(errors).toEqual([]);
+});

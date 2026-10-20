@@ -10,6 +10,7 @@ import { initialState } from '../src/state/initialState';
 import { completeTwo,defaultThird,finishThree,command3,thirdCode } from './chapter3Helpers';
 import { command4,defaultFourth,finishFour,startFour,fourthCode } from './chapter4Helpers';
 import type { ConstellationResult } from '../src/engine/types';
+import beforeHug from './fixtures/chapter4-before-hug.json' with {type:'json'};
 it('has a complete fourth-chapter graph and explicit scene resources',()=>expect(validateContent(chapter4)).toEqual([]));
 it('covers 288 paths across inherited team/aftercare, bench, star result, bond and wish',()=>{
   let count=0;const endings=new Set();
@@ -43,4 +44,35 @@ it('rejects forged star presets, wrong games, stale commands and inconsistent in
   const r=s.campaign.active!;expect(r.nodeId).toBe('c4.stars');expect(step(chapter4,r,{kind:'game-result',expectedTurn:r.turn,result:{kind:'constellation',outcome:'cat',usedPreset:true}}).kind).toBe('rejected');
   expect(step(chapter4,r,{kind:'game-result',expectedTurn:r.turn,result:{kind:'umbrella-patch',outcome:'patched'}}).kind).toBe('rejected');expect(step(chapter4,r,{...command4(r),expectedTurn:r.turn-1}).kind).toBe('rejected');
   const bad=structuredClone(s);bad.campaign.active!.story.teamName='accident';expect(()=>parseSave(JSON.stringify(bad))).toThrow();
+});
+
+it('offers all three goodbyes for all 48 bench/sky/bond/wish combinations without changing their decisions',()=>{
+  const base=finishThree();let count=0;
+  const results:ConstellationResult[]=[{kind:'constellation',outcome:'cat',usedPreset:false},{kind:'constellation',outcome:'controllers',usedPreset:false},{kind:'constellation',outcome:'teapot',usedPreset:false},{kind:'constellation',outcome:'teapot',usedPreset:true}];
+  for(const bench of ['near','space'] as const)for(const result of results)for(const bond of ['romantic','friendly','undecided'] as const)for(const wish of ['adventure','calm'] as const){
+    const path={bench,result,bond,wish};let save=startFour(base);
+    for(let i=0;i<180&&save.campaign.active?.nodeId!=='c4.goodbye';i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active!,path)});
+    expect(save.campaign.active?.nodeId).toBe('c4.goodbye');const run=save.campaign.active!,node=chapter4.nodes[run.nodeId];
+    if(node.kind!=='choice')throw Error('Missing goodbye');expect(node.choices.map(option=>option.id)).toEqual(['accept','her','none']);expect(node.choices.every(option=>!option.when?.length)).toBe(true);
+    const incomplete=structuredClone(save);delete incomplete.campaign.active!.story.wish;expect(()=>parseSave(JSON.stringify(incomplete))).toThrow();
+    for(const goodbye of ['accept','her','none'] as const){
+      let branch=reduceSave(save,{type:'command',target:'campaign',command:{kind:'choose',choiceId:goodbye,expectedTurn:run.turn}});
+      expect(branch.campaign.active?.story).toEqual(run.story);
+      for(let i=0;i<30&&branch.campaign.active;i++){
+        expect(parseSave(JSON.stringify(branch))).toEqual(branch);
+        branch=reduceSave(branch,{type:'command',target:'campaign',command:command4(branch.campaign.active,{...path,goodbye})});
+      }
+      expect(branch.campaign.completed).toEqual([1,2,3,4]);expect(branch.campaign.records[4]?.story).toEqual(run.story);expect(branch.lastResult?.cardId).toBe('c4.'+wish);expect(parseSave(JSON.stringify(branch))).toEqual(branch);count++;
+    }
+  }
+  expect(count).toBe(144);
+});
+
+it('keeps all frozen old final-dialogue cursors and the old completed fourth chapter readable',()=>{
+  expect(parseSave(JSON.stringify(beforeHug.completed))).toEqual(beforeHug.completed);
+  for(const old of beforeHug.active){
+    let save=parseSave(JSON.stringify(old));expect(save).toEqual(old);
+    for(let i=0;i<100&&save.campaign.active;i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active)});
+    expect(save.campaign.records[4]).toEqual(beforeHug.completed.campaign.records[4]);expect(save.campaign.completed).toEqual([1,2,3,4]);expect(parseSave(JSON.stringify(save))).toEqual(save);
+  }
 });

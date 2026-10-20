@@ -1,0 +1,19 @@
+import { it,expect } from 'vitest';
+import { finishR2,priorR2,r2At } from './r2Helpers';
+import { parseSave } from '../src/persistence/validateSave';
+import { step } from '../src/engine/step';
+import { chapter6 } from '../src/content/chapters/ch06';
+import type { EveningRouteResult } from '../src/engine/types';
+it('all sixth-chapter voices, gestures, routes, notes and endings remain reachable',()=>{
+ const stops=['water','lights','window'] as const,base=priorR2();const routes:EveningRouteResult[]=[{kind:'evening-route',mode:'skipped',stops:[]},{kind:'evening-route',mode:'shared',stops:['lights','water']}];
+ for(const a of stops)for(const b of stops)if(a!==b)routes.push({kind:'evening-route',mode:'own',stops:[a,b]});
+ for(const voice of ['lead','tease','quiet'])for(const moment of ['hug','hand','talk','walk'])for(const ending of ['hand','lap','home'])for(const route of routes)for(const note of [undefined,'Я хочу ещё немного побыть рядом.']){
+  const save=finishR2(6,{choices:{'c6.r2.voice':voice,'c6.r2.moment':moment,'c6.r2.ending':ending},results:{'evening-route':route},note},base);
+  expect(parseSave(JSON.stringify(save))).toEqual(save);expect(save.collection.memories).toEqual([`c6.memory.${moment}`]);expect(save.collection.secrets).toEqual(['c6.secret.evening']);
+ }
+});
+it('stale and unavailable commands do not advance the story',()=>{
+ const run=r2At(6,'c6.r2.moment').campaign.active!;
+ expect(step(chapter6,run,{kind:'choose',choiceId:'hand',expectedTurn:run.turn-1}).kind).toBe('rejected');
+ expect(step(chapter6,run,{kind:'choose',choiceId:'invented',expectedTurn:run.turn}).kind).toBe('rejected');
+});

@@ -21,7 +21,13 @@ it('renders every visible final-chapter node and all four final/invitation scree
     let s=startFive(prior);for(let j=0;j<180;j++){const r=s.campaign.active;if(!r)break;if(!seen.has(r.nodeId)){context.save=s;const html=renderToString(<App/>);expect(html).toContain(r.nodeId);seen.add(r.nodeId);}s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:'viewed',ending:endings[Math.floor(i/6)]})});}
   }
   expect([...seen].sort()).toEqual(Object.values(chapter5.nodes).filter(n=>n.kind!=='route'&&n.kind!=='end').map(n=>n.id).sort());
-  for(const ending of endings){context.save=finishFive(undefined,{memory:'skipped',ending});vi.stubGlobal('location',{hash:'#/result/5?source=campaign',search:''});const html=renderToString(<App/>);expect(html).toContain('Может быть, ещё одна встреча?');expect(html).toContain('Отказаться');expect(html.indexOf('final-conversation')).toBeLessThan(html.indexOf('postcard'));expect(html).toContain('Игровой вечер у тебя');expect(html).toContain('Киновечер у тебя');expect(html).not.toContain('Unknown asset');}
+  for(const ending of endings){
+    context.save=finishFive(undefined,{memory:'skipped',ending});vi.stubGlobal('location',{hash:'#/result/5?source=campaign',search:''});
+    const html=renderToString(<App/>);
+    expect(html).toContain('А теперь — встретимся по-настоящему?');expect(html).toContain(invitationBridges[ending]);expect(html).toContain('Продолжить разговор');expect(html).not.toContain('invitation-options');
+    expect(html.indexOf('class="final-conversation"')).toBeLessThan(html.indexOf('class="postcard"'));expect(html).toContain('Псс… Маленький секрет');expect(html).not.toContain('invitation-privacy');expect(html).not.toContain('after-credits-teaser');expect(html).not.toContain('Unknown asset');
+    context.save={...context.save,continuation:'game'};const restored=renderToString(<App/>);expect(restored).toContain('Игровой вечер');expect(restored).toContain('Киновечер');expect(restored).toContain('Пока воздержусь');expect(restored).toContain('Копировать сообщение');
+  }
   const main=finishFive(undefined,{memory:'skipped',ending:'friendly'});
-  for(const ending of endings){context.save=finishFive(main,{memory:'skipped',ending},true);vi.stubGlobal('location',{hash:'#/result/5',search:''});const html=renderToString(<App/>);expect(html).toContain(invitationBridges[ending]);expect(context.save.campaign.records[5]?.story.ending).toBe('friendly');}
+  for(const ending of endings){context.save=finishFive(main,{memory:'skipped',ending},true);vi.stubGlobal('location',{hash:'#/result/5',search:''});const html=renderToString(<App/>);expect(html).not.toContain('class="final-conversation"');expect(context.save.campaign.records[5]?.story.ending).toBe('friendly');}
 });

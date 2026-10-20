@@ -8,7 +8,8 @@ export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,ap
   const [errorText,setErrorText]=useState('');
   const latest=useRef(save);latest.current=save;
   const failed=useRef(false),mounted=useRef(false),pending=useRef(0);
-  const [syncedRevision,setSyncedRevision]=useState(-1);
+  const version=(value:SaveV1)=>`${value.revision}:${value.localNoteRevision}`;
+  const [syncedRevision,setSyncedRevision]=useState('');
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   useEffect(()=>{
     if(!session||paused)return;
@@ -17,7 +18,7 @@ export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,ap
     function flush(){
       if(failed.current)return;pending.current++;if(mounted.current)setStatus('saving');app?.enableClosingConfirmation?.();
       const snapshot=latest.current;
-      void session!.push(snapshot).then(()=>{pending.current--;if(!pending.current&&!failed.current){if(mounted.current){setStatus('saved');setSyncedRevision(snapshot.revision);}if(latest.current.revision===snapshot.revision)app?.disableClosingConfirmation?.();}},error=>{pending.current--;failure(error);});
+      void session!.push(snapshot).then(()=>{pending.current--;if(!pending.current&&!failed.current){if(mounted.current){setStatus('saved');setSyncedRevision(version(snapshot));}if(version(latest.current)===version(snapshot))app?.disableClosingConfirmation?.();}},error=>{pending.current--;failure(error);});
     }
     const timer=setTimeout(flush,650);
     const hide=()=>{if(document.hidden)flush();};
@@ -26,6 +27,6 @@ export function useCloudSync(save:SaveV1,paused:boolean,session?:CloudSession,ap
     return()=>{clearTimeout(timer);window.removeEventListener('focus',check);document.removeEventListener('visibilitychange',hide);app?.offEvent?.('deactivated',flush);};
   },[save,paused,session,app]);
   // Mark an unsent action immediately, including during the debounce window.
-  const visibleStatus=status==='saved'&&syncedRevision!==save.revision?'saving':status;
+  const visibleStatus=status==='saved'&&syncedRevision!==version(save)?'saving':status;
   return {status:visibleStatus,blocked:status==='conflict',errorText};
 }

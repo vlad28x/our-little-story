@@ -1,0 +1,131 @@
+import { it,expect } from 'vitest';
+import fs from 'node:fs';
+import { getChapter } from '../src/content/chapters';
+import { validateContent } from '../src/engine/validateContent';
+import { parseSave } from '../src/persistence/validateSave';
+import { finishArc,arcAt,actionArc,defaultArc,startArc } from './finalArcHelpers';
+import { finishSeven } from './chapter7Helpers';
+import { reduceSave } from '../src/state/reducer';
+it('implements all 159 authored nodes and 289 exact lines with valid scene variants',()=>{
+ for(const chapter of [8,9,10] as const){const content=getChapter(chapter)!;const text=fs.readFileSync(`outputs/CHAPTER_${String(chapter).padStart(2,'0')}_SCRIPT.md`,'utf8').split('## Полный сценарный граф')[1].split('## Интерактивы')[0];expect(Object.keys(content.nodes)).toEqual([...text.matchAll(/^### `(c\d+\.[^`]+)`/gm)].map(m=>m[1]));expect(Object.values(content.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[])).toEqual([...text.matchAll(/^\d+\. \*\*[^*]+:\*\* (.+)$/gm)].map(m=>m[1]));expect(validateContent(content)).toEqual([]);}
+});
+it('plays and reloads every checkpoint through the three final chapters',()=>{
+ let base=finishSeven();for(const chapter of [8,9,10] as const){let s=startArc(chapter,base);for(let i=0;i<600&&s.campaign.active;i++){expect(parseSave(JSON.stringify(s))).toEqual(s);s=reduceSave(s,actionArc(s.campaign.active,{...defaultArc,ending:chapter===10?'private':'kiss'}));}expect(parseSave(JSON.stringify(s))).toEqual(s);expect(s.campaign.completed).toHaveLength(chapter);base=s;}
+});
+it('reaches every calm finale without a kiss and preserves the public venue',()=>{
+ let base=finishSeven();base=finishArc(8,base,{place:'cafe',ending:'tea',word:'none',note:undefined,dessert:{kind:'dessert',mode:'skipped',topping:null,mark:null}});expect(base.campaign.records[8]?.story.c8Ending).toBe('tea');base=finishArc(9,base,{place:'courtyard',ending:'film',memory9:'none',movie:{kind:'movie-setup',mode:'skipped',seat:null,light:null,drink:null}});
+ for(const ending of ['stay','goodnight']){const s=finishArc(10,base,{place:'terrace',ending,memory10:'none'});expect(s.campaign.records[10]?.story.c10Ending).toBe(ending);expect(s.collection.cards.at(-1)?.venue).toBe('terrace');expect(parseSave(JSON.stringify(s))).toEqual(s);}
+});
+it('always includes the dance in both venues and keeps all dance styles independent of kissing and sparks',()=>{
+ const base=finishSeven();
+ for(const place of ['home','cafe'] as const)for(const dance of ['close','lead','playful'] as const)for(const ending of ['kiss','near','tea']){
+  const s=finishArc(8,base,{place,dance,ending,guide:'none',word:'none',note:undefined,bonus:false,dessert:{kind:'dessert',mode:'skipped',topping:null,mark:null}});
+  expect(s.campaign.records[8]?.story).toMatchObject({c8Place:place,c8Dance:dance,c8Ending:ending});
+  expect(s.campaign.records[8]?.episode?.sparks).toHaveLength(2);expect(parseSave(JSON.stringify(s))).toEqual(s);expect(parseSave(cloudRaw(s))).toEqual({...s,continuation:null});
+ }
+ const choice=arcAt(8,'c8.dance'),r=choice.campaign.active!;
+ const action=actionArc(r,{...defaultArc,dance:'lead'}),selected=reduceSave(choice,action);
+ expect(reduceSave(selected,action)).toBe(selected);expect(parseSave(JSON.stringify(selected))).toEqual(selected);
+ const fake=structuredClone(choice);fake.campaign.active!.story.c8Dance='close';expect(()=>parseSave(JSON.stringify(fake))).toThrow();
+ const wrong=structuredClone(selected);wrong.campaign.active!.story.c8Dance='playful';expect(()=>parseSave(JSON.stringify(wrong))).toThrow();
+ const main=finishArc(8,base,{dance:'close'}),trial=finishArc(8,main,{dance:'playful',ending:'tea'},true);
+ expect(trial.campaign).toEqual(main.campaign);expect(trial.lastResult?.episodeRecord?.story.c8Dance).toBe('playful');expect(trial.campaign.records[8]?.story.c8Dance).toBe('close');expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+});
+it('preserves current place after an explicit move and a changed decision',()=>{
+ for(const confirm of ['yes','quiet','leave'] as const){const s=finishArc(10,undefined,{place:'terrace',ending:'private',move:'home',confirm});expect(s.campaign.records[10]?.story).toMatchObject({c10Place:'terrace',c10Move:'home',c10Ending:confirm==='yes'?'private':confirm==='quiet'?'stay':'goodnight'});expect(s.collection.cards.at(-1)?.venue).toBe('home');expect(parseSave(JSON.stringify(s))).toEqual(s);}
+});
+it('rejects stale and premature confirmations and restores mutable previews',()=>{
+ let s=arcAt(8,'c8.dessert');const run=s.campaign.active!;expect(reduceSave(s,{type:'command',target:'campaign',command:{kind:'game-result',result:defaultArc.dessert,expectedTurn:run.turn}})).toBe(s);
+ const a=actionArc(run);s=reduceSave(s,a);expect(reduceSave(s,a)).toBe(s);expect(parseSave(JSON.stringify(s))).toEqual(s);
+ const r=s.campaign.active!;s=reduceSave(s,{type:'command',target:'campaign',command:{kind:'game-action',game:'dessert',action:{kind:'reset'},expectedTurn:r.turn}});expect(parseSave(JSON.stringify(s))).toEqual(s);
+});
+import { startRun,step,resolveScene } from '../src/engine/step';
+import type { DessertResult,MovieSetupResult,StoryState } from '../src/engine/types';
+import type { ArcPath,ArcChapter } from './finalArcHelpers';
+import { defaultSeventh } from './chapter7Helpers';
+import { dessertReduce,initialDessert,validDessertResult } from '../src/minigames/dessertModel';
+import { movieSetupReduce,initialMovie,validMovieResult } from '../src/minigames/movieSetupModel';
+import { eveningLightReduce,initialLight,validLightResult } from '../src/minigames/eveningLightModel';
+import { normalizeWord,validWord,wordLabel } from '../src/persistence/words';
+import { cloudRaw } from '../src/telegram/cloud';
+import { preserveLocalPrivateData } from '../src/persistence/notes';
+import { readNoteDraft,writeNoteDraft,readWordDraft,writeWordDraft,clearFinishedDraft } from '../src/persistence/noteDraft';
+import { cardFromStory,cardBackground } from '../src/content/cards';
+import { initialState } from '../src/state/initialState';
+import { chapters } from '../src/content/chapters/manifest';
+import { vi } from 'vitest';
+import { previewFinal } from '../src/app/developerPreview';
+function play(chapter:ArcChapter,prior:StoryState,p:ArcPath){let run=startRun(getChapter(chapter)!,prior,'matrix-run');const trace:string[]=[];for(let i=0;i<600;i++){trace.push(run.nodeId);const a=actionArc(run,p);if(a.type!=='command')throw Error('Bad action');const result=step(getChapter(chapter)!,run,a.command);if(result.kind==='rejected')throw Error(result.reason+' '+run.nodeId);run=result.run;if(result.kind==='complete')return {run,trace,id:result.cardId};}throw Error('Loop');}
+const desserts:DessertResult[]=[{kind:'dessert',mode:'shared',topping:'berry',mark:'star'},{kind:'dessert',mode:'skipped',topping:null,mark:null}];
+for(const topping of ['berry','chocolate','honey'] as const)for(const mark of ['star','heart','swirl'] as const)desserts.push({kind:'dessert',mode:'completed',topping,mark});
+const movies:MovieSetupResult[]=[{kind:'movie-setup',mode:'shared',seat:'space',light:'warm',drink:'tea'},{kind:'movie-setup',mode:'skipped',seat:null,light:null,drink:null}];
+for(const seat of ['near','space'] as const)for(const light of ['warm','dim'] as const)for(const drink of ['tea','cocoa','water'] as const)movies.push({kind:'movie-setup',mode:'completed',seat,light,drink});
+it('covers 1980 tea routes and all 420 movie routes with first/repeat kiss and safe alternatives',()=>{
+ let count=0;const base=finishSeven(),ends8=new Set(),ends9=new Set();
+ for(const c7Ending of ['open','promise','calm'] as const)for(const dessert of desserts)for(const place of ['home','cafe'] as const)for(const wordCase of ['minute','slow','taks','none','custom','skip'] as const)for(const [ending,approach] of [['kiss','her'],['kiss','ask'],['kiss','back'],['near','her'],['tea','her']] as const){
+ const prior={...base.campaign.records[7]!.story,c7Ending},p={...defaultArc,place,dessert,ending,approach,word:wordCase==='skip'?'custom':wordCase,wordText:wordCase==='skip'?undefined:'Наше слово'};
+ const {run,id,trace}=play(8,prior,p);ends8.add(id);expect(trace).toContain(place==='home'?'c8.dance.home':'c8.dance.cafe');expect(trace).toContain('c8.dance.close');expect(run.story.c8Dance).toBe('close');expect(run.results.dessert).toEqual(dessert);expect(run.story.c8Place).toBe(place);expect(run.episode?.sparks.length).toBe(dessert.mode==='skipped'?2:3);if(wordCase==='skip')expect(run.story.c8Word).toBe('none');count++;
+ }
+ expect(count).toBe(1980);expect(ends8.size).toBe(3);count=0;
+ const first=finishArc(8).campaign.records[8]!.story;
+ for(const c8Ending of ['kiss','near','tea'] as const)for(const movie of movies)for(const place of ['home','courtyard'] as const)for(const [ending,approach] of [['kiss','her'],['kiss','ask'],['kiss','back'],['hug','her'],['film','her']] as const){
+ const {run,id,trace}=play(9,{...first,c8Ending},{...defaultArc,movie,place,ending,approach,memory9:count%2?'none':'wait'});ends9.add(id);expect(run.results['movie-setup']).toEqual(movie);if(run.story.c9Ending==='kiss')expect(trace).toContain(c8Ending==='kiss'?'c9.kiss.again':'c9.kiss.first');else expect(trace.some(v=>v.startsWith('c9.kiss.first')||v.startsWith('c9.kiss.again'))).toBe(false);count++;
+ }
+ expect(count).toBe(420);expect(ends9.size).toBe(3);
+},30000);
+it('covers all 1728 final routes, including every light, memory, guide and kiss history',()=>{
+ const base=finishArc(9).campaign.records[9]!.story;let count=0;const paths:Partial<ArcPath>[]=[];
+ for(const place of ['home','terrace'] as const){for(const ending of ['goodnight','stay'])paths.push({place,ending});if(place==='home')for(const confirm of ['yes','quiet','leave'] as const)paths.push({place,ending:'private',confirm});else{for(const move of ['stay','goodnight'] as const)paths.push({place,ending:'private',move});for(const confirm of ['yes','quiet','leave'] as const)paths.push({place,ending:'private',move:'home',confirm});}}
+ expect(paths).toHaveLength(12);
+ for(const c8Ending of ['kiss','tea'] as const)for(const c9Ending of ['kiss','film'] as const)for(const level of ['warm','dim','unchanged'] as const)for(const memory10 of ['pause','laugh','initiative','none'] as const)for(const guide of ['angel','devil','none'] as const)for(const path of paths){
+ const {run,trace}=play(10,{...base,c8Ending,c9Ending},{...defaultArc,...path,guide,memory10,light:{kind:'evening-light',level}});expect(trace).toContain('c10.advisers.exit');if(run.story.c10Place==='home')expect(run.story.c10Move).toBeUndefined();
+ if(run.story.c10Ending==='private'){expect(run.story.c10Place==='home'||run.story.c10Move==='home').toBe(true);expect(trace).toContain('c10.private.confirm');expect(trace).toContain(c8Ending==='kiss'||c9Ending==='kiss'?'c10.kiss.again':'c10.kiss.first');}else expect(trace).not.toContain('c10.private.fade');
+ const card=cardFromStory(run.story,10,run.results);expect(card.venue).toBe(run.story.c10Place==='home'||run.story.c10Move==='home'?'home':'terrace');count++;
+ }
+ expect(count).toBe(1728);
+},30000);
+it('validates strict models, no-op edits and every preview combination',()=>{
+ for(const topping of [null,'berry','chocolate','honey'] as const)for(const mark of [null,'star','heart','swirl'] as const){let d=initialDessert();if(topping)d=dessertReduce(d,{kind:'set-topping',value:topping});if(mark)d=dessertReduce(d,{kind:'set-mark',value:mark});expect(d).toMatchObject({topping,mark});if(topping)expect(dessertReduce(d,{kind:'set-topping',value:topping})).toBe(d);}
+ for(const seat of [null,'near','space'] as const)for(const light of [null,'warm','dim'] as const)for(const drink of [null,'tea','cocoa','water'] as const){let d=initialMovie();if(seat)d=movieSetupReduce(d,{kind:'set-seat',value:seat});if(light)d=movieSetupReduce(d,{kind:'set-light',value:light});if(drink)d=movieSetupReduce(d,{kind:'set-drink',value:drink});expect(d).toMatchObject({seat,light,drink});}
+ let d=initialLight();d=eveningLightReduce(d,{kind:'toggle'});expect(d.level).toBe('dim');d=eveningLightReduce(d,{kind:'toggle'});expect(d.level).toBe('warm');expect(eveningLightReduce(d,{kind:'select',level:'warm'})).toBe(d);
+ expect(validDessertResult({...defaultArc.dessert,topping:'bad'})).toBe(false);expect(validMovieResult({...defaultArc.movie,seat:null})).toBe(false);expect(validLightResult({kind:'evening-light',level:'off'})).toBe(false);
+});
+it('keeps all notes, custom words and trial venues separate from canon and cloud',()=>{
+ const main=finishArc(8),id=main.campaign.records[8]!.attemptId!;expect(main.privateWords.campaign?.text).toBe(defaultArc.wordText);
+ const edited=reduceSave(main,{type:'word-edit',target:'campaign',attemptId:id,text:'Тёплая пауза'});expect(edited.revision).toBe(main.revision);expect(edited.localNoteRevision).toBe(main.localNoteRevision+1);expect(edited.privateNotes).toEqual(main.privateNotes);
+ const trial=finishArc(8,edited,{place:'cafe',ending:'tea',wordText:'Пробное слово'},true);expect(trial.campaign).toEqual(main.campaign);expect(trial.privateWords.campaign?.text).toBe('Тёплая пауза');expect(trial.privateWords.trial?.text).toBe('Пробное слово');expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+ const nine=startArc(9,trial);expect(wordLabel(nine,9,nine.campaign.active!.story,'campaign',nine.campaign.active!.attemptId)).toBe('Тёплая пауза');expect(wordLabel(nine,9,nine.campaign.active!.story,'trial','trial-nine')).toBe('Тёплая пауза');
+ const remote=parseSave(cloudRaw(trial));expect(remote.privateWords).toEqual(trial.privateWords);expect(remote.privateNotes).toEqual(trial.privateNotes);expect(wordLabel(remote,9,main.campaign.records[8]!.story,'campaign')).toBe('Тёплая пауза');expect(preserveLocalPrivateData(remote,trial).privateWords).toEqual(trial.privateWords);expect(cloudRaw(trial)).toContain('Тёплая пауза');expect(cloudRaw(trial)).toContain('Пробное слово');
+ const deleted=reduceSave(edited,{type:'word-edit',target:'campaign',attemptId:id,remove:true});expect(deleted.campaign).toEqual(main.campaign);expect(wordLabel(deleted,8,main.campaign.records[8]!.story,'campaign',id)).toBe('Наше слово');expect(parseSave(JSON.stringify(deleted))).toEqual(deleted);
+ const rewrite=reduceSave(trial,{type:'rewrite',chapter:8,attemptId:'rewrite-eight'});expect(rewrite.privateWords).toEqual({});expect(rewrite.privateNotes[7]).toEqual(main.privateNotes[7]);
+});
+it('validates shared-word Unicode, escaping, strict migrations7–9 and source bounds',()=>{
+ expect(normalizeWord(' e\u0301\r\n\u0000x ')).toBe('é x');expect(validWord('😈'.repeat(24))).toBe(true);expect(validWord('😈'.repeat(25))).toBe(false);
+ const label=arcAt(8,'c8.word.custom');const action=actionArc(label.campaign.active!,{...defaultArc,wordText:'😈'.repeat(25)});expect(reduceSave(label,action)).toBe(label);
+ const html=reduceSave(label,actionArc(label.campaign.active!,{...defaultArc,wordText:'<b>такс</b>'}));expect(html.privateWords.campaign?.text).toBe('<b>такс</b>');expect(JSON.stringify(html.campaign)).not.toContain('<b>');
+ const seven=finishSeven(),eight=finishArc(8,seven),nine=finishArc(9,eight);
+ for(const [version,save] of [[7,seven],[8,eight],[9,nine]] as const){const old={...structuredClone(save),contentVersion:version,...(version===7?{privateWords:undefined}:{})};const next=parseSave(JSON.stringify(old));expect(next.campaign).toEqual(save.campaign);expect(next.revision).toBe(save.revision);expect(next.updatedAt).toBe(save.updatedAt);expect(next.contentVersion).toBe(10);expect(next.unlocked).toEqual(save.unlocked);}
+ const bad={...structuredClone(seven),contentVersion:7};expect(()=>parseSave(JSON.stringify(bad))).toThrow(); // A v7 writer could never add privateWords.
+});
+it('uses the actual venue and family in scenes, cards and a canonical result after trial',()=>{
+ const home=finishArc(8),trial=finishArc(8,home,{place:'cafe'},true);const canonCard=cardFromStory(home.campaign.records[8]!.story,8,home.campaign.records[8]!.results);expect(cardBackground(canonCard)).toBe('bg.s2.kitchen.evening');expect(trial.collection.cards.find(c=>c.id===canonCard.id)?.venue).toBe('cafe');expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+ for(const chapter of [8,9,10] as const){const s=arcAt(chapter,`c${chapter}.guide`);const n=getChapter(chapter)!.nodes[s.campaign.active!.nodeId];if(!('scene' in n))throw Error('Missing scene');const scene=resolveScene(n.scene,s.campaign.active!.story,s.campaign.active!);expect(scene.character).toBe('vlad.casual.smile');}
+});
+it('migrates bounded note drafts, keeps word/note targets isolated and clears only finished forms',()=>{
+ class Memory{data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
+ const memory=new Memory(),key='draft';const label=arcAt(8,'c8.word.custom'),id=label.campaign.active!.attemptId!;
+ memory.setItem(key+':note-draft',JSON.stringify({formatVersion:2,trial:{chapter:6,attemptId:'trial-six',questionId:'s2.q6',text:'Старый черновик'}}));writeWordDraft(memory,key,id,'campaign','Наш вечер');expect(readNoteDraft(memory,key,'trial-six','trial',6)).toBe('Старый черновик');expect(readWordDraft(memory,key,id,'campaign')).toBe('Наш вечер');expect(readWordDraft(memory,key,'wrong','campaign')).toBe('');
+ clearFinishedDraft(memory,key,label);expect(readWordDraft(memory,key,id,'campaign')).toBe('Наш вечер');expect(readNoteDraft(memory,key,'trial-six','trial',6)).toBe('');writeNoteDraft(memory,key,{chapter:9,attemptId:'trial-nine',questionId:'s2.q9',target:'trial',text:'Другой вопрос'});expect(readWordDraft(memory,key,id,'campaign')).toBe('Наш вечер');
+});
+it('gates all new chapters independently and builds isolated developer prefixes through real transitions',()=>{
+ for(const chapter of [8,9,10] as const){const unlocked=reduceSave(initialState(),{type:'unlock',code:chapters.find(c=>c.id===chapter)!.code!});expect(unlocked.unlocked).toContain(chapter);expect(reduceSave(unlocked,{type:'start',chapter,attemptId:'early'})).toBe(unlocked);}
+ vi.stubEnv('DEV',true);try{for(const chapter of [8,9,10] as const){const save=previewFinal(chapter);expect(save.campaign.active?.nodeId).toBe(`c${chapter}.entry`);expect(parseSave(JSON.stringify(save))).toEqual(save);}}finally{vi.unstubAllEnvs();}
+ expect(defaultSeventh.ending).toBe('open');
+});
+it('rejects future facts, wrong venues, impossible preview turns and foreign chapter sparks',()=>{
+ for(const source of [arcAt(8,'c8.word.custom'),arcAt(9,'c9.place'),arcAt(10,'c10.private.confirm')]){
+ const bad=structuredClone(source),r=bad.campaign.active!;if(r.chapter===8)r.story.c8Word='custom';if(r.chapter===9)r.episode!.sparks.push('c8.spark.plan');if(r.chapter===10)r.story.c10Place='terrace';expect(()=>parseSave(JSON.stringify(bad))).toThrow();
+ }
+ const initial=arcAt(8,'c8.dessert');initial.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(initial))).toThrow();
+ const final=finishArc(10);const card=final.collection.cards.find(c=>c.id==='c10.private')!;card.venue='terrace';expect(()=>parseSave(JSON.stringify(final))).toThrow();
+});

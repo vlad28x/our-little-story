@@ -1,0 +1,84 @@
+import { it,expect } from 'vitest';
+import fs from 'node:fs';
+import { chapter7 } from '../src/content/chapters/ch07';
+import { councilRounds } from '../src/content/betweenLines';
+import { startRun,step } from '../src/engine/step';
+import { validateContent } from '../src/engine/validateContent';
+import { acceptsCouncilResult,betweenLinesReduce,initialCouncil,validCouncilDraft,validCouncilResult } from '../src/minigames/betweenLinesModel';
+import { reduceSave } from '../src/state/reducer';
+import { parseSave } from '../src/persistence/validateSave';
+import { episodeStart } from '../src/content/season2';
+import { cloudRaw } from '../src/telegram/cloud';
+import { preserveLocalNotes } from '../src/persistence/notes';
+import { readNoteDraft,writeNoteDraft,clearFinishedDraft } from '../src/persistence/noteDraft';
+class MemoryStorage{data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
+import { defaultSixth,finishSix,sixAt } from './chapter6Helpers';
+import { action7,defaultSeventh,finishSeven,sevenAt,seventhCode,startSeven } from './chapter7Helpers';
+import type { CouncilResult,PlaceAnswer,TopicAnswer,ToneAnswer } from '../src/engine/types';
+import { initialState } from '../src/state/initialState';
+const results:CouncilResult[]=[{kind:'between-lines',outcome:'skipped',answers:[]}];
+for(const a of ['question','challenge','ordinary'] as TopicAnswer[]){results.push({kind:'between-lines',outcome:'skipped',answers:[a]});for(const b of ['lead','invite','stay'] as PlaceAnswer[]){results.push({kind:'between-lines',outcome:'skipped',answers:[a,b]});for(const c of ['direct','playful','quiet'] as ToneAnswer[])results.push({kind:'between-lines',outcome:'completed',answers:[a,b,c]});}}
+it('matches the exact 56-node script and all nine authored reactions',()=>{
+ const source=fs.readFileSync('outputs/CHAPTER_07_SCRIPT.md','utf8'),graph=source.split('## 3. Сценарный граф')[1].split('## 4. Интерактив')[0];
+ expect(Object.keys(chapter7.nodes)).toEqual([...graph.matchAll(/^### `(c7\.[^`]+)`/gm)].map(m=>m[1]));expect(Object.keys(chapter7.nodes)).toHaveLength(56);
+ expect(Object.values(chapter7.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[])).toEqual([...graph.matchAll(/^\d+\. \*\*[^*]+:\*\* (.+)$/gm)].map(m=>m[1]));
+ const actual=councilRounds.flatMap(r=>r.answers.flatMap(a=>a.lines.map(l=>l.text)));expect(actual).toHaveLength(33);expect(actual).toEqual([...source.split('## 4. Интерактив')[1].matchAll(/^\d+\. \*\*[^*]+:\*\* (.+)$/gm)].map(m=>m[1]));expect(validateContent(chapter7)).toEqual([]);
+});
+it('plays all 3240 guide/thought/result/distance/ending combinations without thresholds',()=>{
+ const base=finishSix(),prior=episodeStart(7,base.campaign.records[6]!.story,base.campaign.records[6]!.results);let count=0;const found=new Set();
+ for(const guide of ['angel','devil','none'] as const)for(const thought of ['curious','playful','steady'] as const)for(const result of results)for(const distance of ['arm','near','space'] as const)for(const ending of ['open','promise','calm'] as const){
+ const p={...defaultSeventh,guide,thought,result,distance,ending};let run=startRun(chapter7,prior,'test-seven');let done=false;
+ for(let i=0;i<600;i++){const action=action7(run,p);if(action.type!=='command')throw Error('Wrong action');const update=step(chapter7,run,action.command);expect(update.kind).not.toBe('rejected');if(update.kind==='rejected')break;run=update.run;if(update.kind==='complete'){found.add(update.cardId);done=true;break;}}
+ expect(done).toBe(true);expect(run.episode?.sparks).toHaveLength(result.outcome==='completed'?3:result.answers.length?2:1);expect(run.results['between-lines']).toEqual(result);count++;
+ }
+ expect(count).toBe(3240);expect(found.size).toBe(3);
+},20000);
+it('validates every saved checkpoint including all partial results and keeps old records unchanged',()=>{
+ const base=finishSix();for(const result of results){let s=startSeven(base);for(let i=0;i<600&&s.campaign.active;i++){expect(parseSave(JSON.stringify(s))).toEqual(s);s=reduceSave(s,action7(s.campaign.active,{...defaultSeventh,result}));}expect(parseSave(JSON.stringify(s))).toEqual(s);for(const id of [1,2,3,4,5,6] as const)expect(s.campaign.records[id]).toEqual(base.campaign.records[id]);}
+});
+it('rejects invalid answers, forged results, phases and stale actions',()=>{
+ let d=initialCouncil();expect(betweenLinesReduce(d,{kind:'answer',answer:'lead'})).toBe(d);expect(acceptsCouncilResult(d,{kind:'between-lines',outcome:'completed',answers:['question','lead','direct']})).toBe(false);
+ d=betweenLinesReduce(d,{kind:'answer',answer:'question'});expect(betweenLinesReduce(d,{kind:'answer',answer:'ordinary'})).toBe(d);expect(validCouncilDraft({...d,lineIndex:99})).toBe(false);expect(validCouncilDraft({...d,phase:'complete'})).toBe(false);expect(validCouncilResult({kind:'between-lines',outcome:'skipped',answers:['question','lead','quiet']})).toBe(false);expect(validCouncilResult({kind:'between-lines',outcome:'completed',answers:['question','lead','quiet'],text:'extra'})).toBe(false);
+ let s=sevenAt('c7.council');const a=action7(s.campaign.active!);s=reduceSave(s,a);expect(reduceSave(s,a)).toBe(s);
+ for(const mutate of [(x:typeof s)=>{x.campaign.active!.episode!.sparks.push('c7.spark.exchange');},(x:typeof s)=>{x.campaign.active!.story.c7Distance='arm';},(x:typeof s)=>{x.campaign.active!.turn++;},(x:typeof s)=>{x.campaign.active!.activity={kind:'between-lines',answers:['question'],phase:'choose',lineIndex:0};}]){const bad=structuredClone(s);mutate(bad);expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
+});
+it('retains independent local notes and isolates trial results, seed and rewrite',()=>{
+ const main=finishSeven(),prior=structuredClone(main.campaign);expect(main.privateNotes[6]?.campaign?.text).toBe(defaultSixth.note);expect(main.privateNotes[7]?.campaign?.text).toBe(defaultSeventh.note);
+ const trial=finishSeven(main,{...defaultSeventh,guide:'devil',ending:'calm',result:{kind:'between-lines',outcome:'completed',answers:['ordinary','lead','quiet']},note:'Пробная заметка'},true);
+ expect(trial.campaign).toEqual(prior);expect(trial.privateNotes[7]?.trial?.text).toBe('Пробная заметка');expect(trial.lastResult?.episodeRecord?.story.c7Ending).toBe('calm');expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+ const edited=reduceSave(main,{type:'note-edit',chapter:7,target:'campaign',attemptId:main.campaign.records[7]!.attemptId!,text:'Изменённый вопрос'});expect(edited.revision).toBe(main.revision);expect(edited.localNoteRevision).toBe(main.localNoteRevision+1);expect(edited.privateNotes[6]).toEqual(main.privateNotes[6]);expect(preserveLocalNotes(parseSave(cloudRaw(main)),edited).privateNotes).toEqual(main.privateNotes);expect(cloudRaw(main)).toContain(defaultSeventh.note);
+ const rewrite=reduceSave(main,{type:'rewrite',chapter:7,attemptId:'rewrite-seven'});expect(rewrite.privateNotes[6]).toEqual(main.privateNotes[6]);expect(rewrite.privateNotes[7]).toBeUndefined();expect(parseSave(JSON.stringify(rewrite))).toEqual(rewrite);
+ const sixTrial=finishSix(main,{...defaultSixth,route:{kind:'evening-route',mode:'shared',stops:['lights','water']}},true);expect(sixTrial.campaign.records[7]).toEqual(main.campaign.records[7]);expect(startSeven(sixTrial,true).trial?.run.story.c7PreviousStop).toBe(main.campaign.startStates[7]?.c7PreviousStop);
+});
+it('strictly migrates v6 saved/deleted/active/trial data and rejects future and injected source fields',()=>{
+ for(const current of [finishSix(),sixAt('c6.map'),finishSix(finishSix(),defaultSixth,true)]){
+ const raw={...structuredClone(current),contentVersion:6,privateWords:undefined,privateNotes:current.privateNotes[6]??{}};const migrated=parseSave(JSON.stringify(raw));expect(migrated.contentVersion).toBe(10);expect(migrated.campaign).toEqual(current.campaign);expect(migrated.privateNotes[6]).toEqual(current.privateNotes[6]);expect(migrated.revision).toBe(current.revision);
+ const bad=structuredClone(raw);if(bad.campaign.active)bad.campaign.active.story.c7Guide='angel';if(bad.campaign.active)expect(()=>parseSave(JSON.stringify(bad))).toThrow();
+ }
+ expect(()=>parseSave(JSON.stringify({...finishSix(),contentVersion:11}))).toThrow();
+ const early=reduceSave(initialState(),{type:'unlock',code:seventhCode});expect(early.unlocked).toContain(7);expect(reduceSave(early,{type:'start',chapter:7,attemptId:'early'})).toBe(early);
+});
+it('keeps two bounded note drafts and migrates a matching legacy draft',()=>{
+ const storage=new MemoryStorage(),base='draft';const main=sixAt('c6.note');storage.setItem(`${base}:note-draft`,JSON.stringify({attemptId:main.campaign.active!.attemptId,questionId:'s2.q6',text:'Шестой'}));clearFinishedDraft(storage,base,main);
+ writeNoteDraft(storage,base,{chapter:7,target:'trial',attemptId:'trial-seven',questionId:'s2.q7',text:'Седьмой'});expect(readNoteDraft(storage,base,main.campaign.active!.attemptId!)).toBe('Шестой');expect(readNoteDraft(storage,base,'trial-seven','trial',7)).toBe('Седьмой');expect(readNoteDraft(storage,base,'other','trial',7)).toBe('');
+});
+import { vi } from 'vitest';
+import { previewSeventh } from '../src/app/developerPreview';
+import { councilRounds as authoredRounds } from '../src/content/betweenLines';
+import { noteLength } from '../src/persistence/notes';
+it('builds a valid isolated developer preview and preserves seed derived from every last stop',()=>{
+ vi.stubEnv('DEV',true);try{const preview=previewSeventh();expect(preview.campaign.active?.nodeId).toBe('c7.entry');expect(parseSave(JSON.stringify(preview))).toEqual(preview);}finally{vi.unstubAllEnvs();}
+ for(const route of [{kind:'evening-route',mode:'own',stops:['window','water']},{kind:'evening-route',mode:'own',stops:['water','lights']},{kind:'evening-route',mode:'own',stops:['water','window']},{kind:'evening-route',mode:'skipped',stops:[]}] as const){
+ const result=structuredClone(route) as import('../src/engine/types').EveningRouteResult;for(const ending of ['hand','lap','home'] as const){const six=finishSix(undefined,{...defaultSixth,route:result,ending});const s=startSeven(six);expect(s.campaign.active!.story.c7PreviousStop).toBe(route.mode==='skipped'?'skipped':route.stops[1]);expect(parseSave(JSON.stringify(s))).toEqual(s);}}
+});
+it('migrates deleted v6 notes and validates both chapter fields and Unicode bounds strictly',()=>{
+ let main=finishSix();main=reduceSave(main,{type:'note-edit',target:'campaign',attemptId:main.campaign.records[6]!.attemptId!,remove:true});
+ const migrated=parseSave(JSON.stringify({...main,contentVersion:6,privateWords:undefined,privateNotes:main.privateNotes[6]}));expect(migrated.privateNotes[6]?.campaign?.status).toBe('deleted');
+ const seven=finishSeven();const id=seven.campaign.records[7]!.attemptId!;const text='😈'.repeat(280);expect(noteLength(text)).toBe(280);const bounded=reduceSave(seven,{type:'note-edit',chapter:7,target:'campaign',attemptId:id,text});expect(parseSave(JSON.stringify(bounded))).toEqual(bounded);expect(reduceSave(bounded,{type:'note-edit',chapter:7,target:'campaign',attemptId:id,text:text+'😈'})).toBe(bounded);
+ const bad=structuredClone(seven) as unknown as {privateNotes:Record<string,{campaign:{chapter:number}}>};bad.privateNotes['7'].campaign.chapter=6;expect(()=>parseSave(JSON.stringify(bad))).toThrow();expect(authoredRounds).toHaveLength(3);
+});
+it('keeps choose/reply/complete drafts and blocks result acceptance before each reaction finishes',()=>{
+ const draft=initialCouncil();let d=draft;
+ for(const answer of ['ordinary','stay','quiet'] as const){d=betweenLinesReduce(d,{kind:'answer',answer});expect(validCouncilDraft(d)).toBe(true);expect(acceptsCouncilResult(d,{kind:'between-lines',outcome:'skipped',answers:d.answers})).toBe(false);while(d.phase==='reply')d=betweenLinesReduce(d,{kind:'next-line'});expect(validCouncilDraft(d)).toBe(true);}
+ expect(d.phase).toBe('complete');expect(acceptsCouncilResult(d,{kind:'between-lines',outcome:'completed',answers:['ordinary','stay','quiet']})).toBe(true);expect(betweenLinesReduce(d,{kind:'next-line'})).toBe(d);
+});

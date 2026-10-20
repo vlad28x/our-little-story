@@ -1,0 +1,9 @@
+import { test,expect } from '@playwright/test';
+import { sevenAt } from './chapter7Helpers';
+const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
+test('seventh chapter serves its gallery from the production base and restores an actual response',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));const initial=sevenAt('c7.council');
+ await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify(initial)});
+ await page.goto('./#/play/7');await expect(page.locator('.scene-background')).toHaveAttribute('src',/assets\/backgrounds\/gallery-evening.webp$/);await expect.poll(()=>page.locator('.scene-background').evaluate(el=>(el as HTMLImageElement).naturalWidth)).toBe(1400);
+ await page.locator('.council-answers button').nth(1).click();await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.getByText('нет. обычно ещё увереннее.',{exact:true})).toBeVisible();const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);await page.reload();await expect(page.getByText('нет. обычно ещё увереннее.',{exact:true})).toBeVisible();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active,key)).toEqual(saved.campaign.active);expect(errors).toEqual([]);
+});

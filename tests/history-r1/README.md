@@ -1,0 +1,1 @@
+Historical R1 exact-dialogue/spark/adviser-guide assertions. Replaced by active R2 suites, not executed against the new story. Golden R1 save fixtures are validated separately by the frozen parser. First-five tests remain active.

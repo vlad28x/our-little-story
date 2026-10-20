@@ -1,0 +1,20 @@
+import { it,expect } from 'vitest';
+import { finishR2 } from './r2Helpers';
+import { parseSave } from '../src/persistence/validateSave';
+import type { CouncilResult,TopicAnswer,PlaceAnswer,ToneAnswer } from '../src/engine/types';
+it('all full and partial conversations preserve their answers and allow every tender reaction',()=>{
+ const base=finishR2(6),results:CouncilResult[]=[{kind:'between-lines',outcome:'skipped',answers:[]}];
+ for(const a of ['question','challenge','ordinary'] as TopicAnswer[]){
+  results.push({kind:'between-lines',outcome:'skipped',answers:[a]});
+  for(const b of ['lead','invite','stay'] as PlaceAnswer[]){
+   results.push({kind:'between-lines',outcome:'skipped',answers:[a,b]});
+   for(const c of ['direct','playful','quiet'] as ToneAnswer[])results.push({kind:'between-lines',outcome:'completed',answers:[a,b,c]});
+  }
+ }
+ expect(results).toHaveLength(40);
+ for(const result of results)for(const moment of ['cheek','collar','near','space'])for(const reply of moment==='space'?['kind']:['kind','hand','pause'])for(const ending of ['open','promise','calm']){
+  const save=finishR2(7,{choices:{'c7.r2.gesture':moment,'c7.r2.flustered':reply,'c7.r2.ending':ending},results:{'between-lines':result}},base);
+  expect(parseSave(JSON.stringify(save))).toEqual(save);expect(save.campaign.records[7]!.story.c7Reply).toBe(moment==='space'?undefined:reply);
+  expect(save.campaign.records[7]!.results['between-lines']).toEqual(result);
+ }
+},30000);

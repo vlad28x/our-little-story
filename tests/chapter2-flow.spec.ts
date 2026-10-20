@@ -14,7 +14,7 @@ async function finish(page:Page,mood:'quiet'|'playful'='quiet'){await until(page
 test('old save opens chapter two by code, preserves memories, solves the puzzle and shows its result',async({page})=>{
   const old=completeSave({...defaultPath,plan:'coop',pace:'flirt',search:{kind:'token-search',outcome:'detour',catNoticed:true}});await seed(page,old);
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.url());});
-  await openSecond(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(6);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k.replace(':save',':backup'))!).contentVersion,key)).toBe(6);
+  await openSecond(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(11);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k.replace(':save',':backup'))!).contentVersion,key)).toBe(11);
   await until(page,'c2.plan.coop');await expect(page.getByText('Влад достаёт маленькую коробку карманной игры и кладёт её на стол под навесом.')).toBeVisible();
   await until(page,'c2.rain');await page.getByRole('button',{name:'Давай добежим до соседней арки'}).click();await until(page,'c2.cat.known');await expect(page.getByText('С начальником вы уже знакомы. Сегодня он отвечает за забытые вещи.')).toBeVisible();
   await until(page,'c2.cat');await page.getByRole('button',{name:'Попросим Нину помочь'}).click();await until(page,'c2.umbrella');

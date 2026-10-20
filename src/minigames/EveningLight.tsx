@@ -1,0 +1,7 @@
+import type { EveningLightDraft,EveningLightAction,EveningLightResult } from '../engine/types';
+import { eveningLights } from './eveningLightModel';
+import { LampArt } from '../ui/LampArt';
+export function EveningLight({draft,suspended,onAction,onComplete}:{draft:EveningLightDraft;suspended:boolean;onAction:(a:EveningLightAction)=>void;onComplete:(r:EveningLightResult)=>void}){
+ const names={warm:'Тёплый свет',dim:'Приглушить',unchanged:'Оставить как есть'};
+ return <section className="cozy-game evening-light"><span className="eyebrow">ПОСЛЕДНИЙ ВЕЧЕР</span><h2>Какой свет оставим?</h2><p className="small">Свет меняет только обстановку.</p><fieldset disabled={suspended}><div className={`lamp-preview ${draft.level==='dim'?'is-dim':''}`}><span className="lamp-window" aria-hidden="true">✧ · ✧</span><button className="lamp-toggle" aria-label="Переключить лампу" onClick={()=>onAction({kind:'toggle'})}><LampArt dim={draft.level==='dim'}/></button><p>{draft.level?names[draft.level]:'Коснись лампы или выбери ниже'}</p></div><div className="light-options">{eveningLights.map(level=><button key={level} aria-pressed={draft.level===level} onClick={()=>onAction({kind:'select',level})}>{names[level]}{draft.level===level?' ✓':''}</button>)}</div><button className="primary full" disabled={!draft.level} onClick={()=>{if(draft.level)onComplete({kind:'evening-light',level:draft.level});}}>Так хорошо</button></fieldset></section>;
+}

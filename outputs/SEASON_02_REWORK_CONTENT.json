@@ -1,0 +1,4873 @@
+{
+  "status": "IMPLEMENTED_LOCAL",
+  "revision": "season2-r2-draft2",
+  "date": "2026-10-20",
+  "scope": [
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "chapters": [
+    {
+      "id": 6,
+      "title": "Ещё пять минут",
+      "entry": "c6.r2.entry",
+      "nodes": {
+        "c6.r2.entry": {
+          "id": "c6.r2.entry",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На развилке Влад замедляет шаг. До остановки — направо. Вдоль воды ещё горят фонари."
+            },
+            {
+              "speaker": "vlad",
+              "text": "короткая дорога — туда. показываю, чтобы ты оценила, насколько честно я сейчас предложу другую."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Длинную?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "с тобой — с удовольствием."
+            }
+          ],
+          "next": "c6.r2.voice"
+        },
+        "c6.r2.voice": {
+          "id": "c6.r2.voice",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "Что ты ему ответишь?",
+          "choices": [
+            {
+              "id": "tease",
+              "text": "Ты всегда так старательно задерживаешь людей?",
+              "next": "c6.r2.voice.tease",
+              "set": {
+                "c6Voice": "tease"
+              }
+            },
+            {
+              "id": "lead",
+              "text": "Давай руку. Теперь дорогу выбираю я",
+              "next": "c6.r2.voice.lead",
+              "set": {
+                "c6Voice": "lead"
+              }
+            },
+            {
+              "id": "quiet",
+              "text": "Я тоже пока не хочу уходить. Просто пройдёмся",
+              "next": "c6.r2.voice.quiet",
+              "set": {
+                "c6Voice": "quiet"
+              }
+            }
+          ]
+        },
+        "c6.r2.voice.tease": {
+          "id": "c6.r2.voice.tease",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Ты всегда так старательно задерживаешь людей?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "нет. обычно я не так сильно хочу, чтобы они остались."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Вот с этого и надо было начинать."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты меня раскусила. придётся дальше говорить честно."
+            }
+          ],
+          "next": "c6.r2.aside"
+        },
+        "c6.r2.voice.lead": {
+          "id": "c6.r2.voice.lead",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай руку. Теперь дорогу выбираю я."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад протягивает ладонь. Ты берёшь его за руку и разворачиваешь к воде."
+            },
+            {
+              "speaker": "vlad",
+              "text": "так. теперь длинную дорогу выбрала ты."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Тебе обязательно всё комментировать?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "нет. могу просто довольно улыбаться."
+            }
+          ],
+          "next": "c6.r2.aside"
+        },
+        "c6.r2.voice.quiet": {
+          "id": "c6.r2.voice.quiet",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Я тоже пока не хочу уходить. Просто пройдёмся."
+            },
+            {
+              "speaker": "vlad",
+              "text": "вот это мне приятно слышать. пойдём."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он убирает телефон. Вы отходите от развилки рядом, не торопясь заполнять разговором каждую секунду."
+            }
+          ],
+          "next": "c6.r2.aside"
+        },
+        "c6.r2.aside": {
+          "id": "c6.r2.aside",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "devil",
+              "text": "Он эту развилку уже мысленно раз пять обошёл."
+            },
+            {
+              "speaker": "angel",
+              "text": "Можно просто сказать, что рад её видеть."
+            },
+            {
+              "speaker": "devil",
+              "text": "Так он и говорит. С небольшим крюком."
+            }
+          ],
+          "next": "c6.r2.map.intro",
+          "presentation": "adviser-aside"
+        },
+        "c6.r2.map.intro": {
+          "id": "c6.r2.map.intro",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "к воде, под огни или к витрине с очень довольным котом. выбери две остановки."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А ты куда хочешь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "идти рядом. с остальным справишься лучше меня."
+            }
+          ],
+          "next": "c6.r2.map"
+        },
+        "c6.r2.map": {
+          "id": "c6.r2.map",
+          "kind": "minigame",
+          "scene": "river",
+          "game": "evening-route",
+          "next": "c6.r2.stop.route"
+        },
+        "c6.r2.stop.route": {
+          "id": "c6.r2.stop.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "route.first",
+                  "equals": "water"
+                }
+              ],
+              "next": "c6.r2.stop.water"
+            },
+            {
+              "all": [
+                {
+                  "field": "route.first",
+                  "equals": "lights"
+                }
+              ],
+              "next": "c6.r2.stop.lights"
+            },
+            {
+              "all": [
+                {
+                  "field": "route.first",
+                  "equals": "window"
+                }
+              ],
+              "next": "c6.r2.stop.window"
+            }
+          ],
+          "fallback": "c6.r2.stop.free"
+        },
+        "c6.r2.stop.water": {
+          "id": "c6.r2.stop.water",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "У воды становится тише. Влад собирается что-то добавить, но замечает, что ты всё ещё смотришь на него."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты сейчас специально?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Что?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "смотришь так, что я забываю, что хотел сказать."
+            }
+          ],
+          "next": "c6.r2.second.route"
+        },
+        "c6.r2.stop.lights": {
+          "id": "c6.r2.stop.lights",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Под гирляндой Влад останавливается и поворачивается к тебе."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты мне фонари показываешь или на меня смотришь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "фонари я уже видел."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он улыбается, но взгляда сразу не отводит."
+            }
+          ],
+          "next": "c6.r2.second.route"
+        },
+        "c6.r2.stop.window": {
+          "id": "c6.r2.stop.window",
+          "kind": "dialogue",
+          "scene": "window",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "В витрине сидит керамический кот в галстуке. На табличке рядом — «Перерыв»."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Он уже всё понял."
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. и теперь смотрит, как я пытаюсь произвести на тебя впечатление."
+            },
+            {
+              "speaker": "heroine",
+              "text": "И как успехи?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "пока ты стоишь рядом — я настроен оптимистично."
+            }
+          ],
+          "next": "c6.r2.second.route"
+        },
+        "c6.r2.stop.free": {
+          "id": "c6.r2.stop.free",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы обходите карту и идёте вдоль воды. На очередном повороте Влад подстраивает шаг под твой."
+            },
+            {
+              "speaker": "vlad",
+              "text": "хорошо, что осталась. вот это я и хотел сказать ещё на развилке."
+            }
+          ],
+          "next": "c6.r2.moment"
+        },
+        "c6.r2.second.route": {
+          "id": "c6.r2.second.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "route.second",
+                  "equals": "water"
+                }
+              ],
+              "next": "c6.r2.second.water"
+            },
+            {
+              "all": [
+                {
+                  "field": "route.second",
+                  "equals": "lights"
+                }
+              ],
+              "next": "c6.r2.second.lights"
+            },
+            {
+              "all": [
+                {
+                  "field": "route.second",
+                  "equals": "window"
+                }
+              ],
+              "next": "c6.r2.second.window"
+            }
+          ],
+          "fallback": "c6.r2.moment"
+        },
+        "c6.r2.second.water": {
+          "id": "c6.r2.second.water",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "У парапета Влад на минуту замолкает. Вы смотрите на отражения в воде."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Какой ты тихий."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне и так хорошо. удивительно, да?"
+            }
+          ],
+          "next": "c6.r2.moment"
+        },
+        "c6.r2.second.lights": {
+          "id": "c6.r2.second.lights",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Тебе идёт этот свет."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне нравится, как ты делаешь комплименты. продолжишь?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Посмотрим, как будешь себя вести."
+            }
+          ],
+          "next": "c6.r2.moment"
+        },
+        "c6.r2.second.window": {
+          "id": "c6.r2.second.window",
+          "kind": "dialogue",
+          "scene": "window",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад замечает керамического кота за стеклом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "он тут каждый вечер. а мне повезло больше — сегодня ты со мной."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты даже с котом соревнуешься?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "только когда выигрываю."
+            }
+          ],
+          "next": "c6.r2.moment"
+        },
+        "c6.r2.moment": {
+          "id": "c6.r2.moment",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "На обратном пути ты останавливаешься. Что сделаешь?",
+          "choices": [
+            {
+              "id": "hug",
+              "text": "Обними меня. Я ещё не ухожу",
+              "next": "c6.r2.moment.hug",
+              "set": {
+                "c6Moment": "hug"
+              }
+            },
+            {
+              "id": "hand",
+              "text": "Взять его за руку, пока он придумывает следующий повод задержаться",
+              "next": "c6.r2.moment.hand",
+              "set": {
+                "c6Moment": "hand"
+              }
+            },
+            {
+              "id": "talk",
+              "text": "Скажи прямо: зачем ты меня задерживаешь?",
+              "next": "c6.r2.moment.talk",
+              "set": {
+                "c6Moment": "talk"
+              }
+            },
+            {
+              "id": "walk",
+              "text": "Мне хорошо вот так. Пойдём дальше?",
+              "next": "c6.r2.moment.walk",
+              "set": {
+                "c6Moment": "walk"
+              }
+            }
+          ]
+        },
+        "c6.r2.moment.hug": {
+          "id": "c6.r2.moment.hug",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Обними меня. Я ещё не ухожу."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад раскрывает руки. Ты подходишь, и он обнимает тебя. Несколько секунд вы остаётесь так."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можешь же без экскурсии."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я просто берег самый убедительный аргумент."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Когда ты чуть отстраняешься, он отпускает тебя и остаётся рядом."
+            }
+          ],
+          "next": "c6.r2.thought"
+        },
+        "c6.r2.moment.hand": {
+          "id": "c6.r2.moment.hand",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "тут за поворотом ещё есть…"
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты протягиваешь руку. Влад принимает её и на секунду забывает про поворот."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Я хочу пройтись с тобой за руку. Можно без экскурсии."
+            },
+            {
+              "speaker": "vlad",
+              "text": "можно. я вообще-то именно это и пытался предложить."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Я поняла."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы идёте дальше за руку. Влад улыбается, больше не подбирая предлог."
+            }
+          ],
+          "next": "c6.r2.thought"
+        },
+        "c6.r2.moment.talk": {
+          "id": "c6.r2.moment.talk",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Скажи прямо: зачем ты меня задерживаешь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "потому что ты мне нравишься. и я хочу ещё немного побыть с тобой."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Вот. А начинал с кота."
+            },
+            {
+              "speaker": "vlad",
+              "text": "нервничал. бывает даже со мной.",
+              "emotion": "awkward"
+            }
+          ],
+          "next": "c6.r2.thought"
+        },
+        "c6.r2.moment.walk": {
+          "id": "c6.r2.moment.walk",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мне хорошо вот так. Пойдём дальше?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "пойдём. ты ещё не закончила рассказывать."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы продолжаете прогулку рядом. Влад не сокращает расстояние за тебя."
+            }
+          ],
+          "next": "c6.r2.thought"
+        },
+        "c6.r2.thought": {
+          "id": "c6.r2.thought",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad-thought",
+              "text": "так. она здесь, и мне хорошо. можно перестать пытаться придумать идеальную реплику."
+            }
+          ],
+          "next": "c6.r2.note"
+        },
+        "c6.r2.note": {
+          "id": "c6.r2.note",
+          "kind": "note",
+          "scene": "river",
+          "questionId": "s2.q6",
+          "maxCodePoints": 280,
+          "prompt": "Что могло бы заставить тебя задержаться со мной ещё немного?",
+          "context": "Впереди ещё один поворот. У фонаря можно ненадолго задержаться.",
+          "answerOptions": [
+            {
+              "id": "preset.1",
+              "kind": "preset",
+              "text": "Ты обнимаешь меня, и мы никуда не торопимся."
+            },
+            {
+              "id": "preset.2",
+              "kind": "preset",
+              "text": "Ты рассказываешь что-то своё — без попытки меня впечатлить."
+            },
+            {
+              "id": "custom",
+              "kind": "custom",
+              "text": "Своими словами"
+            }
+          ],
+          "placeholder": "Мне бы хотелось…",
+          "submitLabel": "Сохранить ответ",
+          "skipLabel": "Пропустить",
+          "statusField": "c6Note",
+          "next": "c6.r2.ending"
+        },
+        "c6.r2.ending": {
+          "id": "c6.r2.ending",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "Как закончится эта прогулка?",
+          "choices": [
+            {
+              "id": "hand",
+              "text": "Ещё немного за руку",
+              "next": "c6.r2.finish.hand",
+              "set": {
+                "c6Ending": "hand"
+              }
+            },
+            {
+              "id": "lap",
+              "text": "Ещё один круг. Просто рядом",
+              "next": "c6.r2.finish.lap",
+              "set": {
+                "c6Ending": "lap"
+              }
+            },
+            {
+              "id": "home",
+              "text": "На сегодня хватит. Проводишь меня?",
+              "next": "c6.r2.finish.home",
+              "set": {
+                "c6Ending": "home"
+              }
+            }
+          ]
+        },
+        "c6.r2.finish.hand": {
+          "id": "c6.r2.finish.hand",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Ещё немного за руку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "иди сюда. короткую дорогу сегодня точно не предлагаю."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он протягивает ладонь. Ты берёшь её, и вы проходите мимо знакомого поворота."
+            }
+          ],
+          "next": "c6.r2.end.hand"
+        },
+        "c6.r2.finish.lap": {
+          "id": "c6.r2.finish.lap",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Ещё один круг. Просто рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. теперь твоя очередь рассказывать, а я буду смотреть на тебя и пытаться не отвлекаться."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты только что сам себя выдал."
+            },
+            {
+              "speaker": "vlad",
+              "text": "сегодня у меня с этим особенно хорошо."
+            }
+          ],
+          "next": "c6.r2.end.lap"
+        },
+        "c6.r2.finish.home": {
+          "id": "c6.r2.finish.home",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "На сегодня хватит. Проводишь меня?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "конечно."
+            },
+            {
+              "speaker": "narrator",
+              "text": "У освещённой остановки он поворачивается к тебе."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне было хорошо с тобой. до следующей встречи?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "До следующей."
+            }
+          ],
+          "next": "c6.r2.end.home"
+        },
+        "c6.r2.end.hand": {
+          "id": "c6.r2.end.hand",
+          "kind": "end",
+          "cardId": "c6.hand",
+          "title": "Рука в руке",
+          "caption": "Короткая дорога подождёт",
+          "quote": "короткую дорогу сегодня точно не предлагаю."
+        },
+        "c6.r2.end.lap": {
+          "id": "c6.r2.end.lap",
+          "kind": "end",
+          "cardId": "c6.lap",
+          "title": "Ещё один круг",
+          "caption": "Разговору нашлось продолжение",
+          "quote": "сегодня у меня с этим особенно хорошо."
+        },
+        "c6.r2.end.home": {
+          "id": "c6.r2.end.home",
+          "kind": "end",
+          "cardId": "c6.home",
+          "title": "До следующего вечера",
+          "caption": "Хороший вечер можно закончить вовремя",
+          "quote": "мне было хорошо с тобой."
+        }
+      },
+      "gameScript": {},
+      "secret": [
+        "Д|Он на всякий случай запомнил ещё три длинные дороги.",
+        "А|Ему можно просто позвать её ещё раз.",
+        "Д|Слишком хорошо работает. Даже спорить не хочется."
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Между строк",
+      "entry": "c7.r2.entry",
+      "nodes": {
+        "c7.r2.entry": {
+          "id": "c7.r2.entry",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "У входа в крытую галерею Влад складывает зонт. За стеклом отражаются фонари."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я вообще хотел показать тебе галерею. но смотреть, кажется, буду преимущественно на тебя."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Может, хоть сделаешь вид?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "первые пять минут. потом ничего не обещаю."
+            }
+          ],
+          "next": "c7.r2.past.route"
+        },
+        "c7.r2.past.route": {
+          "id": "c7.r2.past.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c6Moment",
+                  "equals": "hug"
+                }
+              ],
+              "next": "c7.r2.past.hug"
+            },
+            {
+              "all": [
+                {
+                  "field": "c6Ending",
+                  "equals": "hand"
+                }
+              ],
+              "next": "c7.r2.past.hand"
+            },
+            {
+              "all": [
+                {
+                  "field": "c6Moment",
+                  "equals": "hand"
+                }
+              ],
+              "next": "c7.r2.past.hand"
+            }
+          ],
+          "fallback": "c7.r2.past.walk"
+        },
+        "c7.r2.past.hug": {
+          "id": "c7.r2.past.hug",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "сегодня опять придётся устраивать экскурсию или ты сразу скажешь, если захочешь обняться?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты теперь будешь это вспоминать?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. мне понравилось."
+            }
+          ],
+          "next": "c7.r2.game.intro"
+        },
+        "c7.r2.past.hand": {
+          "id": "c7.r2.past.hand",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "в прошлый раз ты очень убедительно взяла меня за руку."
+            },
+            {
+              "speaker": "heroine",
+              "text": "И?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "я запомнил. сегодня тоже можно без длинных объяснений."
+            }
+          ],
+          "next": "c7.r2.game.intro"
+        },
+        "c7.r2.past.walk": {
+          "id": "c7.r2.past.walk",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "я ждал этой встречи. решил сразу сказать, пока опять не начал рассказывать про витрины."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Так гораздо лучше."
+            }
+          ],
+          "next": "c7.r2.game.intro"
+        },
+        "c7.r2.game.intro": {
+          "id": "c7.r2.game.intro",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Дождь становится плотнее. Вы отходите под крышу. Влад убирает зонт к колонне и остаётся напротив тебя."
+            },
+            {
+              "speaker": "vlad",
+              "text": "спрашивай. один честный ответ с меня точно причитается."
+            }
+          ],
+          "next": "c7.r2.conversation"
+        },
+        "c7.r2.conversation": {
+          "id": "c7.r2.conversation",
+          "kind": "minigame",
+          "scene": "gallery",
+          "game": "between-lines",
+          "next": "c7.r2.aside"
+        },
+        "c7.r2.aside": {
+          "id": "c7.r2.aside",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "devil",
+              "text": "Ну? Он тебе уже глазами весь вечер рассказал."
+            },
+            {
+              "speaker": "angel",
+              "text": "Может, дадим ей спокойно ответить?"
+            }
+          ],
+          "next": "c7.r2.aside.reply",
+          "presentation": "adviser-aside"
+        },
+        "c7.r2.aside.reply": {
+          "id": "c7.r2.aside.reply",
+          "kind": "choice",
+          "scene": "gallery",
+          "prompt": "Советчики опять выглядывают сбоку. Как ответишь им про себя?",
+          "choices": [
+            {
+              "id": "hush",
+              "text": "Оба помолчите. Сейчас я сама",
+              "next": "c7.r2.aside.hush",
+              "set": {
+                "c7Aside": "hush"
+              }
+            },
+            {
+              "id": "joke",
+              "text": "Вам билеты на первый ряд выдали?",
+              "next": "c7.r2.aside.joke",
+              "set": {
+                "c7Aside": "joke"
+              }
+            },
+            {
+              "id": "ignore",
+              "text": "Вернуться к Владу без ответа",
+              "next": "c7.r2.moment",
+              "set": {
+                "c7Aside": "ignore"
+              }
+            }
+          ]
+        },
+        "c7.r2.aside.hush": {
+          "id": "c7.r2.aside.hush",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine-thought",
+              "text": "Оба помолчите. Сейчас я сама."
+            },
+            {
+              "speaker": "devil",
+              "text": "Всё, нас выгоняют. Ухожу красиво."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Закладки с нимбом и рожками складываются и исчезают с края кадра."
+            }
+          ],
+          "next": "c7.r2.moment",
+          "presentation": "adviser-aside"
+        },
+        "c7.r2.aside.joke": {
+          "id": "c7.r2.aside.joke",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine-thought",
+              "text": "Вам билеты на первый ряд выдали?"
+            },
+            {
+              "speaker": "angel",
+              "text": "Уже возвращаем."
+            },
+            {
+              "speaker": "devil",
+              "text": "Даже попкорн взять не успел."
+            }
+          ],
+          "next": "c7.r2.moment",
+          "presentation": "adviser-aside"
+        },
+        "c7.r2.moment": {
+          "id": "c7.r2.moment",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад поправляет шарф и снова смотрит на тебя. Между фразами появляется новая пауза."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я замолчал не потому, что закончились темы. мне просто нравится на тебя смотреть."
+            }
+          ],
+          "next": "c7.r2.gesture"
+        },
+        "c7.r2.gesture": {
+          "id": "c7.r2.gesture",
+          "kind": "choice",
+          "scene": "gallery",
+          "prompt": "Что ты сделаешь сейчас?",
+          "choices": [
+            {
+              "id": "cheek",
+              "text": "Наклонись. Я хочу поцеловать тебя в щёку",
+              "next": "c7.r2.gesture.cheek",
+              "set": {
+                "c7Moment": "cheek"
+              }
+            },
+            {
+              "id": "collar",
+              "text": "Стой. Я поправлю тебе воротник",
+              "next": "c7.r2.gesture.collar",
+              "set": {
+                "c7Moment": "collar"
+              }
+            },
+            {
+              "id": "near",
+              "text": "Подойди. Хочу проверить, такой ли ты уверенный вблизи",
+              "next": "c7.r2.gesture.near",
+              "set": {
+                "c7Moment": "near"
+              }
+            },
+            {
+              "id": "space",
+              "text": "Мне нравится вот так разговаривать с тобой",
+              "next": "c7.r2.gesture.space",
+              "set": {
+                "c7Moment": "space"
+              }
+            }
+          ]
+        },
+        "c7.r2.gesture.cheek": {
+          "id": "c7.r2.gesture.cheek",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Наклонись. Я хочу поцеловать тебя в щёку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "с удовольствием."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он наклоняется, и ты коротко целуешь его в щёку. Выпрямившись, Влад улыбается и не сразу продолжает разговор."
+            },
+            {
+              "speaker": "vlad",
+              "text": "у меня была очень хорошая реплика. теперь не вспомню.",
+              "emotion": "awkward"
+            }
+          ],
+          "next": "c7.r2.flustered"
+        },
+        "c7.r2.gesture.collar": {
+          "id": "c7.r2.gesture.collar",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Стой. Я поправлю тебе воротник."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад чуть наклоняется. Ты расправляешь край воротника и убираешь руку. Он начинает что-то говорить, но вместо этого улыбается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "кажется, я сейчас скажу что-нибудь совершенно простое. мне очень нравится, когда ты рядом."
+            }
+          ],
+          "next": "c7.r2.flustered"
+        },
+        "c7.r2.gesture.near": {
+          "id": "c7.r2.gesture.near",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Подойди. Хочу проверить, такой ли ты уверенный вблизи."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад делает шаг и останавливается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я собирался сказать «всегда». но ты сейчас смотришь на меня, и я уже не так уверен."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он коротко смеётся и остаётся на месте."
+            }
+          ],
+          "next": "c7.r2.flustered"
+        },
+        "c7.r2.gesture.space": {
+          "id": "c7.r2.gesture.space",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мне нравится вот так разговаривать с тобой."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне тоже. особенно когда ты перестаёшь щадить мои попытки казаться загадочным."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он остаётся на своей стороне. Разговор не становится от этого холоднее."
+            }
+          ],
+          "next": "c7.r2.thought"
+        },
+        "c7.r2.flustered": {
+          "id": "c7.r2.flustered",
+          "kind": "choice",
+          "scene": "gallery",
+          "prompt": "Влад на секунду растерялся. Как ответишь?",
+          "choices": [
+            {
+              "id": "kind",
+              "text": "Мне нравится, когда ты говоришь вот так. Без заготовок",
+              "next": "c7.r2.flustered.kind",
+              "set": {
+                "c7Reply": "kind"
+              }
+            },
+            {
+              "id": "hand",
+              "text": "Протянуть ему руку: «Я тоже рада быть рядом»",
+              "next": "c7.r2.flustered.hand",
+              "set": {
+                "c7Reply": "hand"
+              }
+            },
+            {
+              "id": "pause",
+              "text": "Улыбнуться и дать ему договорить",
+              "next": "c7.r2.flustered.pause",
+              "set": {
+                "c7Reply": "pause"
+              }
+            }
+          ]
+        },
+        "c7.r2.flustered.kind": {
+          "id": "c7.r2.flustered.kind",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мне нравится, когда ты говоришь вот так. Без заготовок."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда скажу ещё одну простую вещь. я очень ждал сегодняшний вечер."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он больше не пытается закончить признание шуткой."
+            }
+          ],
+          "next": "c7.r2.thought"
+        },
+        "c7.r2.flustered.hand": {
+          "id": "c7.r2.flustered.hand",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты протягиваешь ладонь. Влад берёт тебя за руку."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Я тоже рада быть рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда можно я ещё немного постою здесь с тобой?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можно."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы ненадолго замолкаете, держась за руки."
+            }
+          ],
+          "next": "c7.r2.thought"
+        },
+        "c7.r2.flustered.pause": {
+          "id": "c7.r2.flustered.pause",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты улыбаешься и остаёшься на месте. Влад не спешит заполнять паузу."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я хотел сказать, что мне с тобой хорошо. вот. теперь договорил."
+            },
+            {
+              "speaker": "narrator",
+              "text": "За стеклом всё ещё идёт дождь."
+            }
+          ],
+          "next": "c7.r2.thought"
+        },
+        "c7.r2.thought": {
+          "id": "c7.r2.thought",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "vlad-thought",
+              "text": "вот теперь хочется просто дослушать её. хорошие реплики можно и не репетировать."
+            }
+          ],
+          "next": "c7.r2.note"
+        },
+        "c7.r2.note": {
+          "id": "c7.r2.note",
+          "kind": "note",
+          "scene": "gallery",
+          "questionId": "s2.q7",
+          "maxCodePoints": 280,
+          "prompt": "Что тебе хотелось бы спросить у меня, если бы я обещал ответить честно?",
+          "context": "За стеклом шумит дождь. Здесь разговор можно не торопить.",
+          "answerOptions": [
+            {
+              "id": "preset.1",
+              "kind": "preset",
+              "text": "Когда тебе впервые захотелось взять меня за руку?"
+            },
+            {
+              "id": "preset.2",
+              "kind": "preset",
+              "text": "Какая моя привычка заставляет тебя улыбаться?"
+            },
+            {
+              "id": "custom",
+              "kind": "custom",
+              "text": "Своими словами"
+            }
+          ],
+          "placeholder": "Мне бы хотелось…",
+          "submitLabel": "Сохранить ответ",
+          "skipLabel": "Пропустить",
+          "statusField": "c7Note",
+          "next": "c7.r2.ending"
+        },
+        "c7.r2.ending": {
+          "id": "c7.r2.ending",
+          "kind": "choice",
+          "scene": "gallery",
+          "prompt": "Что скажешь перед выходом из галереи?",
+          "choices": [
+            {
+              "id": "open",
+              "text": "Ты мне нравишься. Я хочу ещё один вечер",
+              "next": "c7.r2.finish.open",
+              "set": {
+                "c7Ending": "open"
+              }
+            },
+            {
+              "id": "promise",
+              "text": "Продолжишь этот флирт при следующей встрече?",
+              "next": "c7.r2.finish.promise",
+              "set": {
+                "c7Ending": "promise"
+              }
+            },
+            {
+              "id": "calm",
+              "text": "Давай ещё увидимся. Без спешки",
+              "next": "c7.r2.finish.calm",
+              "set": {
+                "c7Ending": "calm"
+              }
+            }
+          ]
+        },
+        "c7.r2.finish.open": {
+          "id": "c7.r2.finish.open",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Ты мне нравишься. Я хочу ещё один вечер."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты мне тоже нравишься. и я очень рад, что ты сейчас это сказала."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он отвечает сразу. На этот раз ему не нужна шутка в конце."
+            }
+          ],
+          "next": "c7.r2.end.open"
+        },
+        "c7.r2.finish.promise": {
+          "id": "c7.r2.finish.promise",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Продолжишь этот флирт при следующей встрече?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. а ты продолжишь так смотреть на меня?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Посмотрим, как будешь себя вести."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда мне точно придётся позвать тебя ещё раз."
+            }
+          ],
+          "next": "c7.r2.end.promise"
+        },
+        "c7.r2.finish.calm": {
+          "id": "c7.r2.finish.calm",
+          "kind": "dialogue",
+          "scene": "gallery",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай ещё увидимся. Без спешки."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. мне нравится узнавать тебя по чуть-чуть."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы выходите из галереи, продолжая разговор."
+            }
+          ],
+          "next": "c7.r2.end.calm"
+        },
+        "c7.r2.end.open": {
+          "id": "c7.r2.end.open",
+          "kind": "end",
+          "cardId": "c7.open",
+          "title": "Сказано вслух",
+          "caption": "У этого разговора будет продолжение",
+          "quote": "ты мне тоже нравишься."
+        },
+        "c7.r2.end.promise": {
+          "id": "c7.r2.end.promise",
+          "kind": "end",
+          "cardId": "c7.promise",
+          "title": "Продолжим при встрече",
+          "caption": "Вы ещё не договорили",
+          "quote": "а ты продолжишь так смотреть на меня?"
+        },
+        "c7.r2.end.calm": {
+          "id": "c7.r2.end.calm",
+          "kind": "end",
+          "cardId": "c7.calm",
+          "title": "В своём темпе",
+          "caption": "Новый вечер можно выбрать без спешки",
+          "quote": "мне нравится узнавать тебя по чуть-чуть."
+        }
+      },
+      "gameScript": {
+        "title": "Без заготовленного ответа",
+        "rules": "Три последовательные ситуации; существующие TopicAnswer/PlaceAnswer/ToneAnswer, по одному выбору; затем свои3 строки реакции. Полный/частичный пропуск сохраняет сказанное. Нет советов, счётчика или оценки.",
+        "rounds": [
+          {
+            "slot": "topic",
+            "prompt": "О чём спросишь его?",
+            "choices": [
+              {
+                "id": "question",
+                "text": "Что ты хотел сказать мне раньше, но не решался?",
+                "lines": [
+                  "Т|Что ты хотел сказать мне раньше, но не решался?",
+                  "В|что ты мне нравишься. я долго пытался подать это как интерес к совместным прогулкам.",
+                  "Т|Убедительно получалось. Почти."
+                ]
+              },
+              {
+                "id": "challenge",
+                "text": "Ты сейчас сдерживаешься или это уже весь твой флирт?",
+                "lines": [
+                  "Т|Ты сейчас сдерживаешься или это уже весь твой флирт?",
+                  "В|сдерживаюсь. но ты явно решила усложнить мне вечер.",
+                  "Т|Я ещё даже не начинала."
+                ]
+              },
+              {
+                "id": "ordinary",
+                "text": "Расскажи что-нибудь о себе без попытки впечатлить",
+                "lines": [
+                  "Т|Расскажи что-нибудь о себе без попытки впечатлить.",
+                  "В|я минут пять выбирал, что тебе написать перед встречей. в итоге написал «я на месте».",
+                  "Т|Вот это уже интересно."
+                ]
+              }
+            ]
+          },
+          {
+            "slot": "place",
+            "prompt": "За стеклом загремел дождь. Как продолжишь?",
+            "choices": [
+              {
+                "id": "lead",
+                "text": "Хватит прятаться за колонной. Пойдём, я нашла место",
+                "lines": [
+                  "Т|Хватит прятаться за колонной. Пойдём, я нашла место.",
+                  "Н|Ты показываешь на светлую арку. Влад берёт зонт и идёт рядом.",
+                  "В|нравится, когда ты сама меня куда-то зовёшь."
+                ]
+              },
+              {
+                "id": "invite",
+                "text": "Подойдёшь к окну со мной?",
+                "lines": [
+                  "Т|Подойдёшь к окну со мной?",
+                  "В|да. только предупреждаю: смотреть на дождь буду не всё время.",
+                  "Н|Вы останавливаетесь у стекла, на выбранном тобой расстоянии."
+                ]
+              },
+              {
+                "id": "stay",
+                "text": "Мне здесь нравится. Останься ещё немного",
+                "lines": [
+                  "Т|Мне здесь нравится. Останься ещё немного.",
+                  "В|я и не собирался сбегать.",
+                  "Н|Он прислоняется к соседней колонне. Вы продолжаете разговор."
+                ]
+              }
+            ]
+          },
+          {
+            "slot": "tone",
+            "prompt": "Он улыбается тебе. Что скажешь?",
+            "choices": [
+              {
+                "id": "direct",
+                "text": "Мне нравится, что ты перестал прятаться за шутками",
+                "lines": [
+                  "Т|Мне нравится, что ты перестал прятаться за шутками.",
+                  "В|тогда прямо: мне хочется узнать тебя ближе.",
+                  "Н|Он выдерживает твой взгляд, не добавляя спасительную остроту."
+                ]
+              },
+              {
+                "id": "playful",
+                "text": "Ты ещё помнишь, что хотел мне показать галерею?",
+                "lines": [
+                  "Т|Ты ещё помнишь, что хотел мне показать галерею?",
+                  "В|я сейчас показываю, как легко меня отвлечь.",
+                  "Т|Полезное открытие."
+                ]
+              },
+              {
+                "id": "quiet",
+                "text": "Мне хорошо. Давай немного послушаем дождь",
+                "lines": [
+                  "Т|Мне хорошо. Давай немного послушаем дождь.",
+                  "В|давай.",
+                  "Н|Он остаётся рядом. Несколько секунд вам достаточно дождя за стеклом."
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "secret": [
+        "Д|Мне даже понравилось молчать.",
+        "А|Ты сейчас опять разговариваешь.",
+        "Д|Проверял, заметишь ли.",
+        "Н|Обе закладки складываются. Дальше — пустой край кадра."
+      ]
+    },
+    {
+      "id": 8,
+      "title": "На чай. Конечно",
+      "entry": "c8.r2.entry",
+      "nodes": {
+        "c8.r2.entry": {
+          "id": "c8.r2.entry",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Сообщение появляется внутри вашей истории."
+            },
+            {
+              "speaker": "vlad",
+              "text": "приходи на чай. я уже придумал, как буду делать вид, что позвал тебя только ради него."
+            },
+            {
+              "speaker": "heroine",
+              "text": "И как?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "пока никак. поэтому пишу честно."
+            }
+          ],
+          "next": "c8.r2.past.route"
+        },
+        "c8.r2.past.route": {
+          "id": "c8.r2.past.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c7Moment",
+                  "equals": "cheek"
+                }
+              ],
+              "next": "c8.r2.past.cheek"
+            },
+            {
+              "all": [
+                {
+                  "field": "c7Ending",
+                  "equals": "open"
+                }
+              ],
+              "next": "c8.r2.past.open"
+            }
+          ],
+          "fallback": "c8.r2.past.other"
+        },
+        "c8.r2.past.cheek": {
+          "id": "c8.r2.past.cheek",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "после того поцелуя в щёку я стал заметно хуже притворяться спокойным."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А по сообщениям не скажешь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "старался. сейчас ты всё увидишь."
+            }
+          ],
+          "next": "c8.r2.place"
+        },
+        "c8.r2.past.open": {
+          "id": "c8.r2.past.open",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "после прошлого раза особенно приятно сказать, что я ждал этой встречи."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можно было и раньше не прятать."
+            },
+            {
+              "speaker": "vlad",
+              "text": "согласен. наверстаю."
+            }
+          ],
+          "next": "c8.r2.place"
+        },
+        "c8.r2.past.other": {
+          "id": "c8.r2.past.other",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "можно просто выпить чаю и поговорить. я соскучился по нашим разговорам."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Вот это приглашение мне нравится."
+            }
+          ],
+          "next": "c8.r2.place"
+        },
+        "c8.r2.place": {
+          "id": "c8.r2.place",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "Где тебе хочется встретиться?",
+          "choices": [
+            {
+              "id": "home",
+              "text": "У тебя дома",
+              "next": "c8.r2.arrival.home",
+              "set": {
+                "c8Place": "home"
+              }
+            },
+            {
+              "id": "cafe",
+              "text": "В «Паузе», за нашим столиком",
+              "next": "c8.r2.arrival.cafe",
+              "set": {
+                "c8Place": "cafe"
+              }
+            }
+          ]
+        },
+        "c8.r2.arrival.home": {
+          "id": "c8.r2.arrival.home",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад открывает дверь. На кухне две чашки и маленькие десерты."
+            },
+            {
+              "speaker": "vlad",
+              "text": "проходи. рад тебя видеть."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А геймпады проверил?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "оба. но сегодня я надеялся, что ты посмотришь на меня хоть немного дольше, чем на телевизор."
+            }
+          ],
+          "next": "c8.r2.dessert.intro"
+        },
+        "c8.r2.arrival.cafe": {
+          "id": "c8.r2.arrival.cafe",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы встречаетесь у окна «Паузы». К чаю приносят два десерта и небольшие пиалы."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я на всякий случай пришёл раньше."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Выбирал лучший столик?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "хотел первым увидеть, как ты войдёшь. столик тоже удачно получился."
+            }
+          ],
+          "next": "c8.r2.dessert.intro"
+        },
+        "c8.r2.dessert.intro": {
+          "id": "c8.r2.dessert.intro",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "давай украсим. я обещаю помогать, а не съесть всё по дороге."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Посмотрим, какая у тебя выдержка."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты уже начинаешь меня проверять. мне нравится."
+            },
+            {
+              "speaker": "narrator",
+              "text": "На столе ягоды, шоколад, мёд и маленькие украшения."
+            }
+          ],
+          "next": "c8.r2.dessert"
+        },
+        "c8.r2.dessert": {
+          "id": "c8.r2.dessert",
+          "kind": "minigame",
+          "scene": "tea-place",
+          "game": "dessert",
+          "next": "c8.r2.dessert.route"
+        },
+        "c8.r2.dessert.route": {
+          "id": "c8.r2.dessert.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "dessert.mode",
+                  "equals": "completed"
+                }
+              ],
+              "next": "c8.r2.dessert.own"
+            },
+            {
+              "all": [
+                {
+                  "field": "dessert.mode",
+                  "equals": "shared"
+                }
+              ],
+              "next": "c8.r2.dessert.shared"
+            }
+          ],
+          "fallback": "c8.r2.dessert.skip"
+        },
+        "c8.r2.dessert.own": {
+          "id": "c8.r2.dessert.own",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты поворачиваешь к Владу готовый десерт. Он сначала смотрит на него, потом на тебя."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты так довольна собой, что я засмотрелся."
+            },
+            {
+              "speaker": "heroine",
+              "text": "На десерт?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты прекрасно поняла."
+            }
+          ],
+          "next": "c8.r2.word"
+        },
+        "c8.r2.dessert.shared": {
+          "id": "c8.r2.dessert.shared",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы заканчиваете украшение вместе. Влад подвигает к тебе тарелку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне нравится, как ты увлекаешься."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Смотри, ещё решу, что ты меня хвалишь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я вообще-то и хвалю."
+            }
+          ],
+          "next": "c8.r2.word"
+        },
+        "c8.r2.dessert.skip": {
+          "id": "c8.r2.dessert.skip",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы оставляете десерты как есть и убираете лишние пиалы."
+            },
+            {
+              "speaker": "vlad",
+              "text": "хорошо. теперь можно заняться главным."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Десертом?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "разговором с тобой. но ложку я уже взял."
+            }
+          ],
+          "next": "c8.r2.word"
+        },
+        "c8.r2.word": {
+          "id": "c8.r2.word",
+          "kind": "choice",
+          "scene": "tea-place",
+          "prompt": "Как назовём этот вечер?",
+          "choices": [
+            {
+              "id": "minute",
+              "text": "«Ещё минутку»",
+              "next": "c8.r2.word.after",
+              "set": {
+                "c8Word": "minute"
+              }
+            },
+            {
+              "id": "slow",
+              "text": "«Без спешки»",
+              "next": "c8.r2.word.after",
+              "set": {
+                "c8Word": "slow"
+              }
+            },
+            {
+              "id": "taks",
+              "text": "«Такс»",
+              "next": "c8.r2.word.after",
+              "set": {
+                "c8Word": "taks"
+              }
+            },
+            {
+              "id": "custom",
+              "text": "Придумать своё слово",
+              "next": "c8.r2.word.custom",
+              "set": {}
+            },
+            {
+              "id": "none",
+              "text": "Оставим без названия",
+              "next": "c8.r2.word.after",
+              "set": {
+                "c8Word": "none"
+              }
+            }
+          ]
+        },
+        "c8.r2.word.custom": {
+          "id": "c8.r2.word.custom",
+          "kind": "label",
+          "scene": "tea-place",
+          "labelId": "s2.word8",
+          "maxCodePoints": 24,
+          "next": "c8.r2.word.after"
+        },
+        "c8.r2.word.after": {
+          "id": "c8.r2.word.after",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Word",
+                  "equals": "none"
+                }
+              ],
+              "next": "c8.r2.word.plain"
+            }
+          ],
+          "fallback": "c8.r2.word.named"
+        },
+        "c8.r2.word.plain": {
+          "id": "c8.r2.word.plain",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "можно просто побыть в этом вечере."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы убираете пустой ярлычок и устраиваетесь с чаем."
+            }
+          ],
+          "next": "c8.r2.private.route"
+        },
+        "c8.r2.word.named": {
+          "id": "c8.r2.word.named",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "мне нравится, когда у вечера есть твоя идея."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы устраиваетесь с чаем. На маленьком ярлычке остаётся выбранное название."
+            }
+          ],
+          "next": "c8.r2.private.route"
+        },
+        "c8.r2.private.route": {
+          "id": "c8.r2.private.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Place",
+                  "equals": "home"
+                }
+              ],
+              "next": "c8.r2.private.home"
+            }
+          ],
+          "fallback": "c8.r2.private.cafe"
+        },
+        "c8.r2.private.home": {
+          "id": "c8.r2.private.home",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад собирается отнести пиалу к раковине."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можешь пока остаться здесь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "могу. мне здесь гораздо интереснее."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он возвращается к столу, чтобы дослушать тебя."
+            }
+          ],
+          "next": "c8.r2.aside"
+        },
+        "c8.r2.private.cafe": {
+          "id": "c8.r2.private.cafe",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад замечает, что ты начала говорить, и закрывает меню."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты что-то хотел выбрать?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "уже выбрал. хочу дослушать тебя."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он поворачивается к тебе, оставляя меню на краю стола."
+            }
+          ],
+          "next": "c8.r2.aside"
+        },
+        "c8.r2.aside": {
+          "id": "c8.r2.aside",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "devil",
+              "text": "Так. Он опять забыл, зачем вставал."
+            },
+            {
+              "speaker": "angel",
+              "text": "Кажется, вспомнит и без нас."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Советчики прячутся за край сцены до начала танца."
+            }
+          ],
+          "next": "c8.r2.dance.route",
+          "presentation": "adviser-aside"
+        },
+        "c8.r2.dance.route": {
+          "id": "c8.r2.dance.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Place",
+                  "equals": "home"
+                }
+              ],
+              "next": "c8.r2.dance.home"
+            }
+          ],
+          "fallback": "c8.r2.dance.cafe"
+        },
+        "c8.r2.dance.home": {
+          "id": "c8.r2.dance.home",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы встаёте, чтобы налить ещё чаю. Между столом и кухонной стойкой как раз хватает места."
+            },
+            {
+              "speaker": "heroine",
+              "text": "У нас тут место на один танец."
+            },
+            {
+              "speaker": "vlad",
+              "text": "а я ещё старался придумать, как тебя пригласить."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можешь дать мне руку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "с удовольствием. как танцуем?"
+            }
+          ],
+          "next": "c8.r2.dance"
+        },
+        "c8.r2.dance.cafe": {
+          "id": "c8.r2.dance.cafe",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы встаёте размяться у окна. В стороне от прохода остаётся свободный уголок."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Как думаешь, на один танец хватит?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "проверим. только если я вдруг собьюсь, делаем вид, что ты так и задумала."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Сначала посмотрю, как стараешься."
+            },
+            {
+              "speaker": "vlad",
+              "text": "всё. я уже очень стараюсь."
+            }
+          ],
+          "next": "c8.r2.dance"
+        },
+        "c8.r2.dance": {
+          "id": "c8.r2.dance",
+          "kind": "choice",
+          "scene": "tea-place",
+          "prompt": "Какой будет ваш маленький танец?",
+          "choices": [
+            {
+              "id": "close",
+              "text": "Взять его за руку и притянуть ближе",
+              "next": "c8.r2.dance.close",
+              "set": {
+                "c8Dance": "close"
+              }
+            },
+            {
+              "id": "lead",
+              "text": "Сегодня веду я. Давай руку",
+              "next": "c8.r2.dance.lead",
+              "set": {
+                "c8Dance": "lead"
+              }
+            },
+            {
+              "id": "playful",
+              "text": "Каждый сам по себе. Повторяй за мной",
+              "next": "c8.r2.dance.playful",
+              "set": {
+                "c8Dance": "playful"
+              }
+            }
+          ]
+        },
+        "c8.r2.dance.close": {
+          "id": "c8.r2.dance.close",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты протягиваешь ладонь и делаешь шаг ближе. Влад принимает руку; свободную кладёт тебе на талию."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты специально подошла так близко?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Да. Хотела посмотреть, сколько ты ещё будешь разговаривать."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он тихо смеётся. Вы продолжаете танец, на этот раз без новой шутки."
+            }
+          ],
+          "next": "c8.r2.tender"
+        },
+        "c8.r2.dance.lead": {
+          "id": "c8.r2.dance.lead",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Сегодня веду я. Давай руку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "всё, сдаюсь в хорошие руки."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты задаёшь медленный шаг и поворачиваешься под его рукой. Влад сбивается и смеётся."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Не отвлекайся. Я ещё не закончила."
+            },
+            {
+              "speaker": "vlad",
+              "text": "в том и проблема. ты слишком хорошо меня отвлекаешь.",
+              "emotion": "laugh"
+            }
+          ],
+          "next": "c8.r2.tender"
+        },
+        "c8.r2.dance.playful": {
+          "id": "c8.r2.dance.playful",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Каждый сам по себе. Повторяй за мной."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты делаешь важный шаг в сторону. Влад старательно повторяет, сохраняя расстояние."
+            },
+            {
+              "speaker": "vlad",
+              "text": "если что, я обычно танцую лучше.",
+              "emotion": "awkward"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Конечно. Продолжай."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы делаете ещё пару смешных шагов и одновременно смеётесь."
+            }
+          ],
+          "next": "c8.r2.tender"
+        },
+        "c8.r2.tender": {
+          "id": "c8.r2.tender",
+          "kind": "choice",
+          "scene": "tea-place",
+          "prompt": "Танец замедляется. Чего хочется сейчас?",
+          "choices": [
+            {
+              "id": "curls",
+              "text": "Можно я поправлю тебе кудри?",
+              "next": "c8.r2.tender.curls",
+              "set": {
+                "c8Tender": "curls"
+              }
+            },
+            {
+              "id": "hair",
+              "text": "Погладь меня по волосам",
+              "next": "c8.r2.tender.hair",
+              "set": {
+                "c8Tender": "hair"
+              }
+            },
+            {
+              "id": "cheek",
+              "text": "Поцелуй меня в щёку",
+              "next": "c8.r2.tender.cheek",
+              "set": {
+                "c8Tender": "cheek"
+              }
+            },
+            {
+              "id": "neck",
+              "text": "Хочу, чтобы ты поцеловал меня в шею",
+              "next": "c8.r2.tender.neck",
+              "set": {
+                "c8Tender": "neck"
+              },
+              "when": [
+                {
+                  "field": "c8Place",
+                  "equals": "home"
+                }
+              ]
+            },
+            {
+              "id": "dance",
+              "text": "Давай ещё немного потанцуем",
+              "next": "c8.r2.tender.dance",
+              "set": {
+                "c8Tender": "dance"
+              }
+            }
+          ]
+        },
+        "c8.r2.tender.curls": {
+          "id": "c8.r2.tender.curls",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Можно я поправлю тебе кудри?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "можно. только потом придётся объяснять, почему я так довольно улыбаюсь."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты касаешься его волос и убираешь руку, оценив результат."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Теперь хорошо."
+            },
+            {
+              "speaker": "vlad",
+              "text": "а мне и до этого нравилось."
+            }
+          ],
+          "next": "c8.r2.thought"
+        },
+        "c8.r2.tender.hair": {
+          "id": "c8.r2.tender.hair",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Погладь меня по волосам."
+            },
+            {
+              "speaker": "vlad",
+              "text": "иди ближе."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты чуть наклоняешь голову к нему. Влад мягко проводит ладонью по твоим волосам и убирает руку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "рад, что ты позвала меня ближе."
+            }
+          ],
+          "next": "c8.r2.thought"
+        },
+        "c8.r2.tender.cheek": {
+          "id": "c8.r2.tender.cheek",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Поцелуй меня в щёку."
+            },
+            {
+              "speaker": "vlad",
+              "text": "с удовольствием."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад чуть наклоняется и коротко целует тебя в щёку. Вы снова смотрите друг на друга."
+            },
+            {
+              "speaker": "vlad",
+              "text": "можешь и дальше так прямо говорить, чего хочешь."
+            }
+          ],
+          "next": "c8.r2.thought"
+        },
+        "c8.r2.tender.neck": {
+          "id": "c8.r2.tender.neck",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Хочу, чтобы ты поцеловал меня в шею."
+            },
+            {
+              "speaker": "vlad",
+              "text": "хочу тебя поцеловать."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад отвечает коротким поцелуем в шею и снова встречается с тобой взглядом. Вы на мгновение останавливаетесь посреди танца."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я рад, что ты сказала."
+            }
+          ],
+          "next": "c8.r2.thought"
+        },
+        "c8.r2.tender.dance": {
+          "id": "c8.r2.tender.dance",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай ещё немного потанцуем."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. теперь я уже почти запомнил шаги."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы продолжаете в выбранном тобой темпе, а потом возвращаетесь к чашкам."
+            }
+          ],
+          "next": "c8.r2.thought"
+        },
+        "c8.r2.thought": {
+          "id": "c8.r2.thought",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "vlad-thought",
+              "text": "я собирался устроить хороший вечер. а больше всего нравится, как она делает его своим."
+            }
+          ],
+          "next": "c8.r2.hoodie.route"
+        },
+        "c8.r2.hoodie.route": {
+          "id": "c8.r2.hoodie.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Place",
+                  "equals": "home"
+                }
+              ],
+              "next": "c8.r2.hoodie.offer"
+            }
+          ],
+          "fallback": "c8.r2.note"
+        },
+        "c8.r2.hoodie.offer": {
+          "id": "c8.r2.hoodie.offer",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На спинке стула лежит худи. Влад замечает его, возвращаясь с чайником."
+            },
+            {
+              "speaker": "vlad",
+              "text": "если захочешь накинуть — бери. только рукава потом придётся найти."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Настолько большое?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "тёплое. остальное увидишь сама."
+            }
+          ],
+          "next": "c8.r2.hoodie"
+        },
+        "c8.r2.hoodie": {
+          "id": "c8.r2.hoodie",
+          "kind": "choice",
+          "scene": "tea-place",
+          "prompt": "Что сделаешь с худи?",
+          "choices": [
+            {
+              "id": "borrow",
+              "text": "Накинуть: «Можно забрать до следующей встречи?»",
+              "next": "c8.r2.hoodie.borrow",
+              "set": {
+                "c8Hoodie": "borrowed"
+              }
+            },
+            {
+              "id": "evening",
+              "text": "Накинуть на этот вечер, потом вернуть",
+              "next": "c8.r2.hoodie.evening",
+              "set": {
+                "c8Hoodie": "evening"
+              }
+            },
+            {
+              "id": "none",
+              "text": "Мне и так хорошо. Но спасибо",
+              "next": "c8.r2.hoodie.none",
+              "set": {
+                "c8Hoodie": "none"
+              }
+            }
+          ]
+        },
+        "c8.r2.hoodie.borrow": {
+          "id": "c8.r2.hoodie.borrow",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты накидываешь худи и расправляешь длинные рукава."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можно забрать до следующей встречи?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "худи забирай. меня тоже иногда приглашай."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А ты сам придёшь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "позови. с удовольствием."
+            }
+          ],
+          "next": "c8.r2.note"
+        },
+        "c8.r2.hoodie.evening": {
+          "id": "c8.r2.hoodie.evening",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты накидываешь худи. Один рукав оказывается длиннее, чем нужно; ты подворачиваешь край."
+            },
+            {
+              "speaker": "heroine",
+              "text": "На вечер одолжу. Потом верну."
+            },
+            {
+              "speaker": "vlad",
+              "text": "конечно. если мешает рукав — чашку пока подержу."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он ждёт, пока ты устроишься, и возвращает тебе чай."
+            }
+          ],
+          "next": "c8.r2.note"
+        },
+        "c8.r2.hoodie.none": {
+          "id": "c8.r2.hoodie.none",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мне и так хорошо. Но спасибо."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда просто чай."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад ставит чашки на стол. Худи остаётся на стуле, разговор продолжается."
+            }
+          ],
+          "next": "c8.r2.note"
+        },
+        "c8.r2.note": {
+          "id": "c8.r2.note",
+          "kind": "note",
+          "scene": "tea-place",
+          "questionId": "s2.q8",
+          "maxCodePoints": 280,
+          "prompt": "Как бы ты дала мне понять, что хочешь поцелуя?",
+          "context": "Чашки остались на столе. После танца Влад не спешит возвращаться к чаю.",
+          "answerOptions": [
+            {
+              "id": "preset.1",
+              "kind": "preset",
+              "text": "Скажу: «Я хочу, чтобы ты меня поцеловал»."
+            },
+            {
+              "id": "preset.2",
+              "kind": "preset",
+              "text": "Возьму тебя за руку и спрошу: «Можно тебя поцеловать?»"
+            },
+            {
+              "id": "custom",
+              "kind": "custom",
+              "text": "Своими словами"
+            }
+          ],
+          "placeholder": "Мне бы хотелось…",
+          "submitLabel": "Сохранить ответ",
+          "skipLabel": "Пропустить",
+          "statusField": "c8Note",
+          "next": "c8.r2.closing"
+        },
+        "c8.r2.closing": {
+          "id": "c8.r2.closing",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "мне хорошо с тобой."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Скажешь ещё что-нибудь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "пока хочу посмотреть на тебя. если не против."
+            }
+          ],
+          "next": "c8.r2.ending"
+        },
+        "c8.r2.ending": {
+          "id": "c8.r2.ending",
+          "kind": "choice",
+          "scene": "tea-place",
+          "prompt": "Как хочется закончить этот момент?",
+          "choices": [
+            {
+              "id": "her",
+              "text": "Можно я тебя поцелую?",
+              "next": "c8.r2.kiss.her",
+              "set": {
+                "c8Approach": "her",
+                "c8Ending": "kiss"
+              }
+            },
+            {
+              "id": "ask",
+              "text": "Поцелуешь меня?",
+              "next": "c8.r2.kiss.ask",
+              "set": {
+                "c8Approach": "ask",
+                "c8Ending": "kiss"
+              }
+            },
+            {
+              "id": "near",
+              "text": "Хочу ещё немного побыть рядом",
+              "next": "c8.r2.finish.near",
+              "set": {
+                "c8Approach": "none",
+                "c8Ending": "near"
+              }
+            },
+            {
+              "id": "tea",
+              "text": "Давай просто допьём чай",
+              "next": "c8.r2.finish.tea",
+              "set": {
+                "c8Approach": "none",
+                "c8Ending": "tea"
+              }
+            }
+          ]
+        },
+        "c8.r2.kiss.her": {
+          "id": "c8.r2.kiss.her",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Можно я тебя поцелую?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты приближаешься, и он отвечает на ваш первый поцелуй в губы. Когда вы снова смотрите друг на друга, Влад улыбается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "вот эту твою идею я точно запомню."
+            }
+          ],
+          "next": "c8.r2.hoodie.finish.route"
+        },
+        "c8.r2.kiss.ask": {
+          "id": "c8.r2.kiss.ask",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Поцелуешь меня?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "очень хочу."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад приближается, и вы впервые целуетесь в губы. Через мгновение он остаётся рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "теперь мне ещё труднее делать вид, что я позвал тебя только на чай."
+            }
+          ],
+          "next": "c8.r2.hoodie.finish.route"
+        },
+        "c8.r2.finish.near": {
+          "id": "c8.r2.finish.near",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Хочу ещё немного побыть рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "побудем. мне нравится и так."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы возвращаетесь к разговору, оставляя удобное расстояние."
+            }
+          ],
+          "next": "c8.r2.hoodie.finish.route"
+        },
+        "c8.r2.finish.tea": {
+          "id": "c8.r2.finish.tea",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай просто допьём чай."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. я ещё хочу тебя послушать."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы делите последний десерт. Вечер продолжается за разговором."
+            }
+          ],
+          "next": "c8.r2.hoodie.finish.route"
+        },
+        "c8.r2.hoodie.finish.route": {
+          "id": "c8.r2.hoodie.finish.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Hoodie",
+                  "equals": "evening"
+                }
+              ],
+              "next": "c8.r2.hoodie.return"
+            }
+          ],
+          "fallback": "c8.r2.card.route"
+        },
+        "c8.r2.hoodie.return": {
+          "id": "c8.r2.hoodie.return",
+          "kind": "dialogue",
+          "scene": "tea-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Позже, перед уходом, ты снимаешь худи и возвращаешь его Владу."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Спасибо. В нём уютно."
+            },
+            {
+              "speaker": "vlad",
+              "text": "бери и в следующий раз."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он кладёт худи на спинку стула."
+            }
+          ],
+          "next": "c8.r2.card.route"
+        },
+        "c8.r2.card.route": {
+          "id": "c8.r2.card.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c8.r2.end.kiss"
+            },
+            {
+              "all": [
+                {
+                  "field": "c8Ending",
+                  "equals": "near"
+                }
+              ],
+              "next": "c8.r2.end.near"
+            }
+          ],
+          "fallback": "c8.r2.end.tea"
+        },
+        "c8.r2.end.kiss": {
+          "id": "c8.r2.end.kiss",
+          "kind": "end",
+          "cardId": "c8.kiss",
+          "title": "Чай немного подождёт",
+          "caption": "Первый поцелуй в губы",
+          "quote": "вот эту твою идею я точно запомню.",
+          "venue": "c8Place"
+        },
+        "c8.r2.end.near": {
+          "id": "c8.r2.end.near",
+          "kind": "end",
+          "cardId": "c8.near",
+          "title": "Ещё немного рядом",
+          "caption": "Вашему темпу можно довериться",
+          "quote": "побудем. мне нравится и так.",
+          "venue": "c8Place"
+        },
+        "c8.r2.end.tea": {
+          "id": "c8.r2.end.tea",
+          "kind": "end",
+          "cardId": "c8.tea",
+          "title": "На чай. Конечно",
+          "caption": "Разговор оказался самым интересным",
+          "quote": "я ещё хочу тебя послушать.",
+          "venue": "c8Place"
+        }
+      },
+      "gameScript": {},
+      "secret": [
+        "Д|Я бы дал ему какой-нибудь совет.",
+        "А|Они уже сами придумали, как провести вечер.",
+        "Д|Да. И у них получилось смешнее."
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Фильм подождёт",
+      "entry": "c9.r2.entry",
+      "nodes": {
+        "c9.r2.entry": {
+          "id": "c9.r2.entry",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад присылает название короткого фильма и довольный смайлик. Сообщение появляется внутри истории."
+            },
+            {
+              "speaker": "vlad",
+              "text": "нашёл кино. там кот пытается ничего не делать."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А мы?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "а мы попробуем хотя бы включить."
+            }
+          ],
+          "next": "c9.r2.past.route"
+        },
+        "c9.r2.past.route": {
+          "id": "c9.r2.past.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c9.r2.past.kiss"
+            },
+            {
+              "all": [
+                {
+                  "field": "c8Tender",
+                  "equals": "neck"
+                }
+              ],
+              "next": "c9.r2.past.neck"
+            },
+            {
+              "all": [
+                {
+                  "field": "c8Tender",
+                  "equals": "cheek"
+                }
+              ],
+              "next": "c9.r2.past.cheek"
+            }
+          ],
+          "fallback": "c9.r2.past.other"
+        },
+        "c9.r2.past.kiss": {
+          "id": "c9.r2.past.kiss",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "в прошлый раз мы отвлеклись от чая. посмотрим, сколько продержится фильм."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты уже отвлёкся."
+            },
+            {
+              "speaker": "vlad",
+              "text": "даже заставку не досмотрел."
+            }
+          ],
+          "next": "c9.r2.place"
+        },
+        "c9.r2.past.neck": {
+          "id": "c9.r2.past.neck",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "мне понравилось, как прямо ты сказала, чего хочешь."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Продолжать?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "я бы очень хотел."
+            }
+          ],
+          "next": "c9.r2.place"
+        },
+        "c9.r2.past.cheek": {
+          "id": "c9.r2.past.cheek",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "тот поцелуй в щёку я тоже запомнил."
+            },
+            {
+              "speaker": "heroine",
+              "text": "И что теперь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "хочу снова тебя увидеть. с этого и начнём."
+            }
+          ],
+          "next": "c9.r2.place"
+        },
+        "c9.r2.past.other": {
+          "id": "c9.r2.past.other",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "я соскучился по нашим разговорам. фильм просто нашёлся кстати."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Вот теперь приглашение звучит честно."
+            }
+          ],
+          "next": "c9.r2.place"
+        },
+        "c9.r2.place": {
+          "id": "c9.r2.place",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "Где устроим киновечер?",
+          "choices": [
+            {
+              "id": "home",
+              "text": "У тебя дома",
+              "next": "c9.r2.arrival.home",
+              "set": {
+                "c9Place": "home"
+              }
+            },
+            {
+              "id": "courtyard",
+              "text": "В крытом кинодворике «Паузы»",
+              "next": "c9.r2.arrival.courtyard",
+              "set": {
+                "c9Place": "courtyard"
+              }
+            }
+          ]
+        },
+        "c9.r2.arrival.home": {
+          "id": "c9.r2.arrival.home",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На диване сложен плед. У телевизора чашки и попкорн. Влад кладёт пульт на стол."
+            },
+            {
+              "speaker": "vlad",
+              "text": "выбирай место. я голосую за рядом со мной."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты фильм смотреть собираешься?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "собирался. потом ты пришла."
+            }
+          ],
+          "next": "c9.r2.hoodie.route"
+        },
+        "c9.r2.arrival.courtyard": {
+          "id": "c9.r2.arrival.courtyard",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Под навесом светится небольшой экран. У вашего столика две чашки и маленькая лампа."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тут и кино, и дождь за стеклом."
+            },
+            {
+              "speaker": "heroine",
+              "text": "И ты?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. меня можно отвлекать, если что."
+            }
+          ],
+          "next": "c9.r2.hoodie.route"
+        },
+        "c9.r2.hoodie.route": {
+          "id": "c9.r2.hoodie.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Hoodie",
+                  "equals": "borrowed"
+                }
+              ],
+              "next": "c9.r2.hoodie.callback"
+            }
+          ],
+          "fallback": "c9.r2.setup.intro"
+        },
+        "c9.r2.hoodie.callback": {
+          "id": "c9.r2.hoodie.callback",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "кстати, как там моё худи?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты по нему соскучился?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "я по тебе соскучился. худи просто удачно вспомнилось."
+            }
+          ],
+          "next": "c9.r2.hoodie"
+        },
+        "c9.r2.hoodie": {
+          "id": "c9.r2.hoodie",
+          "kind": "choice",
+          "scene": "movie-place",
+          "prompt": "Что скажешь про худи?",
+          "choices": [
+            {
+              "id": "return",
+              "text": "Вернуть: «На чай я всё равно ещё приду»",
+              "next": "c9.r2.hoodie.return",
+              "set": {
+                "c9Hoodie": "returned"
+              }
+            },
+            {
+              "id": "keep",
+              "text": "Можно я пока оставлю? Мне в нём уютно",
+              "next": "c9.r2.hoodie.keep",
+              "set": {
+                "c9Hoodie": "kept"
+              }
+            }
+          ]
+        },
+        "c9.r2.hoodie.return": {
+          "id": "c9.r2.hoodie.return",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты протягиваешь Владу сложенное худи."
+            },
+            {
+              "speaker": "heroine",
+              "text": "На чай я всё равно ещё приду."
+            },
+            {
+              "speaker": "vlad",
+              "text": "приходи. я тебя и без обмена вещами рад видеть."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он откладывает худи и возвращается к столу."
+            }
+          ],
+          "next": "c9.r2.setup.intro"
+        },
+        "c9.r2.hoodie.keep": {
+          "id": "c9.r2.hoodie.keep",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Можно я пока оставлю? Мне в нём уютно."
+            },
+            {
+              "speaker": "vlad",
+              "text": "оставь. мне приятно, что тебе в нём хорошо."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад подаёт тебе чашку. Больше возвращать худи сегодня никто не предлагает."
+            }
+          ],
+          "next": "c9.r2.setup.intro"
+        },
+        "c9.r2.setup.intro": {
+          "id": "c9.r2.setup.intro",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "как тебе хочется устроиться?"
+            },
+            {
+              "speaker": "heroine",
+              "text": "А если совсем не так, как ты подготовил?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда подвинемся. я хочу, чтобы тебе было хорошо."
+            }
+          ],
+          "next": "c9.r2.setup"
+        },
+        "c9.r2.setup": {
+          "id": "c9.r2.setup",
+          "kind": "minigame",
+          "scene": "movie-place",
+          "game": "movie-setup",
+          "next": "c9.r2.glitch.route"
+        },
+        "c9.r2.glitch.route": {
+          "id": "c9.r2.glitch.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c9Place",
+                  "equals": "home"
+                }
+              ],
+              "next": "c9.r2.glitch.home"
+            }
+          ],
+          "fallback": "c9.r2.glitch.courtyard"
+        },
+        "c9.r2.glitch.home": {
+          "id": "c9.r2.glitch.home",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На экране появляется спящий кот. Фильм не начинается. Влад нажимает кнопку ещё раз, и кот открывает один глаз."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Он уже всё посмотрел?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "я включил заставку. зато как уверенно сел рядом.",
+              "emotion": "awkward"
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он находит нужную кнопку, но пока оставляет пульт на столе."
+            }
+          ],
+          "next": "c9.r2.aside"
+        },
+        "c9.r2.glitch.courtyard": {
+          "id": "c9.r2.glitch.courtyard",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На экране объявляют короткую задержку начала. На заставке кот сворачивается клубком."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Он начал отдыхать раньше всех."
+            },
+            {
+              "speaker": "vlad",
+              "text": "пусть. я пока на тебя посмотрю."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад поворачивается к тебе, оставляя экран сбоку."
+            }
+          ],
+          "next": "c9.r2.aside"
+        },
+        "c9.r2.aside": {
+          "id": "c9.r2.aside",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "devil",
+              "text": "Фильм у него пока получается хуже свидания."
+            },
+            {
+              "speaker": "angel",
+              "text": "Кажется, его это устраивает."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Советчики обмениваются взглядами и прячутся за край."
+            }
+          ],
+          "next": "c9.r2.distraction",
+          "presentation": "adviser-aside"
+        },
+        "c9.r2.distraction": {
+          "id": "c9.r2.distraction",
+          "kind": "choice",
+          "scene": "movie-place",
+          "prompt": "Вы пока не начали смотреть. Что сделаешь?",
+          "choices": [
+            {
+              "id": "pause",
+              "text": "Хочу, чтобы ты сейчас посмотрел на меня",
+              "next": "c9.r2.distraction.pause",
+              "set": {
+                "c9Moment": "pause"
+              }
+            },
+            {
+              "id": "shoulder",
+              "text": "Обнимешь? Хочу устроиться у тебя на плече",
+              "next": "c9.r2.distraction.shoulder",
+              "set": {
+                "c9Moment": "shoulder"
+              }
+            },
+            {
+              "id": "banter",
+              "text": "Ты на меня смотришь. Мне продолжать делать вид, что я не замечаю?",
+              "next": "c9.r2.distraction.banter",
+              "set": {
+                "c9Moment": "banter"
+              }
+            },
+            {
+              "id": "watch",
+              "text": "Давай пока посмотрим, что делает этот кот",
+              "next": "c9.r2.distraction.watch",
+              "set": {
+                "c9Moment": "watch"
+              }
+            }
+          ]
+        },
+        "c9.r2.distraction.pause": {
+          "id": "c9.r2.distraction.pause",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Хочу, чтобы ты сейчас посмотрел на меня."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я уже."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Без попытки придумать шутку."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он откладывает пульт. Следующую паузу Влад выдерживает, не отводя взгляда."
+            }
+          ],
+          "next": "c9.r2.thought"
+        },
+        "c9.r2.distraction.shoulder": {
+          "id": "c9.r2.distraction.shoulder",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Обнимешь? Хочу устроиться у тебя на плече."
+            },
+            {
+              "speaker": "vlad",
+              "text": "иди ко мне."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он раскрывает руку. Ты устраиваешься рядом, и Влад обнимает тебя."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Удобно."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я сейчас очень стараюсь не улыбаться слишком довольно."
+            }
+          ],
+          "next": "c9.r2.thought"
+        },
+        "c9.r2.distraction.banter": {
+          "id": "c9.r2.distraction.banter",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Ты на меня смотришь. Мне продолжать делать вид, что я не замечаю?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "можешь. у тебя отлично получается."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты тоже старайся."
+            },
+            {
+              "speaker": "vlad",
+              "text": "поздно. я уже признался."
+            }
+          ],
+          "next": "c9.r2.thought"
+        },
+        "c9.r2.distraction.watch": {
+          "id": "c9.r2.distraction.watch",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай пока посмотрим, что делает этот кот."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. у него, кажется, вечер без лишних вопросов."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы поворачиваетесь к экрану и обсуждаете первые кадры. Влад оставляет тебе удобное место."
+            }
+          ],
+          "next": "c9.r2.thought"
+        },
+        "c9.r2.thought": {
+          "id": "c9.r2.thought",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "vlad-thought",
+              "text": "я полвечера выбирал фильм. а больше всего хочется просто побыть с ней."
+            }
+          ],
+          "next": "c9.r2.note"
+        },
+        "c9.r2.note": {
+          "id": "c9.r2.note",
+          "kind": "note",
+          "scene": "movie-place",
+          "questionId": "s2.q9",
+          "maxCodePoints": 280,
+          "prompt": "Какой момент этого вечера ты бы захотела продлить?",
+          "context": "Фильм можно поставить на паузу. Вечер ещё не закончился.",
+          "answerOptions": [
+            {
+              "id": "preset.1",
+              "kind": "preset",
+              "text": "Тихую паузу рядом с тобой."
+            },
+            {
+              "id": "preset.2",
+              "kind": "preset",
+              "text": "Наши подколы — мне нравится тебе отвечать."
+            },
+            {
+              "id": "custom",
+              "kind": "custom",
+              "text": "Своими словами"
+            }
+          ],
+          "placeholder": "Мне бы хотелось…",
+          "submitLabel": "Сохранить ответ",
+          "skipLabel": "Пропустить",
+          "statusField": "c9Note",
+          "next": "c9.r2.closing"
+        },
+        "c9.r2.closing": {
+          "id": "c9.r2.closing",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Кот на экране снова закрывает глаза. Влад поворачивается к тебе."
+            },
+            {
+              "speaker": "vlad",
+              "text": "можем включить. а можем ещё немного отвлечься."
+            }
+          ],
+          "next": "c9.r2.ending"
+        },
+        "c9.r2.ending": {
+          "id": "c9.r2.ending",
+          "kind": "choice",
+          "scene": "movie-place",
+          "prompt": "Чего хочется тебе?",
+          "choices": [
+            {
+              "id": "her",
+              "text": "Хочу сама тебя поцеловать. Можно?",
+              "next": "c9.r2.kiss.her",
+              "set": {
+                "c9Approach": "her",
+                "c9Ending": "kiss"
+              }
+            },
+            {
+              "id": "ask",
+              "text": "Поцелуй меня. Фильм подождёт",
+              "next": "c9.r2.kiss.ask",
+              "set": {
+                "c9Approach": "ask",
+                "c9Ending": "kiss"
+              }
+            },
+            {
+              "id": "hug",
+              "text": "Обнимемся и посмотрим начало?",
+              "next": "c9.r2.finish.hug",
+              "set": {
+                "c9Approach": "none",
+                "c9Ending": "hug"
+              }
+            },
+            {
+              "id": "film",
+              "text": "Давай смотреть фильм",
+              "next": "c9.r2.finish.film",
+              "set": {
+                "c9Approach": "none",
+                "c9Ending": "film"
+              }
+            }
+          ]
+        },
+        "c9.r2.kiss.her": {
+          "id": "c9.r2.kiss.her",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Хочу сама тебя поцеловать. Можно?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. очень хочу."
+            }
+          ],
+          "next": "c9.r2.kiss.route"
+        },
+        "c9.r2.kiss.ask": {
+          "id": "c9.r2.kiss.ask",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Поцелуй меня. Фильм подождёт."
+            },
+            {
+              "speaker": "vlad",
+              "text": "с удовольствием."
+            }
+          ],
+          "next": "c9.r2.kiss.route"
+        },
+        "c9.r2.kiss.route": {
+          "id": "c9.r2.kiss.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c9.r2.kiss.again"
+            }
+          ],
+          "fallback": "c9.r2.kiss.first"
+        },
+        "c9.r2.kiss.first": {
+          "id": "c9.r2.kiss.first",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы впервые целуетесь в губы. Влад остаётся рядом, когда короткий поцелуй заканчивается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "вот теперь я точно запомню этот фильм."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты его ещё не посмотрел."
+            },
+            {
+              "speaker": "vlad",
+              "text": "уже нравится."
+            }
+          ],
+          "next": "c9.r2.end.kiss"
+        },
+        "c9.r2.kiss.again": {
+          "id": "c9.r2.kiss.again",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы снова целуетесь. Когда ты чуть отстраняешься, Влад улыбается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я надеялся, что мы повторим."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты мог просто попросить."
+            },
+            {
+              "speaker": "vlad",
+              "text": "учту. в следующий раз спрошу первым."
+            }
+          ],
+          "next": "c9.r2.end.kiss"
+        },
+        "c9.r2.finish.hug": {
+          "id": "c9.r2.finish.hug",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Обнимемся и посмотрим начало?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты устраиваешься рядом, он обнимает тебя. На экране кот осторожно разворачивает плед."
+            }
+          ],
+          "next": "c9.r2.end.hug"
+        },
+        "c9.r2.finish.film": {
+          "id": "c9.r2.finish.film",
+          "kind": "dialogue",
+          "scene": "movie-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай смотреть фильм."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. теперь попробую следить за сюжетом."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы поворачиваетесь к экрану, сохраняя выбранную обстановку и уже выбранную дистанцию."
+            }
+          ],
+          "next": "c9.r2.end.film"
+        },
+        "c9.r2.end.kiss": {
+          "id": "c9.r2.end.kiss",
+          "kind": "end",
+          "cardId": "c9.kiss",
+          "title": "Фильм подождёт",
+          "caption": "Кино оказалось хорошим поводом встретиться",
+          "quote": "мне нравится, когда ты меня отвлекаешь.",
+          "venue": "c9Place"
+        },
+        "c9.r2.end.hug": {
+          "id": "c9.r2.end.hug",
+          "kind": "end",
+          "cardId": "c9.hug",
+          "title": "Удобно рядом",
+          "caption": "Начало фильма можно смотреть вместе",
+          "quote": "иди ко мне.",
+          "venue": "c9Place"
+        },
+        "c9.r2.end.film": {
+          "id": "c9.r2.end.film",
+          "kind": "end",
+          "cardId": "c9.film",
+          "title": "Вечер с котом",
+          "caption": "Вы всё-таки включили кино",
+          "quote": "теперь попробую следить за сюжетом.",
+          "venue": "c9Place"
+        }
+      },
+      "gameScript": {},
+      "secret": [
+        "Д|Название фильма он запомнил.",
+        "А|А сюжет?",
+        "Д|Теперь будет причина посмотреть ещё раз."
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Оставим свет?",
+      "entry": "c10.r2.entry",
+      "nodes": {
+        "c10.r2.entry": {
+          "id": "c10.r2.entry",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад встречает тебя и убирает телефон. На этот вечер у него нет списка мест, которые обязательно нужно успеть показать."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я хотел придумать красивое приглашение. получилось просто: хочу тебя увидеть."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А я уже здесь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "вот поэтому я так довольно улыбаюсь."
+            }
+          ],
+          "next": "c10.r2.past.route"
+        },
+        "c10.r2.past.route": {
+          "id": "c10.r2.past.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c9Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c10.r2.past.kiss"
+            },
+            {
+              "all": [
+                {
+                  "field": "c9Ending",
+                  "equals": "hug"
+                }
+              ],
+              "next": "c10.r2.past.hug"
+            }
+          ],
+          "fallback": "c10.r2.past.other"
+        },
+        "c10.r2.past.kiss": {
+          "id": "c10.r2.past.kiss",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "тот фильм я, кажется, так и не досмотрел."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Снова позовёшь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. но сегодня хочу побыть с тобой без телевизора."
+            }
+          ],
+          "next": "c10.r2.place"
+        },
+        "c10.r2.past.hug": {
+          "id": "c10.r2.past.hug",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "мне понравилось, как ты устроилась у меня под рукой."
+            },
+            {
+              "speaker": "heroine",
+              "text": "А фильм?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "тоже ничего. но я сейчас вспоминаю не его."
+            }
+          ],
+          "next": "c10.r2.place"
+        },
+        "c10.r2.past.other": {
+          "id": "c10.r2.past.other",
+          "kind": "dialogue",
+          "scene": "river",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "рад, что мы снова увиделись. у меня ещё много вопросов к тебе."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Будешь задавать по одному?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "попробую. если опять не засмотрюсь."
+            }
+          ],
+          "next": "c10.r2.place"
+        },
+        "c10.r2.place": {
+          "id": "c10.r2.place",
+          "kind": "choice",
+          "scene": "river",
+          "prompt": "Где тебе хочется провести этот вечер?",
+          "choices": [
+            {
+              "id": "home",
+              "text": "У тебя дома",
+              "next": "c10.r2.arrival.home",
+              "set": {
+                "c10Place": "home",
+                "c10Venue": "home"
+              }
+            },
+            {
+              "id": "terrace",
+              "text": "На террасе «Паузы»",
+              "next": "c10.r2.arrival.terrace",
+              "set": {
+                "c10Place": "terrace",
+                "c10Venue": "terrace"
+              }
+            }
+          ]
+        },
+        "c10.r2.arrival.home": {
+          "id": "c10.r2.arrival.home",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "В гостиной тихо. На столе две чашки, у дивана тёплая лампа. Влад оставляет тебе выбор места."
+            },
+            {
+              "speaker": "vlad",
+              "text": "садись, где тебе нравится. а я пока придумаю, как оказаться поближе."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Можно просто спросить."
+            },
+            {
+              "speaker": "vlad",
+              "text": "согласен. сначала устроишься — потом спрошу."
+            }
+          ],
+          "next": "c10.r2.memory"
+        },
+        "c10.r2.arrival.terrace": {
+          "id": "c10.r2.arrival.terrace",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На крытой террасе светятся маленькие лампы. Соседние столики остаются на виду, за стеклом идёт дождь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я всё-таки рад, что мы выбрали место, где можно нормально смотреть друг на друга."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Ты опять про освещение?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "я про то, что телефон уже убрал."
+            }
+          ],
+          "next": "c10.r2.memory"
+        },
+        "c10.r2.memory": {
+          "id": "c10.r2.memory",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "На столе чистая закладка. Что оставишь на ней от этих встреч?",
+          "choices": [
+            {
+              "id": "pause",
+              "text": "Тихую паузу",
+              "next": "c10.r2.memory.pause",
+              "set": {
+                "c10Memory": "pause"
+              }
+            },
+            {
+              "id": "laugh",
+              "text": "Наши нелепые шутки",
+              "next": "c10.r2.memory.laugh",
+              "set": {
+                "c10Memory": "laugh"
+              }
+            },
+            {
+              "id": "initiative",
+              "text": "Мои неожиданные повороты",
+              "next": "c10.r2.memory.initiative",
+              "set": {
+                "c10Memory": "initiative"
+              }
+            },
+            {
+              "id": "none",
+              "text": "Пусть пока останется чистой",
+              "next": "c10.r2.memory.none",
+              "set": {
+                "c10Memory": "none"
+              }
+            }
+          ]
+        },
+        "c10.r2.memory.pause": {
+          "id": "c10.r2.memory.pause",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Тихую паузу."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне нравится, что с тобой можно замолчать и не начинать срочно спасать разговор."
+            },
+            {
+              "speaker": "narrator",
+              "text": "На закладке появляется маленькая чашка с паром."
+            }
+          ],
+          "next": "c10.r2.light.intro"
+        },
+        "c10.r2.memory.laugh": {
+          "id": "c10.r2.memory.laugh",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Наши нелепые шутки."
+            },
+            {
+              "speaker": "vlad",
+              "text": "теперь буду считать, что тебе нравится мой юмор."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Не все шутки."
+            },
+            {
+              "speaker": "vlad",
+              "text": "всё равно приятно."
+            },
+            {
+              "speaker": "narrator",
+              "text": "На закладке появляется кривоватая улыбающаяся звезда."
+            }
+          ],
+          "next": "c10.r2.light.intro"
+        },
+        "c10.r2.memory.initiative": {
+          "id": "c10.r2.memory.initiative",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мои неожиданные повороты."
+            },
+            {
+              "speaker": "vlad",
+              "text": "нравится, когда ты сама меня удивляешь."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Продолжать?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "очень прошу."
+            },
+            {
+              "speaker": "narrator",
+              "text": "На закладке появляется стрелка с маленьким завитком."
+            }
+          ],
+          "next": "c10.r2.light.intro"
+        },
+        "c10.r2.memory.none": {
+          "id": "c10.r2.memory.none",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Пусть пока останется чистой."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. можно просто оставить её на память об этом вечере."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад кладёт закладку рядом с чашками."
+            }
+          ],
+          "next": "c10.r2.light.intro"
+        },
+        "c10.r2.light.intro": {
+          "id": "c10.r2.light.intro",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Свет касается края чашки. Влад показывает на переключатель."
+            },
+            {
+              "speaker": "vlad",
+              "text": "оставим так или сделаем мягче?"
+            }
+          ],
+          "next": "c10.r2.light"
+        },
+        "c10.r2.light": {
+          "id": "c10.r2.light",
+          "kind": "minigame",
+          "scene": "final-place",
+          "game": "evening-light",
+          "next": "c10.r2.aside"
+        },
+        "c10.r2.aside": {
+          "id": "c10.r2.aside",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "devil",
+              "text": "Может, мы ещё что-нибудь подскажем?"
+            },
+            {
+              "speaker": "angel",
+              "text": "Мне кажется, они уже сами договорятся."
+            }
+          ],
+          "next": "c10.r2.aside.reply",
+          "presentation": "adviser-aside"
+        },
+        "c10.r2.aside.reply": {
+          "id": "c10.r2.aside.reply",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "Что скажешь советчикам про себя?",
+          "choices": [
+            {
+              "id": "self",
+              "text": "Всё. Дальше я разберусь",
+              "next": "c10.r2.aside.self",
+              "set": {
+                "c10Aside": "self"
+              }
+            },
+            {
+              "id": "last",
+              "text": "Ладно, один последний совет",
+              "next": "c10.r2.aside.last",
+              "set": {
+                "c10Aside": "last"
+              }
+            },
+            {
+              "id": "quiet",
+              "text": "Просто убрать подсказки",
+              "next": "c10.r2.aside.quiet",
+              "set": {
+                "c10Aside": "quiet"
+              }
+            }
+          ]
+        },
+        "c10.r2.aside.self": {
+          "id": "c10.r2.aside.self",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine-thought",
+              "text": "Всё. Дальше я разберусь."
+            },
+            {
+              "speaker": "devil",
+              "text": "Мне нравится, как это прозвучало."
+            },
+            {
+              "speaker": "angel",
+              "text": "Пойдём."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Советчики уходят за край. Больше в этом вечере они не появляются."
+            }
+          ],
+          "next": "c10.r2.thought",
+          "presentation": "adviser-aside"
+        },
+        "c10.r2.aside.last": {
+          "id": "c10.r2.aside.last",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine-thought",
+              "text": "Ладно, один последний совет."
+            },
+            {
+              "speaker": "angel",
+              "text": "Скажи ему, чего хочешь сейчас."
+            },
+            {
+              "speaker": "devil",
+              "text": "И дай ответить. Нам тоже уже пора."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Они складывают свои закладки и исчезают за краем кадра."
+            }
+          ],
+          "next": "c10.r2.thought",
+          "presentation": "adviser-aside"
+        },
+        "c10.r2.aside.quiet": {
+          "id": "c10.r2.aside.quiet",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты возвращаешь внимание к Владу. Нимб и рожки исчезают с края кадра."
+            }
+          ],
+          "next": "c10.r2.thought",
+          "presentation": "adviser-aside"
+        },
+        "c10.r2.thought": {
+          "id": "c10.r2.thought",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "vlad-thought",
+              "text": "хочу, чтобы она осталась. скажу ей прямо, а дальше решим вместе."
+            }
+          ],
+          "next": "c10.r2.note"
+        },
+        "c10.r2.note": {
+          "id": "c10.r2.note",
+          "kind": "note",
+          "scene": "final-place",
+          "questionId": "s2.q10",
+          "maxCodePoints": 280,
+          "prompt": "Что тебе хотелось бы оставить за кадром этой истории?",
+          "context": "На столе две чашки. Разговор о продолжении вечера ещё впереди.",
+          "answerOptions": [
+            {
+              "id": "preset.1",
+              "kind": "preset",
+              "text": "Проснуться рядом и вместе приготовить завтрак."
+            },
+            {
+              "id": "preset.2",
+              "kind": "preset",
+              "text": "Ещё один вечер вдвоём, без спешки."
+            },
+            {
+              "id": "custom",
+              "kind": "custom",
+              "text": "Своими словами"
+            }
+          ],
+          "placeholder": "Мне бы хотелось…",
+          "submitLabel": "Сохранить ответ",
+          "skipLabel": "Пропустить",
+          "statusField": "c10Note",
+          "next": "c10.r2.talk"
+        },
+        "c10.r2.talk": {
+          "id": "c10.r2.talk",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Влад ставит чашку на стол и поворачивается к тебе."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне хорошо с тобой. и хочется быть ближе."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он ждёт твоего ответа."
+            }
+          ],
+          "next": "c10.r2.ending"
+        },
+        "c10.r2.ending": {
+          "id": "c10.r2.ending",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "Как тебе хочется продолжить?",
+          "choices": [
+            {
+              "id": "private",
+              "text": "Хочу поцеловать тебя и побыть только вдвоём",
+              "next": "c10.r2.private.place.route",
+              "set": {
+                "c10Intent": "private"
+              }
+            },
+            {
+              "id": "overnight",
+              "text": "Я сегодня не хочу прощаться. Можно остаться до утра?",
+              "next": "c10.r2.private.place.route",
+              "set": {
+                "c10Intent": "overnight"
+              }
+            },
+            {
+              "id": "stay",
+              "text": "Останусь ещё немного. Просто рядом",
+              "next": "c10.r2.stay.route",
+              "set": {
+                "c10Intent": "stay",
+                "c10Ending": "stay"
+              }
+            },
+            {
+              "id": "goodnight",
+              "text": "На сегодня мне пора. Проводишь?",
+              "next": "c10.r2.goodnight.route",
+              "set": {
+                "c10Intent": "goodnight",
+                "c10Ending": "goodnight"
+              }
+            }
+          ]
+        },
+        "c10.r2.private.place.route": {
+          "id": "c10.r2.private.place.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c10Venue",
+                  "equals": "home"
+                }
+              ],
+              "next": "c10.r2.confirm.route"
+            }
+          ],
+          "fallback": "c10.r2.move.offer"
+        },
+        "c10.r2.move.offer": {
+          "id": "c10.r2.move.offer",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Хочу побыть с тобой вдвоём."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я тоже хочу. можем поехать ко мне. а можем остаться здесь — как тебе сейчас хочется?"
+            }
+          ],
+          "next": "c10.r2.move"
+        },
+        "c10.r2.move": {
+          "id": "c10.r2.move",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "Поедем к Владу или останемся здесь?",
+          "choices": [
+            {
+              "id": "home",
+              "text": "Да, поедем к тебе",
+              "next": "c10.r2.move.home",
+              "set": {
+                "c10Move": "home",
+                "c10Venue": "home"
+              }
+            },
+            {
+              "id": "stay",
+              "text": "Я передумала. Останемся на террасе",
+              "next": "c10.r2.stay.terrace",
+              "set": {
+                "c10Move": "stay",
+                "c10Intent": "stay",
+                "c10Ending": "stay"
+              }
+            },
+            {
+              "id": "goodnight",
+              "text": "Я всё-таки пойду домой",
+              "next": "c10.r2.goodnight.terrace",
+              "set": {
+                "c10Move": "stay",
+                "c10Intent": "goodnight",
+                "c10Ending": "goodnight"
+              }
+            }
+          ]
+        },
+        "c10.r2.move.home": {
+          "id": "c10.r2.move.home",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы договариваетесь поехать к Владу. Следующий кадр — его гостиная. Куртки остаются у входа; на столе две чашки воды."
+            },
+            {
+              "speaker": "vlad",
+              "text": "рад, что ты здесь. устраивайся."
+            }
+          ],
+          "next": "c10.r2.confirm.route"
+        },
+        "c10.r2.confirm.route": {
+          "id": "c10.r2.confirm.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c10Intent",
+                  "equals": "overnight"
+                }
+              ],
+              "next": "c10.r2.confirm.overnight"
+            }
+          ],
+          "fallback": "c10.r2.confirm.private"
+        },
+        "c10.r2.confirm.private": {
+          "id": "c10.r2.confirm.private",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "Вы теперь вдвоём. Чего хочется тебе?",
+          "choices": [
+            {
+              "id": "her",
+              "text": "Можно я тебя поцелую? Хочу остаться с тобой",
+              "next": "c10.r2.kiss.her",
+              "set": {
+                "c10Affection": "her",
+                "c10Ending": "private"
+              }
+            },
+            {
+              "id": "ask",
+              "text": "Поцелуй меня. Хочу побыть с тобой",
+              "next": "c10.r2.kiss.ask",
+              "set": {
+                "c10Affection": "ask",
+                "c10Ending": "private"
+              }
+            },
+            {
+              "id": "quiet",
+              "text": "Хочу просто побыть рядом",
+              "next": "c10.r2.stay.home",
+              "set": {
+                "c10Affection": "none",
+                "c10Intent": "stay",
+                "c10Ending": "stay"
+              }
+            },
+            {
+              "id": "leave",
+              "text": "Я передумала. Мне пора",
+              "next": "c10.r2.goodnight.home",
+              "set": {
+                "c10Affection": "none",
+                "c10Intent": "goodnight",
+                "c10Ending": "goodnight"
+              }
+            }
+          ]
+        },
+        "c10.r2.confirm.overnight": {
+          "id": "c10.r2.confirm.overnight",
+          "kind": "choice",
+          "scene": "final-place",
+          "prompt": "Как хочется остаться?",
+          "choices": [
+            {
+              "id": "her",
+              "text": "Можно я тебя поцелую? Я останусь до утра",
+              "next": "c10.r2.kiss.her",
+              "set": {
+                "c10Affection": "her",
+                "c10Ending": "overnight"
+              }
+            },
+            {
+              "id": "ask",
+              "text": "Поцелуй меня. Я сегодня не хочу прощаться",
+              "next": "c10.r2.kiss.ask",
+              "set": {
+                "c10Affection": "ask",
+                "c10Ending": "overnight"
+              }
+            },
+            {
+              "id": "quiet",
+              "text": "Останусь до утра. Сегодня хочу только обниматься",
+              "next": "c10.r2.night.quiet",
+              "set": {
+                "c10Affection": "hug",
+                "c10Ending": "overnight"
+              }
+            },
+            {
+              "id": "leave",
+              "text": "Я передумала. Мне пора",
+              "next": "c10.r2.goodnight.home",
+              "set": {
+                "c10Affection": "none",
+                "c10Intent": "goodnight",
+                "c10Ending": "goodnight"
+              }
+            }
+          ]
+        },
+        "c10.r2.kiss.her": {
+          "id": "c10.r2.kiss.her",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Можно я тебя поцелую?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "да. очень хочу."
+            }
+          ],
+          "next": "c10.r2.kiss.route"
+        },
+        "c10.r2.kiss.ask": {
+          "id": "c10.r2.kiss.ask",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Поцелуй меня."
+            },
+            {
+              "speaker": "vlad",
+              "text": "с удовольствием."
+            }
+          ],
+          "next": "c10.r2.kiss.route"
+        },
+        "c10.r2.kiss.route": {
+          "id": "c10.r2.kiss.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c8Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c10.r2.kiss.again"
+            },
+            {
+              "all": [
+                {
+                  "field": "c9Ending",
+                  "equals": "kiss"
+                }
+              ],
+              "next": "c10.r2.kiss.again"
+            }
+          ],
+          "fallback": "c10.r2.kiss.first"
+        },
+        "c10.r2.kiss.first": {
+          "id": "c10.r2.kiss.first",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы впервые целуетесь в губы. Влад мягко касается твоей щеки и остаётся рядом, когда поцелуй заканчивается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я рад, что ты сказала, чего хочешь."
+            }
+          ],
+          "next": "c10.r2.after.kiss"
+        },
+        "c10.r2.kiss.again": {
+          "id": "c10.r2.kiss.again",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Вы снова целуетесь. Когда ты чуть отстраняешься, Влад улыбается."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я сейчас попробую не придумывать повод, чтобы поцеловать тебя ещё раз. просто спрошу, если захочется."
+            }
+          ],
+          "next": "c10.r2.after.kiss"
+        },
+        "c10.r2.after.kiss": {
+          "id": "c10.r2.after.kiss",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c10Intent",
+                  "equals": "overnight"
+                }
+              ],
+              "next": "c10.r2.night.close"
+            }
+          ],
+          "fallback": "c10.r2.private.fade"
+        },
+        "c10.r2.private.fade": {
+          "id": "c10.r2.private.fade",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "vlad",
+              "text": "побудь со мной."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Хочу."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы остаётесь вдвоём. Кадр мягко темнеет; дальнейшее продолжение этого вечера остаётся за кадром."
+            }
+          ],
+          "next": "c10.r2.end.private"
+        },
+        "c10.r2.night.close": {
+          "id": "c10.r2.night.close",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Я останусь до утра."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я сейчас очень стараюсь не улыбаться слишком довольно."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Плохо стараешься."
+            },
+            {
+              "speaker": "vlad",
+              "text": "ты остаёшься. какая тут выдержка."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы берётесь за руки. Кадр мягко темнеет."
+            }
+          ],
+          "next": "c10.r2.morning"
+        },
+        "c10.r2.night.quiet": {
+          "id": "c10.r2.night.quiet",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Останусь до утра. Сегодня хочу только обниматься."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. мне хорошо с тобой."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Он раскрывает руки. Ты устраиваешься рядом. Кадр мягко темнеет."
+            }
+          ],
+          "next": "c10.r2.morning"
+        },
+        "c10.r2.morning": {
+          "id": "c10.r2.morning",
+          "kind": "dialogue",
+          "scene": "morning",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "На кухне утренний свет. На столе две чашки. Влад пытается приготовить завтрак и поворачивается, заметив тебя."
+            },
+            {
+              "speaker": "vlad",
+              "text": "доброе утро. обнимать у меня получается увереннее, чем готовить.",
+              "emotion": "awkward"
+            },
+            {
+              "speaker": "heroine",
+              "text": "Завтрак настолько плох?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "пока можно спасти. но я предлагаю начать с того, в чём уверен."
+            }
+          ],
+          "next": "c10.r2.morning.choice"
+        },
+        "c10.r2.morning.choice": {
+          "id": "c10.r2.morning.choice",
+          "kind": "choice",
+          "scene": "morning",
+          "prompt": "С чего начнём утро?",
+          "choices": [
+            {
+              "id": "hug",
+              "text": "Подойти и обнять",
+              "next": "c10.r2.morning.hug",
+              "set": {
+                "c10Morning": "hug"
+              }
+            },
+            {
+              "id": "breakfast",
+              "text": "Спасти завтрак вместе",
+              "next": "c10.r2.morning.breakfast",
+              "set": {
+                "c10Morning": "breakfast"
+              }
+            },
+            {
+              "id": "coffee",
+              "text": "Для начала мне нужен кофе",
+              "next": "c10.r2.morning.coffee",
+              "set": {
+                "c10Morning": "coffee"
+              }
+            }
+          ]
+        },
+        "c10.r2.morning.hug": {
+          "id": "c10.r2.morning.hug",
+          "kind": "dialogue",
+          "scene": "morning",
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "Ты подходишь и обнимаешь Влада. Он откладывает лопатку и отвечает на объятие."
+            },
+            {
+              "speaker": "vlad",
+              "text": "я вообще-то уже хотел тебя позвать."
+            },
+            {
+              "speaker": "heroine",
+              "text": "На завтрак?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "сначала вот так.",
+              "emotion": "warm"
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы ещё немного стоите обнявшись. Потом Влад поворачивается проверить сковородку."
+            }
+          ],
+          "next": "c10.r2.end.overnight"
+        },
+        "c10.r2.morning.breakfast": {
+          "id": "c10.r2.morning.breakfast",
+          "kind": "dialogue",
+          "scene": "morning",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Давай сюда лопатку. Будем спасать завтрак вместе."
+            },
+            {
+              "speaker": "vlad",
+              "text": "а я тогда с тарелками."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты занимаешь место у плиты. Влад ставит рядом две тарелки; к одной прилипла маленькая бумажная наклейка. Он замечает её раньше, чем успевает подать тебе."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Красиво подаёшь."
+            },
+            {
+              "speaker": "vlad",
+              "text": "стараюсь произвести впечатление с самого утра."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Ты показываешь, куда поставить чашки. Через минуту вы садитесь завтракать."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне нравится, что ты здесь."
+            }
+          ],
+          "next": "c10.r2.end.overnight"
+        },
+        "c10.r2.morning.coffee": {
+          "id": "c10.r2.morning.coffee",
+          "kind": "dialogue",
+          "scene": "morning",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Для начала мне нужен кофе."
+            },
+            {
+              "speaker": "vlad",
+              "text": "сделаю."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад ставит перед тобой чашку и садится рядом, не начиная новый разговор."
+            },
+            {
+              "speaker": "heroine",
+              "text": "Спасибо. Вот так хорошо."
+            },
+            {
+              "speaker": "vlad",
+              "text": "тогда посидим. завтрак сегодня никуда не торопится."
+            }
+          ],
+          "next": "c10.r2.end.overnight"
+        },
+        "c10.r2.goodnight.route": {
+          "id": "c10.r2.goodnight.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c10Venue",
+                  "equals": "home"
+                }
+              ],
+              "next": "c10.r2.goodnight.home"
+            }
+          ],
+          "fallback": "c10.r2.goodnight.terrace"
+        },
+        "c10.r2.goodnight.home": {
+          "id": "c10.r2.goodnight.home",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Мне пора. Проводишь?"
+            },
+            {
+              "speaker": "vlad",
+              "text": "конечно."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Влад берёт куртку и выходит проводить тебя."
+            },
+            {
+              "speaker": "vlad",
+              "text": "мне понравился этот вечер. рад, что увиделись."
+            }
+          ],
+          "next": "c10.r2.end.goodnight"
+        },
+        "c10.r2.goodnight.terrace": {
+          "id": "c10.r2.goodnight.terrace",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Я пойду домой."
+            },
+            {
+              "speaker": "vlad",
+              "text": "провожу до выхода."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы выходите с террасы. Город после дождя выглядит светлее."
+            },
+            {
+              "speaker": "vlad",
+              "text": "рад, что мы встретились."
+            }
+          ],
+          "next": "c10.r2.end.goodnight"
+        },
+        "c10.r2.stay.route": {
+          "id": "c10.r2.stay.route",
+          "kind": "route",
+          "cases": [
+            {
+              "all": [
+                {
+                  "field": "c10Venue",
+                  "equals": "home"
+                }
+              ],
+              "next": "c10.r2.stay.home"
+            }
+          ],
+          "fallback": "c10.r2.stay.terrace"
+        },
+        "c10.r2.stay.home": {
+          "id": "c10.r2.stay.home",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Останусь ещё немного. Просто рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай. мне хочется тебя послушать."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы удобно устраиваетесь и продолжаете разговор. Никто не превращает паузу в обещание следующего шага."
+            }
+          ],
+          "next": "c10.r2.end.stay"
+        },
+        "c10.r2.stay.terrace": {
+          "id": "c10.r2.stay.terrace",
+          "kind": "dialogue",
+          "scene": "final-place",
+          "lines": [
+            {
+              "speaker": "heroine",
+              "text": "Останемся здесь. Просто побудем рядом."
+            },
+            {
+              "speaker": "vlad",
+              "text": "давай."
+            },
+            {
+              "speaker": "narrator",
+              "text": "Вы возвращаетесь к чашкам. За стеклом проходит трамвай, а разговору ещё есть куда продолжиться."
+            }
+          ],
+          "next": "c10.r2.end.stay"
+        },
+        "c10.r2.end.goodnight": {
+          "id": "c10.r2.end.goodnight",
+          "kind": "end",
+          "cardId": "c10.goodnight",
+          "title": "До следующей встречи",
+          "caption": "Этот вечер закончился тепло",
+          "quote": "рад, что мы встретились.",
+          "venue": "c10Venue"
+        },
+        "c10.r2.end.stay": {
+          "id": "c10.r2.end.stay",
+          "kind": "end",
+          "cardId": "c10.stay",
+          "title": "Просто рядом",
+          "caption": "У хорошего вечера свой темп",
+          "quote": "мне хочется тебя послушать.",
+          "venue": "c10Venue"
+        },
+        "c10.r2.end.private": {
+          "id": "c10.r2.end.private",
+          "kind": "end",
+          "cardId": "c10.private",
+          "title": "Оставим свет?",
+          "caption": "Продолжение вы выбираете сами",
+          "quote": "побудь со мной.",
+          "venue": "home"
+        },
+        "c10.r2.end.overnight": {
+          "id": "c10.r2.end.overnight",
+          "kind": "end",
+          "cardId": "c10.overnight",
+          "title": "До утра",
+          "caption": "А утром — ещё одна маленькая история",
+          "quote": "теперь утро уже хорошее.",
+          "venue": "home"
+        }
+      },
+      "gameScript": {},
+      "secret": [
+        "Н|На отдельном листке рядом с закладкой — короткая фраза: «Ещё увидимся».",
+        "Н|Под надписью нарисована маленькая кривоватая звезда."
+      ]
+    }
+  ]
+}

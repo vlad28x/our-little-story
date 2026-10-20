@@ -1,0 +1,57 @@
+import { test,expect,type Page } from '@playwright/test';
+import { openOffline } from './offlineApp';
+import { finishSix,defaultSixth } from './chapter6Helpers';
+import { defaultSeventh,finishSeven,sevenAt,seventhCode,type SeventhPath } from './chapter7Helpers';
+import { reduceSave } from '../src/state/reducer';
+import { parseSave } from '../src/persistence/validateSave';
+const key='five-meetings:/:save';
+async function finish(page:Page,p:SeventhPath=defaultSeventh){
+ for(let i=0;i<200;i++){
+  const state=await page.locator('.story-screen,.postcard').first().evaluate(el=>({finished:el.matches('.postcard'),id:el.getAttribute('data-node')}));if(state.finished)return;
+  const id=state.id;
+  const choices:Record<string,number>={'c7.guide':['angel','devil','none'].indexOf(p.guide),'c7.thought':['curious','playful','steady'].indexOf(p.thought),'c7.distance':['arm','near','space'].indexOf(p.distance),'c7.envelope.offer':p.bonus?0:1,'c7.ending':['open','promise','calm'].indexOf(p.ending)};
+  if(id&&id in choices){await page.locator('.choices button').nth(choices[id]).click();continue;}
+  if(id==='c7.note'){if(p.note){await page.getByLabel('Твой ответ',{exact:true}).fill(p.note);await page.getByRole('button',{name:'Сохранить для себя',exact:true}).click();}else await page.getByRole('button',{name:'Пропустить',exact:true}).click();continue;}
+  if(id==='c7.council'){
+   if(await page.locator('.council-answers').count()){
+    const save=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);const target=(await page.evaluate(()=>location.hash)).includes('mode=trial')?'trial':'campaign';
+    const d=target==='trial'?save.trial.run.activity:save.campaign.active.activity;const answer=p.result.answers[d.answers.length];
+    const ids=[['question','challenge','ordinary'],['lead','invite','stay'],['direct','playful','quiet']];
+    if(answer)await page.locator('.council-answers button').nth(ids[d.answers.length].indexOf(answer)).click();else await page.getByRole('button',{name:'Продолжить прогулку без игры',exact:true}).click();
+   }else await page.locator('.between-lines button').filter({hasText:/^(Дальше|Следующая ситуация|Завершить разговор|Вернуться к прогулке)/}).click();continue;
+  }
+  await page.getByRole('button',{name:'Дальше',exact:false}).click();
+ }
+ throw Error('Chapter seven did not finish');
+}
+
+test('chapter seven plays from its code on a 320px phone and preserves the first six chapters',async({page})=>{
+ await page.setViewportSize({width:320,height:568});const prior=finishSix(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await openOffline(page,prior);
+ await page.getByLabel('Код',{exact:true}).fill(seventhCode);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await expect(page.locator('.chapter-list li')).toHaveCount(5);await page.getByRole('button',{name:'Начать встречу 7',exact:false}).click();
+ await finish(page);await expect(page.getByRole('heading',{name:'Сказано вслух',exact:true})).toBeVisible();const save=parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key));expect(save.campaign.completed).toEqual([1,2,3,4,5,6,7]);for(const id of [1,2,3,4,5,6] as const)expect(save.campaign.records[id]).toEqual(prior.campaign.records[id]);expect(save.privateNotes[6]).toEqual(prior.privateNotes[6]);expect(save.privateNotes[7]?.campaign?.text).toBe(defaultSeventh.note);expect(errors).toEqual([]);await page.screenshot({path:'outputs/CHAPTER_07_RESULT_320.png',fullPage:true});
+});
+test('advice is optional, a real reaction and its checkpoint resume on small screens',async({page,context})=>{
+ for(const [width,height] of [[320,568],[390,844],[785,600],[960,900]]){
+  await page.setViewportSize({width,height});await openOffline(page,sevenAt('c7.council'),'/play/7');await page.getByRole('button',{name:'Совет дьяволёнка',exact:false}).click();await expect(page.locator('#council-advice')).toBeVisible();
+  for(const button of await page.locator('.council-answers button,.council-tabs button').all()){const box=await button.boundingBox();expect(box!.height).toBeGreaterThanOrEqual(48);}
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`outputs/CHAPTER_07_GAME_${width}.png`,fullPage:true});
+  await page.locator('.council-answers button').nth(0).click();await expect(page.locator('#council-advice')).toHaveCount(0);await expect(page.getByText('Какой момент нашей прошлой прогулки ты запомнил?',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  const saved=parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key));const reopened=await context.newPage();await reopened.setViewportSize({width,height});await openOffline(reopened,saved,'/play/7');await expect(reopened.getByText('когда разговор на минуту стих. мне всё равно не хотелось расходиться.',{exact:true})).toBeVisible();await expect(reopened.locator('.council-answers')).toHaveCount(0);await reopened.close();
+ }
+});
+test('partial skip keeps her spoken question, its mission and the chosen arch',async({page})=>{
+ await openOffline(page,sevenAt('c7.council'),'/play/7');await page.locator('.council-answers button').nth(0).click();for(let i=0;i<3;i++)await page.locator('.between-lines .next-button').click();await page.locator('.council-answers button').nth(0).click();for(let i=0;i<4;i++)await page.locator('.between-lines .next-button').click();await expect(page.locator('.gallery-arch')).toBeVisible();await page.getByRole('button',{name:'Продолжить прогулку без игры',exact:true}).click();
+ await finish(page,{...defaultSeventh,result:{kind:'between-lines',outcome:'skipped',answers:['question','lead']}});await expect(page.getByText('Задала свой вопрос',{exact:true})).toBeVisible();const s=parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key));expect(s.campaign.records[7]!.results['between-lines']?.answers).toEqual(['question','lead']);expect(s.campaign.records[7]!.episode?.sparks).toHaveLength(2);expect(s.collection.bonuses).not.toContain('c7.bonus.angel');
+});
+test('all three finales work after a full skip without contact',async({context})=>{
+ const p:SeventhPath={...defaultSeventh,distance:'space',result:{kind:'between-lines',outcome:'skipped',answers:[]},note:undefined};
+ for(const [ending,title] of [['open','Сказано вслух'],['promise','Продолжим при встрече'],['calm','В своём темпе']] as const){const page=await context.newPage();await openOffline(page,sevenAt('c7.ending',p),'/play/7');await finish(page,{...p,ending});await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();expect(parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key)).campaign.records[7]!.episode?.sparks).toHaveLength(1);await page.close();}
+});
+test('two local answers and an independently replayed seventh ending stay separate',async({page})=>{
+ const main=finishSeven();await openOffline(page,main,'/result/7');await page.getByRole('button',{name:'Редактировать',exact:true}).click();await page.locator('#edit-personal-note').fill('Только мой новый вопрос');await page.getByRole('button',{name:'Сохранить изменения',exact:true}).click();let s=parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key));expect(s.revision).toBe(main.revision);expect(s.privateNotes[6]?.campaign?.text).toBe(defaultSixth.note);
+ await page.getByRole('button',{name:'Посмотреть другой вариант',exact:false}).click();await expect(page.locator('[data-node="c7.entry"]')).toBeVisible();await finish(page,{...defaultSeventh,ending:'calm',note:'Пробный вопрос'});s=parseSave(await page.evaluate(k=>localStorage.getItem(k)!,key));expect(s.campaign).toEqual(main.campaign);expect(s.privateNotes[7]?.campaign?.text).toBe('Только мой новый вопрос');expect(s.privateNotes[7]?.trial?.text).toBe('Пробный вопрос');await expect(page.getByText('Пробный вопрос',{exact:true})).toBeVisible();
+});
+test('advisers keep their approved scale and direct routes respect codes and future content',async({page})=>{
+ for(const [width,height] of [[320,568],[390,844],[960,900],[785,600]]){await page.setViewportSize({width,height});await openOffline(page,sevenAt('c7.guide'),'/play/7');const stage=(await page.locator('.scene-stage').boundingBox())!;for(const image of await page.locator('.adviser-council img').all()){const box=(await image.boundingBox())!;expect(box.height).toBeGreaterThan(stage.height*.65);}expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`outputs/CHAPTER_07_ADVISERS_${width}.png`,fullPage:true});}
+ const locked=reduceSave(finishSix(),{type:'settings',settings:{...finishSix().settings,textMode:'instant'}});await openOffline(page,locked,'/play/7');await expect(page.locator('[data-node="c7.entry"]')).toHaveCount(0);await openOffline(page,locked,'/play/8');await expect(page.getByRole('heading',{name:'Эта встреча ждёт на карте глав'})).toBeVisible();
+});

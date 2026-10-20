@@ -1,5 +1,5 @@
 import type { CloudAPI } from './bridge';
-import { parseSave,MAX_SAVE_BYTES } from '../persistence/validateSave';
+import { parseSave,MAX_SAVE_BYTES,legacySource } from '../persistence/validateSave';
 import type { SaveV1 } from '../state/types';
 
 const HEAD='five_meetings_v1_head',LEGACY_CHUNK_UNITS=3500,CHUNK_JSON_BYTES=3000,READ_BATCH=32;
@@ -28,7 +28,7 @@ function nativeCode(error:unknown){
 export function cloudErrorText(error:unknown){
   return error instanceof CloudTransportError||error instanceof CloudCryptoError||error instanceof CloudConflict?error.message:'Не удалось проверить или подтвердить облачную копию (CHECK_FAILED).';
 }
-export function cloudRaw(save:SaveV1){const normalized=parseSave(JSON.stringify(save));return JSON.stringify({...normalized,continuation:null,privateNotes:{},localNoteRevision:0});}
+export function cloudRaw(save:SaveV1){const normalized=parseSave(JSON.stringify(save));return JSON.stringify({...normalized,continuation:null});}
 export function splitCloudText(raw:string){
   const chunks:string[]=[];let start=0,end=0,bytes=2;
   // Bound the encoded JSON string, not JS string.length. Cyrillic, emoji,
@@ -88,6 +88,7 @@ export class TelegramCloud {
     return {head:raw,save,backup,damaged:!save,needsRewrite};
   }
   async write(save:SaveV1,expectedHead:string):Promise<string>{
+    if(legacySource(save)||legacySource(parseSave(JSON.stringify(save))))throw Error('Сначала подтверди обновление второго сезона. Облако не изменено.');
     const raw=cloudRaw(save);
     if(await this.getHead()!==expectedHead)throw new CloudConflict();
     let previous:Part|null=null;

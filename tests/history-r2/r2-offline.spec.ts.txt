@@ -1,0 +1,84 @@
+import { test,expect } from '@playwright/test';
+import { openOffline } from './offlineApp';
+import { r2At } from './r2Helpers';
+import { parseSave } from '../src/persistence/validateSave';
+import type { SaveV1 } from '../src/state/types';
+import oldEight from './fixtures/r1/eight.json' with {type:'json'};
+import { legacyCloudData } from './legacySave';
+import { readFile } from 'node:fs/promises';
+const key='five-meetings:/:save';
+declare global {interface Window {testCloud:{data:Record<string,string>}}}
+test('note has two presets plus own answer, explicit save, retained draft and full Unicode limit',async({page,context})=>{
+ const save=r2At(6,'c6.r2.note');await openOffline(page,save,'/play/6');
+ await expect(page.locator('.personal-answer-option')).toHaveCount(3);await expect(page.locator('textarea')).toHaveCount(0);
+ await page.locator('.personal-answer-option').first().click();await expect(page.locator('[data-node="c6.r2.note"]')).toBeVisible();await expect(page.getByRole('button',{name:'Сохранить ответ',exact:true})).toBeEnabled();
+ await page.getByRole('button',{name:/Своими словами/}).click();const input=page.locator('#personal-answer');await expect(input).toHaveValue('');
+ await input.fill('Мой собственный <b>ответ</b> 💗');await input.press('Enter');await expect(page.locator('[data-node="c6.r2.note"]')).toBeVisible();
+ await page.locator('.personal-answer-option').nth(1).click();await page.getByRole('button',{name:/Своими словами/}).click();await expect(input).toHaveValue('Мой собственный <b>ответ</b> 💗\n');
+ await expect.poll(()=>page.evaluate(k=>localStorage.getItem(k+':note-draft'),key)).toContain('custom');
+ const draft=(await page.evaluate(k=>localStorage.getItem(k+':note-draft'),key))!;const second=await context.newPage();await openOffline(second,save,'/play/6',{local:{[key+':note-draft']:draft}});await expect(second.locator('#personal-answer')).toHaveValue('Мой собственный <b>ответ</b> 💗\n');await second.close();
+ await input.fill('🙂'.repeat(281));await expect(input).toHaveValue('🙂'.repeat(281));await expect(page.getByRole('button',{name:'Сохранить ответ',exact:true})).toBeDisabled();await expect(page.getByRole('alert')).toContainText('280');
+ await input.fill('Мой собственный <b>ответ</b> 💗');await page.getByRole('button',{name:'Сохранить ответ',exact:true}).dblclick();await expect(page.locator('[data-node="c6.r2.ending"]')).toBeVisible();
+ const restored=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(restored.privateNotes[6]?.campaign?.text).toBe('Мой собственный <b>ответ</b> 💗');
+});
+test('side advisers show one readable portrait while main Vlad remains visible',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await openOffline(page,r2At(7,'c7.r2.aside'),'/play/7');
+ await expect(page.locator('.adviser-council .adviser-portrait')).toHaveCount(1);await expect(page.locator('.adviser-devil')).toBeVisible();await expect(page.locator('.character')).toHaveCSS('opacity','1');
+ const box=await page.locator('.adviser-portrait').boundingBox();expect(box!.width).toBeGreaterThanOrEqual(110);
+ await page.screenshot({path:'test-results/r2-side-adviser-390.png',fullPage:true});
+ await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.adviser-angel')).toBeVisible();await expect(page.locator('.adviser-council .adviser-portrait')).toHaveCount(1);
+ await expect(page.getByText(/Искры вечера|0 из 3|Необязательная миссия/)).toHaveCount(0);
+});
+test('hoodie is a real optional domestic interaction; small screens have no horizontal overflow',async({context})=>{
+ for(const width of [320,390,785,960]){
+  const page=await context.newPage();await page.setViewportSize({width,height:850});
+  await openOffline(page,r2At(8,'c8.r2.hoodie',{choices:{'c8.r2.place':'home'}}),'/play/8');
+  await expect(page.getByRole('heading',{name:'Что сделаешь с худи?'})).toBeVisible();await expect(page.locator('.choices>button')).toHaveCount(3);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.locator('.choices>button').first().click();await expect(page.locator('[data-node="c8.r2.hoodie.borrow"]')).toBeVisible();await page.close();
+ }
+});
+test('quiet overnight shows the new morning and finishes season without chapter11',async({page})=>{
+ const save=r2At(10,'c10.r2.morning',{choices:{'c10.r2.ending':'overnight','c10.r2.confirm.overnight':'quiet'}});await openOffline(page,save,'/play/10');
+ await expect(page.locator('.scene-stage')).toHaveAttribute('aria-label','Дома у Влада · доброе утро');await expect(page.locator('.adviser-council')).toHaveCount(0);
+ await expect.poll(()=>page.locator('.scene-background').evaluate(el=>(el as HTMLImageElement).naturalWidth)).toBe(1400);
+ await expect(page.locator('.character')).toHaveCSS('opacity','1');await page.screenshot({path:'test-results/r2-morning-390.png',fullPage:true,animations:'disabled'});
+ while(await page.locator('[data-node="c10.r2.morning"]').count())await page.getByRole('button',{name:'Дальше',exact:false}).click();
+ await page.getByRole('button',{name:'Для начала мне нужен кофе',exact:false}).click();
+ while(await page.locator('[data-node]').count())await page.getByRole('button',{name:'Дальше',exact:false}).click();
+ await expect(page.getByRole('heading',{name:'До утра',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Сезон «После титров» завершён'})).toBeVisible();
+ await expect(page.getByText(/встреча 11|одиннадцат/)).toHaveCount(0);expect(parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!).campaign.records[10]!.story.c10Affection).toBe('hug');
+});
+test('legacy upgrade preserves original bytes until explicit confirmation and keeps first-five records',async({page})=>{
+ const old=oldEight as unknown as SaveV1;await openOffline(page,old,'/chapters');await expect(page.getByRole('heading',{name:'Сезон обновился'})).toBeVisible();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(JSON.stringify(old));
+ await page.getByRole('button',{name:'Посмотреть первые пять встреч',exact:true}).click();await page.evaluate(()=>{location.hash='/settings';});
+ const downloading=page.waitForEvent('download');await page.getByRole('button',{name:'Скачать копию прогресса',exact:true}).click();const download=await downloading;expect(await readFile((await download.path())!,'utf8')).toBe(JSON.stringify(old));
+ await page.getByRole('button',{name:'К обновлению сезона',exact:true}).click();
+ await page.getByRole('button',{name:'Начать второй сезон заново',exact:true}).click();
+ await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(11);
+ expect(await page.evaluate(k=>localStorage.getItem(k+':legacy-r1'),key)).toBe(JSON.stringify(old));const save=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(save.campaign.active?.chapter).toBe(6);
+ for(const chapter of [1,2,3,4,5] as const)expect(save.campaign.records[chapter]).toEqual(old.campaign.records[chapter]);
+});
+test('Telegram legacy preflight waits for confirmation, then commits through checked cloud head',async({page})=>{
+ const old=oldEight as unknown as SaveV1,data=legacyCloudData(old),head=data.five_meetings_v1_head;await openOffline(page,old,'/chapters',{seedBrowser:false,telegram:{id:42,data}});
+ await expect(page.getByRole('heading',{name:'Сезон обновился'})).toBeVisible();await page.waitForTimeout(900);
+ expect(await page.evaluate(()=>window.testCloud.data.five_meetings_v1_head)).toBe(head);
+ await page.getByRole('button',{name:'Начать второй сезон заново',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>window.testCloud.data.five_meetings_v1_head)).not.toBe(head);
+ const remote=await page.evaluate(()=>{const d=window.testCloud.data,h=JSON.parse(d.five_meetings_v1_head).current;return Array.from({length:h.count},(_,i)=>d[`five_meetings_v1_${h.slot}_${i}`]).join('');});
+ expect(parseSave(remote).campaign.active?.chapter).toBe(6);
+});
+test('a rejected legacy backup write leaves original progress untouched',async({page})=>{
+ const old=oldEight as unknown as SaveV1;await openOffline(page,old,'/chapters');await expect(page.getByRole('heading',{name:'Сезон обновился'})).toBeVisible();
+ await page.evaluate(()=>{const set=localStorage.setItem;localStorage.setItem=(key,value)=>{if(key.includes(':legacy-r1'))throw Error('full');set(key,value);};});
+ await page.getByRole('button',{name:'Начать второй сезон заново',exact:true}).click();await expect(page.getByRole('alert')).toContainText('исходную копию');expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(JSON.stringify(old));
+});
+test('different legacy notes are never silently treated as equal first-five previews',async({page})=>{
+ const local=oldEight as unknown as SaveV1,remote=structuredClone(local);remote.privateNotes[8]!.campaign!.text='Другая сохранённая мысль';
+ const data=legacyCloudData(remote),head=data.five_meetings_v1_head,scoped='five-meetings:/:telegram:our_little_story_game_bot:42:save';
+ await openOffline(page,local,'/chapters',{seedBrowser:false,local:{[scoped]:JSON.stringify(local)},telegram:{id:42,data}});
+ await expect(page.getByRole('heading',{name:'Какую историю продолжить?'})).toBeVisible();expect(await page.evaluate(()=>window.testCloud.data.five_meetings_v1_head)).toBe(head);
+ await page.getByRole('button',{name:/Продолжить из Telegram/}).click();await expect(page.getByRole('heading',{name:'Сезон обновился'})).toBeVisible();await page.getByRole('button',{name:'Начать второй сезон заново',exact:true}).click();
+ await expect.poll(()=>page.evaluate(k=>localStorage.getItem(k+':legacy-r1'),scoped)).toBeTruthy();
+ const original=JSON.parse((await page.evaluate(k=>localStorage.getItem(k+':legacy-r1'),scoped))!);expect(original.privateNotes[8].campaign.text).toBe('Другая сохранённая мысль');
+});

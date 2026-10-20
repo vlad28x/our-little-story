@@ -47,32 +47,32 @@ it('rejects duplicate commands, forged results and inconsistent episode imports'
   let s=sixAt('c6.map');let run=s.campaign.active!;const action=action6(run);s=reduceSave(s,action);expect(reduceSave(s,action)).toBe(s);
   run=s.campaign.active!;expect(step(chapter6,run,{kind:'game-result',expectedTurn:run.turn,result:{kind:'evening-route',mode:'shared',stops:['lights','water']}}).kind).toBe('rejected');
   for(const change of ['spark','bonus','thought','activity']){
-    const bad=structuredClone(s);if(change==='spark')bad.campaign.active!.episode!.sparks.push('c6.spark.moment');if(change==='bonus')bad.campaign.active!.episode!.bonus='c6.bonus.devil';if(change==='thought')bad.campaign.active!.story.c6Contact='none';if(change==='activity')bad.campaign.active!.activity!.selected=['water','water'];expect(()=>parseSave(JSON.stringify(bad))).toThrow();
+    const bad=structuredClone(s);if(change==='spark')bad.campaign.active!.episode!.sparks.push('c6.spark.moment');if(change==='bonus')bad.campaign.active!.episode!.bonus='c6.bonus.devil';if(change==='thought')bad.campaign.active!.story.c6Contact='none';if(change==='activity')(bad.campaign.active!.activity as import('../src/engine/types').RouteDraft).selected=['water','water'];expect(()=>parseSave(JSON.stringify(bad))).toThrow();
   }
 });
-it('saves the final local answer atomically and excludes all text from cloud snapshots',()=>{
+it('saves the confirmed answer atomically and includes it in cloud snapshots',()=>{
   const s=sixAt('c6.note');const run=s.campaign.active!;expect(reduceSave(s,{type:'command',target:'campaign',command:{kind:'note-result',status:'saved',expectedTurn:run.turn},noteText:'   '})).toBe(s);
   const saved=reduceSave(s,{type:'command',target:'campaign',command:{kind:'note-result',status:'saved',expectedTurn:run.turn},noteText:'Мой <b>личный</b> ответ 🧡'});
-  expect(saved.campaign.active!.story.c6Note).toBe('saved');expect(saved.privateNotes.campaign?.text).toContain('<b>');expect(cloudRaw(saved)).not.toContain('личный');expect(JSON.parse(cloudRaw(saved)).privateNotes).toEqual({});expect(parseSave(cloudRaw(saved)).campaign).toEqual(saved.campaign);
+  expect(saved.campaign.active!.story.c6Note).toBe('saved');expect(saved.privateNotes[6]?.campaign?.text).toContain('<b>');expect(cloudRaw(saved)).toContain('личный');expect(JSON.parse(cloudRaw(saved)).privateNotes).toEqual(saved.privateNotes);expect(parseSave(cloudRaw(saved)).campaign).toEqual(saved.campaign);
   expect(preserveLocalNotes(parseSave(cloudRaw(saved)),saved).privateNotes).toEqual(saved.privateNotes);
 });
 it('keeps trial notes and results separate, accumulates bonuses only on completion, and rewrites the proper suffix',()=>{
   const canonical=reduceSave(finishSix(),{type:'continuation',value:'movie'});let trial=startSix(canonical,true);
-  expect(trial.privateNotes.campaign).toEqual(canonical.privateNotes.campaign);expect(reduceSave(trial,{type:'discard-trial'}).collection).toEqual(canonical.collection);
+  expect(trial.privateNotes[6]?.campaign).toEqual(canonical.privateNotes[6]?.campaign);expect(reduceSave(trial,{type:'discard-trial'}).collection).toEqual(canonical.collection);
   const p={...defaultSixth,guide:'angel' as const,ending:'home' as const,note:'Заметка пробного варианта'};
   for(let i=0;i<350&&trial.trial;i++)trial=reduceSave(trial,action6(trial.trial.run,p,'trial'));
-  expect(trial.campaign).toEqual(canonical.campaign);expect(trial.continuation).toBe('movie');expect(trial.privateNotes.campaign).toEqual(canonical.privateNotes.campaign);expect(trial.privateNotes.trial?.text).toBe(p.note);expect(trial.lastResult?.episodeRecord?.story.c6Guide).toBe('angel');expect(trial.collection.bonuses).toEqual(['c6.bonus.devil','c6.bonus.angel']);expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+  expect(trial.campaign).toEqual(canonical.campaign);expect(trial.continuation).toBe('movie');expect(trial.privateNotes[6]?.campaign).toEqual(canonical.privateNotes[6]?.campaign);expect(trial.privateNotes[6]?.trial?.text).toBe(p.note);expect(trial.lastResult?.episodeRecord?.story.c6Guide).toBe('angel');expect(trial.collection.bonuses).toEqual(['c6.bonus.devil','c6.bonus.angel']);expect(parseSave(JSON.stringify(trial))).toEqual(trial);
   const rewritten=reduceSave(trial,{type:'rewrite',chapter:6,attemptId:'rewrite-six'});expect(rewritten.campaign.completed).toEqual([1,2,3,4,5]);expect(rewritten.continuation).toBe('movie');expect(rewritten.privateNotes).toEqual({});expect(parseSave(JSON.stringify(rewritten))).toEqual(rewritten);
   const fromThree=reduceSave(trial,{type:'rewrite',chapter:3});expect(fromThree.campaign.records[6]).toBeUndefined();expect(fromThree.continuation).toBeNull();expect(fromThree.privateNotes).toEqual({});
 });
 it('edits/deletes notes locally without mutating story, cloud revision, or a different attempt',()=>{
   const main=finishSix();const id=main.campaign.records[6]!.attemptId!;const edited=reduceSave(main,{type:'note-edit',target:'campaign',attemptId:id,text:'Другой ответ'});
-  expect(edited.revision).toBe(main.revision);expect(edited.localNoteRevision).toBe(main.localNoteRevision+1);expect(edited.campaign).toEqual(main.campaign);expect(cloudRaw(edited)).toBe(cloudRaw(main));
-  const deleted=reduceSave(edited,{type:'note-edit',target:'campaign',attemptId:id,remove:true});expect(deleted.privateNotes.campaign).toMatchObject({status:'deleted',text:''});expect(parseSave(JSON.stringify(deleted))).toEqual(deleted);expect(reduceSave(main,{type:'note-edit',target:'campaign',attemptId:'wrong',text:'hello'})).toBe(main);
+  expect(edited.revision).toBe(main.revision);expect(edited.localNoteRevision).toBe(main.localNoteRevision+1);expect(edited.campaign).toEqual(main.campaign);expect(cloudRaw(edited)).not.toBe(cloudRaw(main));
+  const deleted=reduceSave(edited,{type:'note-edit',target:'campaign',attemptId:id,remove:true});expect(deleted.privateNotes[6]?.campaign).toMatchObject({status:'deleted',text:''});expect(parseSave(JSON.stringify(deleted))).toEqual(deleted);expect(reduceSave(main,{type:'note-edit',target:'campaign',attemptId:'wrong',text:'hello'})).toBe(main);
   const storage=new MemoryStorage();expect(persist(storage,main,0,'t:save')).toBe('saved');expect(persist(storage,edited,main.revision,'t:save',main.localNoteRevision)).toBe('saved');expect(load(storage,'t:save').save).toEqual(edited);expect(persist(storage,main,main.revision,'t:save',main.localNoteRevision)).toBe('conflict');
 });
 it('bounds Unicode answers, rejects oversized import, and restores only the matching local draft',()=>{
-  expect(noteLength('😈'.repeat(280))).toBe(280);expect(normalizeNote('e\u0301\r\n\u0000Привет')).toBe('é\nПривет');const s=finishSix();s.privateNotes.campaign!.text='😈'.repeat(280);expect(parseSave(JSON.stringify(s)).privateNotes.campaign!.text).toHaveLength(560);s.privateNotes.campaign!.text+='😈';expect(()=>parseSave(JSON.stringify(s))).toThrow();
+  expect(noteLength('😈'.repeat(280))).toBe(280);expect(normalizeNote('e\u0301\r\n\u0000Привет')).toBe('é\nПривет');const s=finishSix();s.privateNotes[6]!.campaign!.text='😈'.repeat(280);expect(parseSave(JSON.stringify(s)).privateNotes[6]!.campaign!.text).toHaveLength(560);s.privateNotes[6]!.campaign!.text+='😈';expect(()=>parseSave(JSON.stringify(s))).toThrow();
   const storage=new MemoryStorage();writeNoteDraft(storage,'s',{attemptId:'campaign-six',questionId:'s2.q6',text:'Черновик'});expect(readNoteDraft(storage,'s','campaign-six')).toBe('Черновик');expect(readNoteDraft(storage,'s','trial-six')).toBe('');clearFinishedDraft(storage,'s',sixAt('c6.note'));expect(readNoteDraft(storage,'s','campaign-six')).toBe('Черновик');clearFinishedDraft(storage,'s',finishSix());expect(storage.getItem('s:note-draft')).toBeNull();
 });
 

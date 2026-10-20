@@ -1,0 +1,8 @@
+import {it} from 'vitest';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {finishR2,r2At} from './r2Helpers';
+it('capture synthetic R2 before replacing graphs',()=>{
+ mkdirSync('tests/fixtures/r2',{recursive:true});
+ for(const c of [6,7,8,9,10] as const)writeFileSync(`tests/fixtures/r2/${c}.json`,JSON.stringify(finishR2(c,{note:'Сохранённый ответ R2'})));
+ writeFileSync('tests/fixtures/r2/active8.json',JSON.stringify(r2At(8,'c8.r2.note')));
+});

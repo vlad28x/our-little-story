@@ -26,15 +26,20 @@ it('accepts each local continuation only after the canonical ending and keeps it
   for(const value of ['game','movie','cafe','walk','decline','public','chat','later'] as const){const s=reduceSave(main,{type:'continuation',value});expect(s.campaign).toEqual(main.campaign);expect(s.collection).toEqual(main.collection);expect(parseSave(JSON.stringify(s)).continuation).toBe(value);expect(reduceSave(s,{type:'continuation',value})).toBe(s);}
   expect(continuationOptions.map(o=>o.value)).toEqual(['game','movie','cafe','walk','decline']);
   const drafts=['game','movie','cafe','walk'].map(value=>continuationDraft(value as 'game'|'movie'|'cafe'|'walk'));expect(new Set(drafts).size).toBe(4);for(const draft of drafts)expect(draft).toContain('свидание');
-  const trial=startFive(main,true);expect(reduceSave(trial,{type:'continuation',value:'game'})).toBe(trial);expect(continuationDraft('decline')).toBe('');expect(continuationDraft('later')).toBe('');expect(continuationDraft(null)).toBe('');expect(Object.keys(invitationEcho).sort()).toEqual(['absurd','help','tease']);
+  const trial=startFive(main,true);expect(reduceSave(trial,{type:'continuation',value:'game'})).toBe(trial);expect(continuationDraft('decline')).toBe('Спасибо за историю 😊 Пока воздержусь от встречи, но было приятно пройти её.');expect(continuationDraft('later')).toBe('');expect(continuationDraft(null)).toBe('');expect(Object.keys(invitationEcho).sort()).toEqual(['absurd','help','tease']);
 });
 it('uses canonical chapter memories and makes all callback variants readable',()=>{
   const base=finishFour().campaign.records[4]!.story;
   for(const plan of ['tea','banter','coop'] as const)for(const result of ['feast','snack','chaos','skipped'] as const){const story={...base,plan,kitchenResult:result};const text=memoriesFor(story).flatMap(m=>m.lines.map(l=>l.text)).join(' ');expect(text.length).toBeGreaterThan(150);expect(text).not.toContain('undefined');expect(text).not.toContain('батарей');}
   const friendly=chapter5.nodes['c5.tone.friendly'];expect(friendly.kind).toBe('choice');if(friendly.kind==='choice'){expect(friendly.choices).toHaveLength(4);expect(friendly.choices[0].text).toBe('Кажется, сейчас я хочу попробовать свидание');}
 });
-it('migrates active, trial and completed fourth-chapter saves at each cursor',()=>{
-  for(const trial of [false,true]){let s=trial?startFour(finishFour(),true):startFour();for(let i=0;i<180;i++){expect(parseSave(JSON.stringify(legacyContent(s,4)))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command4(r)});}}
+it('migrates old fourth-chapter cursors and refuses new goodbye scenes mislabeled as the old format',()=>{
+  for(const trial of [false,true]){let s=trial?startFour(finishFour(),true):startFour();for(let i=0;i<180;i++){
+    expect(parseSave(JSON.stringify(s))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;
+    if(r?.nodeId.startsWith('c4.goodbye'))expect(()=>parseSave(JSON.stringify(legacyContent(s,4)))).toThrow();
+    else expect(parseSave(JSON.stringify(legacyContent(s,4)))).toEqual(s);
+    if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command4(r)});
+  }}
   expect(()=>parseSave(JSON.stringify(legacyContent(finishFive(),4)))).toThrow();
 });
 it('keeps the final and continuation through trial; rewrite clears only the required suffix and preference',()=>{
@@ -49,6 +54,6 @@ it('requires the fifth code and four previous endings and rejects fake results o
 });
 
 it('leads every ending into the same five meeting choices and gives a respectful distinct response',()=>{
-  for(const ending of ['romantic','comic','gaming','friendly'] as const){const pages=invitationConversation({ending,controllerReaction:'help'});expect(pages).toHaveLength(3);expect(pages.flat().join(' ')).toContain('настоящую встречу');expect(pages[1].join(' ')).toContain('проверил оба');expect(pages[2].join(' ')).toContain('отказаться');}
-  expect(new Set(Object.values(invitationReplies).map(r=>r.vlad)).size).toBe(5);expect(invitationReplies.decline.vlad).toBe('понял. спасибо, что сказала прямо. ничего объяснять не нужно.');
+  for(const ending of ['romantic','comic','gaming','friendly'] as const){const pages=invitationConversation({ending,controllerReaction:'help'});expect(pages).toHaveLength(3);expect(pages.flat().join(' ')).toContain('настоящую встречу');expect(pages[1].join(' ')).toContain('проверил оба');expect(pages[2].join(' ')).toContain('воздержаться');}
+  expect(new Set(Object.values(invitationReplies).map(r=>r.vlad)).size).toBe(5);expect(invitationReplies.decline.vlad).toBe('хорошо, не торопимся. спасибо, что прошла эту историю.');
 });

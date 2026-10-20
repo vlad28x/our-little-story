@@ -1,0 +1,77 @@
+import { it,expect } from 'vitest';
+import { finishR2,r2At,r2Action,type R2Path } from './r2Helpers';
+import { parseSave } from '../src/persistence/validateSave';
+import { reduceSave } from '../src/state/reducer';
+import { getChapter } from '../src/content/chapters';
+import { resolveScene } from '../src/engine/step';
+import { cardBackground } from '../src/content/cards';
+import type { DessertResult,MovieSetupResult } from '../src/engine/types';
+it('dance and optional hoodie work for all eighth-chapter venues, gestures and endings',()=>{
+ const base=finishR2(7);const cards=new Set<string>();
+ for(const place of ['home','cafe'])for(const dance of ['close','lead','playful'])for(const tender of place==='home'?['curls','hair','cheek','neck','dance']:['curls','hair','cheek','dance'])for(const hoodie of place==='home'?['borrow','evening','none']:['none'])for(const ending of ['her','ask','near','tea']){
+  const save=finishR2(8,{choices:{'c8.r2.place':place,'c8.r2.dance':dance,'c8.r2.tender':tender,'c8.r2.hoodie':hoodie,'c8.r2.ending':ending}},base);
+  expect(parseSave(JSON.stringify(save))).toEqual(save);const record=save.campaign.records[8]!;
+  expect(record.story.c8Dance).toBe(dance);expect(record.story.c8Tender).toBe(tender);cards.add(record.cardId);
+  expect(record.story.c8Hoodie).toBe(place==='cafe'?undefined:hoodie==='borrow'?'borrowed':hoodie);
+ }
+ expect(cards.size).toBe(3);
+},30000);
+it('hoodie callbacks come only from canonical borrowed, and trial does not rewrite it',()=>{
+ const base=finishR2(7);
+ for(const hoodie of ['borrow','evening','none']){
+  const eight=finishR2(8,{choices:{'c8.r2.place':'home','c8.r2.hoodie':hoodie}},base);
+  for(const place of ['home','courtyard'])for(const response of ['return','keep']){
+   const nine=finishR2(9,{choices:{'c9.r2.place':place,'c9.r2.hoodie':response}},eight);
+   expect(parseSave(JSON.stringify(nine))).toEqual(nine);expect(nine.campaign.records[9]!.story.c9Hoodie).toBe(hoodie==='borrow'?(response==='return'?'returned':'kept'):undefined);
+  }
+  const trial=finishR2(8,{choices:{'c8.r2.place':'home','c8.r2.hoodie':hoodie==='borrow'?'none':'borrow'}},eight,true);
+  expect(trial.campaign.records[8]).toEqual(eight.campaign.records[8]);
+ }
+});
+it('all four final intentions work after a calm season, including first kiss and quiet overnight',()=>{
+ const base=finishR2(9),cards=new Set<string>();
+ for(const place of ['home','terrace'])for(const ending of ['goodnight','stay','private','overnight'])for(const affection of ['her','ask','quiet','leave'])for(const morning of ['hug','breakfast','coffee']){
+  const p:R2Path={choices:{'c10.r2.place':place,'c10.r2.ending':ending,'c10.r2.move':'home','c10.r2.confirm.private':affection,'c10.r2.confirm.overnight':affection,'c10.r2.morning.choice':morning}};
+  const save=finishR2(10,p,base);expect(parseSave(JSON.stringify(save))).toEqual(save);
+  const record=save.campaign.records[10]!;cards.add(record.cardId);
+  if(record.story.c10Ending==='private'||record.story.c10Ending==='overnight')expect(record.story.c10Venue).toBe('home');
+  if(record.story.c10Ending==='overnight'){expect(record.story.c10Morning).toBe(morning);expect(cardBackground(save.collection.cards.find(c=>c.id==='c10.overnight')!)).toBe('bg.s2.kitchen.morning');}
+ }
+ expect(cards.size).toBe(4);
+});
+it('every completed mini-game and own word round-trip at each checkpoint; notes remain independent',()=>{
+ let base=finishR2(7);
+ base=finishR2(8,{check:true,choices:{'c8.r2.place':'home','c8.r2.word':'custom','c8.r2.tender':'neck','c8.r2.ending':'ask'},word:'Тёплая пауза',note:'Моя мысль',results:{dessert:{kind:'dessert',mode:'completed',topping:'chocolate',mark:'heart'}}},base);
+ const nine=finishR2(9,{check:true,choices:{'c9.r2.distraction':'shoulder','c9.r2.ending':'ask'},results:{'movie-setup':{kind:'movie-setup',mode:'completed',seat:'near',light:'dim',drink:'cocoa'}}},base);
+ const ten=finishR2(10,{check:true,choices:{'c10.r2.ending':'overnight','c10.r2.confirm.overnight':'quiet','c10.r2.morning.choice':'coffee'},results:{'evening-light':{kind:'evening-light',level:'dim'}}},nine);
+ expect(ten.campaign.records[10]!.story.c10Affection).toBe('hug');expect(ten.privateWords.campaign?.text).toBe('Тёплая пауза');
+});
+it('rejects forged hidden actions, optional fields and chapter11',()=>{
+ const eight=finishR2(8);const neck=structuredClone(eight);neck.campaign.records[8]!.story.c8Tender='neck';expect(()=>parseSave(JSON.stringify(neck))).toThrow();
+ const seven=finishR2(7);seven.campaign.records[7]!.story.c7Reply='hand';expect(()=>parseSave(JSON.stringify(seven))).toThrow();
+ const ten=finishR2(10);ten.campaign.records[10]!.story.c10Morning='hug';expect(()=>parseSave(JSON.stringify(ten))).toThrow();
+ expect(()=>parseSave(JSON.stringify({...eight,unlocked:[...eight.unlocked,11]}))).toThrow();
+});
+it('morning scenes resolve the registered background and fade only on authored nodes',()=>{
+ let save=r2At(10,'c10.r2.morning',{choices:{'c10.r2.ending':'overnight','c10.r2.confirm.overnight':'quiet'}});
+ const run=save.campaign.active!,node=getChapter(10)!.nodes[run.nodeId];expect(node.kind).toBe('dialogue');if(node.kind==='dialogue')expect(resolveScene(node.scene,run.story).background).toBe('bg.s2.kitchen.morning');
+ save=reduceSave(save,r2Action(run));expect(parseSave(JSON.stringify(save))).toEqual(save);
+});
+it('all11 dessert,14 movie and3 light results restore through the live R2 validator',()=>{
+ const seven=finishR2(7),desserts:DessertResult[]=[{kind:'dessert',mode:'shared',topping:'berry',mark:'star'},{kind:'dessert',mode:'skipped',topping:null,mark:null}];
+ for(const topping of ['berry','chocolate','honey'] as const)for(const mark of ['star','heart','swirl'] as const)desserts.push({kind:'dessert',mode:'completed',topping,mark});
+ for(const dessert of desserts){const s=finishR2(8,{check:true,results:{dessert}},seven);expect(s.campaign.records[8]!.results.dessert).toEqual(dessert);}
+ const eight=finishR2(8,{},seven),movies:MovieSetupResult[]=[{kind:'movie-setup',mode:'shared',seat:'space',light:'warm',drink:'tea'},{kind:'movie-setup',mode:'skipped',seat:null,light:null,drink:null}];
+ for(const seat of ['near','space'] as const)for(const light of ['warm','dim'] as const)for(const drink of ['tea','cocoa','water'] as const)movies.push({kind:'movie-setup',mode:'completed',seat,light,drink});
+ for(const movie of movies){const s=finishR2(9,{check:true,results:{'movie-setup':movie}},eight);expect(s.campaign.records[9]!.results['movie-setup']).toEqual(movie);}
+ const nine=finishR2(9,{},eight);
+ for(const level of ['warm','dim','unchanged'] as const){const s=finishR2(10,{check:true,results:{'evening-light':{kind:'evening-light',level}}},nine);expect(s.campaign.records[10]!.results['evening-light']?.level).toBe(level);}
+});
+it('first and repeated kisses follow the canonical past rather than trial outcomes',()=>{
+ const seven=finishR2(7),quiet=finishR2(8,{},seven),kissed=finishR2(8,{choices:{'c8.r2.ending':'her'}},seven);
+ expect(r2At(9,'c9.r2.kiss.first',{choices:{'c9.r2.ending':'ask'}},quiet).campaign.active?.nodeId).toBe('c9.r2.kiss.first');
+ expect(r2At(9,'c9.r2.kiss.again',{choices:{'c9.r2.ending':'ask'}},kissed).campaign.active?.nodeId).toBe('c9.r2.kiss.again');
+ const trial=finishR2(8,{choices:{'c8.r2.ending':'her'}},quiet,true);
+ expect(r2At(9,'c9.r2.kiss.first',{choices:{'c9.r2.ending':'her'}},trial).campaign.active?.nodeId).toBe('c9.r2.kiss.first');
+ const nine=finishR2(9,{},quiet);expect(r2At(10,'c10.r2.kiss.first',{choices:{'c10.r2.ending':'private','c10.r2.confirm.private':'ask'}},nine).campaign.active?.nodeId).toBe('c10.r2.kiss.first');
+});

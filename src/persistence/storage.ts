@@ -1,6 +1,6 @@
 import { initialState } from '../state/initialState';
 import type { SaveV1 } from '../state/types';
-import { parseSave } from './validateSave';
+import { parseSave,legacySource } from './validateSave';
 export type StorageLike=Pick<Storage,'getItem'|'setItem'|'removeItem'>;
 export const storageKey=`five-meetings:${import.meta.env.BASE_URL}:save`;
 export const backupKey=`five-meetings:${import.meta.env.BASE_URL}:backup`;
@@ -24,7 +24,9 @@ export function load(storage:StorageLike, key=storageKey):Loaded {
   }
 }
 export function persist(storage:StorageLike,save:SaveV1,expectedRevision:number,key=storageKey,expectedLocalNoteRevision?:number):'saved'|'conflict' {
-  const raw=JSON.stringify(parseSave(JSON.stringify(save)));
+  const normalized=parseSave(JSON.stringify(save));
+  if(legacySource(save)||legacySource(normalized))throw Error('Сначала подтверди обновление второго сезона. Исходная копия не изменена.');
+  const raw=JSON.stringify(normalized);
   const old=storage.getItem(key);let previous:SaveV1|null=null;
   try {if(old)previous=parseSave(old);}catch{/* Do not rotate corrupt data into backup. */}
   if(previous&&previous.revision!==expectedRevision)return 'conflict';

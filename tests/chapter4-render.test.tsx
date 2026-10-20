@@ -14,7 +14,7 @@ it('renders every visible chapter-four node and the preset result without missin
   const visited=new Set<string>();
   for(const team of ['dumpling','calm','accident'] as const)for(const shape of ['cat','controllers','teapot'] as const)for(const bond of ['friendly','romantic','undecided'] as const){
     let s=startFour(finishThree(completeTwo(),{...defaultThird,team,after:team==='calm'?'team':'rematch'}));
-    const path={...defaultFourth,bench:bond==='friendly'?'space' as const:'near' as const,bond,result:{kind:'constellation' as const,outcome:shape,usedPreset:false},wish:shape==='cat'?'adventure' as const:'calm' as const};
+    const path={...defaultFourth,bench:bond==='friendly'?'space' as const:'near' as const,bond,result:{kind:'constellation' as const,outcome:shape,usedPreset:false},wish:shape==='cat'?'adventure' as const:'calm' as const,goodbye:shape==='cat'?'accept' as const:shape==='controllers'?'her' as const:'none' as const};
     for(let i=0;i<180;i++){const r=s.campaign.active;if(!r)break;if(!visited.has(r.nodeId)){context.save=s;const html=renderToString(<App/>);expect(html).toContain(r.nodeId);expect(html).toContain('game-shell');visited.add(r.nodeId);}s=reduceSave(s,{type:'command',target:'campaign',command:command4(r,path)});}
   }
   expect([...visited].sort()).toEqual(Object.values(chapter4.nodes).filter(n=>n.kind!=='route'&&n.kind!=='end').map(n=>n.id).sort());

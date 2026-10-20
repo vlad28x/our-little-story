@@ -1,0 +1,19 @@
+import { test,expect } from '@playwright/test';
+import { r2At,finishR2 } from './r2Helpers';
+import type { EpisodeChapter } from '../src/engine/types';
+const base=process.env.VITE_BASE_PATH||'/',key=`five-meetings:${base}:save`;
+test('production base serves new chapters, side portrait, notes and morning art with no console errors',async({context})=>{
+ const scenes:[EpisodeChapter,string,Parameters<typeof r2At>[2]][]=[[6,'c6.r2.note',{}],[7,'c7.r2.aside',{}],[8,'c8.r2.hoodie', {choices:{'c8.r2.place':'home'}}],[9,'c9.r2.setup',{}],[10,'c10.r2.morning',{choices:{'c10.r2.ending':'overnight','c10.r2.confirm.overnight':'quiet'}}]];
+ for(const [chapter,node,path] of scenes){
+  const page=await context.newPage(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));const save=r2At(chapter,node,path);
+  await page.addInitScript(({key,raw})=>{if(window.name!=='r2-fixture'){localStorage.setItem(key,raw);window.name='r2-fixture';}},{key,raw:JSON.stringify(save)});
+  await page.goto(`./#/play/${chapter}`);await expect(page.locator(`[data-node="${node}"]`)).toBeVisible();
+  await expect.poll(()=>page.locator('.scene-background').evaluate(el=>(el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);await expect(page.locator('.art-error')).toHaveCount(0);
+  await page.reload();await expect(page.locator(`[data-node="${node}"]`)).toBeVisible();expect(errors).toEqual([]);await page.close();
+ }
+});
+test('overnight postcard is served from the configured base and no next season is offered',async({page})=>{
+ const save=finishR2(10,{choices:{'c10.r2.ending':'overnight','c10.r2.confirm.overnight':'quiet','c10.r2.morning.choice':'coffee'}});
+ await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);},{key,raw:JSON.stringify(save)});
+ await page.goto('./#/result/10?source=campaign');await expect(page.getByRole('heading',{name:'До утра',exact:true})).toBeVisible();await expect(page.locator('.postcard-art')).toHaveCSS('background-image',/s2-kitchen-morning.webp/);await expect(page.getByRole('button',{name:/К следующей встрече/})).toHaveCount(0);
+});

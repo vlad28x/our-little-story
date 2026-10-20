@@ -1,0 +1,47 @@
+import { it,expect } from 'vitest';
+import { finishR2,priorR2 } from './r2Helpers';
+import { legacySource,parseSave } from '../src/persistence/validateSave';
+import legacyEight from './fixtures/r1/eight.json' with {type:'json'};
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { getChapter } from '../src/content/chapters';
+import type { EpisodeChapter,NodeId,Line } from '../src/engine/types';
+import { memoryRegistry,secretRegistry } from '../src/content/season2';
+import { validateContent } from '../src/engine/validateContent';
+import { parseSave as parseLegacySave } from '../src/legacy/r1/persistence/validateSave';
+import { persist } from '../src/persistence/storage';
+import { TelegramCloud } from '../src/telegram/cloud';
+it('R2 completes every chapter and round-trips every visible checkpoint',()=>{
+ let save=priorR2();
+ for(const chapter of [6,7,8,9,10] as const){save=finishR2(chapter,{check:true,note:'Моя мысль 🌙'},save);expect(save.campaign.records[chapter]?.scriptRevision).toBe(2);}
+ expect(save.contentVersion).toBe(11);expect(save.collection.memories).toHaveLength(5);expect(save.collection.secrets).toHaveLength(5);
+});
+it('all211 nodes and467 main lines match the approved draft exactly',()=>{
+ const author=JSON.parse(readFileSync('outputs/SEASON_02_REWORK_CONTENT.json','utf8')) as {chapters:{id:EpisodeChapter;nodes:Record<NodeId,{kind:string;lines?:Line[]}>}[]};let nodes=0,lines=0;
+ for(const ch of author.chapters){const live=getChapter(ch.id)!;expect(validateContent(live)).toEqual([]);expect(Object.keys(live.nodes)).toEqual(Object.keys(ch.nodes));
+  for(const [id,n]of Object.entries(ch.nodes)){const node=live.nodes[id as NodeId];expect(node.kind).toBe(n.kind);if(node.kind==='dialogue'){expect(node.lines).toEqual(n.lines);lines+=node.lines.length;}nodes++;}
+ }
+ expect(nodes).toBe(211);expect(lines).toBe(467);expect(Object.keys(memoryRegistry)).toHaveLength(19);expect(Object.keys(secretRegistry)).toHaveLength(5);
+});
+it('first-five chapter source files remain byte-for-byte unchanged',()=>{
+ const hashes=JSON.parse(readFileSync('tests/fixtures/r1/first-five-hashes.json','utf8')) as Record<string,string>;
+ for(const [path,hash]of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(path)).digest('hex')).toBe(hash);
+});
+it('frozen R1 parser still validates every golden snapshot and never interprets them as R2',()=>{
+ for(const name of ['firstFive','six','seven','eight','nine','ten','activeEight']){
+  const raw=readFileSync(`tests/fixtures/r1/${name}.json`,'utf8'),old=JSON.parse(raw);expect(parseLegacySave(raw)).toEqual(old);const preview=parseSave(raw);
+  expect(legacySource(preview)!==null).toBe(name!=='firstFive');
+  for(const chapter of [1,2,3,4,5] as const)expect(preview.campaign.records[chapter]).toEqual(old.campaign.records[chapter]);
+ }
+});
+it('device and cloud writers independently reject an unconfirmed legacy preview',async()=>{
+ const preview=parseSave(JSON.stringify(legacyEight));let writes=0;const storage={getItem:()=>JSON.stringify(legacyEight),setItem:()=>{writes++;},removeItem:()=>{writes++;}};
+ expect(()=>persist(storage,preview,preview.revision,'test')).toThrow('обновление');expect(writes).toBe(0);
+ const cloud=new TelegramCloud({getItem(_key,done){done(null,'');},getItems(_keys,done){done(null,{});},setItem(_key,_value,done){writes++;done(null,true);}});
+ await expect(cloud.write(preview,'')).rejects.toThrow('обновление');expect(writes).toBe(0);
+});
+it('legacy second season is a read-only preview with its exact original source',()=>{
+ const raw=JSON.stringify(legacyEight),preview=parseSave(raw);
+ expect(legacySource(preview)).toBe(raw);expect(preview.campaign.completed).toEqual([1,2,3,4,5]);
+ for(const chapter of [1,2,3,4,5] as const)expect(preview.campaign.records[chapter]).toEqual(legacyEight.campaign.records[chapter]);
+});

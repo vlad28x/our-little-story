@@ -1,0 +1,15 @@
+import { test,expect } from 'vitest';
+import { writeFileSync,mkdirSync } from 'node:fs';
+import { finishArc,arcAt } from './finalArcHelpers';
+import { finishSix } from './chapter6Helpers';
+import { finishFive } from './chapter5Helpers';
+import { finishSeven } from './chapter7Helpers';
+import { parseSave } from '../src/persistence/validateSave';
+test('capture pre-R2 real engine save fixtures',()=>{
+ const saves={firstFive:finishFive(),six:finishSix(),seven:finishSeven(),eight:finishArc(8),nine:finishArc(9),ten:finishArc(10),activeEight:arcAt(8,'c8.dance')};
+ mkdirSync('tests/fixtures/r1',{recursive:true});
+ for(const [name,save]of Object.entries(saves)){
+  expect(parseSave(JSON.stringify(save)).campaign.completed).toEqual(save.campaign.completed);
+  writeFileSync(`tests/fixtures/r1/${name}.json`,JSON.stringify(save,null,2)+'\n');
+ }
+});

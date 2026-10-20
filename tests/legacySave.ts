@@ -7,8 +7,9 @@ import { createHash } from 'node:crypto';
 // fields that the old client never wrote, and should be rejected by validation.
 export function legacyContent(save:SaveV1,version:number):SaveV1{
   const legacy=structuredClone(save) as unknown as Record<string,unknown>;
-  delete legacy.privateNotes;delete legacy.localNoteRevision;
+  delete legacy.privateWords;delete legacy.privateNotes;delete legacy.localNoteRevision;
   delete (legacy.collection as Record<string,unknown>).bonuses;legacy.contentVersion=version;
+  delete (legacy.collection as Record<string,unknown>).memories;delete (legacy.collection as Record<string,unknown>).secrets;
   return legacy as unknown as SaveV1;
 }
 

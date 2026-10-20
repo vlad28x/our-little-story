@@ -1,0 +1,13 @@
+import { chapters } from '../src/content/chapters/manifest';
+import type { CouncilResult,Run,StoryState } from '../src/engine/types';
+import type { SaveV1 } from '../src/state/types';
+import { finishSix } from './chapter6Helpers';
+import { r2Action,startR2,finishR2,r2At,type R2Path } from './r2Helpers';
+export const seventhCode=chapters.find(c=>c.id===7)!.code!;
+export type SeventhPath={guide:'angel'|'devil'|'none';thought:'curious'|'playful'|'steady';distance:'arm'|'near'|'space';gesture?:StoryState['c7Moment'];ending:NonNullable<StoryState['c7Ending']>;result:CouncilResult;bonus:boolean;note?:string};
+export const defaultSeventh:SeventhPath={guide:'angel',thought:'curious',distance:'arm',ending:'open',result:{kind:'between-lines',outcome:'completed',answers:['question','invite','direct']},bonus:true,note:'Мой личный вопрос седьмого вечера'};
+function path(p:SeventhPath):R2Path{return {choices:{'c7.r2.aside.reply':'ignore','c7.r2.gesture':p.gesture??(p.distance==='arm'?'collar':p.distance==='near'?'near':'space'),'c7.r2.flustered':'kind','c7.r2.ending':p.ending},note:p.note,results:{'between-lines':p.result}};}
+export function action7(r:Run,p=defaultSeventh,target:'campaign'|'trial'='campaign'){return r2Action(r,path(p),target);}
+export function startSeven(base=finishSix(),trial=false){return startR2(7,base,trial);}
+export function finishSeven(base=finishSix(),p=defaultSeventh,trial=false){return finishR2(7,path(p),base,trial);}
+export function sevenAt(id:string,p=defaultSeventh,base?:SaveV1){return r2At(7,id.replace('c7.','c7.r2.').replace('.council','.game').replace('.distance','.gesture'),path(p),base??finishSix());}

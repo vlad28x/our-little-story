@@ -1,0 +1,1660 @@
+{
+  "active": [
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 222,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.bond",
+          "lineIndex": 0,
+          "turn": 32,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 237,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 0,
+          "turn": 47,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 238,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 1,
+          "turn": 48,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 239,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 2,
+          "turn": 49,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 240,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 3,
+          "turn": 50,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 241,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 4,
+          "turn": 51,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    },
+    {
+      "appId": "five-meetings",
+      "schemaVersion": 1,
+      "contentVersion": 12,
+      "revision": 242,
+      "updatedAt": "2026-10-20T20:00:00.000Z",
+      "settings": {
+        "sound": false,
+        "volume": 0.25,
+        "textMode": "instant",
+        "motion": "system"
+      },
+      "unlocked": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "campaign": {
+        "completed": [
+          1,
+          2,
+          3
+        ],
+        "startStates": {
+          "1": {},
+          "2": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "3": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "4": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          }
+        },
+        "records": {
+          "1": {
+            "endingId": "c1.tea",
+            "cardId": "c1.tea",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea"
+            },
+            "results": {
+              "token-search": {
+                "kind": "token-search",
+                "outcome": "skipped",
+                "catNoticed": false
+              }
+            }
+          },
+          "2": {
+            "endingId": "c2.shelter",
+            "cardId": "c2.shelter",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet"
+            },
+            "results": {
+              "umbrella-patch": {
+                "kind": "umbrella-patch",
+                "outcome": "patched"
+              }
+            }
+          },
+          "3": {
+            "endingId": "c3.dinner",
+            "cardId": "c3.dinner",
+            "story": {
+              "approach": "space",
+              "searchResult": "skipped",
+              "catNoticed": false,
+              "pace": "quiet",
+              "plan": "tea",
+              "rainRoute": "shelter",
+              "catApproach": "wait",
+              "umbrella": "patched",
+              "eveningMood": "quiet",
+              "controllerReaction": "help",
+              "teamName": "calm",
+              "kitchenStyle": "planner",
+              "kitchenResult": "feast",
+              "gameAftercare": "team"
+            },
+            "results": {
+              "kitchen": {
+                "kind": "kitchen",
+                "outcome": "feast",
+                "served": 9,
+                "mode": "calm"
+              }
+            }
+          }
+        },
+        "active": {
+          "chapter": 4,
+          "nodeId": "c4.end",
+          "lineIndex": 5,
+          "turn": 52,
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          },
+          "earned": [
+            "own-sky"
+          ]
+        }
+      },
+      "trial": null,
+      "lastResult": null,
+      "collection": {
+        "cards": [
+          {
+            "id": "c1.tea",
+            "chapter": 1,
+            "endingId": "c1.tea",
+            "variant": "skipped",
+            "captionId": "c1.tea.skipped"
+          },
+          {
+            "id": "c2.shelter",
+            "chapter": 2,
+            "endingId": "c2.shelter",
+            "variant": "patched",
+            "captionId": "c2.shelter.patched"
+          },
+          {
+            "id": "c3.dinner",
+            "chapter": 3,
+            "endingId": "c3.dinner",
+            "variant": "feast",
+            "captionId": "c3.dinner.feast",
+            "teamName": "calm"
+          }
+        ],
+        "achievements": [
+          "dry-plan",
+          "full-table"
+        ],
+        "memories": [],
+        "secrets": []
+      },
+      "privateNotes": {},
+      "privateWords": {},
+      "localNoteRevision": 0,
+      "continuation": null
+    }
+  ],
+  "completed": {
+    "appId": "five-meetings",
+    "schemaVersion": 1,
+    "contentVersion": 12,
+    "revision": 243,
+    "updatedAt": "2026-10-20T20:00:00.000Z",
+    "settings": {
+      "sound": false,
+      "volume": 0.25,
+      "textMode": "instant",
+      "motion": "system"
+    },
+    "unlocked": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "campaign": {
+      "completed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "startStates": {
+        "1": {},
+        "2": {
+          "approach": "space",
+          "searchResult": "skipped",
+          "catNoticed": false,
+          "pace": "quiet",
+          "plan": "tea"
+        },
+        "3": {
+          "approach": "space",
+          "searchResult": "skipped",
+          "catNoticed": false,
+          "pace": "quiet",
+          "plan": "tea",
+          "rainRoute": "shelter",
+          "catApproach": "wait",
+          "umbrella": "patched",
+          "eveningMood": "quiet"
+        },
+        "4": {
+          "approach": "space",
+          "searchResult": "skipped",
+          "catNoticed": false,
+          "pace": "quiet",
+          "plan": "tea",
+          "rainRoute": "shelter",
+          "catApproach": "wait",
+          "umbrella": "patched",
+          "eveningMood": "quiet",
+          "controllerReaction": "help",
+          "teamName": "calm",
+          "kitchenStyle": "planner",
+          "kitchenResult": "feast",
+          "gameAftercare": "team"
+        }
+      },
+      "records": {
+        "1": {
+          "endingId": "c1.tea",
+          "cardId": "c1.tea",
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea"
+          },
+          "results": {
+            "token-search": {
+              "kind": "token-search",
+              "outcome": "skipped",
+              "catNoticed": false
+            }
+          }
+        },
+        "2": {
+          "endingId": "c2.shelter",
+          "cardId": "c2.shelter",
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet"
+          },
+          "results": {
+            "umbrella-patch": {
+              "kind": "umbrella-patch",
+              "outcome": "patched"
+            }
+          }
+        },
+        "3": {
+          "endingId": "c3.dinner",
+          "cardId": "c3.dinner",
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team"
+          },
+          "results": {
+            "kitchen": {
+              "kind": "kitchen",
+              "outcome": "feast",
+              "served": 9,
+              "mode": "calm"
+            }
+          }
+        },
+        "4": {
+          "endingId": "c4.calm",
+          "cardId": "c4.calm",
+          "story": {
+            "approach": "space",
+            "searchResult": "skipped",
+            "catNoticed": false,
+            "pace": "quiet",
+            "plan": "tea",
+            "rainRoute": "shelter",
+            "catApproach": "wait",
+            "umbrella": "patched",
+            "eveningMood": "quiet",
+            "controllerReaction": "help",
+            "teamName": "calm",
+            "kitchenStyle": "planner",
+            "kitchenResult": "feast",
+            "gameAftercare": "team",
+            "bench": "space",
+            "constellation": "teapot",
+            "bond": "friendly",
+            "wish": "calm"
+          },
+          "results": {
+            "constellation": {
+              "kind": "constellation",
+              "outcome": "teapot",
+              "usedPreset": false
+            }
+          }
+        }
+      },
+      "active": null
+    },
+    "trial": null,
+    "lastResult": {
+      "chapter": 4,
+      "cardId": "c4.calm",
+      "source": "campaign"
+    },
+    "collection": {
+      "cards": [
+        {
+          "id": "c1.tea",
+          "chapter": 1,
+          "endingId": "c1.tea",
+          "variant": "skipped",
+          "captionId": "c1.tea.skipped"
+        },
+        {
+          "id": "c2.shelter",
+          "chapter": 2,
+          "endingId": "c2.shelter",
+          "variant": "patched",
+          "captionId": "c2.shelter.patched"
+        },
+        {
+          "id": "c3.dinner",
+          "chapter": 3,
+          "endingId": "c3.dinner",
+          "variant": "feast",
+          "captionId": "c3.dinner.feast",
+          "teamName": "calm"
+        },
+        {
+          "id": "c4.calm",
+          "chapter": 4,
+          "endingId": "c4.calm",
+          "variant": "teapot",
+          "captionId": "c4.calm.teapot",
+          "usedPreset": false
+        }
+      ],
+      "achievements": [
+        "dry-plan",
+        "full-table",
+        "own-sky"
+      ],
+      "memories": [],
+      "secrets": []
+    },
+    "privateNotes": {},
+    "privateWords": {},
+    "localNoteRevision": 0,
+    "continuation": null
+  }
+}

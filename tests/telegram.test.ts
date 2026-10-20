@@ -7,6 +7,9 @@ import { finishFive } from './chapter5Helpers';
 import { runTo } from './helpers';
 import { createHash } from 'node:crypto';
 import { withLegacyJournal,legacyCloudData } from './legacySave';
+import { finishArc } from './finalArcHelpers';
+import { preserveLocalPrivateData } from '../src/persistence/notes';
+import { parseSave } from '../src/persistence/validateSave';
 class FakeCloud implements CloudAPI {
   data=new Map<string,string>();failKey='';failReads=false;setCalls:string[]=[];
   getItem(key:string,done:(error:string|null,value:string)=>void){done(this.failReads?'offline':null,this.data.get(key)??'');}
@@ -15,6 +18,44 @@ class FakeCloud implements CloudAPI {
 }
 const HEAD='five_meetings_v1_head';
 describe('Telegram cloud snapshots',()=>{
+  it('round trips all confirmed answers and words including emoji, trial slots and deletions',async()=>{
+    let save=finishArc(10);save=finishArc(8,save,{wordText:'Пробное слово',note:'Пробный ответ'},true);
+    for(const group of Object.values(save.privateNotes))for(const note of Object.values(group))note.text='😈'.repeat(280);
+    for(const word of Object.values(save.privateWords))word.text='💗'.repeat(24);
+    save.privateNotes[6]!.campaign={...save.privateNotes[6]!.campaign!,status:'deleted',text:''};
+    const api=new FakeCloud(),cloud=new TelegramCloud(api);await cloud.write(save,'');
+    const restored=(await cloud.read()).save!;expect(restored).toEqual({...save,continuation:null});
+    expect(restored.privateNotes[8]?.trial?.text).toBe('😈'.repeat(280));expect(restored.privateWords.trial?.text).toBe('💗'.repeat(24));
+  });
+  it('syncs answer-only edits and deletions without requiring a story action',async()=>{
+    const main=finishArc(8),api=new FakeCloud(),cloud=new TelegramCloud(api),session=new CloudSession(cloud,'',null);
+    await session.push(main);
+    const edited=reduceSave(main,{type:'note-edit',chapter:8,target:'campaign',attemptId:main.campaign.records[8]!.attemptId!,text:'Новый ответ'});
+    expect(edited.revision).toBe(main.revision);await session.push(edited);expect((await cloud.read()).save?.privateNotes).toEqual(edited.privateNotes);
+    const deleted=reduceSave(edited,{type:'note-edit',chapter:8,target:'campaign',attemptId:main.campaign.records[8]!.attemptId!,remove:true});
+    await session.push(deleted);expect((await cloud.read()).save?.privateNotes[8]?.campaign).toMatchObject({status:'deleted',text:''});
+    const word=reduceSave(deleted,{type:'word-edit',target:'campaign',attemptId:main.campaign.records[8]!.attemptId!,text:'Слово иначе'});
+    await session.push(word);expect((await cloud.read()).save?.privateWords.campaign?.text).toBe('Слово иначе');
+  });
+  it('preserves matching device answers when explicitly selecting an old text-free cloud copy',()=>{
+    const local=finishArc(10),legacy=parseSave(JSON.stringify({...local,privateNotes:{},privateWords:{},localNoteRevision:0}));
+    const recovered=preserveLocalPrivateData(legacy,local);
+    expect(parseSave(JSON.stringify(recovered))).toEqual(recovered);expect(recovered.privateNotes).toEqual(local.privateNotes);expect(recovered.privateWords).toEqual(local.privateWords);
+    expect(recovered.campaign).toEqual(legacy.campaign);expect(recovered.revision).toBe(legacy.revision);
+    expect(parseSave(cloudRaw(recovered)).privateNotes).toEqual(local.privateNotes);
+  });
+  it('remote text and deletion markers win over stale device values; unrelated attempts do not reappear',()=>{
+    const local=finishArc(8),id=local.campaign.records[8]!.attemptId!;
+    let remote=reduceSave(local,{type:'note-edit',chapter:8,target:'campaign',attemptId:id,text:'С облака'});
+    remote=reduceSave(remote,{type:'word-edit',target:'campaign',attemptId:id,remove:true});
+    expect(preserveLocalPrivateData(remote,local)).toEqual(remote);
+    remote=reduceSave(remote,{type:'note-edit',chapter:8,target:'campaign',attemptId:id,remove:true});
+    expect(preserveLocalPrivateData(remote,local)).toEqual(remote);
+    const rewritten=reduceSave(local,{type:'rewrite',chapter:8,attemptId:'another-attempt'});
+    expect(preserveLocalPrivateData(rewritten,local).privateWords).toEqual({});expect(preserveLocalPrivateData(rewritten,local).privateNotes[8]).toBeUndefined();
+    const old=structuredClone(local);old.privateNotes[8]!.campaign!.attemptId='unrelated';delete old.privateWords.campaign;
+    const stripped={...local,privateNotes:{},privateWords:{},localNoteRevision:0};expect(preserveLocalPrivateData(stripped,old).privateNotes[8]).toBeUndefined();
+  });
   it('does not split an emoji into invalid Unicode at a native storage boundary',()=>{
     const text='я'.repeat(3499)+'💗'+'a'.repeat(3498)+'🙂'+'\\"\n\u0000\ud800'.repeat(400);const chunks=splitCloudText(text);
     expect(chunks.join('')).toBe(text);for(const chunk of chunks){expect(Buffer.byteLength(JSON.stringify(chunk),'utf8')).toBeLessThanOrEqual(3000);expect(chunk.endsWith('\ud83d')).toBe(false);}
