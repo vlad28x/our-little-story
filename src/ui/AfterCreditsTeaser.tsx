@@ -14,7 +14,6 @@ export function AfterCreditsTeaser(){
       <span className="secret-peek-crop">
         <img className="secret-peek-body" src={assetUrl('adviser.devil.peek')} alt=""/>
       </span>
-      <span className="secret-peek-spark" aria-hidden="true">✧</span>
     </button>
     {open&&<SecretConversation onClose={()=>setOpen(false)}/>}
   </>;

@@ -1,4 +1,4 @@
-import { legacyContent } from './legacySave';
+import { legacyContent,prePolishSnapshot } from './legacySave';
 import { test,expect,type Page } from '@playwright/test';
 import { expectSimpleResult } from './resultActions';
 import { openOffline } from './offlineApp';
@@ -14,6 +14,24 @@ const endingLabels={romantic:'Кажется, сейчас я хочу попр�
 const endingTitles={romantic:'Место для шестой встречи',comic:'Продлено котом',gaming:'Второй игрок остаётся',friendly:'Хорошо, что встретились'};
 async function end(page:Page,ending:NonNullable<StoryState['ending']>){await toTone(page);await page.getByRole('button',{name:endingLabels[ending],exact:false}).click();for(let i=0;i<30;i++){const next=page.getByRole('button',{name:'Дальше',exact:false}),card=page.locator('.postcard');await expect(card.or(next)).toBeVisible();if(await card.count())break;await next.click();}await expect(page.getByRole('heading',{name:endingTitles[ending],exact:true})).toBeVisible();}
 function atAlbum(){let s=startFive();for(let i=0;i<180&&s.campaign.active?.nodeId!=='c5.album';i++)s=reduceSave(s,{type:'command',target:'campaign',command:command5(s.campaign.active!)});return s;}
+
+test('remembered goodbyes have distinct fifth-chapter callbacks; old and non-hug saves skip them',async({page})=>{
+  for(const goodbye of ['her','accept','none',undefined] as const){
+    const prior=finishFour(undefined,{...defaultFourth,goodbye:goodbye??'none'});
+    if(goodbye===undefined)delete prior.campaign.records[4]!.story.c4Goodbye;
+    const save=startFive(prior),rain='c5.rain.'+save.campaign.active!.story.rainRoute;
+    await openOffline(page,save,'/play/5');
+    const target=goodbye==='her'?'c5.hug.her':goodbye==='accept'?'c5.hug.accept':rain;
+    await until(page,target);
+    if(goodbye==='her'||goodbye==='accept'){
+      await expect(page.getByText(goodbye==='her'?'в прошлый раз ты меня обняла первой. я потом полдороги улыбался.':'знаешь, я со вчерашнего вечера ждал этой встречи.',{exact:true})).toBeVisible();
+      const checkpoint=JSON.parse(await page.evaluate(k=>localStorage.getItem(k)!,key));
+      await openOffline(page,checkpoint,'/play/5');await expect(page.locator(`[data-node="${target}"]`)).toBeVisible();
+      await until(page,rain);
+    }else await expect(page.locator('[data-node^="c5.hug."]')).toHaveCount(0);
+    expect(JSON.parse(await page.evaluate(k=>localStorage.getItem(k)!,key)).campaign.records[4]).toEqual(prior.campaign.records[4]);
+  }
+});
 test('fifth code, exact memories, comic finale, editable optional invitation and independent replay',async({page})=>{
   const prior=finishFour(finishThree(completeTwo('quiet',undefined,{rain:'arcade',cat:'help',umbrella:'borrowed'}),{...defaultThird,reaction:'absurd',team:'dumpling',after:'rematch',result:{kind:'kitchen',outcome:'chaos',served:0,mode:'calm'}}),{...defaultFourth,bond:'friendly',wish:'adventure'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await openOffline(page,legacyContent(prior,4) as unknown as typeof prior);await expect(page.getByLabel('Код',{exact:true})).toBeVisible();await page.getByLabel('Код',{exact:true}).fill(fifthCode);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await page.locator('.chapter-list li').nth(4).getByRole('button',{name:'Начать встречу'}).click();await expect(page.locator('[data-node="c5.return"]')).toBeVisible();await page.screenshot({path:'outputs/CHAPTER_05_CAFE_PREVIEW.png',fullPage:true,animations:'disabled'});
@@ -21,7 +39,7 @@ test('fifth code, exact memories, comic finale, editable optional invitation and
   for(const [name,slot] of [['Знакомство',1],['Игровой вечер',2],['Набережная',3]] as const){await page.locator('.memory-tokens').getByRole('button',{name,exact:true}).click();await page.getByRole('button',{name:`Место ${slot}`,exact:true}).click();}
   await page.getByRole('button',{name:'Вспомнить: Игровой вечер',exact:true}).click();await expect(page.getByText('Тарелки были почти пустыми, зато настоящие вкусняшки — на месте.')).toBeVisible();await expect(page.getByText('«пельмень и партнёры» — хорошее название. я его запомнил.')).toBeVisible();await page.screenshot({path:'outputs/CHAPTER_05_MEMORIES_PREVIEW.png',fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:'Закрыть альбом',exact:false}).click();await toTone(page);await expect(page.getByRole('button',{name:endingLabels.romantic,exact:false})).toBeVisible();await expect(page.locator('.choices button')).toHaveCount(4);await end(page,'comic');
-  const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.campaign.completed).toEqual([1,2,3,4,5]);expect(main.continuation).toBeNull();for(const id of [1,2,3,4] as const)expect(main.campaign.records[id]).toEqual(prior.campaign.records[id]);
+  const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.campaign.completed).toEqual([1,2,3,4,5]);expect(main.continuation).toBeNull();for(const id of [1,2,3,4] as const)expect(main.campaign.records[id]).toEqual(prePolishSnapshot(prior).campaign.records[id]);
   await page.screenshot({path:'outputs/CHAPTER_05_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});await expectSimpleResult(page);
   await expect(page.getByRole('region',{name:'Разговор о следующей встрече'})).toBeVisible();await expect(page.locator('.invitation-options button')).toHaveCount(0);expect(await page.locator('.invitation-options [aria-pressed=true]').count()).toBe(0);await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await expect(page.getByText('скамейка запасных сегодня пустует',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await expect(page.locator('.invitation-options button')).toHaveCount(5);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).continuation,key)).toBeNull();
   await page.getByRole('button',{name:'Пока воздержусь',exact:true}).click();await expect(page.getByRole('button',{name:'Копировать сообщение',exact:true})).toBeVisible();await expect(page.getByLabel('Сообщение Владу',{exact:true})).toHaveValue(/Пока воздержусь от встречи/);await expect(page.locator('.taxi-note')).toHaveCount(0);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).continuation,key)).toBe('decline');

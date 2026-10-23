@@ -64,7 +64,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
     {error?<><h1>Проверим сохранение</h1><p role="alert">{error}</p><p>Облако не изменено. Без проверки можно продолжить с копией на этом устройстве; синхронизация останется на паузе.</p><div className="stack"><button className="primary" onClick={()=>{setError('');setAttempt(n=>n+1);}}>Проверить ещё раз</button><button onClick={()=>setReady({key:localKey,loaded:load(storage,localKey),app:launchApp})}>Продолжить на этом устройстве</button></div></>:
     choice?<><h1>{choice.snapshot.damaged?'Сохраним эту историю':choice.snapshot.save?'Какую историю продолжить?':'История будет с тобой 💗'}</h1>
       <p>{choice.snapshot.damaged?'Облачная копия повреждена. Можно восстановить предыдущую или явно заменить её выбранной историей.':'В Telegram можно сохранять главы, ответы, альбом и настройки и продолжать на другом устройстве с тем же аккаунтом.'}</p>
-      <p className="small">Сохранённые ответы и своё название вечера входят в копию Telegram. Черновики и реальный выбор встречи остаются на устройстве. В обычном браузере прогресс хранится отдельно. Игра не отправляет сообщений.</p>
+      <p className="small">Сохранённые ответы, своё название вечера и выбор реальной встречи входят в копию Telegram. Неподтверждённые черновики остаются на устройстве. В обычном браузере прогресс хранится отдельно. Игра не отправляет сообщений.</p>
       <div className="stack">
         {choice.snapshot.save&&<SaveChoice title="Продолжить из Telegram" save={choice.snapshot.save} onChoose={()=>choose(choice.snapshot.save!)}/>}
         {choice.snapshot.backup&&<SaveChoice title="Восстановить резервную копию Telegram" save={choice.snapshot.backup} onChoose={()=>choose(choice.snapshot.backup!)}/>}

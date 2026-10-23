@@ -1,4 +1,4 @@
-import { legacyContent } from './legacySave';
+import { legacyContent,prePolishSnapshot } from './legacySave';
 import { it,expect } from 'vitest';
 import { chapter4 } from '../src/content/chapters/ch04';
 import { validateContent } from '../src/engine/validateContent';
@@ -29,7 +29,7 @@ it('waits for the fourth code and all three previous endings; old public code do
 it('migrates every chapter-three campaign/trial cursor without changing it and rejects new data labelled as old',()=>{
   for(const trial of [false,true]){
     let s=trial?reduceSave(finishThree(),{type:'trial',chapter:3}):reduceSave(reduceSave(completeTwo(),{type:'unlock',code:thirdCode}),{type:'start',chapter:3});
-    for(let i=0;i<180;i++){expect(parseSave(JSON.stringify(legacyContent(s,3)))).toEqual(s);const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command3(r)});}
+    for(let i=0;i<180;i++){expect(parseSave(JSON.stringify(legacyContent(s,3)))).toEqual(prePolishSnapshot(s));const r=trial?s.trial?.run:s.campaign.active;if(!r)break;s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command3(r)});}
   }
   expect(()=>parseSave(JSON.stringify(legacyContent(finishFour(),3)))).toThrow();
 });
@@ -57,12 +57,12 @@ it('offers all three goodbyes for all 48 bench/sky/bond/wish combinations withou
     const incomplete=structuredClone(save);delete incomplete.campaign.active!.story.wish;expect(()=>parseSave(JSON.stringify(incomplete))).toThrow();
     for(const goodbye of ['accept','her','none'] as const){
       let branch=reduceSave(save,{type:'command',target:'campaign',command:{kind:'choose',choiceId:goodbye,expectedTurn:run.turn}});
-      expect(branch.campaign.active?.story).toEqual(run.story);
+      expect(branch.campaign.active?.story).toEqual({...run.story,c4Goodbye:goodbye});
       for(let i=0;i<30&&branch.campaign.active;i++){
         expect(parseSave(JSON.stringify(branch))).toEqual(branch);
         branch=reduceSave(branch,{type:'command',target:'campaign',command:command4(branch.campaign.active,{...path,goodbye})});
       }
-      expect(branch.campaign.completed).toEqual([1,2,3,4]);expect(branch.campaign.records[4]?.story).toEqual(run.story);expect(branch.lastResult?.cardId).toBe('c4.'+wish);expect(parseSave(JSON.stringify(branch))).toEqual(branch);count++;
+      expect(branch.campaign.completed).toEqual([1,2,3,4]);expect(branch.campaign.records[4]?.story).toEqual({...run.story,c4Goodbye:goodbye});expect(branch.lastResult?.cardId).toBe('c4.'+wish);expect(parseSave(JSON.stringify(branch))).toEqual(branch);count++;
     }
   }
   expect(count).toBe(144);
@@ -73,6 +73,7 @@ it('keeps all frozen old final-dialogue cursors and the old completed fourth cha
   for(const old of beforeHug.active){
     let save=parseSave(JSON.stringify(old));expect(save).toEqual(old);
     for(let i=0;i<100&&save.campaign.active;i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active)});
-    expect(save.campaign.records[4]).toEqual(beforeHug.completed.campaign.records[4]);expect(save.campaign.completed).toEqual([1,2,3,4]);expect(parseSave(JSON.stringify(save))).toEqual(save);
+    const record=structuredClone(save.campaign.records[4]!);expect(record.story.c4Goodbye).toBe('none');delete record.story.c4Goodbye;
+    expect(record).toEqual(beforeHug.completed.campaign.records[4]);expect(save.campaign.completed).toEqual([1,2,3,4]);expect(parseSave(JSON.stringify(save))).toEqual(save);
   }
 });

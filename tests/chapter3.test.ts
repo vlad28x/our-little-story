@@ -1,4 +1,4 @@
-import { legacyContent } from './legacySave';
+import { legacyContent,prePolishSnapshot } from './legacySave';
 import { it,expect } from 'vitest';
 import { chapter3 } from '../src/content/chapters/ch03';
 import { chapter2 } from '../src/content/chapters/ch02';
@@ -24,11 +24,11 @@ it('gates chapter three by its own code and both previous endings',()=>{
   const base=completeTwo();expect(reduceSave(base,{type:'start',chapter:3})).toBe(base);expect(reduceSave(base,{type:'unlock',code:'COOP'})).toBe(base);
 });
 it('migrates old chapter-two saves at every cursor, including trials and completed snapshots',()=>{
-  const base=completeTwo();expect(parseSave(JSON.stringify(legacyContent(base,2)))).toEqual(base);
+  const base=completeTwo();expect(parseSave(JSON.stringify(legacyContent(base,2)))).toEqual(prePolishSnapshot(base));
   for(const target of ['campaign','trial'] as const){
     let s=reduceSave(base,{type:target==='trial'?'trial':'rewrite',chapter:2});
     for(let i=0;i<180;i++){
-      expect(parseSave(JSON.stringify(legacyContent(s,2)))).toEqual(s);
+      expect(parseSave(JSON.stringify(legacyContent(s,2)))).toEqual(prePolishSnapshot(s));
       const r=target==='trial'?s.trial?.run:s.campaign.active;if(!r)break;
       const n=chapter2.nodes[r.nodeId];let command:Command;
       if(n.kind==='dialogue')command={kind:'advance',expectedTurn:r.turn};

@@ -4,6 +4,7 @@ import { TelegramCloud,CloudSession,CloudConflict,cloudRaw,splitCloudText,cloudE
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
 import { finishFive } from './chapter5Helpers';
+import { defaultFourth,finishFour } from './chapter4Helpers';
 import { runTo } from './helpers';
 import { createHash } from 'node:crypto';
 import { withLegacyJournal,legacyCloudData } from './legacySave';
@@ -18,13 +19,21 @@ class FakeCloud implements CloudAPI {
 }
 const HEAD='five_meetings_v1_head';
 describe('Telegram cloud snapshots',()=>{
+  it.each(['accept','her','none'] as const)('preserves goodbye4=%s in JSON and a fresh Telegram client',async goodbye=>{
+    const save=finishFive(finishFour(undefined,{...defaultFourth,goodbye}));
+    const imported=parseSave(JSON.stringify(save));expect(imported).toEqual(save);
+    expect(imported.campaign.records[4]!.story.c4Goodbye).toBe(goodbye);expect(imported.campaign.records[5]!.story.c4Goodbye).toBe(goodbye);
+    const api=new FakeCloud();await new TelegramCloud(api).write(imported,'');
+    const loaded=(await new TelegramCloud(api).read()).save;expect(loaded).toEqual(imported);
+    expect(loaded?.campaign.startStates[5]?.c4Goodbye).toBe(goodbye);
+  });
   it('round trips all confirmed answers and words including emoji, trial slots and deletions',async()=>{
     let save=finishArc(10);save=finishArc(8,save,{wordText:'Пробное слово',note:'Пробный ответ'},true);
     for(const group of Object.values(save.privateNotes))for(const note of Object.values(group))note.text='😈'.repeat(280);
     for(const word of Object.values(save.privateWords))word.text='💗'.repeat(24);
     save.privateNotes[6]!.campaign={...save.privateNotes[6]!.campaign!,status:'deleted',text:''};
     const api=new FakeCloud(),cloud=new TelegramCloud(api);await cloud.write(save,'');
-    const restored=(await cloud.read()).save!;expect(restored).toEqual({...save,continuation:null});
+    const restored=(await cloud.read()).save!;expect(restored).toEqual(save);
     expect(restored.privateNotes[8]?.trial?.text).toBe('😈'.repeat(280));expect(restored.privateWords.trial?.text).toBe('💗'.repeat(24));
   });
   it('syncs answer-only edits and deletions without requiring a story action',async()=>{
@@ -83,10 +92,27 @@ describe('Telegram cloud snapshots',()=>{
     expect(chunks.length).toBeGreaterThan(32);expect(await cloud.read()).toMatchObject({save:base,needsRewrite:true});
     const next={...base,revision:base.revision+1};await cloud.write(next,head);expect(await cloud.read()).toMatchObject({save:next,needsRewrite:false});expect(api.data.size).toBeLessThanOrEqual(353);
   });
-  it('round trips the entire five-chapter story in legal chunks without the real-life preference',async()=>{
+  it('round trips the entire five-chapter story and real-life preference in legal chunks',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),save=reduceSave(finishFive(),{type:'continuation',value:'game'});
     expect((await cloud.read()).save).toBeNull();const head=await cloud.write(save,'');const loaded=await cloud.read();
-    expect(head).toBe(api.data.get(HEAD));expect(loaded.save).toEqual({...save,continuation:null});expect(loaded.damaged).toBe(false);expect(api.data.size).toBeGreaterThan(2);expect(api.setCalls.at(-1)).toBe(HEAD);
+    expect(head).toBe(api.data.get(HEAD));expect(loaded.save).toEqual(save);expect(loaded.damaged).toBe(false);expect(api.data.size).toBeGreaterThan(2);expect(api.setCalls.at(-1)).toBe(HEAD);
+  });
+  it.each([null,'game','movie','cafe','walk','decline','public','chat','later'] as const)('preserves meeting choice %s on a fresh cloud client',async value=>{
+    const save=reduceSave(finishFive(),{type:'continuation',value}),api=new FakeCloud();
+    await new TelegramCloud(api).write(save,'');
+    expect((await new TelegramCloud(api).read()).save).toEqual(save);
+    expect(save.continuation).toBe(value);
+  });
+  it('syncs a choice from an old null cloud copy, changed choice, and reset after rewriting chapter five',async()=>{
+    const main=finishFive(),api=new FakeCloud(),cloud=new TelegramCloud(api);
+    const head=await cloud.write(main,'');
+    const session=new CloudSession(cloud,head,cloudRaw(main));
+    const cafe=reduceSave(main,{type:'continuation',value:'cafe'});await session.push(cafe);
+    expect((await new TelegramCloud(api).read()).save?.continuation).toBe('cafe');
+    const decline=reduceSave(cafe,{type:'continuation',value:'decline'});await session.push(decline);
+    expect((await cloud.read()).save?.continuation).toBe('decline');
+    const rewritten=reduceSave(decline,{type:'rewrite',chapter:5});await session.push(rewritten);
+    expect((await cloud.read()).save).toEqual(rewritten);expect(rewritten.continuation).toBeNull();
   });
   it('keeps the committed story after a partial write and recovers its previous bank after corruption',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),a=initialState(),b=reduceSave(a,{type:'start'});

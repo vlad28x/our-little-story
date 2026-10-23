@@ -17,7 +17,7 @@ it('renders every visible final-chapter node and all four final/invitation scree
   for(let i=0;i<24;i++){
     const first=completeSave({...defaultPath,approach:(['joke','help','space'] as const)[i%3],plan:(['tea','coop','banter'] as const)[i%3]});
     const second=completeTwo('quiet',first,{rain:i%2?'arcade':'shelter',cat:Math.floor(i/3)%2?'help':'wait',umbrella:(['patched','borrowed','skipped'] as const)[Math.floor(i/2)%3]});
-    const third=finishThree(second,{...defaultThird,after:i%2?'rematch':'team'}),prior=finishFour(third,{...defaultFourth,bond:(['friendly','romantic','undecided'] as const)[i%3]});
+    const third=finishThree(second,{...defaultThird,after:i%2?'rematch':'team'}),prior=finishFour(third,{...defaultFourth,bond:(['friendly','romantic','undecided'] as const)[i%3],goodbye:(['accept','her','none'] as const)[i%3]});
     let s=startFive(prior);for(let j=0;j<180;j++){const r=s.campaign.active;if(!r)break;if(!seen.has(r.nodeId)){context.save=s;const html=renderToString(<App/>);expect(html).toContain(r.nodeId);seen.add(r.nodeId);}s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:'viewed',ending:endings[Math.floor(i/6)]})});}
   }
   expect([...seen].sort()).toEqual(Object.values(chapter5.nodes).filter(n=>n.kind!=='route'&&n.kind!=='end').map(n=>n.id).sort());

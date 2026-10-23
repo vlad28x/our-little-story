@@ -1,4 +1,5 @@
 import { getChapter } from '../src/content/chapters';
+import { getChapter as getLegacyChapter } from '../src/legacy/r1/content/chapters';
 import type { Run } from '../src/engine/types';
 import type { SaveV1 } from '../src/state/types';
 import { createHash } from 'node:crypto';
@@ -6,11 +7,31 @@ import { createHash } from 'node:crypto';
 // Build an actual old envelope: changing only the version label would leave
 // fields that the old client never wrote, and should be rejected by validation.
 export function legacyContent(save:SaveV1,version:number):SaveV1{
-  const legacy=structuredClone(save) as unknown as Record<string,unknown>;
+  const legacy=prePolishSnapshot(save) as unknown as Record<string,unknown>;
   delete legacy.privateWords;delete legacy.privateNotes;delete legacy.localNoteRevision;
   delete (legacy.collection as Record<string,unknown>).bonuses;legacy.contentVersion=version;
   delete (legacy.collection as Record<string,unknown>).memories;delete (legacy.collection as Record<string,unknown>).secrets;
   return legacy as unknown as SaveV1;
+}
+
+// Expected state of an actual pre-2026-10-23 client, before envelope migration.
+export function prePolishSnapshot(save:SaveV1):SaveV1{
+  const old=structuredClone(save);
+  function beforePolish(value:unknown){
+    if(!value||typeof value!=='object')return;
+    const item=value as Record<string,unknown>;delete item.c4Goodbye;
+    if(Array.isArray(item.journal)){
+      const chapter=getLegacyChapter(item.chapter as Run['chapter']);
+      item.journal=item.journal.filter(entry=>chapter?.nodes[(entry as {nodeId:Run['nodeId']}).nodeId]);
+    }
+    if(['c1.inside','c3.pad.ready','c5.return'].includes(String(item.nodeId))&&typeof item.lineIndex==='number'){
+      const node=getLegacyChapter(item.chapter as Run['chapter'])?.nodes[item.nodeId as Run['nodeId']];
+      if(node?.kind==='dialogue')item.lineIndex=Math.min(item.lineIndex,node.lines.length-1);
+    }
+    for(const child of Object.values(item))beforePolish(child);
+  }
+  beforePolish(old);
+  return old;
 }
 
 // Synthetic pre-removal format. No player exports or personal choices are fixtures.

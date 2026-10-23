@@ -19,10 +19,11 @@ it('R3 graph has no missing or unreachable nodes and round-trips every checkpoin
  }
  expect(save.contentVersion).toBe(12);expect(save.collection.memories).toHaveLength(5);expect(save.collection.secrets).toHaveLength(5);
 },60000);
-it('first three and fifth scripts retain their original bytes; chapter4 has an approved goodbye addition',()=>{
+it('first-season scripts retain their approved bytes after the 2026-10-23 polish',()=>{
  const hashes=JSON.parse(readFileSync('tests/fixtures/r1/first-five-hashes.json','utf8')) as Record<string,string>;
- // Chapter4 is the sole approved first-season script change after R3 delivery.
- for(const [file,hash] of Object.entries(hashes))if(!file.endsWith('/ch04.ts'))expect(createHash('sha256').update(readFileSync(file)).digest('hex')).toBe(hash);
+ // Owner-approved baseline: outputs/SEASON_01_POLISH_BRIEF_2026_10_23.md.
+ // Keep protecting all five scripts, including the now remembered goodbye4.
+ for(const [file,hash] of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(file)).digest('hex')).toBe(hash);
 });
 it('all six golden R2 snapshots remain valid read-only sources until explicit update',()=>{
  for(const name of ['6','7','8','9','10','active8']){

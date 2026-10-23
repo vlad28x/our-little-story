@@ -10,7 +10,7 @@ export function InvitationPanel({story}:{story:StoryState}){
   const pages=invitationConversation(story),selected=save.continuation;
   const answer=continuationOptions.find(option=>option.value===selected)?.value;
   const reply=answer?invitationReplies[answer]:undefined;
-  function choose(value:MeetingChoice){send({type:'continuation',value});setDraft(continuationDraft(value));setMessage('Ответ сохранён только на этом устройстве.');}
+  function choose(value:MeetingChoice){send({type:'continuation',value});setDraft(continuationDraft(value));setMessage('Выбор встречи сохранён. Его можно изменить.');}
   async function copy(){try{await navigator.clipboard.writeText(draft);setMessage('Текст скопирован. Если захочешь, вставь его в ваш чат.');}catch{setMessage('Здесь не получилось скопировать автоматически. Выдели текст в поле и скопируй вручную.');}}
   return <section id="real-meeting-invitation" tabIndex={-1} className="final-conversation" aria-label="Разговор о следующей встрече">
     <div className="story-panel invitation-panel">

@@ -9,7 +9,7 @@ export type StoryState = {
   pace?: 'quiet'|'playful'|'flirt'; plan?: 'tea'|'banter'|'coop';
   rainRoute?: 'shelter'|'arcade'; catApproach?: 'wait'|'help'; umbrella?: 'patched'|'borrowed'|'skipped'; eveningMood?: 'quiet'|'playful';
   controllerReaction?: 'tease'|'help'|'absurd'; teamName?: 'dumpling'|'calm'|'accident'; kitchenStyle?: 'planner'|'improv'; kitchenResult?: 'feast'|'snack'|'chaos'|'skipped'; gameAftercare?: 'team'|'rematch';
-  bench?: 'near'|'space'; constellation?: 'cat'|'controllers'|'teapot'; bond?: 'romantic'|'friendly'|'undecided'; wish?: 'adventure'|'calm'; ending?: 'romantic'|'comic'|'gaming'|'friendly';
+  bench?: 'near'|'space'; constellation?: 'cat'|'controllers'|'teapot'; bond?: 'romantic'|'friendly'|'undecided'; wish?: 'adventure'|'calm'; c4Goodbye?: 'accept'|'her'|'none'; ending?: 'romantic'|'comic'|'gaming'|'friendly';
   c6Voice?:'lead'|'tease'|'quiet'; c6Moment?:'hug'|'hand'|'talk'|'walk'; c6Note?:'saved'|'skipped'; c6Ending?:'hand'|'lap'|'home';
   c7Aside?:'hush'|'joke'|'ignore'; c7Moment?:'cheek'|'collar'|'near'|'space'; c7Reply?:'kind'|'hand'|'pause'; c7Note?:'saved'|'skipped'; c7Ending?:'open'|'promise'|'calm';
   c8Place?:'home'|'cafe'; c8Word?:'minute'|'slow'|'taks'|'custom'|'none'; c8Dance?:'close'|'lead'|'playful'; c8Tender?:'curls'|'hair'|'cheek'|'neck'|'dance'; c8Hoodie?:'borrowed'|'evening'|'none'; c8Note?:'saved'|'skipped'; c8Approach?:'her'|'ask'|'none'; c8Ending?:'kiss'|'near'|'tea';

@@ -9,12 +9,38 @@ import { withLegacyJournal } from './legacySave';
 import { defaultSixth,sixAt } from './chapter6Helpers';
 import { defaultArc,finishArc } from './finalArcHelpers';
 import { parseSave } from '../src/persistence/validateSave';
+import { finishFive } from './chapter5Helpers';
 const key='five-meetings:/:telegram:our_little_story_game_bot:42:save';
 async function cloudData(save:SaveV1){
   const data:Record<string,string>={};const cloud=new TelegramCloud({getItem(k,done){done(null,data[k]??'');},getItems(keys,done){done(null,Object.fromEntries(keys.map(k=>[k,data[k]??''])));},setItem(k,v,done){data[k]=v;done(null,true);}});await cloud.write(save,'');return data;
 }
 function remote(page:Page){return page.evaluate(()=>(window as unknown as {testCloud:{data:Record<string,string>}}).testCloud.data);}
 async function remoteSave(page:Page){const data=await remote(page),part=JSON.parse(data.five_meetings_v1_head).current;return parseSave(Array.from({length:part.count},(_,i)=>data[`five_meetings_v1_${part.slot}_${i}`]).join(''));}
+
+test('meeting choice uploads from an old device-only save and restores with changes on fresh clients',async({page,context})=>{
+  const old=finishFive(),local=reduceSave(old,{type:'continuation',value:'cafe'});
+  await openOffline(page,old,'/result/5?source=campaign',{seedBrowser:false,local:{[key]:JSON.stringify(local)},telegram:{id:42,data:await cloudData(old)}});
+  await expect(page.getByRole('heading',{name:'Какую историю продолжить?',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:/Продолжить с этого устройства/}).click();
+  const invitation=page.locator('#real-meeting-invitation');
+  await expect(invitation.getByRole('button',{name:'Встретиться в кафе',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect.poll(async()=> (await remoteSave(page)).continuation).toBe('cafe');
+  await invitation.getByRole('button',{name:'Киновечер',exact:true}).click();
+  await expect(invitation.getByRole('status')).toHaveText('Выбор встречи сохранён. Его можно изменить.');
+  await expect.poll(async()=> (await remoteSave(page)).continuation).toBe('movie');
+
+  const second=await context.newPage();
+  await openOffline(second,old,'/result/5?source=campaign',{seedBrowser:false,telegram:{id:42,data:await remote(page)}});
+  const restored=second.locator('#real-meeting-invitation');
+  await expect(restored.getByRole('button',{name:'Киновечер',exact:true})).toHaveAttribute('aria-pressed','true');
+  await restored.getByRole('button',{name:'Пока воздержусь',exact:true}).click();
+  await expect.poll(async()=> (await remoteSave(second)).continuation).toBe('decline');
+  const third=await context.newPage();
+  await openOffline(third,old,'/result/5?source=campaign',{seedBrowser:false,telegram:{id:42,data:await remote(second)}});
+  await expect(third.locator('#real-meeting-invitation').getByRole('button',{name:'Пока воздержусь',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(third.locator('#continuation-message')).toHaveValue(/Пока воздержусь/);
+  await second.close();await third.close();
+});
 
 test('the optional answer has no device-only caption and its confirmed text restores in Telegram',async({page,context})=>{
   const save=sixAt('c6.note'),data=await cloudData(save);await openOffline(page,save,'/play/6',{seedBrowser:false,telegram:{id:42,data}});

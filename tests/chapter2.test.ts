@@ -1,4 +1,4 @@
-import { legacyContent } from './legacySave';
+import { legacyContent,prePolishSnapshot } from './legacySave';
 import { chapters as chapterManifest } from '../src/content/chapters/manifest';
 const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
 import { describe,it,expect } from 'vitest';
@@ -66,7 +66,7 @@ describe('chapter two',()=>{
   it('migrates every first chapter cursor and its completed/trial state without changing progress',()=>{
     let s=reduceSave(initialState(),{type:'start'});
     for(let i=0;i<180;i++){
-      const legacy=legacyContent(s,1);expect(parseSave(JSON.stringify(legacy))).toEqual(s);
+      const legacy=legacyContent(s,1);expect(parseSave(JSON.stringify(legacy))).toEqual(prePolishSnapshot(s));
       if(!s.campaign.active)break;s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active)});
     }
     s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify(legacyContent(s,1)))).toEqual(s);
