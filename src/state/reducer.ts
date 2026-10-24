@@ -1,3 +1,4 @@
+import { replayFirstSeason } from '../persistence/replayFirstSeason';
 import { getChapter } from '../content/chapters';
 import { checkCode } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
@@ -71,7 +72,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       const id=Number(action.nodeId.match(/^c(\d+)\./)?.[1]) as ChapterId,chapter=getChapter(id),node=chapter?.nodes[action.nodeId];
       if(id>=6)return current; // Chapter six is exercised through isolated full-save fixtures.
       if(!chapter||!node||node.kind==='route'||node.kind==='end')return current;
-      const run=startRun(chapter);run.nodeId=action.nodeId;run.story=action.story;
+      const run=startRun(chapter);run.nodeId=action.nodeId;run.story={...action.story,...(id===4?{c4Edition:2 as const}:id===5?{c4Edition:2 as const,c5Edition:3 as const,c4Goodbye:action.story.c4Goodbye??'none'}:{})};
       if(id===1&&run.story.searchResult){run.results['token-search']={kind:'token-search',outcome:run.story.searchResult,catNoticed:!!run.story.catNoticed};if(run.story.catNoticed)run.earned=['cat-supervisor'];}
       if(id===2&&run.story.umbrella){run.results['umbrella-patch']={kind:'umbrella-patch',outcome:run.story.umbrella};if(run.story.umbrella==='patched')run.earned=['dry-plan'];}
       if(id===1)s.campaign={completed:[],startStates:{1:{}},records:{},active:run};
@@ -92,19 +93,24 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
             s.campaign.completed.push(3);s.campaign.startStates[4]=prior3;s.campaign.records[3]={endingId:card3.id,cardId:card3.id,story:prior3,results:{kitchen:{kind:'kitchen',outcome:prior3.kitchenResult!,served,mode:'calm'}}};s.unlocked=[...new Set([...s.unlocked,4 as const])];
             if(id===4&&run.story.constellation){run.results.constellation={kind:'constellation',outcome:run.story.constellation,usedPreset:false};run.earned=['own-sky'];}
             if(id===5){
-              const prior4:StoryState={...prior3,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',bond:action.story.bond??'friendly',wish:action.story.wish??'calm'};
+              const prior4:StoryState={...prior3,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',c4Edition:2,wish:action.story.wish??'calm',c4Goodbye:action.story.c4Goodbye??'none'};
               const results4={constellation:{kind:'constellation' as const,outcome:prior4.constellation!,usedPreset:false}},card4=cardFromStory(prior4,4,results4);
               s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card4.id),card4];s.collection.achievements=[...new Set([...s.collection.achievements,'own-sky'])];s.campaign.completed.push(4);s.campaign.startStates[5]=prior4;s.campaign.records[4]={endingId:card4.id,cardId:card4.id,story:prior4,results:results4};s.unlocked=[...new Set([...s.unlocked,5 as const])];
-              if(action.nodeId==='c5.letter'||action.nodeId.startsWith('c5.tone.')||action.nodeId.startsWith('c5.ending.')||action.nodeId.startsWith('c5.gaming.'))run.results.memories={kind:'memories',outcome:'viewed'};
+              if(action.nodeId==='c5.close'||action.nodeId==='c5.letter'||action.nodeId.startsWith('c5.tone.')||action.nodeId.startsWith('c5.ending.')||action.nodeId.startsWith('c5.gaming.'))run.results.memories={kind:'memories',outcome:'viewed'};
             }
           }
         }
+      }
+      if(id===4||id===5){
+        const verified=replayFirstSeason(id,run.story,run.results,{nodeId:run.nodeId,lineIndex:0});
+        if(!verified)return current;
+        s.campaign.active=verified;
       }
       s.trial=null;s.lastResult=null;break;
     }
     case 'command':{
       const run=action.target==='trial'?s.trial?.run:s.campaign.active;
-      if(!run)return current;const chapter=getChapter(run.chapter);if(!chapter)return current;
+      if(!run)return current;const chapter=getChapter(run.chapter,run.story);if(!chapter)return current;
       if(action.command.kind==='note-result'){
         const text=normalizeNote(action.noteText??'').trim();
         if(action.command.status==='saved'&&!validNote(text))return current;
@@ -132,5 +138,5 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     }
   }
   if((JSON.stringify(s.privateNotes)!==JSON.stringify(current.privateNotes)||JSON.stringify(s.privateWords)!==JSON.stringify(current.privateWords))&&s.localNoteRevision===current.localNoteRevision)s.localNoteRevision++;
-  s.contentVersion=12;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
+  s.contentVersion=14;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
 }

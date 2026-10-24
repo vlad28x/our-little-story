@@ -39,7 +39,7 @@ function settle(chapter:Chapter, run:Run):StepResult {
 }
 export function startRun(chapter:Chapter, story:StoryState = {},attemptId?:string):Run {
   if((chapter.id>=6)&&!attemptId)throw new Error('Для новой встречи нужен ID попытки');
-  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,episode:{}}:{})});
+  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story,...(chapter.firstSeasonEdition?{[chapter.id===4?'c4Edition':'c5Edition']:chapter.firstSeasonEdition}:{})},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,episode:{}}:{})});
   if (result.kind !== 'ready') throw new Error('Глава должна начинаться с доступной сцены');
   return result.run;
 }

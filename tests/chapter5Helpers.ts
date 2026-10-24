@@ -1,16 +1,16 @@
-import { chapter5 } from '../src/content/chapters/ch05';
+import { getChapter } from '../src/content/chapters';
 import { chapters } from '../src/content/chapters/manifest';
 import { reduceSave } from '../src/state/reducer';
 import { parseSave } from '../src/persistence/validateSave';
 import { finishFour } from './chapter4Helpers';
 import type { Command,MemoriesResult,Run,StoryState } from '../src/engine/types';
 export const fifthCode=chapters.find(c=>c.id===5)!.code!;
-export type FifthPath={memory:MemoriesResult['outcome'];ending:NonNullable<StoryState['ending']>};
+export type FifthPath={memory:MemoriesResult['outcome'];ending:NonNullable<StoryState['ending']>;firstTaste?:NonNullable<StoryState['c5FirstTaste']>;recommendation?:NonNullable<StoryState['c5Recommendation']>};
 export const defaultFifth:FifthPath={memory:'viewed',ending:'friendly'};
 export function command5(r:Run,p=defaultFifth):Command{
-  const n=chapter5.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
+  const n=getChapter(5,r.story)!.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
   if(n.kind==='minigame')return {kind:'game-result',expectedTurn:r.turn,result:{kind:'memories',outcome:p.memory}};
-  if(n.kind==='choice')return {kind:'choose',expectedTurn:r.turn,choiceId:p.ending};
+  if(n.kind==='choice')return {kind:'choose',expectedTurn:r.turn,choiceId:n.id==='c5.drink.first'?p.firstTaste??'compare':n.id==='c5.drink.recommend'?p.recommendation??'fresh':p.ending};
   throw Error('Hidden node');
 }
 export function startFive(base=finishFour(),trial=false){return reduceSave(reduceSave(base,{type:'unlock',code:fifthCode}),{type:trial?'trial':'start',chapter:5});}

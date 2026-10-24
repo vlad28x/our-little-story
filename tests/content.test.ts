@@ -7,7 +7,7 @@ import { chapter2 } from '../src/content/chapters/ch02';
 import { chapter3 } from '../src/content/chapters/ch03';
 import { chapter4 } from '../src/content/chapters/ch04';
 import { chapter5 } from '../src/content/chapters/ch05';
-import { invitationIntro,invitationEcho,invitationText } from '../src/content/invitation';
+import { invitationBridge,invitationIntro,invitationEcho,invitationText } from '../src/content/invitation';
 import { validateContent } from '../src/engine/validateContent';
 import { assetManifest,assetUrl } from '../src/content/assetManifest';
 import type { Chapter } from '../src/engine/types';
@@ -23,13 +23,14 @@ it('resolves every chapter-three home expression before any scene is rendered',(
 });
 it('registers and documents every fourth-chapter scene, line and resource',()=>{
   const source=fs.readFileSync('outputs/CHAPTER_04_SCRIPT.md','utf8');const ids=[...source.matchAll(/^### `(c4\.[^`]+)`/gm)].map(m=>m[1]).sort();expect(ids).toEqual(Object.keys(chapter4.nodes).sort());
-  const lines=source.split(/\r?\n/).filter(l=>/^\d+\. \*\*(Описание|Влад|Ты|Нина):/.test(l)).map(l=>l.replace(/^\d+\. \*\*(Описание|Влад|Ты|Нина):\*\* /,''));expect(lines).toEqual(Object.values(chapter4.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]));expect(ids).toHaveLength(37);expect(lines).toHaveLength(97);
+  const lines=source.split(/\r?\n/).filter(l=>/^\d+\. \*\*(Описание|Влад|Ты|Нина):/.test(l)).map(l=>l.replace(/^\d+\. \*\*(Описание|Влад|Ты|Нина):\*\* /,''));expect(lines).toEqual(Object.values(chapter4.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]));expect(ids).toHaveLength(33);expect(lines).toHaveLength(85);
   for(const n of Object.values(chapter4.nodes))if('scene' in n){expect(()=>assetUrl(n.scene.character)).not.toThrow();expect(()=>assetUrl(n.scene.background)).not.toThrow();}
 });
 it('documents every fifth-chapter line, final and invitation without missing elegant resources',()=>{
   const source=fs.readFileSync('outputs/CHAPTER_05_SCRIPT.md','utf8');const ids=[...source.matchAll(/^### `(c5\.[^`]+)`/gm)].map(m=>m[1]).sort();expect(ids).toEqual(Object.keys(chapter5.nodes).sort());
-  const lines=source.split(/\r?\n/).filter(l=>/^\d+\. \*\*(Описание|Влад|Ты|Нина):/.test(l)).map(l=>l.replace(/^\d+\. \*\*(Описание|Влад|Ты|Нина):\*\* /,''));expect(lines).toEqual(Object.values(chapter5.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]));expect(ids).toHaveLength(35);expect(lines).toHaveLength(91);
-  for(const text of [...invitationIntro,...Object.values(invitationEcho),invitationText])expect(source).toContain(text);
+  const lines=source.split(/\r?\n/).filter(l=>/^\d+\. \*\*(Описание|Влад|Ты|Нина):/.test(l)).map(l=>l.replace(/^\d+\. \*\*(Описание|Влад|Ты|Нина):\*\* /,''));expect(lines).toEqual(Object.values(chapter5.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]));expect(ids).toHaveLength(48);expect(lines).toHaveLength(100);
+  for(const text of [invitationBridge,...invitationIntro,...Object.values(invitationEcho),invitationText])expect(source).toContain(text);
+  expect(source.match(/^## Приглашение в реальность$/gm)).toHaveLength(1);
   for(const n of Object.values(chapter5.nodes))if('scene' in n){expect(()=>assetUrl(n.scene.character)).not.toThrow();expect(()=>assetUrl(n.scene.background)).not.toThrow();}
 });
 it('detects broken graph links and cycles',()=>{const c=structuredClone(chapter1) as Chapter;const n=c.nodes['c1.entry'];if(n.kind==='dialogue')n.next='c1.missing';expect(validateContent(c).some(e=>e.includes('Missing node'))).toBe(true);if(n.kind==='dialogue')n.next='c1.entry';expect(validateContent(c).some(e=>e.includes('Cycle'))).toBe(true);});

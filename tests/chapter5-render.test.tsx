@@ -2,10 +2,10 @@ import { it,expect,vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { completeSave,defaultPath } from './helpers';
 import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
-import { defaultFourth,finishFour } from './chapter4Helpers';
-import { chapter5 } from '../src/content/chapters/ch05';
-import { invitationBridges } from '../src/content/invitation';
-import { startFive,command5,finishFive } from './chapter5Helpers';
+import { defaultFourth,finishFour } from './legacy4Helpers';
+import { chapter5 } from '../src/legacy/season1/ch05';
+import { invitationBridge } from '../src/content/invitation';
+import { startFive,command5,finishFive } from './legacy5Helpers';
 import { reduceSave } from '../src/state/reducer';
 import type { SaveV1 } from '../src/state/types';
 const context=vi.hoisted(()=>({save:null as unknown as SaveV1}));
@@ -24,7 +24,7 @@ it('renders every visible final-chapter node and all four final/invitation scree
   for(const ending of endings){
     context.save=finishFive(undefined,{memory:'skipped',ending});vi.stubGlobal('location',{hash:'#/result/5?source=campaign',search:''});
     const html=renderToString(<App/>);
-    expect(html).toContain('А теперь — встретимся по-настоящему?');expect(html).toContain(invitationBridges[ending]);expect(html).toContain('Продолжить разговор');expect(html).not.toContain('invitation-options');
+    expect(html).toContain('А теперь — встретимся по-настоящему?');expect(html).toContain(invitationBridge);expect(html).toContain('Продолжить разговор');expect(html).not.toContain('invitation-options');
     expect(html.indexOf('class="final-conversation"')).toBeLessThan(html.indexOf('class="postcard"'));expect(html).toContain('Псс… Маленький секрет');expect(html).not.toContain('invitation-privacy');expect(html).not.toContain('after-credits-teaser');expect(html).not.toContain('Unknown asset');
     context.save={...context.save,continuation:'game'};const restored=renderToString(<App/>);expect(restored).toContain('Игровой вечер');expect(restored).toContain('Киновечер');expect(restored).toContain('Пока воздержусь');expect(restored).toContain('Копировать сообщение');
   }

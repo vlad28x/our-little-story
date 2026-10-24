@@ -37,7 +37,7 @@ export function prePolishSnapshot(save:SaveV1):SaveV1{
 // Synthetic pre-removal format. No player exports or personal choices are fixtures.
 export function withLegacyJournal(save:SaveV1){
   function attach(run:Run){
-    const chapter=getChapter(run.chapter)!;
+    const chapter=getChapter(run.chapter,run.story)!;
     const journal=Object.values(chapter.nodes).flatMap(node=>node.kind==='dialogue'
       ?node.lines.map((line,index)=>({...line,key:`${node.id}:${index}`,nodeId:node.id}))
       :[]).slice(0,52);

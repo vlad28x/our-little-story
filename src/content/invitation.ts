@@ -4,14 +4,9 @@ export const invitationIntro=['слушай, а помнишь тот игров
 export const invitationEcho:Record<NonNullable<StoryState['controllerReaction']>,string>={tease:'полторы штуки больше не выдаю за комплект',help:'запасные батарейки тоже рядом. спасибо за прошлый раз',absurd:'скамейка запасных сегодня пустует'};
 export const invitationText='можем устроить игровой вечер у меня. или киновечер — с фильмом, пледом и чем-нибудь вкусным. если хочется выбраться из дома, давай в кафе или просто погуляем';
 export type MeetingChoice='game'|'movie'|'cafe'|'walk'|'decline';
-export const invitationBridges:Record<NonNullable<StoryState['ending']>,string>={
-  romantic:'пять встреч мы уже придумали. теперь хочу одну настоящую — с тобой.',
-  comic:'бюро случайных встреч работу продолжает. предлагаю следующую уже без сценария.',
-  gaming:'команда у нас уже есть. хочется теперь выбраться из этой истории в настоящую встречу.',
-  friendly:'мне было хорошо с тобой в этой истории. если тебе тоже хочется увидеться вживую, давай выберем, как.',
-};
+export const invitationBridge='а теперь обращаюсь уже к тебе, по эту сторону экрана.';
 export function invitationConversation(story:StoryState):string[][]{return [
-  [invitationBridges[story.ending??'friendly'],'хочу пригласить тебя на настоящую встречу. что тебе было бы по душе?'],
+  [invitationBridge,'хочу пригласить тебя на настоящую встречу. что тебе было бы по душе?'],
   [...invitationIntro,...(story.controllerReaction?[invitationEcho[story.controllerReaction]]:[])],
   [invitationText,'выбирай, что тебе ближе. если пока не хочется встречаться — можно воздержаться, без объяснений.'],
 ];}
@@ -31,10 +26,10 @@ export const continuationOptions:{value:MeetingChoice;label:string}[]=[
 ];
 export function continuationDraft(value:SaveV1['continuation']){
   switch(value){
-    case 'game':return 'Я прошла историю. Хочу устроить с тобой настоящее свидание — игровой вечер. Во что сыграем и когда нам обоим удобно?';
-    case 'movie':return 'Я прошла историю. Хочу устроить с тобой настоящее свидание — киновечер. Давай выберем фильм и удобный день?';
-    case 'cafe':return 'Я прошла историю. Хочу сходить с тобой на свидание в кафе. Давай выберем место и удобный день?';
-    case 'walk':return 'Я прошла историю. Хочу сходить с тобой на свидание — погулять вместе. Давай выберем маршрут и удобный день?';
+    case 'game':return 'Я прошла историю. Хочу устроить с тобой игровой вечер. Во что сыграем и когда нам обоим удобно?';
+    case 'movie':return 'Я прошла историю. Хочу устроить с тобой киновечер. Давай выберем фильм и удобный день?';
+    case 'cafe':return 'Я прошла историю. Хочу встретиться с тобой в кафе. Давай выберем место и удобный день?';
+    case 'walk':return 'Я прошла историю. Хочу погулять вместе с тобой. Давай выберем маршрут и удобный день?';
     case 'decline':return 'Спасибо за историю 😊 Пока воздержусь от встречи, но было приятно пройти её.';
     // Preserve the original, deliberately undecided public-place preference.
     case 'public':return 'Я прошла историю. Давай сначала погуляем или зайдём в кафе — выберем удобный день?';

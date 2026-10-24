@@ -1,8 +1,8 @@
 import { it,expect,vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
-import { startFour,command4,defaultFourth,finishFour } from './chapter4Helpers';
-import { chapter4 } from '../src/content/chapters/ch04';
+import { startFour,command4,defaultFourth,finishFour } from './legacy4Helpers';
+import { chapter4 } from '../src/legacy/season1/ch04';
 import { reduceSave } from '../src/state/reducer';
 import type { SaveV1 } from '../src/state/types';
 const context=vi.hoisted(()=>({save:null as unknown as SaveV1}));

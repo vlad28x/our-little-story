@@ -1,7 +1,7 @@
 import { legacyContent,prePolishSnapshot } from './legacySave';
 import { it,expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { chapter5 } from '../src/content/chapters/ch05';
+import { chapter5 } from '../src/legacy/season1/ch05';
 import { validateContent } from '../src/engine/validateContent';
 import { step } from '../src/engine/step';
 import { reduceSave } from '../src/state/reducer';
@@ -10,8 +10,8 @@ import { parseSave } from '../src/persistence/validateSave';
 import { memoriesFor } from '../src/content/memories';
 import { continuationDraft,continuationOptions,invitationEcho,invitationConversation,invitationReplies } from '../src/content/invitation';
 import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
-import { defaultFourth,command4,startFour,finishFour } from './chapter4Helpers';
-import { command5,finishFive,startFive,fifthCode } from './chapter5Helpers';
+import { defaultFourth,command4,startFour,finishFour } from './legacy4Helpers';
+import { command5,finishFive,startFive,fifthCode } from './legacy5Helpers';
 it('has a complete fifth graph with four equal endings',()=>expect(validateContent(chapter5)).toEqual([]));
 it.each(['her','accept','none',undefined] as const)('uses only remembered goodbye4=%s for the fifth-chapter callback',goodbye=>{
   const prior=finishFour(undefined,{...defaultFourth,goodbye:goodbye??'none'});
@@ -75,7 +75,7 @@ it('accepts each local continuation only after the canonical ending and keeps it
   const empty=initialState();expect(reduceSave(empty,{type:'continuation',value:'game'})).toBe(empty);const main=finishFive();
   for(const value of ['game','movie','cafe','walk','decline','public','chat','later'] as const){const s=reduceSave(main,{type:'continuation',value});expect(s.campaign).toEqual(main.campaign);expect(s.collection).toEqual(main.collection);expect(parseSave(JSON.stringify(s)).continuation).toBe(value);expect(reduceSave(s,{type:'continuation',value})).toBe(s);}
   expect(continuationOptions.map(o=>o.value)).toEqual(['game','movie','cafe','walk','decline']);
-  const drafts=['game','movie','cafe','walk'].map(value=>continuationDraft(value as 'game'|'movie'|'cafe'|'walk'));expect(new Set(drafts).size).toBe(4);for(const draft of drafts)expect(draft).toContain('свидание');
+  const drafts=['game','movie','cafe','walk'].map(value=>continuationDraft(value as 'game'|'movie'|'cafe'|'walk'));expect(new Set(drafts).size).toBe(4);for(const draft of drafts)expect(draft).not.toContain('свидание');
   const trial=startFive(main,true);expect(reduceSave(trial,{type:'continuation',value:'game'})).toBe(trial);expect(continuationDraft('decline')).toBe('Спасибо за историю 😊 Пока воздержусь от встречи, но было приятно пройти её.');expect(continuationDraft('later')).toBe('');expect(continuationDraft(null)).toBe('');expect(Object.keys(invitationEcho).sort()).toEqual(['absurd','help','tease']);
 });
 it('uses canonical chapter memories and makes all callback variants readable',()=>{

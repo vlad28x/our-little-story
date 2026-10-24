@@ -1,0 +1,26 @@
+import { startRun } from '../src/engine/step';
+import { chapter5 as edition2 } from '../src/legacy/season1/ch05-v13';
+import { getChapter } from '../src/content/chapters';
+import { chapters } from '../src/content/chapters/manifest';
+import { reduceSave } from '../src/state/reducer';
+import { parseSave } from '../src/persistence/validateSave';
+import { finishFour } from './chapter4Helpers';
+import type { Command,MemoriesResult,Run,StoryState } from '../src/engine/types';
+export const fifthCode=chapters.find(c=>c.id===5)!.code!;
+export type FifthPath={memory:MemoriesResult['outcome'];ending:NonNullable<StoryState['ending']>};
+export const defaultFifth:FifthPath={memory:'viewed',ending:'friendly'};
+export function command5(r:Run,p=defaultFifth):Command{
+  const n=getChapter(5,r.story)!.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
+  if(n.kind==='minigame')return {kind:'game-result',expectedTurn:r.turn,result:{kind:'memories',outcome:p.memory}};
+  if(n.kind==='choice')return {kind:'choose',expectedTurn:r.turn,choiceId:p.ending};
+  throw Error('Hidden node');
+}
+export function startFive(base=finishFour(),trial=false){
+ const save=reduceSave(reduceSave(base,{type:'unlock',code:fifthCode}),{type:trial?'trial':'start',chapter:5});
+ const prior=save.campaign.startStates[5]!;
+ if(trial)save.trial!.run=startRun(edition2,prior);else save.campaign.active=startRun(edition2,prior);
+ return save;
+}
+export function finishFive(base=finishFour(),p=defaultFifth,trial=false,check=false){
+  let s=startFive(base,trial);for(let i=0;i<180;i++){const r=trial?s.trial?.run:s.campaign.active;if(!r)return s;if(check)parseSave(JSON.stringify(s));s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command5(r,p)});}throw Error('Loop');
+}

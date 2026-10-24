@@ -1,4 +1,4 @@
-import { chapter4 } from '../src/content/chapters/ch04';
+import { getChapter } from '../src/content/chapters';
 import { chapters } from '../src/content/chapters/manifest';
 import { reduceSave } from '../src/state/reducer';
 import { parseSave } from '../src/persistence/validateSave';
@@ -8,7 +8,7 @@ export const fourthCode=chapters.find(c=>c.id===4)!.code!;
 export type FourthPath={bench:NonNullable<StoryState['bench']>;result:ConstellationResult;bond:NonNullable<StoryState['bond']>;wish:NonNullable<StoryState['wish']>;goodbye?:'accept'|'her'|'none'};
 export const defaultFourth:FourthPath={bench:'space',result:{kind:'constellation',outcome:'teapot',usedPreset:false},bond:'friendly',wish:'calm'};
 export function command4(r:Run,p=defaultFourth):Command{
-  const n=chapter4.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
+  const n=getChapter(4,r.story)!.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
   if(n.kind==='minigame')return {kind:'game-result',expectedTurn:r.turn,result:p.result};
   if(n.kind==='choice')return {kind:'choose',expectedTurn:r.turn,choiceId:n.id==='c4.distance'?p.bench:n.id==='c4.bond'?p.bond:n.id==='c4.goodbye'?p.goodbye??'none':p.wish};
   throw Error('Hidden node');

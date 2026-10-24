@@ -5,6 +5,8 @@ export type NodeId = `c${ChapterId}.${string}`;
 export type Emotion = 'neutral'|'smile'|'awkward'|'thinking'|'laugh'|'warm'|'surprised';
 export type Speaker = 'narrator'|'vlad'|'heroine'|'nina'|'angel'|'devil'|'heroine-thought'|'vlad-thought';
 export type StoryState = {
+  c4Edition?:2;c5Edition?:2|3;
+  c5FirstTaste?:'vanilla'|'sweet'|'compare';c5Recommendation?:'vanilla'|'fresh'|'both';
   approach?: 'joke'|'help'|'space'; searchResult?: 'tidy'|'detour'|'skipped'; catNoticed?: boolean;
   pace?: 'quiet'|'playful'|'flirt'; plan?: 'tea'|'banter'|'coop';
   rainRoute?: 'shelter'|'arcade'; catApproach?: 'wait'|'help'; umbrella?: 'patched'|'borrowed'|'skipped'; eveningMood?: 'quiet'|'playful';
@@ -80,8 +82,8 @@ export type StoryNode =
   | {id:NodeId;kind:'note';scene:Scene;questionId:QuestionId;prompt:string;context:string;answerOptions:{id:string;kind:'preset'|'custom';text:string}[];placeholder:string;submitLabel:string;skipLabel:string;maxCodePoints:280;next:NodeId}
   | {id:NodeId;kind:'label';scene:Scene;labelId:'s2.word8';maxCodePoints:24;next:NodeId}
   | {id:NodeId;kind:'end';endingId:CardId;cardId:CardId};
-export type Chapter = {id:ChapterId;contentVersion:number;scriptRevision?:3;title:string;entry:NodeId;nodes:Record<NodeId,StoryNode>};
-export type CardId = "c8.r3.dance"|"c8.r3.tea"|"c8.r3.next"|"c9.r3.talk"|"c9.r3.quiet"|"c9.r3.credits"|'c1.tea'|'c1.banter'|'c1.coop'|'c2.shelter'|'c2.arcade'|'c3.dinner'|'c4.adventure'|'c4.calm'|'c5.romantic'|'c5.comic'|'c5.gaming'|'c5.friendly'|'c6.hand'|'c6.lap'|'c6.home'|'c7.open'|'c7.promise'|'c7.calm'|'c8.kiss'|'c8.near'|'c8.tea'|'c9.kiss'|'c9.hug'|'c9.film'|'c10.goodnight'|'c10.stay'|'c10.private'|'c10.overnight';
+export type Chapter = {id:ChapterId;contentVersion:number;scriptRevision?:3;firstSeasonEdition?:2|3;title:string;entry:NodeId;nodes:Record<NodeId,StoryNode>};
+export type CardId = 'c5.story'|"c8.r3.dance"|"c8.r3.tea"|"c8.r3.next"|"c9.r3.talk"|"c9.r3.quiet"|"c9.r3.credits"|'c1.tea'|'c1.banter'|'c1.coop'|'c2.shelter'|'c2.arcade'|'c3.dinner'|'c4.adventure'|'c4.calm'|'c5.romantic'|'c5.comic'|'c5.gaming'|'c5.friendly'|'c6.hand'|'c6.lap'|'c6.home'|'c7.open'|'c7.promise'|'c7.calm'|'c8.kiss'|'c8.near'|'c8.tea'|'c9.kiss'|'c9.hug'|'c9.film'|'c10.goodnight'|'c10.stay'|'c10.private'|'c10.overnight';
 export type SearchResult = {kind:'token-search';outcome:'tidy'|'detour'|'skipped';catNoticed:boolean};
 export type UmbrellaResult = {kind:'umbrella-patch';outcome:'patched'|'borrowed'|'skipped'};
 export type KitchenResult = {kind:'kitchen';outcome:'feast'|'snack'|'chaos'|'skipped';served:number;mode:'timed'|'calm'};

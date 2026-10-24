@@ -9,10 +9,9 @@ import type { StoryState } from '../engine/types';
 // Called only by DeveloperPanel in the separate ?dev=1 save scope.
 export function previewSeventh(){
  let save=initialState();const apply=(a:Action)=>{const next=reduceSave(save,a);if(next===save)throw Error('Не удалось подготовить тестовую встречу');save=next;};
- const story:StoryState={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',bond:'friendly',wish:'calm',ending:'friendly'};
- apply({type:'dev-jump',nodeId:'c5.ending.friendly',story});
- let run=save.campaign.active!;const chapter5=getChapter(5)!;const node=chapter5.nodes[run.nodeId];if(node.kind!=='dialogue')throw Error('Не найдена сцена');
- for(let i=0;i<node.lines.length;i++){run=save.campaign.active!;apply({type:'command',target:'campaign',command:{kind:'advance',expectedTurn:run.turn}});}
+ const story:StoryState={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',wish:'calm',c5FirstTaste:'compare',c5Recommendation:'fresh'};
+ apply({type:'dev-jump',nodeId:'c5.close',story});
+ save=finishPreview(save);
  apply({type:'unlock',code:chapters.find(c=>c.id===6)!.code!});apply({type:'start',chapter:6,attemptId:'developer-six'});
  save=finishPreview(save);
  apply({type:'unlock',code:chapters.find(c=>c.id===7)!.code!});apply({type:'start',chapter:7,attemptId:'developer-seven'});

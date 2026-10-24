@@ -1,5 +1,5 @@
 /**
- * Полная справочная DTO текущего сейва — обновлена 23 октября 2026.
+ * Полная справочная DTO текущего сейва — обновлена 24 октября 2026.
  * Автоматически собрана из src/state/types.ts и src/engine/types.ts.
  * Имена и типы полей сохранены; код игры этот справочник не импортирует.
  * Это контракт, не копия пользовательского прогресса.
@@ -19,7 +19,7 @@
 export type SaveV1 = {
     appId: 'five-meetings';
     schemaVersion: 1;
-    contentVersion: 12;
+    contentVersion: 14;
     revision: number;
     updatedAt: string;
     settings: Settings;
@@ -76,6 +76,7 @@ export type ChapterRecord = {
 
 /** Найденная открытка. variant/teamName/venue хранят данные её отображения. */
 export type CardRecord = {
+    c5Edition?: 3;
     id: CardId;
     chapter: ChapterId;
     endingId: CardId;
@@ -113,8 +114,12 @@ export type PrivateWord = {
 /** Сюжетные решения. Поля необязательные: появляются по мере прохождения соответствующих веток.
  * teamName: dumpling = «Пельмень и партнёры», calm = «Два спокойных человека», accident = «Отдел случайных побед».
  * constellation: cat = «Пончик», controllers = «Наша команда», teapot = «Ещё по чашке?».
- * Это снимок состояния, а не журнал всех нажатий. Объятие в главе 4 отдельным полем не сохраняется. */
+ * Это снимок состояния, а не журнал всех нажатий. c4Goodbye хранит вариант прощания4. c4Edition/c5Edition различают редакции; новые вкусы пятой появляются только в c5Edition=3. */
 export type StoryState = {
+    c4Edition?: 2;
+    c5Edition?: 2 | 3;
+    c5FirstTaste?: 'vanilla' | 'sweet' | 'compare';
+    c5Recommendation?: 'vanilla' | 'fresh' | 'both';
     approach?: 'joke' | 'help' | 'space';
     searchResult?: 'tidy' | 'detour' | 'skipped';
     catNoticed?: boolean;
@@ -220,7 +225,7 @@ export type Run = {
 
 export type ChapterId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export type CardId = "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
+export type CardId = 'c5.story' | "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
 
 export type NodeId = `c${ChapterId}.${string}`;
 

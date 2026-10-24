@@ -5,6 +5,7 @@ import { constellationNames } from '../minigames/constellationModel';
 import { effectiveVenue } from './season2';
 import type { Run } from '../engine/types';
 export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:string;background:string}> = {
+  'c5.story':{chapter:5,title:'Пять встреч',caption:'Пять вечеров, знакомый столик и маленькая история в конверте.',quote:'мой любимый незапланированный перерыв.',motif:'envelope',background:'bg.cafe.sunset'},
   'c1.tea': {chapter:1,title:'Маленькая пауза',caption:'Иногда хороший день начинается с того, что никуда не торопишься',quote:'спасибо, что задержалась.',motif:'tea',background:'bg.cafe.window'},
   'c1.banter': {chapter:1,title:'Нелепо познакомились',caption:'План знакомиться красиво заменён на план смеяться вместе',quote:'хорошо посидели. неожиданно буквально.',motif:'scarf',background:'bg.cafe.window'},
   'c1.coop': {chapter:1,title:'Второй игрок найден',caption:'Сначала собрали жетоны. Кажется, теперь собралась команда',quote:'сохраним место. у нас тут ещё мостик непостроенный.',motif:'token',background:'bg.cafe.window'},
@@ -43,7 +44,7 @@ export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string
 export const searchCaptions = {tidy:'Три точных находки',detour:'Провели расследование',skipped:'Собрали вместе'};
 export const umbrellaCaptions={patched:'Облако-нашивка на память',borrowed:'Сухой чехол для зонтика',skipped:'Просто хороший перерыв'};
 export const kitchenCaptions={feast:'Целый пир на экране',snack:'Один большой бутерброд',chaos:'Зато красиво сервировали',skipped:'Печенье без обучения'};
-export function archivedEpisodeCard(id:CardId){return ['c8.kiss','c8.near','c8.tea','c9.kiss','c9.hug','c9.film'].includes(id);}
+export function archivedEpisodeCard(id:CardId){return ['c5.romantic','c5.comic','c5.gaming','c5.friendly','c8.kiss','c8.near','c8.tea','c9.kiss','c9.hug','c9.film'].includes(id);}
 export function cardDetail(card:CardRecord){return archivedEpisodeCard(card.id)?'Из прежнего сценария · встреча '+card.chapter:card.chapter>=8?`После титров · ${card.chapter-5} / 5`:card.chapter===7?'После титров · вторая встреча':card.chapter===6?'После титров · первая встреча':card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===3?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
 export function cardBackground(card:CardRecord){return card.id==='c10.overnight'?'bg.s2.kitchen.morning':card.chapter>=8?(card.venue==='home'?(card.chapter===8?'bg.s2.kitchen.evening':'bg.home.living'):cards[card.id].background):cards[card.id].background;}
 export function cardCharacter(id:CardId,venue?:CardRecord['venue']){const chapter=cards[id].chapter;return chapter>=8&&venue==='home'?'vlad.casual.warm':chapter>=6?'vlad.city.smile':chapter===3?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
@@ -54,6 +55,7 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
   else if(chapter===2&&story.rainRoute&&story.umbrella){id=`c2.${story.rainRoute}`;variant=story.umbrella;}
   else if(chapter===3&&story.kitchenResult&&story.teamName){id='c3.dinner';variant=story.kitchenResult;}
   else if(chapter===4&&story.wish&&story.constellation){id=`c4.${story.wish}`;variant=story.constellation;}
+  else if(chapter===5&&!!story.c5Edition&&story.wish){id='c5.story';variant=story.wish;}
   else if(chapter===5&&story.ending&&story.wish){id=`c5.${story.ending}`;variant=story.wish;}
   else if(chapter===6&&story.c6Ending){id=`c6.${story.c6Ending}`;variant='evening';}
   else if(chapter===7&&story.c7Ending){id=`c7.${story.c7Ending}`;variant='evening';}
@@ -61,5 +63,10 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
   else if(chapter===9&&story.c9Close){id=`c9.r3.${story.c9Close}`;variant='evening';}
   else if(chapter===10&&story.c10Ending){id=`c10.${story.c10Ending}`;variant=story.c10Ending==='overnight'?'morning':'evening';}
   else throw new Error('История ещё не завершена');
-  return {id,chapter,...(chapter>=8?{venue:effectiveVenue(chapter,story)}:{}),endingId:id,variant,captionId:`${id}.${variant}`,...(chapter===3?{teamName:story.teamName}:{}),...(chapter===4?{usedPreset:results?.constellation?.usedPreset??false}:{})};
+  return {id,chapter,...(chapter===5&&story.c5Edition===3?{c5Edition:3 as const}:{}),...(chapter>=8?{venue:effectiveVenue(chapter,story)}:{}),endingId:id,variant,captionId:`${id}.${variant}`,...(chapter===3?{teamName:story.teamName}:{}),...(chapter===4?{usedPreset:results?.constellation?.usedPreset??false}:{})};
+}
+
+// The same postcard ID keeps the old wording when reconstructing an edition2 record.
+export function cardMeta(card:CardRecord){
+  return card.id==='c5.story'&&card.c5Edition===3?{...cards[card.id],caption:'Знакомый столик, новый рецепт и маленький спор о вкусе.',quote:'чай с характером. компания тоже.'}:cards[card.id];
 }

@@ -17,13 +17,14 @@ it('R3 graph has no missing or unreachable nodes and round-trips every checkpoin
   save=finishR3(chapter,{check:true,note:'Моя мысль 🌙'},save);
   expect(save.campaign.records[chapter]?.scriptRevision).toBe(3);
  }
- expect(save.contentVersion).toBe(12);expect(save.collection.memories).toHaveLength(5);expect(save.collection.secrets).toHaveLength(5);
+ expect(save.contentVersion).toBe(14);expect(save.collection.memories).toHaveLength(5);expect(save.collection.secrets).toHaveLength(5);
 },60000);
-it('first-season scripts retain their approved bytes after the 2026-10-23 polish',()=>{
+it('chapters1–3 and the frozen previous4–5 retain their approved 2026-10-23 bytes',()=>{
  const hashes=JSON.parse(readFileSync('tests/fixtures/r1/first-five-hashes.json','utf8')) as Record<string,string>;
  // Owner-approved baseline: outputs/SEASON_01_POLISH_BRIEF_2026_10_23.md.
- // Keep protecting all five scripts, including the now remembered goodbye4.
- for(const [file,hash] of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(file)).digest('hex')).toBe(hash);
+ // The explicit 2026-10-24 exception changes4–5. Protect their frozen originals
+ // with the original hashes, while1–3 remain protected in their runtime paths.
+ for(const [file,hash] of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(file.replace('content/chapters/ch04','legacy/season1/ch04').replace('content/chapters/ch05','legacy/season1/ch05'))).digest('hex')).toBe(hash);
 });
 it('all six golden R2 snapshots remain valid read-only sources until explicit update',()=>{
  for(const name of ['6','7','8','9','10','active8']){

@@ -72,7 +72,7 @@ test('valid R2 stays untouched until confirmation and is archived in its own sco
  await expect(page.getByRole('heading',{name:'Сезон обновился',exact:true})).toBeVisible();
  expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(raw);
  await page.getByRole('button',{name:'Начать второй сезон заново',exact:true}).click();
- await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(12);
+ await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(14);
  expect(await page.evaluate(k=>localStorage.getItem(k+':legacy-r2'),key)).toBe(raw);
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign.active.chapter,key)).toBe(6);
 });

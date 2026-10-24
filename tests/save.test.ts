@@ -7,7 +7,7 @@ import { reduceSave } from '../src/state/reducer';
 import { chapter,commandFor,completeSave,defaultPath } from './helpers';
 import { withLegacyJournal } from './legacySave';
 import { completeTwo,finishThree } from './chapter3Helpers';
-import { finishFour } from './chapter4Helpers';
+import { finishFour } from './legacy4Helpers';
 import { chapters } from '../src/content/chapters/manifest';
 import type { ChapterId } from '../src/engine/types';
 class MemoryStorage implements StorageLike { data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
@@ -40,6 +40,7 @@ describe('save and restore',()=>{
     for(const [index,base] of bases.entries()){
       const chapter=(index+1) as ChapterId,code=chapters.find(c=>c.id===chapter)?.code;
       let save=reduceSave(code?reduceSave(base,{type:'unlock',code}):base,{type:'start',chapter});save=reduceSave(save,{type:'trial',chapter});
+      for(const run of [save.campaign.active,save.trial?.run])if(run){delete run.story.c4Edition;delete run.story.c5Edition;}
       const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw).toContain('"journal"');expect(parseSave(raw)).toEqual(save);expect(parseSave(JSON.stringify(legacyContent(legacy,chapter)))).toEqual(prePolishSnapshot(save));expect(JSON.stringify(legacy)).toBe(raw);
       const storage=new MemoryStorage();storage.setItem(key,raw);expect(load(storage,key).save).toEqual(save);expect(storage.getItem(key)).toBe(raw);
       expect(persist(storage,legacy,save.revision,key)).toBe('saved');expect(storage.getItem(key)).not.toContain('"journal"');expect(parseSave(storage.getItem('test:backup')!)).toEqual(save);

@@ -1,6 +1,6 @@
 import { legacyContent,prePolishSnapshot } from './legacySave';
 import { it,expect } from 'vitest';
-import { chapter4 } from '../src/content/chapters/ch04';
+import { chapter4 } from '../src/legacy/season1/ch04';
 import { validateContent } from '../src/engine/validateContent';
 import { reduceSave } from '../src/state/reducer';
 import { parseSave } from '../src/persistence/validateSave';
@@ -8,7 +8,7 @@ import { step } from '../src/engine/step';
 import { cardFromStory } from '../src/content/cards';
 import { initialState } from '../src/state/initialState';
 import { completeTwo,defaultThird,finishThree,command3,thirdCode } from './chapter3Helpers';
-import { command4,defaultFourth,finishFour,startFour,fourthCode } from './chapter4Helpers';
+import { command4,defaultFourth,finishFour,startFour,fourthCode } from './legacy4Helpers';
 import type { ConstellationResult } from '../src/engine/types';
 import beforeHug from './fixtures/chapter4-before-hug.json' with {type:'json'};
 it('has a complete fourth-chapter graph and explicit scene resources',()=>expect(validateContent(chapter4)).toEqual([]));
@@ -69,9 +69,9 @@ it('offers all three goodbyes for all 48 bench/sky/bond/wish combinations withou
 });
 
 it('keeps all frozen old final-dialogue cursors and the old completed fourth chapter readable',()=>{
-  expect(parseSave(JSON.stringify(beforeHug.completed))).toEqual(beforeHug.completed);
+  expect(parseSave(JSON.stringify(beforeHug.completed))).toEqual({...beforeHug.completed,contentVersion:14});
   for(const old of beforeHug.active){
-    let save=parseSave(JSON.stringify(old));expect(save).toEqual(old);
+    let save=parseSave(JSON.stringify(old));expect(save).toEqual({...old,contentVersion:14});
     for(let i=0;i<100&&save.campaign.active;i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active)});
     const record=structuredClone(save.campaign.records[4]!);expect(record.story.c4Goodbye).toBe('none');delete record.story.c4Goodbye;
     expect(record).toEqual(beforeHug.completed.campaign.records[4]);expect(save.campaign.completed).toEqual([1,2,3,4]);expect(parseSave(JSON.stringify(save))).toEqual(save);

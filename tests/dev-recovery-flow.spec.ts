@@ -5,6 +5,17 @@ import { parseSave } from '../src/persistence/validateSave';
 import oldEight from './fixtures/r1/eight.json' with {type:'json'};
 import oldR2 from './fixtures/r2/8.json' with {type:'json'};
 const key='five-meetings:/:dev:save',ordinary='five-meetings:/:save';
+test('first-season development shortcuts create valid new4–5 states without a relationship choice',async({page})=>{
+ const normal=JSON.stringify(finishFive());
+ await page.addInitScript(({ordinary,normal})=>{if(!localStorage.getItem(ordinary))localStorage.setItem(ordinary,normal);},{ordinary,normal});
+ for(const id of ['c4.walk','c4.stars','c4.honest','c4.end','c5.return','c5.drink.first','c5.drink.recommend','c5.album','c5.letter','c5.close']){
+  await page.goto('./?dev=1#/chapters');await page.getByText('Тестовые сцены',{exact:true}).click();
+  await page.getByRole('button',{name:id,exact:true}).click();await expect(page.locator(`[data-node="${id}"]`)).toBeVisible();
+  const saved=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);
+  expect(saved.campaign.active?.story.bond).toBeUndefined();expect(saved.campaign.active?.story.ending).toBeUndefined();
+  expect(await page.evaluate(k=>localStorage.getItem(k),ordinary)).toBe(normal);
+ }
+});
 async function seed(page:Page){
  const old=finishArc(8);delete old.campaign.records[8]!.story.c8Dance;const raw=JSON.stringify(old),normal=JSON.stringify(finishFive());
  await page.addInitScript(({key,ordinary,raw,normal})=>{
@@ -42,7 +53,7 @@ test('a valid R1 sandbox also offers explicit recovery instead of a blocked prev
  const raw=JSON.stringify(oldEight),normal=JSON.stringify(finishFive());
  await page.addInitScript(({key,ordinary,raw,normal})=>{if(!localStorage.getItem(key))localStorage.setItem(key,raw);if(!localStorage.getItem(ordinary))localStorage.setItem(ordinary,normal);},{key,ordinary,raw,normal});
  await page.goto('./?dev=1#/chapters');await expect(page.getByRole('heading',{name:'Тестовый прогресс устарел'})).toBeVisible();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(raw);
- await page.getByRole('button',{name:'Открыть встречу 6',exact:true}).click();await expect(page.locator('[data-node="c6.r3.entry"]')).toBeVisible();await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(12);
+ await page.getByRole('button',{name:'Открыть встречу 6',exact:true}).click();await expect(page.locator('[data-node="c6.r3.entry"]')).toBeVisible();await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).contentVersion,key)).toBe(14);
  expect(await page.evaluate(k=>localStorage.getItem(k),ordinary)).toBe(normal);
 });
 test('a valid R2 sandbox can explicitly open R3 and retains its own original backup',async({page})=>{
