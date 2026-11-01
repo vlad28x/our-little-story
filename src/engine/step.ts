@@ -121,4 +121,4 @@ export function step(chapter:Chapter, current:Run, command:Command):StepResult {
   return settle(chapter,run);
 }
 
-export function resolveScene(scene:Scene,story:StoryState,run?:Run):Scene{const selected=scene.variants?.find(v=>matches(story,v.when,run));return selected?{background:selected.background,character:selected.character}:{background:scene.background,character:scene.character};}
+export function resolveScene(scene:Scene,story:StoryState,run?:Run):Scene{const selected=scene.variants?.find(v=>(v.fromLine===undefined||!!run&&run.lineIndex>=v.fromLine)&&matches(story,v.when,run));return selected?{background:selected.background,character:selected.character}:{background:scene.background,character:scene.character};}

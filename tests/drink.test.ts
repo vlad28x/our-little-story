@@ -14,6 +14,7 @@ import {finishFive as edition2Five} from './edition2FifthHelpers';
 import {finishR3} from './r3Helpers';
 import {completeTwo,finishThree,defaultThird} from './chapter3Helpers';
 import type {SaveV1} from '../src/state/types';
+import {resolveScene} from '../src/engine/step';
 
 const initial=finishFour();
 it('contains exactly two scene menus and one common ending, with no status or real invitation inside the graph',()=>{
@@ -23,6 +24,14 @@ it('contains exactly two scene menus and one common ending, with no status or re
  const text=Object.values(chapter5.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]).join(' ');
  expect(text).not.toMatch(/не зря тренировались пять встреч|Хорошо тогда задержались у двери|мой любимый незапланированный перерыв|по-настоящему|свидание|победитель/);
  expect(chapter5.nodes['c5.exit'].kind).toBe('dialogue');
+ const exit=chapter5.nodes['c5.exit'];
+ if(exit.kind==='dialogue'){
+  for(const lineIndex of [0,1,2,3,4,5]){
+   const run={...startFive(initial).campaign.active!,nodeId:exit.id,lineIndex};
+   expect(resolveScene(exit.scene,run.story,run).background).toBe(lineIndex<2?'bg.cafe.sunset':'bg.cafe.exterior');
+  }
+  expect(validateContent({...chapter5,nodes:{...chapter5.nodes,[exit.id]:{...exit,scene:{...exit.scene,variants:[{when:[],fromLine:6,background:'bg.cafe.exterior',character:'vlad.elegant.smile'}]}}}})).toContain('Invalid scene line c5.exit');
+ }
 });
 it('all nine taste/recommendation combinations retain every cursor, comparison and exact callback through JSON/cloud',()=>{
  const endings=new Set();let count=0;

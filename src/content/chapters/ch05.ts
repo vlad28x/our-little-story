@@ -122,5 +122,7 @@ d('c5.exit','c5.finish.story','smile',[
   Y('И как тебе вечер экспериментов?'),V('чай с характером. компания тоже.'),
   N('У развилки вы прощаетесь и расходитесь каждый своей дорогой. Окно кафе ещё немного светится за спиной.'),
 ]);
+const exit=nodes['c5.exit'];
+if(exit.kind==='dialogue')exit.scene.variants=[{when:[],fromLine:2,background:'bg.cafe.exterior',character:'vlad.elegant.smile'}];
 nodes['c5.finish.story']={id:'c5.finish.story',kind:'end',endingId:'c5.story',cardId:'c5.story'};
 export const chapter5:Chapter={id:5,contentVersion:14,firstSeasonEdition:3,title:'А что, если это не конец?',entry:'c5.return',nodes};

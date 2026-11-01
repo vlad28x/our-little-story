@@ -10,6 +10,7 @@ export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
   'bg.s2.cafe.terrace':{file:'backgrounds/s2-cafe-terrace.webp',alt:'',status:'generated'},
   'bg.cafe.entry':{file:'backgrounds/cafe-entry.webp',alt:'',status:'generated'},
   'bg.cafe.sunset':{file:'backgrounds/cafe-sunset.webp',alt:'',status:'generated'},
+  'bg.cafe.exterior':{file:'backgrounds/cafe-exterior-evening.webp',alt:'',status:'generated'},
   'vlad.elegant.smile':{file:'characters/vlad/elegant-smile.webp',alt:'Влад в чёрном пиджаке и водолазке',status:'generated'},
   'vlad.elegant.neutral':{file:'characters/vlad/elegant-smile.webp',alt:'Влад в чёрном пиджаке и водолазке',status:'generated'},
   'vlad.elegant.warm':{file:'characters/vlad/elegant-smile.webp',alt:'Влад в чёрном пиджаке и водолазке',status:'generated'},

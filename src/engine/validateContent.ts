@@ -8,6 +8,7 @@ export function validateContent(chapter:Chapter):string[] {
     if(seen.has(id))return;seen.add(id);
     if(n.id!==id)errors.push(`ID mismatch ${id}`);
     if('scene' in n)for(const asset of [n.scene,...(n.scene.variants??[])].flatMap(s=>[s.background,s.character]))if(!assetManifest[asset])errors.push(`Missing asset ${asset}`);
+    if('scene' in n)for(const variant of n.scene.variants??[])if(variant.fromLine!==undefined&&(n.kind!=='dialogue'||!Number.isInteger(variant.fromLine)||variant.fromLine<0||variant.fromLine>=n.lines.length))errors.push(`Invalid scene line ${id}`);
     let next:NodeId[]=[];
     if(n.kind==='dialogue'){if(!n.lines.length)errors.push(`No lines ${id}`);next=[n.next];}
     if(n.kind==='choice'){if(!n.choices.length||n.choices.every(c=>c.when?.length))errors.push(`No default choice ${id}`);if(new Set(n.choices.map(c=>c.id)).size!==n.choices.length)errors.push(`Duplicate choice ${id}`);next=n.choices.map(c=>c.next);}

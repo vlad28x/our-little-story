@@ -72,7 +72,7 @@ export type SecretId = "c6.r3.secret"|"c7.r3.secret"|"c8.r3.secret"|"c9.r3.secre
 export type EpisodeProgress={memory?:MemoryId;secret?:SecretId};
 export type Effect=SetEffect;
 export type Line = {speaker:Speaker;text:string;emotion?:Emotion};
-export type Scene = {background:string;character:string;variants?:{when:Condition[];background:string;character:string}[]};
+export type Scene = {background:string;character:string;variants?:{when:Condition[];fromLine?:number;background:string;character:string}[]};
 export type Choice = {id:string;text:string;next:NodeId;effects?:Effect[];when?:Condition[]};
 export type StoryNode =
   | {id:NodeId;kind:'dialogue';scene:Scene;lines:Line[];next:NodeId;presentation?:'adviser-aside';fadeOnLastLine?:boolean}
