@@ -1,2103 +1,1287 @@
-import type { Chapter } from '../../engine/types';
-// R3: outputs/SEASON_02_R3_SCRIPT_*.md
+import type {Chapter} from '../../engine/types';
+// Exact text: outputs/CHAPTER_06_WALK_SCRIPT_2026_11_04.md
 export const chapter6:Chapter={
   "id": 6,
-  "contentVersion": 12,
-  "scriptRevision": 3,
-  "title": "Ещё пять минут",
-  "entry": "c6.r3.entry",
+  "contentVersion": 16,
+  "scriptRevision": 5,
+  "title": "Пока светло",
+  "entry": "c6.photo.entry",
   "nodes": {
-    "c6.r3.entry": {
-      "id": "c6.r3.entry",
+    "c6.photo.entry": {
+      "id": "c6.photo.entry",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.sun",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "На развилке Влад показывает направо, но сам останавливается."
-        },
-        {
-          "speaker": "vlad",
-          "text": "остановка там. а здесь можно ещё немного пройтись."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты уже выбрал?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "за себя — да. теперь пытаюсь прилично предложить."
+          "text": "Прошло несколько дней."
         },
         {
           "speaker": "narrator",
-          "text": "Он убирает телефон в карман и разворачивается к воде."
+          "text": "У входа на набережную Влад замечает тебя и отходит от перил."
         },
         {
           "speaker": "vlad",
-          "text": "пять минут. а если найдём что-нибудь интересное, виноват будет город."
-        }
-      ],
-      "next": "c6.r3.voice"
-    },
-    "c6.r3.voice": {
-      "id": "c6.r3.voice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Пройдёмся ещё немного?",
-      "choices": [
-        {
-          "id": "lead",
-          "text": "Ладно. Показывай, что у тебя за пять минут",
-          "next": "c6.r3.voice.lead",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6Voice",
-              "value": "lead"
-            }
-          ]
-        },
-        {
-          "id": "tease",
-          "text": "Я выберу дорогу. Ты отвечаешь за компанию",
-          "next": "c6.r3.voice.tease",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6Voice",
-              "value": "tease"
-            }
-          ]
-        },
-        {
-          "id": "quiet",
-          "text": "Пройдёмся без плана?",
-          "next": "c6.r3.voice.quiet",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6Voice",
-              "value": "quiet"
-            }
-          ]
-        }
-      ]
-    },
-    "c6.r3.voice.lead": {
-      "id": "c6.r3.voice.lead",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "люблю разумный запас доверия"
+          "text": "привет. рад тебя видеть."
         },
         {
           "speaker": "heroine",
-          "text": "Пока маленький."
+          "text": "Привет. Вдоль воды пойдём?"
         },
         {
           "speaker": "vlad",
-          "text": "постараюсь не потратить на рассказ про фонари."
+          "text": "пойдём. там ещё солнце."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы выходите на нижнюю дорожку. Влад уже миновал лестницу, когда ты останавливаешься у воды."
         }
       ],
-      "next": "c6.r3.window.intro"
+      "next": "c6.photo.light"
     },
-    "c6.r3.voice.tease": {
-      "id": "c6.r3.voice.tease",
+    "c6.photo.light": {
+      "id": "c6.photo.light",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "отлично. наконец-то должность, к которой я готов."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Без длинной речи."
-        },
-        {
-          "speaker": "vlad",
-          "text": "уже начал её сокращать."
-        }
-      ],
-      "next": "c6.r3.window.intro"
-    },
-    "c6.r3.voice.quiet": {
-      "id": "c6.r3.voice.quiet",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "да. это у меня обычно получается лучше всего."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А зачем телефон доставал?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "чтобы выглядеть человеком с планом."
-        }
-      ],
-      "next": "c6.r3.window.intro"
-    },
-    "c6.r3.window.intro": {
-      "id": "c6.r3.window.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.sun",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Вы доходите до освещённой витрины. Влад задерживается перед тремя керамическими фигурками."
-        },
-        {
-          "speaker": "vlad",
-          "text": "давай проверим кое-что. какую из этих трёх я бы забрал?"
+          "text": "В воде дрожит золотой прямоугольник — отражение стены на противоположном берегу."
         },
         {
           "speaker": "heroine",
-          "text": "Ты сейчас проверяешь, насколько я тебя знаю?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "нет. насколько убедительно я могу объяснить странную покупку."
+          "text": "Подожди. Смотри, будто окно прямо в воде."
         },
         {
           "speaker": "narrator",
-          "text": "В витрине — важный кот, маленький домик и чашка с кривой ручкой."
+          "text": "Влад возвращается на шаг и смотрит туда, куда ты показываешь."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вижу. только ручку не приделали."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Ты уже собрался открывать?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "сначала постучать. вдруг занято."
+        },
+        {
+          "speaker": "narrator",
+          "text": "По отражению проходит мелкая рябь. Ты достаёшь телефон, но отвлекаешься на витрину киоска у лестницы."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Там фотоаппараты? Те, которые с плёнкой?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "похоже. одноразовые."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Давай возьмём один на двоих."
+        },
+        {
+          "speaker": "vlad",
+          "text": "давай. это отражение будет первым?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Если успеем."
         }
       ],
-      "next": "c6.r3.guess"
+      "next": "c6.photo.purchase"
     },
-    "c6.r3.guess": {
-      "id": "c6.r3.guess",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Что бы выбрал Влад?",
-      "choices": [
-        {
-          "id": "cat",
-          "text": "Кота. Слишком похож на хозяина",
-          "next": "c6.r3.guess.cat"
-        },
-        {
-          "id": "house",
-          "text": "Домик. Ты же обещал уют",
-          "next": "c6.r3.guess.house"
-        },
-        {
-          "id": "cup",
-          "text": "Чашку. Её надо спасти",
-          "next": "c6.r3.guess.cup"
-        }
-      ]
-    },
-    "c6.r3.guess.cat": {
-      "id": "c6.r3.guess.cat",
+    "c6.photo.purchase": {
+      "id": "c6.photo.purchase",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Кота. Вид у него такой, будто всё под контролем."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да, это он. а внутри, подозреваю, тоже полный бардак."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Значит, угадала?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "с неприятной точностью."
-        }
-      ],
-      "next": "c6.r3.her.intro"
-    },
-    "c6.r3.guess.house": {
-      "id": "c6.r3.guess.house",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Домик. Ты же обещал уют."
-        },
-        {
-          "speaker": "vlad",
-          "text": "красивый ответ. я выбрал кота, но теперь чувствую, что мне стоило подготовиться лучше."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Можно купить коту дом."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот так незаметно начинаются большие расходы."
-        }
-      ],
-      "next": "c6.r3.her.intro"
-    },
-    "c6.r3.guess.cup": {
-      "id": "c6.r3.guess.cup",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Чашку. Её надо спасти."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я выбрал кота. но чашку теперь тоже жалко."
-        },
-        {
-          "speaker": "heroine",
-          "text": "У тебя всё так легко меняется?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "только планы на керамику. пока что."
-        }
-      ],
-      "next": "c6.r3.her.intro"
-    },
-    "c6.r3.her.intro": {
-      "id": "c6.r3.her.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.sun",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Влад отступает, чтобы не закрывать тебе витрину."
-        },
-        {
-          "speaker": "vlad",
-          "text": "теперь твоя очередь. выбери что-нибудь про себя. я попробую угадать."
-        }
-      ],
-      "next": "c6.r3.her.choice"
-    },
-    "c6.r3.her.choice": {
-      "id": "c6.r3.her.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Выбери про себя — он попробует угадать",
-      "choices": [
-        {
-          "id": "cat",
-          "text": "Я бы выбрала кота",
-          "next": "c6.r3.her.guess",
+          "text": "Вы складываетесь на один аппарат. Влад снимает упаковку, а ты разворачиваешь маленький листок инструкции.",
           "effects": [
             {
               "kind": "set",
-              "key": "c6Keepsake",
-              "value": "cat"
+              "key": "c6Film",
+              "value": "loaded"
+            },
+            {
+              "kind": "set",
+              "key": "c6CameraHolder",
+              "value": "vlad"
             }
           ]
         },
         {
-          "id": "house",
-          "text": "Мне нравится домик",
-          "next": "c6.r3.her.guess",
+          "speaker": "heroine",
+          "text": "Двадцать семь кадров."
+        },
+        {
+          "speaker": "vlad",
+          "text": "и ни одного экрана. я уже почти потянулся посмотреть, что там."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Вот это мне и нравится. С телефоном я бы сейчас сделала десять одинаковых и выбирала."
+        },
+        {
+          "speaker": "vlad",
+          "text": "а тут выберешь один и будешь ходить довольная до проявки."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Почему сразу довольная?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "пока не доказано обратное."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты складываешь инструкцию в сумку. Влад поворачивает колёсико до упора и передаёт тебе аппарат, держась за боковые стороны.",
           "effects": [
             {
               "kind": "set",
-              "key": "c6Keepsake",
-              "value": "house"
+              "key": "c6CameraHolder",
+              "value": "her"
             }
           ]
         },
         {
-          "id": "cup",
-          "text": "Всё-таки чашку",
-          "next": "c6.r3.her.guess",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6Keepsake",
-              "value": "cup"
-            }
-          ]
-        }
-      ]
-    },
-    "c6.r3.her.guess": {
-      "id": "c6.r3.her.guess",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
           "speaker": "vlad",
-          "text": "мне кажется, чашку. у неё есть характер."
+          "text": "готов. идём за твоим окном."
         }
       ],
-      "next": "c6.r3.her.route"
+      "next": "c6.photo.missed"
     },
-    "c6.r3.her.route": {
-      "id": "c6.r3.her.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c6Keepsake",
-              "equals": "cat"
-            }
-          ],
-          "next": "c6.r3.her.cat"
-        },
-        {
-          "all": [
-            {
-              "key": "c6Keepsake",
-              "equals": "house"
-            }
-          ],
-          "next": "c6.r3.her.house"
-        }
-      ],
-      "fallback": "c6.r3.her.cup"
-    },
-    "c6.r3.her.cat": {
-      "id": "c6.r3.her.cat",
+    "c6.photo.missed": {
+      "id": "c6.photo.missed",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Вообще-то кота."
-        },
-        {
-          "speaker": "vlad",
-          "text": "так. одного мы уже не поделили."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Пусть остаётся здесь."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и повод вернуться готов."
-        }
-      ],
-      "next": "c6.r3.window.after"
-    },
-    "c6.r3.her.house": {
-      "id": "c6.r3.her.house",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Домик."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ладно, твоя идея с котом и домом была серьёзной."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты слишком рано решил, что понял мою логику."
-        },
-        {
-          "speaker": "vlad",
-          "text": "зато теперь интересно."
-        }
-      ],
-      "next": "c6.r3.window.after"
-    },
-    "c6.r3.her.cup": {
-      "id": "c6.r3.her.cup",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Угадал."
-        },
-        {
-          "speaker": "vlad",
-          "text": "сейчас очень хочется сделать вид, что я отлично разбираюсь в людях."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Не порть красивый момент."
-        },
-        {
-          "speaker": "vlad",
-          "text": "молчу. просто запомню чашку."
-        }
-      ],
-      "next": "c6.r3.window.after"
-    },
-    "c6.r3.window.after": {
-      "id": "c6.r3.window.after",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Магазин уже закрыт. Вы ничего не покупаете, но уходить от витрины сразу не получается."
-        },
-        {
-          "speaker": "vlad",
-          "text": "нравится, что обычный кот внезапно занял столько времени."
+          "text": "Вы возвращаетесь к перилам. Стена на другом берегу уже в тени. Вместо золотого прямоугольника по воде тянется серая полоса."
         },
         {
           "speaker": "heroine",
-          "text": "Уже считаешь свои пять минут?"
+          "text": "Всё. Закрылось."
         },
         {
           "speaker": "vlad",
-          "text": "перестал ещё у кривой ручки."
-        }
-      ],
-      "next": "c6.r3.lantern"
-    },
-    "c6.r3.aside": {
-      "id": "c6.r3.aside",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
+          "text": "даже без таблички с расписанием."
+        },
         {
-          "speaker": "devil",
-          "text": "Пять минут. Ага."
+          "speaker": "narrator",
+          "text": "Ты проверяешь отражение чуть левее. Влад отходит вправо, заглядывает за выступ перил и возвращается."
+        },
+        {
+          "speaker": "vlad",
+          "text": "отсюда тоже нет. наверху ещё светлые крыши. можно подняться."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Или остаться здесь. В воде уже другое получается."
         },
         {
           "speaker": "angel",
-          "text": "Кот действительно интересный."
+          "text": "Внизу теперь видна лестница."
+        },
+        {
+          "speaker": "devil",
+          "text": "А наверху ещё можно догнать солнце. Я за погоню."
         }
       ],
-      "next": "c6.r3.route.intro",
+      "next": "c6.photo.place",
       "presentation": "adviser-aside"
     },
-    "c6.r3.route.intro": {
-      "id": "c6.r3.route.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "можем пройти к воде или завернуть ещё куда-нибудь. выбирай, я больше не считаю минуты."
-        }
-      ],
-      "next": "c6.r3.route"
-    },
-    "c6.r3.route": {
-      "id": "c6.r3.route",
-      "kind": "minigame",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "game": "evening-route",
-      "next": "c6.r3.stop.route"
-    },
-    "c6.r3.stop.route": {
-      "id": "c6.r3.stop.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 0,
-              "equals": "water"
-            }
-          ],
-          "next": "c6.r3.stop.water"
-        },
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 0,
-              "equals": "lights"
-            }
-          ],
-          "next": "c6.r3.stop.lights"
-        },
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 0,
-              "equals": "window"
-            }
-          ],
-          "next": "c6.r3.stop.window"
-        }
-      ],
-      "fallback": "c6.r3.stop.free"
-    },
-    "c6.r3.stop.water": {
-      "id": "c6.r3.stop.water",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы доходите до тихой площадки у воды. Здесь не нужно обходить встречных каждую минуту."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хороший поворот. можно наконец смотреть по сторонам, а не под ноги."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Тогда не торопись."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и не собирался."
-        }
-      ],
-      "next": "c6.r3.second.route"
-    },
-    "c6.r3.stop.lights": {
-      "id": "c6.r3.stop.lights",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы сворачиваете к фонарям. Их отражения вытягиваются через дорожку."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Вот здесь хочется немного замедлиться."
-        },
-        {
-          "speaker": "vlad",
-          "text": "давай. пока никуда не сворачиваем."
-        }
-      ],
-      "next": "c6.r3.second.route"
-    },
-    "c6.r3.stop.window": {
-      "id": "c6.r3.stop.window",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы ещё раз возвращаетесь к освещённой витрине. Керамический кот всё так же смотрит на улицу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ничего не пропустил. мы тоже пока просто гуляем."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Подозреваю, он так весь вечер."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хороший у него вечер."
-        }
-      ],
-      "next": "c6.r3.second.route"
-    },
-    "c6.r3.second.route": {
-      "id": "c6.r3.second.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 1,
-              "equals": "water"
-            }
-          ],
-          "next": "c6.r3.second.water"
-        },
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 1,
-              "equals": "lights"
-            }
-          ],
-          "next": "c6.r3.second.lights"
-        },
-        {
-          "all": [
-            {
-              "kind": "route-stop",
-              "index": 1,
-              "equals": "window"
-            }
-          ],
-          "next": "c6.r3.second.window"
-        }
-      ],
-      "fallback": "c6.r3.poster"
-    },
-    "c6.r3.second.water": {
-      "id": "c6.r3.second.water",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы доходите до тихой площадки у воды. Здесь не нужно обходить встречных каждую минуту."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хороший поворот. можно наконец смотреть по сторонам, а не под ноги."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Тогда не торопись."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и не собирался."
-        }
-      ],
-      "next": "c6.r3.poster"
-    },
-    "c6.r3.second.lights": {
-      "id": "c6.r3.second.lights",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы сворачиваете к фонарям. Их отражения вытягиваются через дорожку."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Вот здесь хочется немного замедлиться."
-        },
-        {
-          "speaker": "vlad",
-          "text": "давай. пока никуда не сворачиваем."
-        }
-      ],
-      "next": "c6.r3.poster"
-    },
-    "c6.r3.second.window": {
-      "id": "c6.r3.second.window",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.window.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы ещё раз возвращаетесь к освещённой витрине. Керамический кот всё так же смотрит на улицу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ничего не пропустил. мы тоже пока просто гуляем."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Подозреваю, он так весь вечер."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хороший у него вечер."
-        }
-      ],
-      "next": "c6.r3.poster"
-    },
-    "c6.r3.stop.free": {
-      "id": "c6.r3.stop.free",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы не выбираете отдельные остановки и идёте вдоль воды."
-        },
-        {
-          "speaker": "vlad",
-          "text": "можно просто гулять. город пока отлично справляется без расписания."
-        }
-      ],
-      "next": "c6.r3.poster"
-    },
-    "c6.r3.poster": {
-      "id": "c6.r3.poster",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "У воды ветер переворачивает край афиши на столбе. Влад ловит его взглядом."
-        },
-        {
-          "speaker": "vlad",
-          "text": "половину объявления не видно. предлагаю придумать вторую."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А если там что-то серьёзное?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "тогда у нас получится очень странная выставка."
-        }
-      ],
-      "next": "c6.r3.poster.choice"
-    },
-    "c6.r3.poster.choice": {
-      "id": "c6.r3.poster.choice",
+    "c6.photo.place": {
+      "id": "c6.photo.place",
       "kind": "choice",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile"
       },
-      "prompt": "Что там могло быть написано?",
+      "prompt": "Где найдём новый кадр?",
       "choices": [
         {
-          "id": "cat",
-          "text": "«Приходите со своим котом»",
-          "next": "c6.r3.poster.cat"
-        },
-        {
-          "id": "late",
-          "text": "«Можно опоздать, мы тоже»",
-          "next": "c6.r3.poster.late"
-        },
-        {
-          "id": "read",
-          "text": "Давай попробуем прочитать настоящую",
-          "next": "c6.r3.poster.read"
-        }
-      ]
-    },
-    "c6.r3.poster.cat": {
-      "id": "c6.r3.poster.cat",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "наш керамический уже готов."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ему ещё из магазина выйти надо."
-        },
-        {
-          "speaker": "vlad",
-          "text": "значит, встречаемся у витрины после открытия."
-        }
-      ],
-      "next": "c6.r3.moment.intro"
-    },
-    "c6.r3.poster.late": {
-      "id": "c6.r3.poster.late",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "вот на такое я бы пришёл вовремя."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Чтобы удивить организаторов?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "чтобы занять удобное место."
-        }
-      ],
-      "next": "c6.r3.moment.intro"
-    },
-    "c6.r3.poster.read": {
-      "id": "c6.r3.poster.read",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы отходите на несколько шагов и находите угол, с которого видно надпись."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мастер-класс по керамике."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Кот был ближе к правде, чем казалось."
-        },
-        {
-          "speaker": "vlad",
-          "text": "он весь вечер всё знал."
-        }
-      ],
-      "next": "c6.r3.moment.intro"
-    },
-    "c6.r3.moment.intro": {
-      "id": "c6.r3.moment.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы возвращаетесь к ограде. Влад становится рядом, оставляя тебе место."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я рад, что мы не свернули сразу к остановке."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Из-за кота?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "кот неплохой. но компания мне нравится больше."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хочешь, возьму тебя за руку?"
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он протягивает раскрытую ладонь и ждёт."
-        }
-      ],
-      "next": "c6.r3.moment"
-    },
-    "c6.r3.moment": {
-      "id": "c6.r3.moment",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Как хочется пройтись дальше?",
-      "choices": [
-        {
-          "id": "hand",
-          "text": "Давай",
-          "next": "c6.r3.moment.hand",
+          "id": "upper",
+          "text": "Поднимемся. Хочу поймать оставшийся свет",
+          "next": "c6.photo.upper",
           "effects": [
             {
               "kind": "set",
-              "key": "c6Moment",
+              "key": "c6PhotoPlace",
+              "value": "upper"
+            }
+          ]
+        },
+        {
+          "id": "water",
+          "text": "Останемся у воды. Поищем отражение",
+          "next": "c6.photo.water",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6PhotoPlace",
+              "value": "water"
+            }
+          ]
+        }
+      ]
+    },
+    "c6.photo.upper": {
+      "id": "c6.photo.upper",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [],
+            "fromLine": 2,
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Поднимемся. Хочу поймать оставшийся свет."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты идёшь к лестнице. Влад придерживает лёгкую калитку у её начала, пока ты проходишь."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Наверху вода почти скрывается за перилами. Зато над крышами остаётся широкая светлая полоса неба."
+        },
+        {
+          "speaker": "vlad",
+          "text": "здесь лучше. только вывеска лезет прямо в середину."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он встаёт напротив перил. Ты смотришь в видоискатель и делаешь два шага в сторону."
+        },
+        {
+          "speaker": "heroine",
+          "text": "А если отсюда?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "вывеска ушла?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Да. Теперь у тебя из головы торчит фонарь."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад смещается на шаг. Фонарь остаётся позади его плеча."
+        },
+        {
+          "speaker": "vlad",
+          "text": "так я хотя бы отдельно от освещения?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Теперь отдельно."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты опускаешь аппарат. С этого места можно снять Влада у перил, силуэт на фоне неба или сами крыши."
+        }
+      ],
+      "next": "c6.photo.subject"
+    },
+    "c6.photo.water": {
+      "id": "c6.photo.water",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Останемся у воды. Поищем отражение."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы проходите вдоль перил до широкого просвета. В воде отражаются лестница и тонкая полоска неба."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад останавливается сбоку, чтобы не перекрывать тебе вид. Ты поворачиваешь аппарат вертикально."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Здесь лестница идёт прямо вниз, а в воде — куда-то вбок."
+        },
+        {
+          "speaker": "vlad",
+          "text": "можно спуститься и сразу передумать."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Посмотри отсюда."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты показываешь место и передаёшь ему аппарат. Влад смотрит в видоискатель, не нажимая кнопку.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6CameraHolder",
+              "value": "vlad"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "а если убрать верхний край, вообще непонятно, где вода."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Вот. Оставим только то, что отражается."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он возвращает аппарат. По воде проходит рябь, и прямые линии ненадолго складываются в зигзаг.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6CameraHolder",
+              "value": "her"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "сейчас ещё чуть-чуть подождать — лестница сама себя завяжет."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты ждёшь, пока вода успокоится. Здесь можно снять Влада у просвета, свой силуэт в отражении или саму лестницу в воде."
+        }
+      ],
+      "next": "c6.photo.subject"
+    },
+    "c6.photo.subject": {
+      "id": "c6.photo.subject",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Что снимем первым?",
+      "choices": [
+        {
+          "id": "vlad",
+          "text": "Влад, оставайся в кадре",
+          "next": "c6.photo.shot.vlad",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6PhotoSubject",
+              "value": "vlad"
+            }
+          ]
+        },
+        {
+          "id": "her",
+          "text": "Теперь ты меня. Только силуэтом",
+          "next": "c6.photo.shot.her",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6PhotoSubject",
+              "value": "her"
+            }
+          ]
+        },
+        {
+          "id": "place",
+          "text": "Сниму само место",
+          "next": "c6.photo.shot.place",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6PhotoSubject",
+              "value": "place"
+            }
+          ]
+        }
+      ]
+    },
+    "c6.photo.shot.vlad": {
+      "id": "c6.photo.shot.vlad",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Влад, оставайся в кадре."
+        },
+        {
+          "speaker": "vlad",
+          "text": "так и знал. вышел погулять, теперь работаю моделью."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Пока бесплатно. Повернись немного."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он поворачивается к тебе вполоборота и опирается локтем на перила."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Свет остаётся у него на щеке. В видоискателе за плечом видны крыши, а фонарь теперь сбоку.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "Свет остаётся у него на щеке. В видоискателе за плечом видны крыши, а фонарь теперь сбоку."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "За его плечом виден просвет между перилами. Внизу дрожат линии отражённой лестницы."
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "серьёзное лицо делать?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Нет. Вот это оставь."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он успевает усмехнуться. Ты нажимаешь кнопку.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Film",
+              "value": "key"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "теперь я не узнаю, что ты там поймала?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Пока нет."
+        },
+        {
+          "speaker": "vlad",
+          "text": "ладно. живу с этой улыбкой до проявки."
+        }
+      ],
+      "next": "c6.photo.roll"
+    },
+    "c6.photo.shot.her": {
+      "id": "c6.photo.shot.her",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Теперь ты меня. Только силуэтом."
+        },
+        {
+          "speaker": "vlad",
+          "text": "давай сюда."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты передаёшь ему аппарат и выбираешь место у перил.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6CameraHolder",
+              "value": "vlad"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты становишься спиной к камере, лицом к светлому небу. Влад отходит к лестнице, оставляя вокруг силуэта больше пространства.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "Ты становишься спиной к камере, лицом к светлому небу. Влад отходит к лестнице, оставляя вокруг силуэта больше пространства."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "Ты становишься у просвета в перилах. Влад направляет аппарат на воду: в кадре будет твой тёмный силуэт среди отражённых линий."
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "так? ты и полгорода.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "так? ты и полгорода."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "так? ты и лестница вверх ногами."
+            }
+          ]
+        },
+        {
+          "speaker": "heroine",
+          "text": "Да. Только не командуй улыбаться."
+        },
+        {
+          "speaker": "vlad",
+          "text": "даже не собирался. я с этой стороны всё равно не проверю."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты остаёшься на выбранном месте. Влад чуть меняет угол и нажимает кнопку.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Film",
+              "value": "key"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "есть."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Уже можно обернуться?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "можно. теперь моя очередь не показывать фотографию."
+        }
+      ],
+      "next": "c6.photo.roll"
+    },
+    "c6.photo.shot.place": {
+      "id": "c6.photo.shot.place",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Сниму само место."
+        },
+        {
+          "speaker": "vlad",
+          "text": "тогда отойду."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад выходит из кадра. Ты снова поднимаешь аппарат."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Между тёмными крышами остаётся светлая щель. Ты поворачиваешь аппарат, чтобы убрать из кадра вывеску и оставить эту полоску неба.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "Между тёмными крышами остаётся светлая щель. Ты поворачиваешь аппарат, чтобы убрать из кадра вывеску и оставить эту полоску неба."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "Ты убираешь из кадра берег. Остаются отражённая лестница и полосы воды; верх и низ почти не различить."
+            }
+          ]
+        },
+        {
+          "speaker": "heroine",
+          "text": "Вот так. Почти одни края.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "Вот так. Почти одни края."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "Вот так. Будет непонятно, как держать фотографию."
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "я бы прошёл и не посмотрел туда второй раз.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "я бы прошёл и не посмотрел туда второй раз."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "придётся каждый раз выбирать новую сторону."
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты нажимаешь кнопку и опускаешь аппарат.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Film",
+              "value": "key"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "сняла?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Сняла."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он возвращается к перилам и смотрит на то место, которое ты выбрала. Несколько секунд вы стоите молча."
+        }
+      ],
+      "next": "c6.photo.roll"
+    },
+    "c6.photo.roll": {
+      "id": "c6.photo.roll",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Вы перематываете плёнку к следующему кадру. При передаче аппарата палец задевает кнопку раньше, чем камера успевает подняться от земли.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Film",
+              "value": "accidental"
+            }
+          ]
+        },
+        {
+          "speaker": "heroine",
+          "text": "Подожди. Он сейчас снял?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "кажется, да. куда смотрел?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Вниз. Там наши ноги были."
+        },
+        {
+          "speaker": "vlad",
+          "text": "значит, у прогулки теперь есть доказательства."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Главное, что оба пришли."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы снимаете ещё несколько деталей рядом: перила, воду, край крыши, лампы на противоположном берегу. Аппарат переходит из рук в руки.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Film",
+              "value": "six"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "После последней перемотки в окошке счётчика остаётся двадцать один кадр."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Всё, убираю. А то к концу прогулки останется одна упаковка."
+        },
+        {
+          "speaker": "vlad",
+          "text": "согласен. у меня ещё весь город в очереди."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты кладёшь аппарат в сумку отдельно от ключей. Влад сворачивает пустую упаковку и убирает в ближайшую урну.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6CameraHolder",
+              "value": "her"
+            }
+          ]
+        }
+      ],
+      "next": "c6.photo.walk.on"
+    },
+    "c6.photo.walk.on": {
+      "id": "c6.photo.walk.on",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Вы проходите дальше по верхней дорожке. За спиной остаются лестница и место у перил, где вы снимали.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "upper"
+                }
+              ],
+              "text": "Вы проходите дальше по верхней дорожке. За спиной остаются лестница и место у перил, где вы снимали."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6PhotoPlace",
+                  "equals": "water"
+                }
+              ],
+              "text": "Вы идёте дальше вдоль воды. Отражённая лестница остаётся позади, и дорожка становится шире."
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "а окно всё-таки упустили."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Зато перестали стоять у одного столба."
+        },
+        {
+          "speaker": "vlad",
+          "text": "да. мы с ним уже почти познакомились."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Впереди дорожка делает широкий поворот. Влад идёт рядом, потом поворачивает к тебе открытую ладонь."
+        },
+        {
+          "speaker": "vlad",
+          "text": "дашь руку?"
+        }
+      ],
+      "next": "c6.photo.touch"
+    },
+    "c6.photo.touch": {
+      "id": "c6.photo.touch",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Как тебе хочется продолжить прогулку?",
+      "choices": [
+        {
+          "id": "hand",
+          "text": "Взять его за руку",
+          "next": "c6.photo.touch.hand",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6Gesture",
               "value": "hand"
             }
           ]
         },
         {
           "id": "hug",
-          "text": "Лучше обними меня",
-          "next": "c6.r3.moment.hug",
+          "text": "Лучше обниму тебя",
+          "next": "c6.photo.touch.hug",
           "effects": [
             {
               "kind": "set",
-              "key": "c6Moment",
+              "key": "c6Gesture",
               "value": "hug"
             }
           ]
         },
         {
-          "id": "walk",
-          "text": "Пока просто пойдём рядом",
-          "next": "c6.r3.moment.walk",
+          "id": "none",
+          "text": "Давай просто рядом",
+          "next": "c6.photo.touch.none",
           "effects": [
             {
               "kind": "set",
-              "key": "c6Moment",
-              "value": "walk"
+              "key": "c6Gesture",
+              "value": "none"
             }
           ]
         }
       ]
     },
-    "c6.r3.moment.hand": {
-      "id": "c6.r3.moment.hand",
+    "c6.photo.touch.hand": {
+      "id": "c6.photo.touch.hand",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Ты вкладываешь ладонь в его руку. Влад подстраивает шаг под твой."
+          "text": "Ты вкладываешь ладонь в его. Влад смыкает пальцы и продолжает идти рядом с тобой."
         },
         {
           "speaker": "vlad",
-          "text": "теперь маршрут мне нравится ещё больше."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты это каждый раз говоришь?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "сегодня проверяю впервые."
-        }
-      ],
-      "next": "c6.r3.talk"
-    },
-    "c6.r3.moment.hug": {
-      "id": "c6.r3.moment.hug",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Лучше обними меня."
-        },
-        {
-          "speaker": "vlad",
-          "text": "иди сюда."
+          "text": "вот так хорошо."
         },
         {
           "speaker": "narrator",
-          "text": "Вы останавливаетесь. Влад обнимает тебя; через несколько секунд вы возвращаетесь к прогулке."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот теперь можно идти дальше."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Уже торопишься?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "как раз наоборот."
+          "text": "На повороте он подстраивает шаг. Вы проходите мимо свободной скамейки, не останавливаясь."
         }
       ],
-      "next": "c6.r3.talk"
+      "next": "c6.photo.gallery"
     },
-    "c6.r3.moment.walk": {
-      "id": "c6.r3.moment.walk",
+    "c6.photo.touch.hug": {
+      "id": "c6.photo.touch.hug",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
       },
       "lines": [
         {
           "speaker": "heroine",
-          "text": "Пока просто пойдём рядом."
+          "text": "Лучше обниму тебя."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты останавливаешься и подходишь ближе. Влад обнимает тебя в ответ, оставляя сумку с аппаратом сбоку."
         },
         {
           "speaker": "vlad",
-          "text": "давай. у меня ещё есть незаконченное дело с той афишей."
+          "text": "такой вариант тоже очень подходит."
         },
         {
-          "speaker": "heroine",
-          "text": "Ты хочешь записаться?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "хочу однажды показать тебе кота, который будет хуже магазинного."
+          "speaker": "narrator",
+          "text": "Ты отпускаешь его, и вы возвращаетесь на дорожку."
         }
       ],
-      "next": "c6.r3.talk"
+      "next": "c6.photo.gallery"
     },
-    "c6.r3.talk": {
-      "id": "c6.r3.talk",
+    "c6.photo.touch.none": {
+      "id": "c6.photo.touch.none",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
       },
       "lines": [
         {
-          "speaker": "vlad",
-          "text": "а ты часто соглашаешься на что-нибудь просто потому, что стало любопытно?"
-        },
-        {
           "speaker": "heroine",
-          "text": "Например, на прогулку, которая длится дольше обещанного?"
+          "text": "Давай просто рядом."
         },
         {
           "speaker": "vlad",
-          "text": "именно. пример совершенно случайный."
+          "text": "давай."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он опускает руку. На повороте вы обходите лужицу с разных сторон и снова оказываетесь рядом."
         }
       ],
-      "next": "c6.r3.talk.choice"
+      "next": "c6.photo.gallery"
     },
-    "c6.r3.talk.choice": {
-      "id": "c6.r3.talk.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Как у тебя обычно получается?",
-      "choices": [
-        {
-          "id": "free",
-          "text": "Иногда лучше не придумывать всё заранее",
-          "next": "c6.r3.talk.free"
-        },
-        {
-          "id": "plan",
-          "text": "Мне нравится, когда есть маленький план",
-          "next": "c6.r3.talk.plan"
-        },
-        {
-          "id": "company",
-          "text": "Смотря с кем",
-          "next": "c6.r3.talk.company"
-        }
-      ]
-    },
-    "c6.r3.talk.free": {
-      "id": "c6.r3.talk.free",
+    "c6.photo.gallery": {
+      "id": "c6.photo.gallery",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда предлагаю оставить один свободный вечер под что-нибудь странное."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Насколько странное?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "начнём с кривой чашки. дальше посмотрим."
-        }
-      ],
-      "next": "c6.r3.talk.after"
-    },
-    "c6.r3.talk.plan": {
-      "id": "c6.r3.talk.plan",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "договорились. место и время — с меня. внезапный керамический кот — по обстоятельствам."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Уже похоже на план."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и даже хочется его выполнить."
-        }
-      ],
-      "next": "c6.r3.talk.after"
-    },
-    "c6.r3.talk.company": {
-      "id": "c6.r3.talk.company",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Влад на секунду перестаёт смотреть на дорогу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "этот ответ я сейчас очень постараюсь не испортить шуткой."
+          "text": "Возле киоска ты останавливаешься у афиши. На ней несколько фотографий: полосы света, край стены, ступени без начала и конца."
         },
         {
           "speaker": "heroine",
-          "text": "Получается?"
+          "text": "Смотри. «Линии и свет». Это в галерее."
         },
         {
           "speaker": "vlad",
-          "text": "пока да."
+          "text": "тут лестница или крыша?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Не знаю. Давай сходим и посмотрим поближе."
+        },
+        {
+          "speaker": "vlad",
+          "text": "давай. когда тебе удобно?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты достаёшь телефон и открываешь расписание галереи. Вы выбираете время, когда оба свободны."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Тогда в следующий раз сюда. Только внутрь, а не опять мимо афиши."
+        },
+        {
+          "speaker": "vlad",
+          "text": "договорились. аппарат тоже бери."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Он пока побудет у меня?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "да. в следующий раз принесёшь наш фотоаппарат."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Принесу."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты сохраняешь адрес и убираешь телефон. На афише остаётся яркая полоса; на настоящей стене свет уже погас."
         }
       ],
-      "next": "c6.r3.talk.after"
+      "next": "c6.photo.goodbye"
     },
-    "c6.r3.talk.after": {
-      "id": "c6.r3.talk.after",
+    "c6.photo.goodbye": {
+      "id": "c6.photo.goodbye",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Мимо проезжает велосипед; вы даёте ему дорогу и снова выходите к воде."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я люблю такие вечера. вроде ничего особенного не случилось, а домой идёшь совсем с другим настроением."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Может, особенное не всегда громкое."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. вот это, пожалуй, запомню."
-        }
-      ],
-      "next": "c6.r3.small.plans"
-    },
-    "c6.r3.note": {
-      "id": "c6.r3.note",
-      "kind": "note",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "questionId": "s2.r3.q6",
-      "maxCodePoints": 280,
-      "prompt": "Какую маленькую остановку ты добавила бы в такую прогулку?",
-      "context": "Прогулка оказалась длиннее обещанных пяти минут.",
-      "answerOptions": [
-        {
-          "id": "preset.1",
-          "kind": "preset",
-          "text": "Зайти за чем-нибудь тёплым и ещё немного пройтись."
-        },
-        {
-          "id": "preset.2",
-          "kind": "preset",
-          "text": "Найти тихое место и посидеть без плана."
-        },
-        {
-          "id": "custom",
-          "kind": "custom",
-          "text": "Своими словами ✎"
-        }
-      ],
-      "placeholder": "Мне бы хотелось…",
-      "submitLabel": "Сохранить ответ",
-      "skipLabel": "Пропустить",
-      "next": "c6.r3.closing"
-    },
-    "c6.r3.closing": {
-      "id": "c6.r3.closing",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "У развилки снова видна остановка. На этот раз Влад не делает вид, будто не замечает её."
-        },
-        {
-          "speaker": "vlad",
-          "text": "могу проводить. или сделаем ещё маленький круг."
-        }
-      ],
-      "next": "c6.r3.ending"
-    },
-    "c6.r3.ending": {
-      "id": "c6.r3.ending",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Куда теперь?",
-      "choices": [
-        {
-          "id": "lap",
-          "text": "Ещё круг. Теперь без обещаний про пять минут",
-          "next": "c6.r3.finish.lap",
-          "effects": [
+          "text": "У выхода ты останавливаешься, и вы размыкаете руки. Влад остаётся напротив тебя.",
+          "variants": [
             {
-              "kind": "set",
-              "key": "c6Ending",
-              "value": "lap"
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "hand"
+                }
+              ],
+              "text": "У выхода ты останавливаешься, и вы размыкаете руки. Влад остаётся напротив тебя."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "hug"
+                }
+              ],
+              "text": "У выхода вы останавливаетесь. Влад поворачивается к тебе, засунув руки в карманы."
+            },
+            {
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "none"
+                }
+              ],
+              "text": "У выхода дорожка расходится. Вы останавливаетесь рядом с указателем, каждый со своей стороны."
             }
           ]
         },
         {
-          "id": "hand",
-          "text": "Проводи меня за руку",
-          "next": "c6.r3.hand.route",
-          "effects": [
+          "speaker": "vlad",
+          "text": "до галереи?",
+          "variants": [
             {
-              "kind": "set",
-              "key": "c6Ending",
-              "value": "hand"
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "hand"
+                }
+              ],
+              "text": "до галереи?"
+            },
+            {
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "hug"
+                }
+              ],
+              "text": "до галереи?"
+            },
+            {
+              "when": [
+                {
+                  "key": "c6Gesture",
+                  "equals": "none"
+                }
+              ],
+              "text": "до галереи?"
             }
           ]
         },
         {
-          "id": "home",
-          "text": "Давай к остановке. Был хороший вечер",
-          "next": "c6.r3.finish.home",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6Ending",
-              "value": "home"
-            }
-          ]
-        }
-      ]
-    },
-    "c6.r3.hand.route": {
-      "id": "c6.r3.hand.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c6Moment",
-              "equals": "hand"
-            }
-          ],
-          "next": "c6.r3.hand.already"
-        }
-      ],
-      "fallback": "c6.r3.hand.new"
-    },
-    "c6.r3.hand.already": {
-      "id": "c6.r3.hand.already",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад чуть меняет направление, не выпуская твоей ладони."
-        }
-      ],
-      "next": "c6.r3.finish.hand"
-    },
-    "c6.r3.hand.new": {
-      "id": "c6.r3.hand.new",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "с удовольствием."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Ты берёшь его за руку."
-        }
-      ],
-      "next": "c6.r3.finish.hand"
-    },
-    "c6.r3.finish.lap": {
-      "id": "c6.r3.finish.lap",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "даже спорить не буду."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы поворачиваете к следующему фонарю."
-        },
-        {
           "speaker": "heroine",
-          "text": "Завтра кот всё ещё будет в витрине."
+          "text": "До галереи."
         },
         {
           "speaker": "vlad",
-          "text": "хорошо. пусть пока присматривает за нашим маршрутом."
-        }
-      ],
-      "next": "c6.r3.callback"
-    },
-    "c6.r3.finish.hand": {
-      "id": "c6.r3.finish.hand",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "следующий вечер я уже хочу предложить сам."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Предлагай."
-        },
-        {
-          "speaker": "vlad",
-          "text": "сначала красиво доведу этот."
-        }
-      ],
-      "next": "c6.r3.callback"
-    },
-    "c6.r3.finish.home": {
-      "id": "c6.r3.finish.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "был. хочу повторить."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Прогулку или угадывание?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "тебя рядом. остальное придумаем."
+          "text": "пока."
         },
         {
           "speaker": "narrator",
-          "text": "Вы идёте к остановке, продолжая разговор."
-        }
-      ],
-      "next": "c6.r3.callback"
-    },
-    "c6.r3.callback": {
-      "id": "c6.r3.callback",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c6Keepsake",
-              "equals": "cat"
-            }
-          ],
-          "next": "c6.r3.callback.cat"
+          "text": "Ты поднимаешь ладонь на прощание. Влад отвечает и сворачивает к улице."
         },
         {
-          "all": [
-            {
-              "key": "c6Keepsake",
-              "equals": "house"
-            }
-          ],
-          "next": "c6.r3.callback.house"
+          "speaker": "narrator",
+          "text": "В сумке лежит общий фотоаппарат. Пока в нём только плёнка — ни один сегодняшний снимок ещё нельзя увидеть."
         }
       ],
-      "fallback": "c6.r3.callback.cup"
+      "next": "c6.photo.end.walk"
     },
-    "c6.r3.callback.cat": {
-      "id": "c6.r3.callback.cat",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "кота пока не покупаю. вдруг ты передумаешь делить."
-        }
-      ],
-      "next": "c6.r3.card"
-    },
-    "c6.r3.callback.house": {
-      "id": "c6.r3.callback.house",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "домик я, кстати, запомнил."
-        }
-      ],
-      "next": "c6.r3.card"
-    },
-    "c6.r3.callback.cup": {
-      "id": "c6.r3.callback.cup",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "в следующий раз проверим, на месте ли твоя чашка."
-        }
-      ],
-      "next": "c6.r3.card"
-    },
-    "c6.r3.card": {
-      "id": "c6.r3.card",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c6Ending",
-              "equals": "lap"
-            }
-          ],
-          "next": "c6.r3.end.lap"
-        },
-        {
-          "all": [
-            {
-              "key": "c6Ending",
-              "equals": "hand"
-            }
-          ],
-          "next": "c6.r3.end.hand"
-        }
-      ],
-      "fallback": "c6.r3.end.home"
-    },
-    "c6.r3.end.hand": {
-      "id": "c6.r3.end.hand",
+    "c6.photo.end.walk": {
+      "id": "c6.photo.end.walk",
       "kind": "end",
-      "cardId": "c6.hand",
-      "endingId": "c6.hand"
-    },
-    "c6.r3.end.lap": {
-      "id": "c6.r3.end.lap",
-      "kind": "end",
-      "cardId": "c6.lap",
-      "endingId": "c6.lap"
-    },
-    "c6.r3.end.home": {
-      "id": "c6.r3.end.home",
-      "kind": "end",
-      "cardId": "c6.home",
-      "endingId": "c6.home"
-    },
-    "c6.r3.lantern": {
-      "id": "c6.r3.lantern",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Чуть дальше у воды вы находите скамью, на которую падает свет сразу от двух фонарей."
-        },
-        {
-          "speaker": "vlad",
-          "text": "смотри. это уже похоже на место, где можно сочинить очень убедительную историю."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Про кого?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "про человека, который каждый вечер приходит сюда с одним и тем же пакетом."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты его видел?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "нет. но пакет в моей версии уже есть."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад останавливается у спинки скамьи, не торопя тебя садиться."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Может, человек просто несёт домой продукты."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вполне. только это история, где я быстро заканчиваю рассказ."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А длинная версия какая?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "он приносит корм очень важной утке. она выходит только к этому фонарю."
-        },
-        {
-          "speaker": "heroine",
-          "text": "У тебя опять кто-то важный."
-        },
-        {
-          "speaker": "vlad",
-          "text": "люблю уважительно относиться к незнакомым птицам."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На воде действительно появляется небольшая рябь. Влад всматривается в отражения."
-        },
-        {
-          "speaker": "vlad",
-          "text": "сейчас было бы красиво, если бы утка вышла подтвердить."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Она не обязана поддерживать твои истории."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот поэтому уважаю её ещё больше."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы смотрите на воду. Из-под мостика выплывает обычная ветка."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Вот твой свидетель."
-        },
-        {
-          "speaker": "vlad",
-          "text": "молчаливый, зато прибыл вовремя."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Мне нравится, как ты выкручиваешься."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я ещё даже не начал объяснять пакет."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Может, лучше остановиться на ветке?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "разумно. оставим истории пространство."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он отступает от скамьи и снова встаёт рядом."
-        },
-        {
-          "speaker": "vlad",
-          "text": "а ты любишь придумывать прошлое местам, в которых впервые оказалась?"
-        },
-        {
-          "speaker": "heroine",
-          "text": "Иногда хватает посмотреть, как здесь кто-то живёт."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. чужая чашка в окне иногда рассказывает больше красивой вывески."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На противоположном берегу в одном из окон загорается свет."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот. кто-то тоже наконец добрался домой."
-        }
-      ],
-      "next": "c6.r3.lantern.choice"
-    },
-    "c6.r3.lantern.choice": {
-      "id": "c6.r3.lantern.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Какую историю оставим этому месту?",
-      "choices": [
-        {
-          "id": "duck",
-          "text": "Утка пусть остаётся. Мне нравится её характер",
-          "next": "c6.r3.lantern.duck"
-        },
-        {
-          "id": "ordinary",
-          "text": "Мне нравится обычная версия. Кто-то идёт домой",
-          "next": "c6.r3.lantern.ordinary"
-        },
-        {
-          "id": "ours",
-          "text": "Давай лучше оставим здесь свою историю",
-          "next": "c6.r3.lantern.ours"
-        }
-      ]
-    },
-    "c6.r3.lantern.duck": {
-      "id": "c6.r3.lantern.duck",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда в следующий раз проверим, на месте ли она."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И принесём доказательства существования пакета."
-        },
-        {
-          "speaker": "vlad",
-          "text": "отлично. полноценная экспедиция, а я рассчитывал на прогулку."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы ещё раз смотрите под мостик, но находите только отражения."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Не пришла."
-        },
-        {
-          "speaker": "vlad",
-          "text": "значит, у неё сегодня другие планы."
-        }
-      ],
-      "next": "c6.r3.aside"
-    },
-    "c6.r3.lantern.ordinary": {
-      "id": "c6.r3.lantern.ordinary",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "мне тоже. особенно если его там ждут."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Или он сам ждёт возможности наконец поставить чайник."
-        },
-        {
-          "speaker": "vlad",
-          "text": "тоже хорошая причина ускорить шаг."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На том берегу свет появляется ещё в одном окне."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Можно и без большого сюжета."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. иногда хочется просто знать, что вечер будет хороший."
-        }
-      ],
-      "next": "c6.r3.aside"
-    },
-    "c6.r3.lantern.ours": {
-      "id": "c6.r3.lantern.ours",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад перестаёт смотреть через реку и поворачивается к тебе."
-        },
-        {
-          "speaker": "vlad",
-          "text": "эта мне уже нравится больше."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Мы пока ничего особенного не сделали."
-        },
-        {
-          "speaker": "vlad",
-          "text": "зато очень серьёзно обсудили ветку."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Запоминающееся начало."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и ещё есть время придумать продолжение."
-        }
-      ],
-      "next": "c6.r3.aside"
-    },
-    "c6.r3.small.plans": {
-      "id": "c6.r3.small.plans",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "На другом берегу гаснет подсветка одной витрины. Река от этого кажется чуть шире."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мне раньше было трудно оставить вечер свободным. казалось, его обязательно надо чем-то заполнить."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И чем заполнял?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "обычно планами, на которые потом не хватало самого вечера."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Очень практично."
-        },
-        {
-          "speaker": "vlad",
-          "text": "зато список был красивый."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он усмехается и смотрит на дорожку впереди."
-        },
-        {
-          "speaker": "vlad",
-          "text": "сейчас чаще думаю, что можно просто выбрать одну вещь и нормально ею заняться."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Например, долго обсуждать керамику?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот. уже умею."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А если вдруг окажется скучно?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "поменяем занятие. это же не договор с городом."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На дорожке становится свободнее. Вы обходите скамью и снова идёте рядом."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Мне нравится, когда можно передумать по ходу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мне тоже. особенно если никто не делает вид, будто вся прогулка испорчена."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Даже если я захочу повернуть обратно?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "повернём. я успею рассказать ещё одну глупость по дороге."
-        },
-        {
-          "speaker": "heroine",
-          "text": "У тебя запас?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "к сожалению, большой."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад показывает на тропинку, по которой можно вернуться к развилке."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот отсюда уже близко. можно идти в любом темпе."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты заметил, что перестал продавать свою прогулку?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "заметил. кажется, мы её уже гуляем."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы ненадолго останавливаетесь, пропуская прохожего с собакой."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хорошее слово, кстати. “гуляем”. без необходимости куда-то успеть."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Теперь главное — не превратить его в длинную речь."
-        },
-        {
-          "speaker": "vlad",
-          "text": "всё, понял. даю слово тебе."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он замолкает и ждёт, пока ты сама выберешь следующую тему."
-        }
-      ],
-      "next": "c6.r3.small.plans.choice"
-    },
-    "c6.r3.small.plans.choice": {
-      "id": "c6.r3.small.plans.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Что хочется ещё добавить в вечер?",
-      "choices": [
-        {
-          "id": "warm",
-          "text": "Что-нибудь тёплое по дороге",
-          "next": "c6.r3.small.plans.warm"
-        },
-        {
-          "id": "quiet",
-          "text": "Пока ничего. Мне нравится эта прогулка",
-          "next": "c6.r3.small.plans.quiet"
-        },
-        {
-          "id": "next",
-          "text": "Хочу, чтобы в следующий раз ты придумал маленький сюрприз",
-          "next": "c6.r3.small.plans.next"
-        }
-      ]
-    },
-    "c6.r3.small.plans.warm": {
-      "id": "c6.r3.small.plans.warm",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "найдём. только в этот раз не буду угадывать за тебя."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Можешь предложить."
-        },
-        {
-          "speaker": "vlad",
-          "text": "чай, какао или просто зайти погреться."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Вот. Уже три хороших варианта."
-        },
-        {
-          "speaker": "vlad",
-          "text": "приятно иногда начинать с готового списка."
-        }
-      ],
-      "next": "c6.r3.note"
-    },
-    "c6.r3.small.plans.quiet": {
-      "id": "c6.r3.small.plans.quiet",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда оставим как есть."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он не ищет новую остановку и убирает телефон глубже в карман."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Даже карту не проверишь?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "мы рядом с рекой. с одной стороны точно не заблудимся."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Убедительно."
-        },
-        {
-          "speaker": "vlad",
-          "text": "стараюсь обещать только то, что вижу."
-        }
-      ],
-      "next": "c6.r3.note"
-    },
-    "c6.r3.small.plans.next": {
-      "id": "c6.r3.small.plans.next",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "договорились. маленький — это важное условие, я запомнил."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Без необходимости весь день к нему готовиться."
-        },
-        {
-          "speaker": "vlad",
-          "text": "и без торжественного вручения?"
-        },
-        {
-          "speaker": "heroine",
-          "text": "Желательно."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хорошо. просто появится ещё один хороший повод встретиться."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он улыбается, но не пытается сразу раскрыть будущий план."
-        }
-      ],
-      "next": "c6.r3.note"
+      "endingId": "c6.photo.walk",
+      "cardId": "c6.photo.walk"
     }
   }
 };

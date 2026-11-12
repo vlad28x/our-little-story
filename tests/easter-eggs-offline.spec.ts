@@ -30,7 +30,7 @@ async function open(page:Page,save:SaveV1,chapter=1){
 }
 
 test('hair and cat react on a small screen without changing saved story, then clear on advance',async({page})=>{
-  await page.setViewportSize({width:320,height:568});const errors=await open(page,firstAt());
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,firstAt('c1.entry'));
   const hair=page.getByRole('button',{name:'Потрогать кудри Влада'}),cat=page.getByRole('button',{name:'Погладить Пончика'});
   await expect(hair).toBeVisible();await expect(cat).toBeVisible();const raw=await stored(page);
   await expect(hair.locator('.easter-spark')).toHaveCount(1);await expect(cat.locator('.easter-spark')).toHaveCount(1);

@@ -1,0 +1,63 @@
+import {it,expect} from 'vitest';
+import fs from 'node:fs';
+import {chapter6} from '../src/content/chapters/ch06';
+import {getChapter} from '../src/content/chapters';
+import {chapters} from '../src/content/chapters/manifest';
+import {validateContent} from '../src/engine/validateContent';
+import {reduceSave,canStart} from '../src/state/reducer';
+import {parseSave} from '../src/persistence/validateSave';
+import {cloudRaw} from '../src/telegram/cloud';
+import {resolveLine} from '../src/engine/step';
+import {filmLeft} from '../src/persistence/photoSix';
+import {cardFromStory,cardMeta} from '../src/content/cards';
+import {finishFive} from './chapter5Helpers';
+import {startPhotoSix,finishPhotoSix,photoCommand,photoAt,type PhotoPath} from './photo6Helpers';
+const base=finishFive();
+it('ships all author text and 27 nodes with only two endings and five menus',()=>{
+ expect(validateContent(chapter6)).toEqual([]);expect(Object.keys(chapter6.nodes)).toHaveLength(27);
+ const script=fs.readFileSync('outputs/CHAPTER_06_PHOTO_SCRIPT_2026_11_03.md','utf8');
+ for(const n of Object.values(chapter6.nodes))if(n.kind==='dialogue')for(const line of n.lines){expect(script).toContain(line.text);for(const v of line.variants??[])expect(script).toContain(v.text);}
+ const text=script.slice(script.indexOf('## 3. Точный сценарий'),script.indexOf('## 4. Память'));
+ const shown=new Set(Object.values(chapter6.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.flatMap(l=>[l.text,...(l.variants??[]).map(v=>v.text)]):[]));
+ for(const m of text.matchAll(/^(?:\d+\. \*\*[НВТАД]:\*\*|- \*\*(?:upper|water|hand|hug|none) — [НВТАД]:\*\*) (.+)\r?$/gm))expect(shown.has(m[1].trim())).toBe(true);
+ expect(Object.values(chapter6.nodes).filter(n=>n.kind==='choice')).toHaveLength(5);expect(Object.values(chapter6.nodes).filter(n=>n.kind==='end')).toHaveLength(2);
+});
+it('all twenty paths preserve first five, exact cursors, semantic text, film and JSON/cloud saves',()=>{
+ const paths:Partial<PhotoPath>[]=[{direction:'friends',friend:'walk'},{direction:'friends',friend:'goodbye'}];
+ for(const place of ['upper','water'] as const)for(const subject of ['vlad','her','place'] as const)for(const gesture of ['hand','hug','none'] as const)paths.push({direction:'romance',place,subject,gesture});
+ for(const path of paths){let s=startPhotoSix(base);const texts:string[]=[],counts=new Set<number>();
+  while(s.campaign.active){const r=s.campaign.active,n=chapter6.nodes[r.nodeId];expect(parseSave(JSON.stringify(s))).toEqual(s);expect(parseSave(cloudRaw(s))).toEqual(s);if(n.kind==='dialogue')texts.push(resolveLine(n.lines[r.lineIndex],r.story).text);const left=filmLeft(r.story);if(left!==undefined)counts.add(left);const cmd=photoCommand(r,path),next=reduceSave(s,{type:'command',target:'campaign',command:cmd});expect(reduceSave(next,{type:'command',target:'campaign',command:cmd})).toEqual(next);s=next;}
+  const st=s.campaign.records[6]!.story;expect(s.campaign.records[5]).toEqual(base.campaign.records[5]);expect(s.continuation).toBe(base.continuation);expect(st.s2Direction).toBe(path.direction);
+  expect(parseSave(JSON.stringify(s))).toEqual(s);
+  if(path.direction==='friends'){expect([...counts]).toEqual([]);expect(st.c6Film).toBeUndefined();expect(st.c6PhotoPlace).toBeUndefined();expect(st.c6FriendExit).toBe(path.friend);expect(texts.join(' ')).not.toMatch(/фотоаппарат|галере/);}
+  else {expect([...counts]).toEqual([27,26,25,21]);expect(st).toMatchObject({c6PhotoPlace:path.place,c6PhotoSubject:path.subject,c6Gesture:path.gesture,c6Film:'six',c6CameraHolder:'her'});if(path.gesture==='none')expect(texts.join(' ')).not.toMatch(/Ты вкладываешь ладонь|обнимает тебя в ответ|размыкаете руки/);if(path.subject==='her')expect(texts.join(' ')).toContain(path.place==='upper'?'ты и полгорода.':'ты и лестница вверх ногами.');}
+ }
+ expect(paths).toHaveLength(20);
+},60000);
+it('review does not act until a new answer; rechoose and trials preserve first season, collected friend card and real answer',()=>{
+ const old=reduceSave(finishPhotoSix(base,{direction:'friends',friend:'goodbye'}),{type:'continuation',value:'decline'});const snapshot=structuredClone(old);
+ expect(old).toEqual(snapshot);
+ const next=reduceSave(old,{type:'rechoose-six',target:'campaign',direction:'romance',attemptId:'rechoice'});
+ expect(next.campaign.active?.nodeId).toBe('c6.photo.romance.start');expect(next.collection).toEqual(old.collection);expect(next.continuation).toBe('decline');for(const id of [1,2,3,4,5] as const)expect(next.campaign.records[id]).toEqual(old.campaign.records[id]);expect(parseSave(JSON.stringify(next))).toEqual(next);
+ const trial=finishPhotoSix(old,{direction:'romance'},true);expect(trial.campaign).toEqual(old.campaign);expect(trial.continuation).toBe(old.continuation);expect(trial.lastResult?.episodeRecord?.story.s2Direction).toBe('romance');expect(parseSave(cloudRaw(trial))).toEqual(trial);
+ const romantic=finishPhotoSix();const friendlyTrial=finishPhotoSix(romantic,{direction:'friends',friend:'walk'},true);expect(friendlyTrial.campaign).toEqual(romantic.campaign);expect(parseSave(JSON.stringify(friendlyTrial))).toEqual(friendlyTrial);
+});
+it('has exact friendship captions and cannot launch old 7–10 even with codes or forged rights',()=>{
+ for(const friend of ['walk','goodbye'] as const){const s=finishPhotoSix(base,{direction:'friends',friend});const rec=s.campaign.records[6]!;expect(cardMeta(cardFromStory(rec.story,6)).caption).toBe(friend==='walk'?'У поворота каждый пошёл своей дорогой. Вы остались друзьями.':'Вы попрощались у набережной. Вы остались друзьями.');for(const id of [7,8,9,10] as const){expect(getChapter(id)).toBeUndefined();expect(canStart({...s,unlocked:[...s.unlocked,id]},id)).toBe(false);expect(reduceSave(s,{type:'unlock',code:chapters.find(c=>c.id===id)!.code!})).toEqual(s);}}
+});
+it('rejects fabricated early facts, wrong scenes, count changes and old-format relabels',()=>{
+ const initial=startPhotoSix();for(const field of ['s2Direction','c6Film','c6Gesture'] as const){const bad=structuredClone(initial);Object.assign(bad.campaign.active!.story,{[field]:field==='s2Direction'?'romance':field==='c6Film'?'six':'hand'});expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
+ const at=photoAt('c6.photo.roll');const bad=structuredClone(at);bad.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(bad))).toThrow();
+ expect(()=>parseSave(JSON.stringify({...at,contentVersion:14}))).toThrow();
+ const premature=structuredClone(at);premature.trial={chapter:6,run:structuredClone(premature.campaign.active!)};expect(()=>parseSave(JSON.stringify(premature))).toThrow();
+ const friend=finishPhotoSix(base,{direction:'friends'});const impossible=structuredClone(friend);impossible.campaign.records[6]!.story.c6Film='six';expect(()=>parseSave(JSON.stringify(impossible))).toThrow();
+});
+it('real invitation values do not change the neutral entry or select a direction',()=>{
+ for(const value of [null,'game','movie','cafe','walk','decline','public','chat','later'] as const){const before=reduceSave(base,{type:'continuation',value}),s=startPhotoSix(before);expect(s.campaign.active?.nodeId).toBe('c6.photo.entry');expect(s.campaign.active?.story.s2Direction).toBeUndefined();expect(s.campaign.active?.story).toEqual(base.campaign.records[5]?.story);expect(s.continuation).toBe(value);}
+});
+it('discards only old second-season progress without translating it into a new direction or camera',()=>{
+ const old=structuredClone(base) as unknown as Record<string,unknown>;old.contentVersion=14;
+ const c=old.campaign as typeof base.campaign;c.completed.push(6,7);Object.assign(c.records,{6:{old:true},7:{old:true}});Object.assign(c.startStates,{6:{old:true},7:{old:true}});c.active={chapter:8} as typeof c.active;
+ (old.collection as typeof base.collection).cards.push({id:'c6.hand',chapter:6} as typeof base.collection.cards[number]);old.privateNotes={6:{campaign:{text:'Old test'}}};old.unlocked=[1,2,3,4,5,6,7,8,9,10];
+ const reset=parseSave(JSON.stringify(old));expect(reset.campaign.records).toEqual(base.campaign.records);expect(reset.campaign.completed).toEqual([1,2,3,4,5]);expect(reset.campaign.active).toBeNull();expect(reset.collection.cards).toEqual(base.collection.cards);expect(reset.privateNotes).toEqual({});expect(reset.unlocked).toEqual([1,2,3,4,5,6,7,8,9,10]);for(const id of [7,8,9,10] as const)expect(canStart(reset,id)).toBe(false);expect(reset.continuation).toEqual(base.continuation);expect(reset.campaign.records[6]).toBeUndefined();
+});

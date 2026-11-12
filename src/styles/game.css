@@ -244,3 +244,42 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .season-two .scene-stage{width:calc(100% - 32px);margin-inline:16px;border-radius:12px}
 .adviser-aside .adviser-council{overflow:visible}
 @media(max-width:600px){.season-two .scene-stage{width:calc(100% - 24px);margin-inline:12px}}
+
+/* The film counter describes the shared object, never previews an exposure. */
+.choice-description{display:block;font-size:14px;font-weight:400;line-height:1.5;margin-top:7px;color:var(--muted)}
+.photo-camera{display:flex;align-items:center;gap:12px;width:fit-content;max-width:100%;margin:0 0 12px;padding:7px 12px;border-radius:16px;background:#eaf0e3;color:#465543;font-size:14px;line-height:1.3}
+.photo-camera svg{display:block;width:62px;height:40px;flex:none}
+.photo-result{width:min(100%,780px);margin:auto;padding:24px 16px 40px}
+.photo-postcard{position:relative;background-position:center 45%;min-height:230px}
+.postcard-camera{position:absolute;width:140px;bottom:30px;left:28px;filter:drop-shadow(0 6px 5px #2d3c4250);transform:rotate(-7deg)}
+.postcard-camera svg{display:block;width:100%;height:auto}
+.photo-result .postcard-copy{padding:24px}.photo-result .stack{gap:12px}.photo-result .result-actions{margin-top:20px}
+.continuation-pending{padding:16px;border-radius:14px;background:#f2e9df}
+.direction-review{max-width:680px}.direction-review h1{font-size:clamp(25px,5vw,38px)}.direction-review .stack{gap:12px;margin:24px 0}.direction-review .stack button{text-align:left;min-height:64px;padding:16px 20px}
+@media(max-width:380px){.photo-camera{font-size:13px;padding:5px 10px;margin-bottom:8px}.photo-camera svg{width:48px;height:32px}.choice-description{font-size:13px}.photo-result{padding:16px 12px}.photo-postcard{min-height:200px}}
+@media(max-height:450px) and (orientation:landscape){.photo-camera{padding:3px 9px;font-size:12px;margin-bottom:5px}.photo-camera svg{width:40px;height:26px}}
+
+.gallery-art{position:absolute;z-index:2;pointer-events:none;color:#4b443d}
+.gallery-works{display:flex;gap:10px;align-items:flex-start;justify-content:center;height:100%}
+.gallery-works figure{margin:0;background:#fffaf0;padding:6px;box-shadow:0 3px 12px #33251542;min-width:0}
+.gallery-works img{display:block;width:100%;height:100%;object-fit:contain;background:#e7dfcf}
+.gallery-works figcaption{text-align:center;font-size:12px;line-height:1.4;margin-top:5px;letter-spacing:.04em}
+.gallery-art-hall{left:8%;right:8%;top:15%;height:36%}
+.gallery-art-hall figure{width:31%;height:100%;border:9px solid #ece7dd;border-bottom-width:30px;padding:5px}
+.gallery-art-hall figure:nth-child(1){transform:perspective(600px) rotateY(9deg)}
+.gallery-art-hall figure:nth-child(3){transform:perspective(600px) rotateY(-9deg)}
+.gallery-art-row,.gallery-art-chip,.gallery-art-blue{inset:4% 12% 8%}
+.gallery-art-row figure,.gallery-art-chip figure,.gallery-art-blue figure{height:100%;max-width:100%;padding:9px 9px 26px}
+.gallery-art-cards{inset:5% 12% 12%;transform:rotate(-2deg)}
+.gallery-art-cards figure{width:46%;height:90%;padding:9px 9px 26px}
+.gallery-art-cards figure+figure{transform:translateY(8%) rotate(5deg)}
+.gallery-art-poster{top:16%;left:9%;width:34%;padding:10px 8px 14px;background:#f7f0df;box-shadow:0 2px 5px #362f3150}
+.gallery-art-poster strong{display:block;font-size:clamp(8px,1.6vw,12px);text-align:center;letter-spacing:.05em;margin-bottom:8px}
+.gallery-art-poster .gallery-works{gap:3px;height:75px}
+.gallery-art-poster figure{padding:0;box-shadow:none;width:33%}
+.exhibit-row .character,.exhibit-chip .character,.exhibit-blue .character,.exhibit-cards .character{display:none}
+.exhibit-overview .character{display:none}
+.photo-postcard .gallery-art-hall{top:12%;height:52%}
+@media(max-width:600px){.gallery-art-hall{left:5%;right:5%;height:38%}.gallery-art-hall figure{border-width:5px;border-bottom-width:22px;padding:2px}.gallery-works figcaption{font-size:10px;margin-top:3px}.gallery-art-row,.gallery-art-chip,.gallery-art-blue{inset:4% 9% 10%}.gallery-art-poster .gallery-works{height:58px}.gallery-art-poster{padding:6px 5px 9px}.gallery-art-poster strong{font-size:8px;margin-bottom:5px}}
+
+.scene-background.cafe-approach{object-position:center 8%}

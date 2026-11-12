@@ -1,14 +1,10 @@
-// Fixture adapter: old caller options select equivalent R2 actions, never old nodes.
-import { chapters } from '../src/content/chapters/manifest';
-import { finishFive } from './chapter5Helpers';
-import type { EveningRouteResult,Run,StoryState } from '../src/engine/types';
-import type { SaveV1 } from '../src/state/types';
-import { r2Action,startR2,finishR2,r2At,type R2Path } from './r2Helpers';
+import {chapters} from '../src/content/chapters/manifest';
+import {photoAt,finishPhotoSix,startPhotoSix,photoCommand,photoPath,type PhotoPath} from './photo6Helpers';
+import type {NodeId} from '../src/engine/types';
 export const sixthCode=chapters.find(c=>c.id===6)!.code!;
-export type SixthPath={guide:'angel'|'devil'|'none';thought:'linger'|'tease'|'quiet';voice:'stay'|'lead'|'tease'|'quiet';contact:'her'|'asked'|'none';moment?:StoryState['c6Moment'];ending:NonNullable<StoryState['c6Ending']>;route:EveningRouteResult;bonus:boolean;note?:string};
-export const defaultSixth:SixthPath={guide:'devil',thought:'linger',voice:'stay',contact:'her',ending:'hand',route:{kind:'evening-route',mode:'own',stops:['window','water']},bonus:true,note:'Хочу ещё немного погулять.'};
-function path(p:SixthPath):R2Path{return {choices:{'c6.r3.voice':p.voice==='stay'?'lead':p.voice,'c6.r3.moment':p.moment??(p.contact==='her'?'hand':p.contact==='asked'?'hug':'walk'),'c6.r3.ending':p.ending},note:p.note,results:{'evening-route':p.route}};}
-export function action6(r:Run,p=defaultSixth,target:'campaign'|'trial'='campaign'){return r2Action(r,path(p),target);}
-export function startSix(base=finishFive(),trial=false){return startR2(6,base,trial);}
-export function finishSix(base=finishFive(),p=defaultSixth,trial=false){return finishR2(6,path(p),base,trial);}
-export function sixAt(id:string,p=defaultSixth,base?:SaveV1){return r2At(6,id.replace('c6.','c6.r3.').replace('.gesture','.moment').replace('.map','.route'),path(p),base??finishFive());}
+export type SixthPath=Partial<PhotoPath>;
+export const defaultSixth={...photoPath,gesture:'hand'} as const;
+export const action6=photoCommand;
+export const startSix=startPhotoSix;
+export function finishSix(base?:Parameters<typeof finishPhotoSix>[0],path:SixthPath=defaultSixth,trial=false){return finishPhotoSix(base,path,trial);}
+export function sixAt(id:string,path:SixthPath=defaultSixth,base?:Parameters<typeof photoAt>[2]){const ids:Record<string,NodeId>={'c6.map':'c6.photo.place','c6.ending':'c6.photo.touch','c6.note':'c6.photo.gallery'};return photoAt(ids[id]??id as NodeId,path,base);}

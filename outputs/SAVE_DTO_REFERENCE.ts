@@ -1,5 +1,5 @@
 /**
- * Полная справочная DTO текущего сейва — обновлена 24 октября 2026.
+ * Полная справочная DTO прогулки6 и галереи7 — schema1/content16, 4 ноября2026.
  * Автоматически собрана из src/state/types.ts и src/engine/types.ts.
  * Имена и типы полей сохранены; код игры этот справочник не импортирует.
  * Это контракт, не копия пользовательского прогресса.
@@ -19,7 +19,7 @@
 export type SaveV1 = {
     appId: 'five-meetings';
     schemaVersion: 1;
-    contentVersion: 14;
+    contentVersion: 16;
     revision: number;
     updatedAt: string;
     settings: Settings;
@@ -65,7 +65,7 @@ export type Settings = {
 
 /** Снимок завершённой главы основной истории. story включает накопленные к этому моменту решения. */
 export type ChapterRecord = {
-    scriptRevision?: 3;
+    scriptRevision?: 3 | 4 | 5;
     endingId: CardId;
     cardId: CardId;
     story: StoryState;
@@ -80,7 +80,7 @@ export type CardRecord = {
     id: CardId;
     chapter: ChapterId;
     endingId: CardId;
-    variant: 'tidy' | 'detour' | 'skipped' | 'patched' | 'borrowed' | 'feast' | 'snack' | 'chaos' | 'cat' | 'controllers' | 'teapot' | 'adventure' | 'calm' | 'evening' | 'morning';
+    variant: 'tidy' | 'detour' | 'skipped' | 'patched' | 'borrowed' | 'feast' | 'snack' | 'chaos' | 'cat' | 'controllers' | 'teapot' | 'adventure' | 'calm' | 'evening' | 'morning' | 'walk' | 'goodbye' | 'upper' | 'water' | 'together' | 'apart';
     captionId: string;
     teamName?: NonNullable<StoryState['teamName']>;
     usedPreset?: boolean;
@@ -116,6 +116,22 @@ export type PrivateWord = {
  * constellation: cat = «Пончик», controllers = «Наша команда», teapot = «Ещё по чашке?».
  * Это снимок состояния, а не журнал всех нажатий. c4Goodbye хранит вариант прощания4. c4Edition/c5Edition различают редакции; новые вкусы пятой появляются только в c5Edition=3. */
 export type StoryState = {
+    c6Edition?: 5;
+    c7GalleryRoute?: 'together' | 'apart';
+    c7GalleryWork?: 'blue' | 'chip';
+    c7GalleryGift?: 'chip' | 'blue' | 'none';
+    c7GalleryFrame?: 'vlad' | 'her' | 'both';
+    c7GalleryFarewell?: 'cheek' | 'words';
+    c7Cheek?: true;
+    c7Film?: 'key' | 'six';
+    c7CameraHolder?: 'her' | 'vlad';
+    s2Direction?: 'friends' | 'romance';
+    c6FriendExit?: 'walk' | 'goodbye';
+    c6PhotoPlace?: 'upper' | 'water';
+    c6PhotoSubject?: 'vlad' | 'her' | 'place';
+    c6Gesture?: 'hand' | 'hug' | 'none';
+    c6Film?: 'loaded' | 'key' | 'accidental' | 'six';
+    c6CameraHolder?: 'her' | 'vlad';
     c4Edition?: 2;
     c5Edition?: 2 | 3;
     c5FirstTaste?: 'vanilla' | 'sweet' | 'compare';
@@ -200,7 +216,7 @@ export type StoryState = {
  * attemptId связывает попытку с её текстовыми ответами. */
 export type Run = {
     chapter: ChapterId;
-    scriptRevision?: 3;
+    scriptRevision?: 3 | 4 | 5;
     nodeId: NodeId;
     lineIndex: number;
     turn: number;
@@ -225,7 +241,7 @@ export type Run = {
 
 export type ChapterId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export type CardId = 'c5.story' | "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
+export type CardId = 'c6.photo.walk' | 'c7.gallery' | 'c6.photo.friends' | 'c6.photo.romance' | 'c5.story' | "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
 
 export type NodeId = `c${ChapterId}.${string}`;
 

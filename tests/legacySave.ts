@@ -20,11 +20,13 @@ export function prePolishSnapshot(save:SaveV1):SaveV1{
   function beforePolish(value:unknown){
     if(!value||typeof value!=='object')return;
     const item=value as Record<string,unknown>;delete item.c4Goodbye;
+    // The old client started at the door and had only six table lines.
+    if(item.nodeId==='c1.prologue'||item.nodeId==='c1.before')item.nodeId='c1.entry';
     if(Array.isArray(item.journal)){
       const chapter=getLegacyChapter(item.chapter as Run['chapter']);
       item.journal=item.journal.filter(entry=>chapter?.nodes[(entry as {nodeId:Run['nodeId']}).nodeId]);
     }
-    if(['c1.inside','c3.pad.ready','c5.return'].includes(String(item.nodeId))&&typeof item.lineIndex==='number'){
+    if(['c1.inside','c1.table','c3.pad.ready','c5.return'].includes(String(item.nodeId))&&typeof item.lineIndex==='number'){
       const node=getLegacyChapter(item.chapter as Run['chapter'])?.nodes[item.nodeId as Run['nodeId']];
       if(node?.kind==='dialogue')item.lineIndex=Math.min(item.lineIndex,node.lines.length-1);
     }

@@ -1,0 +1,21 @@
+import {test,expect} from '@playwright/test';
+import {photoAt,finishPhotoSix} from './photo6Helpers';
+import {parseSave} from '../src/persistence/validateSave';
+const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
+test('new sixth restores every direction boundary and completed friend choice without changing history',async({page})=>{
+ const save=photoAt('c6.photo.direction'),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
+ await page.goto('./#/play/6');await page.reload();await page.getByRole('button',{name:'Хочу остаться друзьями',exact:false}).click();
+ for(let i=0;i<4;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await page.getByRole('button',{name:'Я пойду отсюда. До встречи',exact:false}).click();
+ for(let i=0;i<6;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.getByRole('heading',{name:'До встречи',exact:true})).toBeVisible();await page.reload();
+ const before=await page.evaluate(k=>localStorage.getItem(k),key);await page.getByRole('button',{name:'Вернуться к выбору',exact:true}).click();await page.reload();await expect(page.getByRole('heading',{name:'Как ты хочешь продолжить эту историю?',exact:true})).toBeVisible();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(before);
+ await page.getByRole('button',{name:'Вернуться к встречам',exact:true}).click();await expect(page.locator('.chapter-list li')).toHaveCount(1);await page.getByRole('button',{name:'Вернуться к выбору',exact:true}).click();await page.getByRole('button',{name:'Хочу попробовать отношения с тобой',exact:false}).click();await page.reload();await expect(page.locator('[data-node="c6.photo.romance.start"]')).toBeVisible();const after=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(after.campaign.records[5]).toEqual(save.campaign.records[5]);expect(after.collection.cards.some(c=>c.id==='c6.photo.friends')).toBe(true);expect(errors).toEqual([]);
+});
+test('all new daylight assets load under the configured base; key photograph stays unexposed and no old seven opens',async({page})=>{
+ const save=photoAt('c6.photo.roll',{place:'upper',subject:'her'});await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});await page.goto('./#/play/6');await expect(page.locator('.photo-camera')).toContainText('26');await expect(page.locator('.scene-background')).toHaveAttribute('src',/photo6-upper.webp$/);await expect.poll(()=>page.locator('.scene-background').evaluate((im:HTMLImageElement)=>im.naturalWidth)).toBe(1000);await page.getByRole('button',{name:'Дальше',exact:false}).click();await page.reload();await expect(page.locator('.photo-camera')).toContainText('25');
+ for(const file of ['photo6-lower-sun.webp','photo6-lower-shade.webp','photo6-upper.webp']){const response=await page.request.get(`./assets/backgrounds/${file}`);expect(response.ok()).toBe(true);}
+ await page.goto('./#/play/7');await expect(page.locator('[data-node]')).toHaveCount(0);await page.goto('./#/result/7');await expect(page.locator('.postcard')).toHaveCount(0);
+});
+test('completed romance reloads its actual place card and waits for new seventh',async({page})=>{
+ const save=finishPhotoSix(undefined,{place:'water'});await page.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key,save});await page.goto('./#/result/6');await expect(page.locator('.postcard h1')).toHaveText('Пока светло');await expect(page.getByText('Первый кадр нашёлся у воды. Двадцать один ещё впереди.',{exact:true})).toBeVisible();await expect(page.locator('.photo-postcard')).toHaveCSS('background-image',/photo6-lower-shade.webp/);await expect(page.locator('.photo-postcard img')).toHaveCount(0);await page.reload();await expect(page.getByText('Следующая встреча в галерее ещё готовится.',{exact:true})).toBeVisible();
+});

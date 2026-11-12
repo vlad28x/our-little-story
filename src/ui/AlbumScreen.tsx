@@ -6,7 +6,7 @@ import { achievements } from '../content/achievements';
 import { assetUrl } from '../content/assetManifest';
 import type { CardId } from '../engine/types';
 import { Illustration } from './Illustration';
-import { MemoryCollection,SecretCollection } from './EpisodeResult';
+
 
 export function AlbumScreen(){
   const {save}=useGame();
@@ -35,7 +35,7 @@ export function AlbumScreen(){
     </section>
     {seasonOpen&&<section className="album-season" aria-label="После титров"><h2>После титров</h2>
       {foundCards.some(id=>cards[id].chapter>=6)?<div className="album-chapters">{chapterCards(true)}</div>:<p className="small album-empty">Здесь появятся воспоминания из новых вечеров.</p>}
-      <MemoryCollection ids={save.collection.memories}/><SecretCollection ids={save.collection.secrets}/>
+
     </section>}
     <h2>Маленькие секреты</h2>{achievements.map(achievement=>{
       const unlocked=save.collection.achievements.includes(achievement.id);

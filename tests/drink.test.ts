@@ -11,7 +11,7 @@ import {cardFromStory,cardMeta} from '../src/content/cards';
 import {finishFour,defaultFourth} from './chapter4Helpers';
 import {startFive,finishFive,command5} from './chapter5Helpers';
 import {finishFive as edition2Five} from './edition2FifthHelpers';
-import {finishR3} from './r3Helpers';
+import {finishPhotoSix} from './photo6Helpers';
 import {completeTwo,finishThree,defaultThird} from './chapter3Helpers';
 import type {SaveV1} from '../src/state/types';
 import {resolveScene} from '../src/engine/step';
@@ -70,7 +70,7 @@ it('reads and continues all fourteen frozen edition2 snapshots without assigning
  const states=JSON.parse(readFileSync('tests/fixtures/season1-v13/states.json','utf8')) as SaveV1[];
  expect(states).toHaveLength(14);
  for(const old of states){
-  let s=parseSave(JSON.stringify(old));expect(s).toEqual({...old,contentVersion:14});
+  let s=parseSave(JSON.stringify(old));expect(s).toEqual({...old,contentVersion:16});
   const trial=!!s.trial;
   while(trial?s.trial:s.campaign.active){const r=(trial?s.trial?.run:s.campaign.active)!;expect(getChapter(5,r.story)?.firstSeasonEdition).toBe(2);s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command5(r)});expect(parseSave(JSON.stringify(s))).toEqual(s);}
   expect(s.campaign.records[5]?.story.c5FirstTaste).toBeUndefined();expect(s.campaign.records[5]?.story.c5Recommendation).toBeUndefined();
@@ -108,9 +108,9 @@ it('uses the saved team, work style, sky and goodbye independently from the drin
  expect(text('c5.letter')).toContain('Внутри ваш рисунок созвездия и два жетона с желаниями.');
  for(const goodbye of ['her','accept','none'] as const){const prior=finishFour(undefined,{...defaultFourth,goodbye}),s=finishFive(prior);expect(s.campaign.records[5]?.story.c4Goodbye).toBe(goodbye);}
 });
-it('new drink decisions pass into unchanged6–10 and coexist with saved personal text',()=>{
+it('new drink decisions pass unchanged into the photo-six prefix',()=>{
  let s=finishFive(initial,{memory:'skipped',ending:'friendly',firstTaste:'sweet',recommendation:'both'});
  const prefix=s.campaign.records[5]!.story;
- for(const chapter of [6,7,8,9,10] as const)s=finishR3(chapter,{note:'Личная мысль '+chapter,check:true},s);
- expect(s.campaign.records[10]?.story).toMatchObject(prefix);expect(s.privateNotes[10]?.campaign?.text).toBe('Личная мысль 10');expect(parseSave(cloudRaw(s))).toEqual(s);
+ s=finishPhotoSix(s);
+ expect(s.campaign.records[6]?.story).toMatchObject(prefix);expect(s.privateNotes).toEqual({});expect(parseSave(cloudRaw(s))).toEqual(s);
 },60000);

@@ -69,7 +69,7 @@ describe('chapter two',()=>{
       const legacy=legacyContent(s,1);expect(parseSave(JSON.stringify(legacy))).toEqual(prePolishSnapshot(s));
       if(!s.campaign.active)break;s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active)});
     }
-    s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify(legacyContent(s,1)))).toEqual(s);
+    s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify(legacyContent(s,1)))).toEqual(prePolishSnapshot(s));
   });
   it('rejects contradictory inherited decisions and forged completed prefixes',()=>{
     const main=finish2(completeSave());const wrong=structuredClone(main);wrong.campaign.records[2]!.story.plan='coop';expect(()=>parseSave(JSON.stringify(wrong))).toThrow();const prefix=structuredClone(main);prefix.campaign.completed=[2];expect(()=>parseSave(JSON.stringify(prefix))).toThrow();

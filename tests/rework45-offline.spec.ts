@@ -102,8 +102,8 @@ test('new fifth can open the existing sixth via the unchanged secret and reload'
   await page.getByRole('button',{name:'И какие же?',exact:true}).click();
   const input=page.getByRole('textbox',{name:'Код от Влада',exact:true});await input.fill(chapters.find(c=>c.id===6)!.code!);
   await page.getByRole('button',{name:'Проверить код',exact:true}).click();await page.getByRole('button',{name:'Начать шестую встречу',exact:false}).click();
-  await expect(page.locator('[data-node="c6.r3.entry"]')).toBeVisible();const loaded=await state(page);expect(loaded.campaign.records[5]).toEqual(main.campaign.records[5]);
-  await openOffline(page,loaded,'/play/6');await expect(page.locator('[data-node="c6.r3.entry"]')).toBeVisible();
+  await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();const loaded=await state(page);expect(loaded.campaign.records[5]).toEqual(main.campaign.records[5]);
+  await openOffline(page,loaded,'/play/6');await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();
 });
 test('new continuation and edition markers survive mock Telegram cloud restore',async({page,context})=>{
   const main=finishFive();await openOffline(page,main,'/result/5',{seedBrowser:false,telegram:{id:42,data:legacyCloudData(main)}});

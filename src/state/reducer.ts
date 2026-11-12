@@ -1,6 +1,7 @@
+import {completedWalk} from '../persistence/photoSix';
 import { replayFirstSeason } from '../persistence/replayFirstSeason';
 import { getChapter } from '../content/chapters';
-import { checkCode } from '../content/chapters/manifest';
+import { checkCode,chapters } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
 import { startRun, step } from '../engine/step';
 import type { ChapterId,Command,NodeId,StoryState,EpisodeChapter } from '../engine/types';
@@ -18,7 +19,7 @@ export type Action =
   | {type:'continuation';value:SaveV1['continuation']}
   | {type:'replace';save:SaveV1}
   | {type:'dev-jump';nodeId:NodeId;story:StoryState};
-export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
+export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
 export function reduceSave(current:SaveV1,action:Action):SaveV1 {
   let s=structuredClone(current);
   switch(action.type){
@@ -38,7 +39,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     }
     case 'trial':{
       const id=action.chapter??1,chapter=getChapter(id),start=s.campaign.startStates[id];
-      if(!chapter||!start||s.trial)return current;
+      if(!chapter||!start||s.trial||!canStart(s,id))return current;
       if((id>=6)&&(!action.attemptId||!s.campaign.completed.includes(id)||action.attemptId===s.campaign.records[id]?.attemptId))return current;
       s.trial={chapter:id,run:startRun(chapter,start,action.attemptId)};s.lastResult=null;if(id>=6)delete s.privateNotes[id as EpisodeChapter]?.trial;if(id===8)delete s.privateWords.trial;break;
     }
@@ -127,7 +128,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       if(result.kind==='ready'){if(action.target==='trial')s.trial={chapter:run.chapter,run:result.run};else s.campaign.active=result.run;}
       else {
         const card=cardFromStory(result.run.story,run.chapter,result.run.results);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card.id),card];s.collection.achievements=[...new Set([...s.collection.achievements,...result.run.earned])];
-        const record:ChapterRecord={endingId:result.endingId,cardId:result.cardId,story:result.run.story,results:result.run.results,...((run.chapter>=6)?{scriptRevision:3,attemptId:result.run.attemptId,episode:result.run.episode}:{})};
+        const record:ChapterRecord={endingId:result.endingId,cardId:result.cardId,story:result.run.story,results:result.run.results,...((run.chapter>=6)?{scriptRevision:result.run.scriptRevision,...(result.run.attemptId?{attemptId:result.run.attemptId}:{}),...(result.run.episode?{episode:result.run.episode}:{})}:{})};
         if(result.run.episode?.memory)s.collection.memories=[...new Set([...s.collection.memories,result.run.episode.memory])];
         if(result.run.episode?.secret)s.collection.secrets=[...new Set([...s.collection.secrets,result.run.episode.secret])];
         s.lastResult={chapter:run.chapter,cardId:result.cardId,source:action.target,...((run.chapter>=6)&&action.target==='trial'?{episodeRecord:record}:{})};
@@ -138,5 +139,5 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     }
   }
   if((JSON.stringify(s.privateNotes)!==JSON.stringify(current.privateNotes)||JSON.stringify(s.privateWords)!==JSON.stringify(current.privateWords))&&s.localNoteRevision===current.localNoteRevision)s.localNoteRevision++;
-  s.contentVersion=14;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
+  s.contentVersion=16;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
 }

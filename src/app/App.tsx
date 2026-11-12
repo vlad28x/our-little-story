@@ -7,9 +7,11 @@ import { DeveloperRecovery } from './DeveloperRecovery';
 import { chapters,checkCode,chapterFromRoute } from '../content/chapters/manifest';
 import { getChapter } from '../content/chapters';
 import { canStart } from '../state/reducer';
+import {completedWalk} from '../persistence/photoSix';
 import { SceneStage } from '../ui/SceneStage';
 import { Illustration } from '../ui/Illustration';
 import { AlbumScreen } from '../ui/AlbumScreen';
+
 import { StoryScreen } from '../ui/StoryScreen';
 import { ResultScreen } from '../ui/ResultScreen';
 import { SettingsPanel } from '../ui/SettingsPanel';
@@ -83,7 +85,7 @@ export function App(){
   return <main className="game-shell" data-motion={save.settings.motion}>
     <header className="topbar">
       <button className="brand" onClick={()=>go('/start')} aria-label="На главный экран"><svg className="brand-mark" viewBox="0 0 40 40" fill="none" stroke="#75425f" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 9L19.2 17.3L28.5 18.7L21.8 25.2L23.4 34.5L15 30.1L6.6 34.5L8.2 25.2L1.5 18.7L10.8 17.3Z" fill="#f4d9a6"/><path d="M30 2L32.4 6.8L37.7 7.6L33.9 11.3L34.8 16.6L30 14.1L25.2 16.6L26.1 11.3L22.3 7.6L27.6 6.8Z" fill="#e9b8c8"/></svg><span>пять случайных<br/><b>встреч</b></span></button>
-      <span className="topbar-caption">{isPlay?`${String(routeChapter).padStart(2,'0')} · ${routeChapter===1?'Случайная встреча':routeChapter===2?'Прогулка под дождём':routeChapter===3?'Игровой вечер':routeChapter===4?'Разговор под звёздами':routeChapter>=8?`После титров · ${chapters.find(c=>c.id===routeChapter)?.title}`:routeChapter===7?'После титров · Между строк':routeChapter===6?'После титров · Ещё пять минут':'Ещё одна встреча?'}`:'маленькая история о нас'}</span>
+      <span className="topbar-caption">{isPlay?`${String(routeChapter).padStart(2,'0')} · ${routeChapter===1?'Случайная встреча':routeChapter===2?'Прогулка под дождём':routeChapter===3?'Игровой вечер':routeChapter===4?'Разговор под звёздами':routeChapter>=8?`После титров · ${chapters.find(c=>c.id===routeChapter)?.title}`:routeChapter===7?'После титров · На шаг левее':routeChapter===6?'После титров · Пока светло':'Ещё одна встреча?'}`:'маленькая история о нас'}</span>
       <button className="icon-button menu-toggle" aria-label="Открыть меню" onClick={()=>setMenu(true)}><span/><span/></button>
     </header>
     {seasonUpdateRaw&&!DEV_SANDBOX&&<div className="cloud-banner"><span>Первые пять встреч сохранены. Второй сезон ждёт обновления.</span><button onClick={()=>setReadLegacy(false)}>К обновлению сезона</button></div>}
@@ -110,13 +112,14 @@ export function App(){
       </section>}
       {save.trial&&<div className="trial-map-actions"><button className="text-button" onClick={()=>go(`/play/${save.trial!.chapter}?mode=trial`)}>Продолжить пробный вариант главы {save.trial.chapter}</button><button className="text-button" onClick={()=>setDiscardTrial(true)}>Закрыть пробный вариант</button></div>}
       {seasonOpen&&<div className="season-tabs" role="group" aria-label="Выбрать историю"><button aria-pressed={season===1} onClick={()=>setSeason(1)}>Пять встреч</button><button aria-pressed={season===2} onClick={()=>setSeason(2)}>После титров <span aria-hidden="true">😈</span></button></div>}
-      {season===2&&seasonOpen&&<div className="season-map-heading"><span className="eyebrow">НОВАЯ ГЛАВА ВАШЕЙ ИСТОРИИ</span><h2>После титров</h2><p className="small">Пять новых вечеров. Чуть меньше случайностей.</p></div>}
+      {season===2&&seasonOpen&&<div className="season-map-heading"><span className="eyebrow">НОВАЯ ГЛАВА ВАШЕЙ ИСТОРИИ</span><h2>После титров</h2><p className="small">Прогулка, свет и один аппарат на двоих.</p></div>}
       <ol className="chapter-list">{listedChapters.map(c=>{
+        const needsWalk=c.id===7&&save.campaign.completed.includes(6)&&!completedWalk(save.campaign.records[6]?.story);
         const completed=save.campaign.completed.includes(c.id),active=save.campaign.active?.chapter===c.id,entitled=save.unlocked.includes(c.id),priorDone=Array.from({length:c.id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));
         return <li key={c.id} className={c.available?'available':'locked'}>
           <div className="chapter-icon"><Illustration kind={chapterIllustrations[c.id]}/><span>{String(c.id).padStart(2,'0')}</span></div>
           <div><span className="eyebrow">ВСТРЕЧА {c.id}</span><h2>{c.title}</h2><p>{c.motif}</p>
-            {!c.available?<span className="locked-caption">Этот вечер ещё готовится</span>:!priorDone?<><span className="locked-caption">Сначала заверши встречу {c.id-1}</span>{!entitled&&<button className="text-button chapter-unlock-link" onClick={focusCode}>Ввести код</button>}</>:!entitled?<><span className="locked-caption">Ждёт своего маленького приглашения</span><p className="small unlock-note">Влад пришлёт код, когда будет время для следующей встречи.</p><button className="text-button chapter-unlock-link" onClick={focusCode}>Ввести код</button></>:<>
+            {!c.available?<span className="locked-caption">Этот вечер ещё готовится</span>:!priorDone||needsWalk?<><span className="locked-caption">{needsWalk?'Сначала пройди новую прогулку «Пока светло».':`Сначала заверши встречу ${c.id-1}`}</span>{needsWalk&&<button className="text-button" onClick={()=>go('/result/6')}>К новой прогулке</button>}{!entitled&&<button className="text-button chapter-unlock-link" onClick={focusCode}>Ввести код</button>}</>:!entitled?<><span className="locked-caption">Ждёт своего маленького приглашения</span><p className="small unlock-note">Влад пришлёт код, когда будет время для следующей встречи.</p><button className="text-button chapter-unlock-link" onClick={focusCode}>Ввести код</button></>:<>
               <button className="primary" disabled={!completed&&!active&&!!save.campaign.active} onClick={()=>openChapter(c.id)}>{completed?'Мой финал':active?'Продолжить':'Начать встречу'} →</button>
               {c.id===5&&completed&&<button className="chapter-meeting-link" disabled={conflict||cloudBlocked||!!seasonUpdateRaw} onClick={returnToInvitation}>Встретиться вживую <span aria-hidden="true">→</span></button>}
               {save.campaign.startStates[c.id]&&<div className="replay-links">{(!save.trial||save.trial.chapter===c.id)&&<button className="text-button" onClick={()=>openTrial(c.id)}>{save.trial?'Продолжить другой вариант':'Посмотреть другой вариант'}</button>}{save.trial?.chapter===c.id&&<button className="text-button" onClick={()=>setDiscardTrial(true)}>Закрыть пробный вариант</button>}<button className="text-button" onClick={()=>setRewrite(c.id)}>Изменить мою историю</button></div>}

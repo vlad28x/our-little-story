@@ -1,20 +1,20 @@
 import { expect,it } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { getChapter } from '../src/content/chapters';
+import { getChapter,playableChapters } from '../src/content/chapters';
 import { chapter4 } from '../src/content/chapters/ch04';
 import { chapter5 } from '../src/legacy/season1/ch05-v13';
 import { parseSave } from '../src/persistence/validateSave';
 import { reduceSave } from '../src/state/reducer';
 import { cloudRaw } from '../src/telegram/cloud';
-import { cardFromStory,archivedEpisodeCard } from '../src/content/cards';
+import { archivedEpisodeCard } from '../src/content/cards';
 import { continuationDraft,invitationConversation } from '../src/content/invitation';
 import { finishThree } from './chapter3Helpers';
 import { defaultFourth,finishFour,startFour } from './chapter4Helpers';
 import { command5,finishFive,startFive } from './edition2FifthHelpers';
 import { finishFour as oldFour,defaultFourth as oldFourth,startFour as startOldFour,command4 as oldCommand4 } from './legacy4Helpers';
 import { finishFive as oldFive,startFive as startOldFive,command5 as oldCommand5 } from './legacy5Helpers';
-import { finishR3 } from './r3Helpers';
+import { finishPhotoSix } from './photo6Helpers';
 import type { ConstellationResult } from '../src/engine/types';
 import type { SaveV1 } from '../src/state/types';
 
@@ -99,21 +99,16 @@ it('all real invitation values round-trip in cloud JSON and cannot alter complet
   const main=finishFive();
   for(const value of [null,'game','movie','cafe','walk','decline','public','chat','later'] as const){const saved=reduceSave(main,{type:'continuation',value});roundtrip(saved);expect(saved.campaign).toEqual(main.campaign);expect(saved.collection).toEqual(main.collection);}
 });
-it('new prefix starts and completes unchanged R3 chapters6–10; all private text survives import/export',()=>{
-  let s=finishFive();
-  for(const chapter of [6,7,8,9,10] as const){s=finishR3(chapter,{note:'Сохранённая мысль '+chapter,check:true},s);expect(s.campaign.records[chapter]?.scriptRevision).toBe(3);}
-  expect(s.campaign.records[10]?.story.bond).toBeUndefined();expect(s.campaign.records[10]?.story.ending).toBeUndefined();roundtrip(s);
-  for(const id of [6,7,8,9,10] as const)expect(s.privateNotes[id]?.campaign?.text).toBe('Сохранённая мысль '+id);
-  expect(cardFromStory(s.campaign.records[5]!.story,5,s.campaign.records[5]!.results).id).toBe('c5.story');
-},60000);
+it('new prefix completes photo-six without altering first-five history',()=>{const before=finishFive(finishFour());const next=finishPhotoSix(before);for(const id of [1,2,3,4,5] as const)expect(next.campaign.records[id]).toEqual(before.campaign.records[id]);expect(next.campaign.records[6]?.scriptRevision).toBe(5);expect(parseSave(JSON.stringify(next))).toEqual(next);});
+
 it('retains frozen source hashes of the previous fourth and fifth chapters',()=>{
   const hashes=JSON.parse(readFileSync('tests/fixtures/season1-v12/hashes.json','utf8')) as Record<string,string>;
   for(const [file,hash] of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(file)).digest('hex')).toBe(hash);
   const r3=JSON.parse(readFileSync('outputs/SEASON_02_R3_CONTENT.json','utf8')) as {chapters:unknown[]};
-  for(const chapter of r3.chapters){const id=(chapter as {id:6|7|8|9|10}).id;expect(getChapter(id)).toEqual(chapter);}
+  for(const chapter of r3.chapters){const id=(chapter as {id:6|7|8|9|10}).id;if(id>7)expect(playableChapters[id]).toEqual(chapter);}
 });
 it('reads the 24 frozen V12 campaign/trial checkpoints without changing decisions, cards or cursors',()=>{
   const fixtures=JSON.parse(readFileSync('tests/fixtures/season1-v12/states.json','utf8')) as SaveV1[];
   expect(fixtures).toHaveLength(24);
-  for(const fixture of fixtures)expect(parseSave(JSON.stringify(fixture))).toEqual({...fixture,contentVersion:14});
+  for(const fixture of fixtures)expect(parseSave(JSON.stringify(fixture))).toEqual({...fixture,contentVersion:16});
 });

@@ -8,7 +8,7 @@ const key='five-meetings:/:telegram:our_little_story_game_bot:42:save';
 test('startup requests fullscreen once; notch, Telegram controls and landscape insets keep content and dialogs usable',async({page})=>{
   await page.setViewportSize({width:390,height:844});const save=reduceSave(initialState(),{type:'start'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await openOffline(page,initialState(),'/play/1',{seedBrowser:false,telegram:{id:42,data:legacyCloudData(save),presentation:{fullscreen:'success'}}});
-  await expect(page.locator('[data-node="c1.entry"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
+  await expect(page.locator('[data-node="c1.prologue"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
   expect(await page.evaluate(()=>(window as unknown as {testCloud:{presentation:{fullscreenCalls:number;expandCalls:number}}}).testCloud.presentation)).toMatchObject({fullscreenCalls:1,expandCalls:1});
   expect((await page.locator('.topbar').boundingBox())!.y).toBeGreaterThanOrEqual(103);
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();const modal=page.getByRole('dialog',{name:'Маленькая пауза',exact:true});let box=(await modal.boundingBox())!;expect(box.y).toBeGreaterThanOrEqual(103);expect(box.y+box.height).toBeLessThanOrEqual(810);
@@ -22,7 +22,7 @@ for(const scenario of [{version:'7.10',fullscreen:'success',calls:0,expand:1},{v
   test(`fullscreen ${scenario.fullscreen} on ${scenario.version} does not block restoring and playing`,async({page})=>{
     const save=reduceSave(initialState(),{type:'start'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
     await openOffline(page,initialState(),'/play/1',{seedBrowser:false,telegram:{id:42,data:legacyCloudData(save),presentation:{fullscreen:scenario.fullscreen,version:scenario.version}}});
-    await expect(page.locator('[data-node="c1.entry"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
+    await expect(page.locator('[data-node="c1.prologue"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
     const presentation=await page.evaluate(()=>(window as unknown as {testCloud:{presentation:{fullscreenCalls?:number;expandCalls:number}}}).testCloud.presentation);expect(presentation.fullscreenCalls??0).toBe(scenario.calls);expect(presentation.expandCalls).toBe(scenario.expand);
     await page.getByRole('button',{name:/Дальше/}).click();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');const after=JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(after.campaign.active.turn).toBe(save.campaign.active!.turn+1);expect(errors).toEqual([]);
   });

@@ -2,6 +2,40 @@ import { finishSix } from './chapter6Helpers';
 import { test,expect,type Page } from '@playwright/test';
 import { expectSimpleResult } from './resultActions';
 const prefix=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
+test('the short prologue shows only the cafe, survives reload and leads into the original meeting',async({page})=>{
+  await page.setViewportSize({width:320,height:568});
+  await page.goto('./');
+  await page.getByRole('button',{name:'К встречам',exact:true}).click();
+  await page.locator('.chapter-list li').first().getByRole('button',{name:'Начать встречу',exact:false}).click();
+  await expect(page.locator('[data-node="c1.prologue"]')).toBeVisible();
+  await expect(page.locator('.scene-background')).toHaveAttribute('src',/cafe-approach-day\.webp$/);
+  await expect(page.locator('.scene-stage')).toHaveAttribute('aria-label','У «Паузы» · перед встречей');
+  await expect(page.locator('.scene-stage .character,.scene-stage .scene-cat,.scene-stage .easter-hair,.fallen-tokens')).toHaveCount(0);
+  await expect(page.getByText('Дела на сегодня закончены.',{exact:false})).toBeVisible();
+  await expect.poll(()=>page.locator('.scene-background').evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:'outputs/CHAPTER_01_PROLOGUE_320.png',fullPage:true,animations:'disabled'});
+  await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  await page.reload();
+  await expect(page.getByText('За стеклом горит тёплая лампа,',{exact:false})).toBeVisible();
+  await page.setViewportSize({width:960,height:900});
+  await page.screenshot({path:'outputs/CHAPTER_01_PROLOGUE_960.png',fullPage:true,animations:'disabled'});
+  for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  await expect(page.locator('[data-node="c1.before"]')).toBeVisible();
+  await expect(page.locator('.scene-background')).toHaveAttribute('src',/cafe-entry\.webp$/);
+  await expect(page.locator('.scene-stage .character')).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('А внутри кафе Влад допивает кофе.',{exact:false})).toBeVisible();
+  await page.screenshot({path:'outputs/CHAPTER_01_VLAD_BEFORE_960.png',fullPage:true,animations:'disabled'});
+  await page.setViewportSize({width:320,height:568});
+  for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:'outputs/CHAPTER_01_VLAD_BEFORE_320.png',fullPage:true,animations:'disabled'});
+  await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  await expect(page.locator('[data-node="c1.entry"]')).toBeVisible();
+  await expect(page.locator('.scene-stage .character')).toBeVisible();
+  await expect(page.locator('.scene-stage .scene-cat')).toBeVisible();
+});
 async function advanceUntil(page:Page,target:string){for(let i=0;i<110;i++){if(await page.locator(`[data-node="${target}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error(`Did not reach ${target}`);}
 async function start(page:Page){await page.goto('./');await page.getByRole('button',{name:'К встречам',exact:true}).click();await page.locator('.chapter-list li').first().getByRole('button',{name:'Начать встречу',exact:false}).click();await advanceUntil(page,'c1.approach');await page.getByRole('button',{name:'Давай сначала освободим проход'}).click();await advanceUntil(page,'c1.search');}
 async function finish(page:Page,ending:'tea'|'banter'|'coop'){await advanceUntil(page,'c1.pace');await page.getByRole('button',{name:'Есть пять минут. Только давай спокойно'}).click();await advanceUntil(page,'c1.detail');await page.getByRole('button',{name:'На минуту отвлечься на окно'}).click();await advanceUntil(page,'c1.plan');await page.getByRole('button',{name:ending==='tea'?'Давай всё-таки возьмём чай':ending==='banter'?'У меня ещё пять минут на твою авторскую методику':'В следующий раз покажешь эту игру?'}).click();for(let i=0;i<8;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.postcard')).toBeVisible();}
@@ -35,9 +69,9 @@ test('the sixth result overrides an old first-season preference and survives a r
   const save=finishSix(),preference=`${prefix}:map-season`;
   await page.addInitScript(({key,raw})=>{if(!localStorage.getItem(key)){localStorage.setItem(key,raw);localStorage.setItem(`${key}:map-season`,'1');}},{key:prefix,raw:JSON.stringify(save)});
   await page.goto('./#/result/6?source=campaign');await expect(page.locator('.postcard')).toBeVisible();
-  await page.getByRole('button',{name:'К следующей встрече',exact:false}).click();
+  await page.getByRole('button',{name:'К встречам',exact:true}).click();
   await expect(page.locator('.season-tabs button').nth(1)).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('.chapter-list li').first()).toContainText('Ещё пять минут');
+  await expect(page.locator('.chapter-list li').first()).toContainText('Пока светло');
   await page.reload();await expect(page.locator('.season-tabs button').nth(1)).toHaveAttribute('aria-pressed','true');
   expect(await page.evaluate(k=>localStorage.getItem(k),preference)).toBe('2');
   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),prefix)).toEqual(save);

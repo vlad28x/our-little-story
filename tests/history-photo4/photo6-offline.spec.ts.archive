@@ -1,0 +1,42 @@
+import {test,expect,type Page} from '@playwright/test';
+import {openOffline} from './offlineApp';
+import {photoAt,finishPhotoSix,startPhotoSix,photoPath} from './photo6Helpers';
+import {finishFive} from './chapter5Helpers';
+import {parseSave} from '../src/persistence/validateSave';
+import {initialState} from '../src/state/initialState';
+import {TelegramCloud} from '../src/telegram/cloud';
+import type {SaveV1} from '../src/state/types';
+const key='five-meetings:/:save';
+const read=(p:Page,k=key)=>p.evaluate(k=>JSON.parse(localStorage.getItem(k)!) as SaveV1,k);
+async function advance(p:Page){const rev=(await read(p)).revision;await p.getByRole('button',{name:'Дальше',exact:false}).click();await expect.poll(async()=>(await read(p)).revision).toBeGreaterThan(rev);}
+async function until(p:Page,id:string){for(let i=0;i<140;i++){if(await p.locator(`[data-node="${id}"]`).count())return;await advance(p);}throw Error('Missing '+id);}
+async function finish(p:Page){for(let i=0;i<130;i++){if(!(await read(p)).campaign.active){await expect(p.locator('.postcard')).toBeVisible();return;}await advance(p);}throw Error('Missing result');}
+test('friendship is a complete ending, hides later slots and can be reviewed without altering history',async({page})=>{
+ for(const friend of ['walk','goodbye'] as const){await openOffline(page,photoAt('c6.photo.direction'),'/play/6');await expect(page.getByText('Это выбор внутри истории. К нему можно вернуться.',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Хочу остаться друзьями',exact:false}).click();await page.evaluate(()=>location.hash='#/chapters');await expect(page.locator('.chapter-list li')).toHaveCount(1);await page.locator('.chapter-list li').first().getByRole('button',{name:'Продолжить',exact:false}).click();await until(page,'c6.photo.friends.choice');await page.getByRole('button',{name:friend==='walk'?'Да, до поворота':'Я пойду отсюда. До встречи',exact:false}).click();await finish(page);await expect(page.getByRole('heading',{name:'До встречи',exact:true})).toBeVisible();const before=await read(page);await page.getByRole('button',{name:'Вернуться к выбору',exact:true}).click();await expect(page.getByRole('heading',{name:'Как ты хочешь продолжить эту историю?',exact:true})).toBeVisible();expect(await read(page)).toEqual(before);await page.getByRole('button',{name:'Вернуться к встречам',exact:true}).click();await expect(page.locator('.chapter-list li')).toHaveCount(1);await expect(page.locator('.chapter-list')).not.toContainText('Между строк');expect(await read(page)).toEqual(before);
+  await page.getByRole('button',{name:'Вернуться к выбору',exact:true}).click();await page.getByRole('button',{name:'Хочу попробовать отношения с тобой',exact:false}).click();await expect(page.locator('[data-node="c6.photo.romance.start"]')).toBeVisible();const changed=await read(page);expect(changed.collection.cards.some(c=>c.id==='c6.photo.friends')).toBe(true);expect(changed.campaign.records[5]).toEqual(before.campaign.records[5]);expect(parseSave(JSON.stringify(changed))).toEqual(changed);}
+});
+test('all 18 romantic combinations show only their own text and survive the menus, camera sequence and result',async({page})=>{
+ test.setTimeout(180000);
+ let index=0;
+ for(const place of ['upper','water'] as const)for(const subject of ['vlad','her','place'] as const)for(const gesture of ['hand','hug','none'] as const){
+  await page.setViewportSize({width:[320,390,960][index%3],height:index%3===2?900:844});let s=photoAt('c6.photo.place');await openOffline(page,s,'/play/6');
+  await page.getByRole('button',{name:place==='upper'?'Поднимемся. Хочу поймать оставшийся свет':'Останемся у воды. Поищем отражение',exact:false}).click();s=await read(page);await openOffline(page,s,'/play/6');await until(page,'c6.photo.subject');
+  await page.getByRole('button',{name:subject==='vlad'?'Влад, оставайся в кадре':subject==='her'?'Теперь ты меня. Только силуэтом':'Сниму само место',exact:false}).click();s=await read(page);await openOffline(page,s,'/play/6');await until(page,'c6.photo.roll');await expect(page.locator('.photo-camera')).toContainText('26');
+  await advance(page);await expect(page.locator('.photo-camera')).toContainText('25');await until(page,'c6.photo.touch');await expect(page.locator('.photo-camera')).toContainText('21');
+  await page.getByRole('button',{name:gesture==='hand'?'Взять его за руку':gesture==='hug'?'Лучше обниму тебя':'Давай просто рядом',exact:false}).click();s=await read(page);await openOffline(page,s,'/play/6');await until(page,'c6.photo.gallery');if(index<2)await page.screenshot({path:`work/PHOTO6_${place}_${subject}_${gesture}.png`,animations:'disabled'});await finish(page);
+  await expect(page.getByRole('heading',{name:'Пока светло',exact:true})).toBeVisible();await expect(page.getByText('Следующая встреча в галерее ещё готовится.',{exact:true})).toBeVisible();const done=await read(page);expect(done.campaign.records[6]?.story).toMatchObject({s2Direction:'romance',c6PhotoPlace:place,c6PhotoSubject:subject,c6Gesture:gesture,c6Film:'six',c6CameraHolder:'her'});expect(parseSave(JSON.stringify(done))).toEqual(done);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);index++;
+ }
+});
+test('trial direction cannot change canonical friendship and old future codes/routes cannot run',async({page})=>{
+ const base=finishPhotoSix(undefined,{direction:'friends'});await openOffline(page,base,'/result/6');await page.getByRole('button',{name:'Посмотреть другой вариант',exact:true}).click();await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();for(let i=0;i<5;i++)await advance(page);await page.getByRole('button',{name:'Хочу попробовать отношения с тобой',exact:false}).click();expect((await read(page)).campaign).toEqual(base.campaign);
+ for(const id of [7,8,9,10]){await openOffline(page,base,`/play/${id}`);await expect(page.locator('[data-node]')).toHaveCount(0);await openOffline(page,base,`/result/${id}`);await expect(page.locator('.postcard')).toHaveCount(0);}
+});
+test('photo cursor and shared camera restore on another synthetic Telegram client',async({context})=>{
+ const save=photoAt('c6.photo.roll',{...photoPath,place:'upper',subject:'her'}),cloudKey='five-meetings:/:telegram:our_little_story_game_bot:42:save';
+ const cloudData:Record<string,string>={};await new TelegramCloud({getItem(k,done){done(null,cloudData[k]??'');},getItems(keys,done){done(null,Object.fromEntries(keys.map(k=>[k,cloudData[k]??''])));},setItem(k,v,done){cloudData[k]=v;done(null,true);}}).write(save,'');
+ const first=await context.newPage();await openOffline(first,initialState(),'/play/6',{seedBrowser:false,telegram:{id:42,data:cloudData}});await expect(first.locator('[data-node="c6.photo.roll"]')).toBeVisible();await expect(first.locator('.photo-camera')).toContainText('26');await first.getByRole('button',{name:'Дальше',exact:false}).click();await expect(first.locator('.telegram-sync')).toContainText('История сохранена в Telegram');const data=await first.evaluate(()=>(window as unknown as {testCloud:{data:Record<string,string>}}).testCloud.data);const expected=await read(first,cloudKey);
+ const second=await context.newPage();await openOffline(second,initialState(),'/play/6',{seedBrowser:false,telegram:{id:42,data}});await expect(second.locator('.photo-camera')).toContainText('25');expect(await read(second,cloudKey)).toEqual(expected);await first.close();await second.close();
+});
+test('neutral entry is identical for every real-invitation answer and small screens show readable menus',async({page})=>{
+ const save=startPhotoSix();await page.setViewportSize({width:320,height:568});await openOffline(page,save,'/play/6');for(let i=0;i<5;i++)await advance(page);for(const button of await page.locator('.choices button').all()){const box=(await button.boundingBox())!;expect(box.height).toBeGreaterThanOrEqual(48);}await page.screenshot({path:'work/PHOTO6_DIRECTION_320.png',animations:'disabled'});await expect(page.getByRole('button',{name:'Вернуться к встречам',exact:true})).toBeVisible();expect((await read(page)).campaign.records[5]).toEqual(finishFive().campaign.records[5]);
+});

@@ -13,6 +13,14 @@ import type { ChapterId } from '../src/engine/types';
 class MemoryStorage implements StorageLike { data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
 const key='test:save';
 describe('save and restore',()=>{
+  it('keeps an old door cursor and action count instead of replaying the new prologue',()=>{
+    const save=reduceSave(initialState(),{type:'start'});
+    save.campaign.active={chapter:1,nodeId:'c1.entry',lineIndex:4,turn:4,story:{},results:{},earned:[]};
+    expect(parseSave(JSON.stringify(save))).toEqual(save);
+    const next=reduceSave(save,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:4}});
+    expect(next.campaign.active).toMatchObject({nodeId:'c1.door',lineIndex:0,turn:5});
+    expect(parseSave(JSON.stringify(next))).toEqual(next);
+  });
   it('resumes the renamed Pages site without changing the old snapshot and writes subsequent progress to the new key',()=>{
     const s=new MemoryStorage(),oldKey='five-meetings:/little-projects/:save',newKey='five-meetings:/our-little-story/:save';
     const before=reduceSave(initialState(),{type:'start'}),raw=JSON.stringify(before);s.setItem(oldKey,raw);
