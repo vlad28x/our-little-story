@@ -32,6 +32,13 @@ it('all eighteen walks preserve first five and reload at every cursor with no st
   while(s.campaign.active){const r=s.campaign.active,n=chapter6.nodes[r.nodeId];expect(parseSave(JSON.stringify(s))).toEqual(s);const left=filmLeft(r.story);if(left!==undefined)counts.add(left);if(n.kind==='dialogue')texts.push(resolveLine(n.lines[r.lineIndex],r.story).text);const cmd=photoCommand(r,{place,subject,gesture});s=reduceSave(s,{type:'command',target:'campaign',command:cmd});expect(reduceSave(s,{type:'command',target:'campaign',command:cmd})).toEqual(s);}
   expect([...counts]).toEqual([27,26,25,21]);expect(s.campaign.records[6]?.story).toMatchObject({c6Edition:5,c6PhotoPlace:place,c6PhotoSubject:subject,c6Gesture:gesture,c6Film:'six',c6CameraHolder:'her'});expect(s.campaign.records[6]?.story.s2Direction).toBeUndefined();
   if(gesture==='none')expect(texts.join(' ')).not.toMatch(/Ты вкладываешь ладонь|обнимает тебя в ответ|размыкаете руки/);
+  const farewell=texts.slice(-6).join(' ');
+  expect(farewell.includes('чуть сжимает пальцы')).toBe(gesture==='hand');
+  expect(farewell.includes('накрывает твою ладонь своей')).toBe(gesture==='hug');
+  expect(farewell.includes('поднимаешь ладонь на прощание')).toBe(gesture==='none');
+  const walk=chapter6.nodes['c6.photo.walk.on'];if(walk.kind!=='dialogue')throw Error('Missing walk');
+  const joke=walk.lines.slice(2,4).map(line=>resolveLine(line,s.campaign.records[6]!.story).text).join(' ');
+  expect(joke.includes('столба')).toBe(place==='upper');expect(joke.includes('не задирая голову')).toBe(place==='water');
   expect(s.campaign.records[5]).toEqual(base.campaign.records[5]);expect(parseSave(cloudRaw(s))).toEqual(s);expect(canStart({...s,unlocked:[...s.unlocked,7]},7)).toBe(true);
  }
 },90000);
@@ -74,7 +81,7 @@ it('rejects invented facts, skipped actions, relabelled editions and old future 
  const s=galleryAt('c7.gallery.replay');for(const effect of [{c7GalleryGift:'chip'},{c7Cheek:true},{c7Film:'six'}]){const bad=structuredClone(s);Object.assign(bad.campaign.active!.story,effect);expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
  const initial=startPhotoSix();initial.campaign.active!.story.s2Direction='romance';expect(()=>parseSave(JSON.stringify(initial))).toThrow();
  const bad=photoAt('c6.photo.roll');bad.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(bad))).toThrow();
- for(const id of [8,9,10] as const){expect(getChapter(id)).toBeUndefined();expect(reduceSave(s,{type:'unlock',code:chapters.find(c=>c.id===id)!.code!})).toEqual(s);}
+ for(const id of [9,10] as const){expect(getChapter(id)).toBeUndefined();expect(reduceSave(s,{type:'unlock',code:chapters.find(c=>c.id===id)!.code!})).toEqual(s);}
  const wrong=startPhotoSix();wrong.campaign.active!.scriptRevision=4;expect(()=>parseSave(JSON.stringify(wrong))).toThrow();
  for(const contentVersion of [14,15])expect(()=>parseSave(JSON.stringify({...photoAt('c6.photo.roll'),contentVersion}))).toThrow();
 });

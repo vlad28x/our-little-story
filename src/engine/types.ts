@@ -5,6 +5,8 @@ export type NodeId = `c${ChapterId}.${string}`;
 export type Emotion = 'neutral'|'smile'|'awkward'|'thinking'|'laugh'|'warm'|'surprised';
 export type Speaker = 'narrator'|'vlad'|'heroine'|'nina'|'angel'|'devil'|'heroine-thought'|'vlad-thought';
 export type StoryState = {
+  c8Filling?:'pepper'|'mushroom'|'mix'|'simple';c8Shape?:'fold'|'open';
+  c8Frame?:'foodHer'|'foodVlad'|'boardHer'|'boardVlad';c8Film?:'key'|'nine';c8Step?:'follow'|'lead'|'play'|'sit';
   c6Edition?:5;
   c7GalleryRoute?:'together'|'apart';c7GalleryWork?:'blue'|'chip';c7GalleryGift?:'chip'|'blue'|'none';
   c7GalleryFrame?:'vlad'|'her'|'both';c7GalleryFarewell?:'cheek'|'words';c7Cheek?:true;
@@ -90,7 +92,7 @@ export type StoryNode =
   | {id:NodeId;kind:'label';scene:Scene;labelId:'s2.word8';maxCodePoints:24;next:NodeId}
   | {id:NodeId;kind:'end';endingId:CardId;cardId:CardId};
 export type Chapter = {id:ChapterId;contentVersion:number;scriptRevision?:3|4|5;firstSeasonEdition?:2|3;title:string;entry:NodeId;nodes:Record<NodeId,StoryNode>};
-export type CardId = 'c6.photo.walk'|'c7.gallery'|'c6.photo.friends'|'c6.photo.romance'|'c5.story'|"c8.r3.dance"|"c8.r3.tea"|"c8.r3.next"|"c9.r3.talk"|"c9.r3.quiet"|"c9.r3.credits"|'c1.tea'|'c1.banter'|'c1.coop'|'c2.shelter'|'c2.arcade'|'c3.dinner'|'c4.adventure'|'c4.calm'|'c5.romantic'|'c5.comic'|'c5.gaming'|'c5.friendly'|'c6.hand'|'c6.lap'|'c6.home'|'c7.open'|'c7.promise'|'c7.calm'|'c8.kiss'|'c8.near'|'c8.tea'|'c9.kiss'|'c9.hug'|'c9.film'|'c10.goodnight'|'c10.stay'|'c10.private'|'c10.overnight';
+export type CardId = 'c8.supper'|'c6.photo.walk'|'c7.gallery'|'c6.photo.friends'|'c6.photo.romance'|'c5.story'|"c8.r3.dance"|"c8.r3.tea"|"c8.r3.next"|"c9.r3.talk"|"c9.r3.quiet"|"c9.r3.credits"|'c1.tea'|'c1.banter'|'c1.coop'|'c2.shelter'|'c2.arcade'|'c3.dinner'|'c4.adventure'|'c4.calm'|'c5.romantic'|'c5.comic'|'c5.gaming'|'c5.friendly'|'c6.hand'|'c6.lap'|'c6.home'|'c7.open'|'c7.promise'|'c7.calm'|'c8.kiss'|'c8.near'|'c8.tea'|'c9.kiss'|'c9.hug'|'c9.film'|'c10.goodnight'|'c10.stay'|'c10.private'|'c10.overnight';
 export type SearchResult = {kind:'token-search';outcome:'tidy'|'detour'|'skipped';catNoticed:boolean};
 export type UmbrellaResult = {kind:'umbrella-patch';outcome:'patched'|'borrowed'|'skipped'};
 export type KitchenResult = {kind:'kitchen';outcome:'feast'|'snack'|'chaos'|'skipped';served:number;mode:'timed'|'calm'};

@@ -20,7 +20,7 @@ export function ResultScreen({route}:{route:string}){
   const canonical=save.campaign.records[chapter];
   const card=wanted?save.collection.cards.find(c=>c.id===wanted&&c.chapter===chapter):isTrial?(chapter>=6&&save.lastResult?.episodeRecord?cardFromStory(save.lastResult.episodeRecord.story,chapter,save.lastResult.episodeRecord.results):save.collection.cards.find(c=>c.id===save.lastResult?.cardId)):canonical?cardFromStory(canonical.story,chapter,canonical.results):undefined;
   if(!card)return <div className="page-content"><h2>Этот финал ещё впереди</h2><button onClick={()=>go('/chapters')}>К главам</button></div>;
-  if(chapter===6||chapter===7)return <div ref={result} tabIndex={-1}><PhotoChapterResult card={card} trial={isTrial} archive={!!wanted}/></div>;
+  if(chapter===6||chapter===7||card.id==='c8.supper')return <div ref={result} tabIndex={-1}><PhotoChapterResult card={card} trial={isTrial} archive={!!wanted}/></div>;
   const c=cardMeta(card);
   const episodeRecord=wanted?undefined:isTrial?save.lastResult?.episodeRecord:canonical;
   const showInvitation=chapter===5&&!wanted&&!isTrial&&!save.trial&&canonical&&save.campaign.completed.includes(5);

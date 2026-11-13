@@ -69,9 +69,9 @@ it('offers all three goodbyes for all 48 bench/sky/bond/wish combinations withou
 });
 
 it('keeps all frozen old final-dialogue cursors and the old completed fourth chapter readable',()=>{
-  expect(parseSave(JSON.stringify(beforeHug.completed))).toEqual({...beforeHug.completed,contentVersion:16});
+  expect(parseSave(JSON.stringify(beforeHug.completed))).toEqual({...beforeHug.completed,contentVersion:17});
   for(const old of beforeHug.active){
-    let save=parseSave(JSON.stringify(old));expect(save).toEqual({...old,contentVersion:16});
+    let save=parseSave(JSON.stringify(old));expect(save).toEqual({...old,contentVersion:17});
     for(let i=0;i<100&&save.campaign.active;i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active)});
     const record=structuredClone(save.campaign.records[4]!);expect(record.story.c4Goodbye).toBe('none');delete record.story.c4Goodbye;
     expect(record).toEqual(beforeHug.completed.campaign.records[4]);expect(save.campaign.completed).toEqual([1,2,3,4]);expect(parseSave(JSON.stringify(save))).toEqual(save);

@@ -9,6 +9,7 @@ export function DeveloperRecovery(){
   <p>Сценарий обновился, и прежняя тестовая копия больше не подходит. Заново открой нужную встречу. Обычная история останется без изменений.</p>
   <button className="primary" onClick={()=>open(6)}>Открыть шестую встречу</button>
   <button onClick={()=>open(7)}>Открыть седьмую встречу</button>
+  <button onClick={()=>open(8)}>Открыть восьмую встречу</button>
   <button className="text-button" onClick={()=>{location.href=`${location.pathname}#/chapters`;}}>Вернуться к обычной игре</button>
  </section>;
 }

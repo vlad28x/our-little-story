@@ -12,9 +12,9 @@ export function GalleryArt({view='hall'}:{view?:GalleryView}){
 }
 export function galleryView(node:string,line:number):GalleryView{
  if(node==='c7.gallery.first'&&line===0)return 'overview';
- if(node==='c7.gallery.together')return line<11?'row':line<18?'chip':'blue';
- if(node==='c7.gallery.apart')return line<6?'blue':line<8?'chip':'hall';
- if(node==='c7.gallery.blue')return line<9?'blue':'chip';
+ if(node==='c7.gallery.together')return line<4?'row':line<11?'chip':'blue';
+ if(node==='c7.gallery.apart')return line<6?'blue':line<7?'chip':'hall';
+ if(node==='c7.gallery.blue')return line<10?'blue':'hall';
  if(node==='c7.gallery.chip')return 'chip';
  if(['rack','card','giveChip','giveBlue','leaveCards'].some(n=>node==='c7.gallery.'+n))return 'cards';
  if(['entry','outside','frame','shotVlad','shotHer','shotBoth','film'].some(n=>node==='c7.gallery.'+n))return 'poster';

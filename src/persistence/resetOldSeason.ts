@@ -17,3 +17,20 @@ export function resetOldSecondSeason(source:Record<string,unknown>){
  if('privateNotes'in s)s.privateNotes={};if('privateWords'in s)s.privateWords={};
  return s;
 }
+
+// November 13: the owner explicitly confirmed that the second season is unplayed.
+// Retain the untouched sixth and every first-season value and entitlement.
+export function resetEditedChapters(source:Record<string,unknown>){
+ const s=structuredClone(source);
+ const later=(v:unknown)=>typeof v==='number'&&v>=7&&v<=10;
+ const campaign=s.campaign as {completed:unknown[];records:Record<string,unknown>;startStates:Record<string,unknown>;active:{chapter:number}|null};
+ if(!campaign||!Array.isArray(campaign.completed))return s;
+ campaign.completed=campaign.completed.filter(n=>!later(n));
+ for(const group of [campaign.records,campaign.startStates])if(group&&typeof group==='object')for(const id of ['7','8','9','10'])delete group[id];
+ if(later(campaign.active?.chapter))campaign.active=null;
+ if(later((s.trial as {chapter?:number}|null)?.chapter))s.trial=null;
+ if(later((s.lastResult as {chapter?:number}|null)?.chapter))s.lastResult=null;
+ const collection=s.collection as {cards?:{chapter:number}[]};
+ if(Array.isArray(collection?.cards))collection.cards=collection.cards.filter(card=>!later(card.chapter));
+ return s;
+}

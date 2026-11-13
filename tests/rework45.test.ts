@@ -105,10 +105,10 @@ it('retains frozen source hashes of the previous fourth and fifth chapters',()=>
   const hashes=JSON.parse(readFileSync('tests/fixtures/season1-v12/hashes.json','utf8')) as Record<string,string>;
   for(const [file,hash] of Object.entries(hashes))expect(createHash('sha256').update(readFileSync(file)).digest('hex')).toBe(hash);
   const r3=JSON.parse(readFileSync('outputs/SEASON_02_R3_CONTENT.json','utf8')) as {chapters:unknown[]};
-  for(const chapter of r3.chapters){const id=(chapter as {id:6|7|8|9|10}).id;if(id>7)expect(playableChapters[id]).toEqual(chapter);}
+  for(const chapter of r3.chapters){const id=(chapter as {id:6|7|8|9|10}).id;if(id>8)expect(playableChapters[id]).toEqual(chapter);}
 });
 it('reads the 24 frozen V12 campaign/trial checkpoints without changing decisions, cards or cursors',()=>{
   const fixtures=JSON.parse(readFileSync('tests/fixtures/season1-v12/states.json','utf8')) as SaveV1[];
   expect(fixtures).toHaveLength(24);
-  for(const fixture of fixtures)expect(parseSave(JSON.stringify(fixture))).toEqual({...fixture,contentVersion:16});
+  for(const fixture of fixtures)expect(parseSave(JSON.stringify(fixture))).toEqual({...fixture,contentVersion:17});
 });

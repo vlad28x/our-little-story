@@ -5,6 +5,7 @@ type Asset={file:string;alt:string;status:'generated'|'original-vector'};
 export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
   'bg.s2.kitchen.morning':{file:'backgrounds/s2-kitchen-morning.webp',alt:'',status:'generated'},
   'bg.s2.gallery.evening':{file:'backgrounds/gallery-evening.webp',alt:'',status:'generated'},
+  'bg.supper8.kitchen':{file:'backgrounds/supper8-kitchen-evening.webp',alt:'',status:'generated'},
   'bg.s2.kitchen.evening':{file:'backgrounds/s2-kitchen-evening.webp',alt:'',status:'generated'},
   'bg.s2.cinema.courtyard':{file:'backgrounds/s2-cinema-courtyard.webp',alt:'',status:'generated'},
   'bg.s2.cafe.terrace':{file:'backgrounds/s2-cafe-terrace.webp',alt:'',status:'generated'},
@@ -47,6 +48,7 @@ export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
   'vlad.city.thinking':{file:'characters/vlad/city-thinking.webp',alt:'Влад в сером пальто и шарфе',status:'generated'},
   'vlad.city.laugh':{file:'characters/vlad/city-laugh.webp',alt:'Влад в сером пальто и шарфе',status:'generated'},
   'vlad.city.surprised':{file:'characters/vlad/city-surprised.webp',alt:'Влад в сером пальто и шарфе',status:'generated'},
+  'vlad.apron.smile':{file:'characters/vlad/apron-smile.webp',alt:'Влад в чёрном кухонном фартуке',status:'generated'},
   'vlad.casual.neutral':{file:'characters/vlad/casual-smile.webp',alt:'Влад в домашней футболке',status:'generated'},
   'vlad.casual.smile':{file:'characters/vlad/casual-smile.webp',alt:'Влад в домашней футболке',status:'generated'},
   'vlad.casual.warm':{file:'characters/vlad/casual-smile.webp',alt:'Влад в домашней футболке',status:'generated'},

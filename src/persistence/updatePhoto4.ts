@@ -6,7 +6,7 @@ import type {Run} from '../engine/types';
 // Validate content15 against its frozen graph before adapting active cursors.
 // Completed records retain their actual revision4 facts without a new answer.
 export function updatePhoto4(save:SaveV1):SaveV1{
- const next=structuredClone(save);next.contentVersion=16;
+ const next=structuredClone(save);next.contentVersion=17;
  const adapt=(run:Run):Run=>{
   if(run.chapter!==6||run.scriptRevision!==4||run.nodeId.startsWith('c6.photo.friends.'))return run;
   const prior=next.campaign.startStates[6]!;

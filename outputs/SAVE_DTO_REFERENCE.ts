@@ -1,3 +1,5 @@
+// Current chapter 8 uses c8Filling/c8Shape/c8Frame/c8Film/c8Step, c8LipKiss and c8Hoodie.
+// Earlier R3-only fields below document archived formats; the current parser rejects them.
 /**
  * Полная справочная DTO прогулки6 и галереи7 — schema1/content16, 4 ноября2026.
  * Автоматически собрана из src/state/types.ts и src/engine/types.ts.
@@ -19,7 +21,7 @@
 export type SaveV1 = {
     appId: 'five-meetings';
     schemaVersion: 1;
-    contentVersion: 16;
+    contentVersion: 17;
     revision: number;
     updatedAt: string;
     settings: Settings;
@@ -80,7 +82,7 @@ export type CardRecord = {
     id: CardId;
     chapter: ChapterId;
     endingId: CardId;
-    variant: 'tidy' | 'detour' | 'skipped' | 'patched' | 'borrowed' | 'feast' | 'snack' | 'chaos' | 'cat' | 'controllers' | 'teapot' | 'adventure' | 'calm' | 'evening' | 'morning' | 'walk' | 'goodbye' | 'upper' | 'water' | 'together' | 'apart';
+    variant: 'tidy' | 'detour' | 'skipped' | 'patched' | 'borrowed' | 'feast' | 'snack' | 'chaos' | 'cat' | 'controllers' | 'teapot' | 'adventure' | 'calm' | 'evening' | 'morning' | 'walk' | 'goodbye' | 'upper' | 'water' | 'together' | 'apart' | 'fold' | 'open';
     captionId: string;
     teamName?: NonNullable<StoryState['teamName']>;
     usedPreset?: boolean;
@@ -117,7 +119,7 @@ export type PrivateWord = {
  * Это снимок состояния, а не журнал всех нажатий. c4Goodbye хранит вариант прощания4. c4Edition/c5Edition различают редакции; новые вкусы пятой появляются только в c5Edition=3. */
 export type StoryState = {
     c6Edition?: 5;
-    c7GalleryRoute?: 'together' | 'apart';
+    c7GalleryRoute?: 'together' | 'apart' | 'fold' | 'open';
     c7GalleryWork?: 'blue' | 'chip';
     c7GalleryGift?: 'chip' | 'blue' | 'none';
     c7GalleryFrame?: 'vlad' | 'her' | 'both';
@@ -165,6 +167,11 @@ export type StoryState = {
     c7Reply?: 'kind' | 'hand' | 'pause';
     c7Note?: 'saved' | 'skipped';
     c7Ending?: 'open' | 'promise' | 'calm';
+    c8Filling?: 'pepper' | 'mushroom' | 'mix' | 'simple';
+    c8Shape?: 'fold' | 'open';
+    c8Frame?: 'foodHer' | 'foodVlad' | 'boardHer' | 'boardVlad';
+    c8Film?: 'key' | 'nine';
+    c8Step?: 'follow' | 'lead' | 'play' | 'sit';
     c8Place?: 'home' | 'cafe';
     c8Word?: 'minute' | 'slow' | 'taks' | 'custom' | 'none';
     c8Dance?: 'close' | 'lead' | 'playful';
@@ -241,7 +248,7 @@ export type Run = {
 
 export type ChapterId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export type CardId = 'c6.photo.walk' | 'c7.gallery' | 'c6.photo.friends' | 'c6.photo.romance' | 'c5.story' | "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
+export type CardId = 'c8.supper' | 'c6.photo.walk' | 'c7.gallery' | 'c6.photo.friends' | 'c6.photo.romance' | 'c5.story' | "c8.r3.dance" | "c8.r3.tea" | "c8.r3.next" | "c9.r3.talk" | "c9.r3.quiet" | "c9.r3.credits" | 'c1.tea' | 'c1.banter' | 'c1.coop' | 'c2.shelter' | 'c2.arcade' | 'c3.dinner' | 'c4.adventure' | 'c4.calm' | 'c5.romantic' | 'c5.comic' | 'c5.gaming' | 'c5.friendly' | 'c6.hand' | 'c6.lap' | 'c6.home' | 'c7.open' | 'c7.promise' | 'c7.calm' | 'c8.kiss' | 'c8.near' | 'c8.tea' | 'c9.kiss' | 'c9.hug' | 'c9.film' | 'c10.goodnight' | 'c10.stay' | 'c10.private' | 'c10.overnight';
 
 export type NodeId = `c${ChapterId}.${string}`;
 

@@ -1,4 +1,4 @@
-import {completedWalk} from '../persistence/photoSix';
+import {completedWalk,completedGallery} from '../persistence/photoSix';
 import { replayFirstSeason } from '../persistence/replayFirstSeason';
 import { getChapter } from '../content/chapters';
 import { checkCode,chapters } from '../content/chapters/manifest';
@@ -19,7 +19,7 @@ export type Action =
   | {type:'continuation';value:SaveV1['continuation']}
   | {type:'replace';save:SaveV1}
   | {type:'dev-jump';nodeId:NodeId;story:StoryState};
-export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
+export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&!(id===8&&!completedGallery(save.campaign.records[7]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
 export function reduceSave(current:SaveV1,action:Action):SaveV1 {
   let s=structuredClone(current);
   switch(action.type){
@@ -139,5 +139,5 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     }
   }
   if((JSON.stringify(s.privateNotes)!==JSON.stringify(current.privateNotes)||JSON.stringify(s.privateWords)!==JSON.stringify(current.privateWords))&&s.localNoteRevision===current.localNoteRevision)s.localNoteRevision++;
-  s.contentVersion=16;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
+  s.contentVersion=17;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
 }

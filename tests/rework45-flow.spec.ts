@@ -30,7 +30,7 @@ test('production new4→new5→existing6 survives real reload and has one neutra
  await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();
  await page.getByRole('button',{name:'Встретиться в кафе',exact:true}).click();await expect(page.getByLabel('Сообщение Владу',{exact:true})).not.toHaveValue(/свидание/);
  await page.reload();await expect(page.getByRole('button',{name:'Встретиться в кафе',exact:true})).toHaveAttribute('aria-pressed','true');
- const before=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(before.contentVersion).toBe(16);expect(before.campaign.records[5].story.bond).toBeUndefined();expect(before.campaign.records[5].story.ending).toBeUndefined();
+ const before=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(before.contentVersion).toBe(17);expect(before.campaign.records[5].story.bond).toBeUndefined();expect(before.campaign.records[5].story.ending).toBeUndefined();
  await page.getByRole('button',{name:'Псс… Маленький секрет',exact:true}).click();await page.getByRole('button',{name:'И какие же?',exact:true}).click();
  await page.getByLabel('Код от Влада',{exact:true}).fill(chapters.find(c=>c.id===6)!.code!);await page.getByRole('button',{name:'Проверить код',exact:true}).click();await page.getByRole('button',{name:'Начать шестую встречу',exact:false}).click();
  await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();await page.reload();await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();

@@ -283,3 +283,15 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 @media(max-width:600px){.gallery-art-hall{left:5%;right:5%;height:38%}.gallery-art-hall figure{border-width:5px;border-bottom-width:22px;padding:2px}.gallery-works figcaption{font-size:10px;margin-top:3px}.gallery-art-row,.gallery-art-chip,.gallery-art-blue{inset:4% 9% 10%}.gallery-art-poster .gallery-works{height:58px}.gallery-art-poster{padding:6px 5px 9px}.gallery-art-poster strong{font-size:8px;margin-bottom:5px}}
 
 .scene-background.cafe-approach{object-position:center 8%}
+
+/* Supper uses the same saved choice flow as dialogue, with tappable assembly art. */
+.supper-art{display:block;width:100%;height:auto;max-height:180px}
+.supper-scene{position:absolute;z-index:3;bottom:25px;left:3%;width:52%;pointer-events:none;filter:drop-shadow(0 6px 8px #39271533)}
+.supper-gift{position:absolute;width:23%;max-height:90px;object-fit:contain;left:72%;bottom:70%;border:5px solid #fff5df;transform:rotate(-6deg);box-shadow:0 3px 9px #342c3d44}
+.supper-scene:has(.supper-gift):not(:has(.supper-art)){min-height:90px}
+.supper-choices button>span:nth-child(2){flex:1;min-width:0}
+.supper-choices .supper-art{max-width:190px;max-height:95px;margin:0 auto 5px}
+.supper-choices button{min-height:112px}
+.supper-postcard{position:absolute;left:8%;bottom:10%;width:84%}
+.supper-postcard .supper-art{max-height:250px}
+@media(max-width:480px){.supper-scene{width:62%;left:0;bottom:15px}.supper-choices .supper-art{max-width:145px;max-height:74px}.supper-choices button{min-height:96px}}
