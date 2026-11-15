@@ -37,4 +37,19 @@ export function previewSupper(target:NodeId='c8.supper.entry'){
  for(let i=0;i<240&&save.campaign.active?.nodeId!==target;i++){const r=save.campaign.active;if(!r)throw Error('Тестовая сцена не найдена');const n=getChapter(8)!.nodes[r.nodeId];save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});}
  if(save.campaign.active?.nodeId!==target)throw Error('Тестовая сцена не найдена');return parseSave(JSON.stringify(save));
 }
-export function recoveryPreview(chapter:6|7|8|9|10){if(chapter===8)return previewSupper();if(chapter===7)return previewGallery();if(chapter!==6)throw Error('Новая встреча ещё готовится');return previewPhotoSix();}
+export function previewCourtyard(target:NodeId='c9.courtyard.entry'){
+ let save=previewSupper();
+ for(let i=0;i<240&&save.campaign.active;i++){
+  const r=save.campaign.active,n=getChapter(8)!.nodes[r.nodeId];
+  const picks:Record<string,string>={'c8.supper.hoodieChoice':'borrow','c8.supper.reply':'no'};
+  save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:picks[n.id]??n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});
+ }
+ save=reduceSave(save,{type:'unlock',code:chapters.find(c=>c.id===9)!.code!});
+ save=reduceSave(save,{type:'start',chapter:9,attemptId:'developer-courtyard-nine'});
+ for(let i=0;i<240&&save.campaign.active?.nodeId!==target;i++){
+  const r=save.campaign.active;if(!r)throw Error('Тестовая сцена не найдена');const n=getChapter(9)!.nodes[r.nodeId];
+  save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:n.id==='c9.courtyard.rainChoice'&&target==='c9.courtyard.earlyWalk'?'leave':n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});
+ }
+ if(save.campaign.active?.nodeId!==target)throw Error('Тестовая сцена не найдена');return parseSave(JSON.stringify(save));
+}
+export function recoveryPreview(chapter:6|7|8|9|10){if(chapter===9)return previewCourtyard();if(chapter===8)return previewSupper();if(chapter===7)return previewGallery();if(chapter!==6)throw Error('Новая встреча ещё готовится');return previewPhotoSix();}

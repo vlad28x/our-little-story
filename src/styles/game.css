@@ -295,3 +295,16 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .supper-postcard{position:absolute;left:8%;bottom:10%;width:84%}
 .supper-postcard .supper-art{max-height:250px}
 @media(max-width:480px){.supper-scene{width:62%;left:0;bottom:15px}.supper-choices .supper-art{max-width:145px;max-height:74px}.supper-choices button{min-height:96px}}
+
+/* Chapter nine uses the same cover geometry for its painted screen and projection. */
+.courtyard-stage .scene-background{object-position:center}
+.courtyard-stage .character{left:76%;height:112%;bottom:-24%;max-width:76%}
+.courtyard-visual{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.courtyard-projection{width:100%;height:100%;display:block}
+.courtyard-rain{position:absolute;inset:0;background:repeating-linear-gradient(105deg,transparent 0 32px,#cbd7e42b 33px,transparent 35px 73px);animation:courtyard-rain .7s linear infinite}
+@keyframes courtyard-rain{to{background-position:-24px 80px}}
+.courtyard-stage.dance-still .courtyard-rain{animation:none}
+@media(prefers-reduced-motion:reduce){.courtyard-rain{animation:none}}
+@media(max-width:600px){.courtyard-stage .character{left:77%;height:105%;bottom:-20%;max-width:75%}}
+.courtyard-stage:has(.courtyard-playing) .character{visibility:hidden}
+.courtyard-stage .courtyard-books-background{object-position:left center}

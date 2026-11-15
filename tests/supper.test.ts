@@ -26,7 +26,7 @@ it('ships the exact revised text and a complete eighth graph, without later cont
    if(node.kind==='choice')for(const choice of node.choices)expect(source).toContain(choice.text);
   }
  }
- expect(getChapter(8)?.title).toBe('Половина кухни');expect(getChapter(9)).toBeUndefined();expect(getChapter(10)).toBeUndefined();
+ expect(getChapter(8)?.title).toBe('Половина кухни');expect(getChapter(9)?.title).toBe('С крышей разберёмся');expect(getChapter(10)).toBeUndefined();
  expect(Object.values(chapter8.nodes).filter(n=>n.kind==='end')).toHaveLength(1);
  const meal=chapter8.nodes['c8.supper.meal'];if(meal.kind!=='dialogue')throw Error('Missing meal');
  const remove=meal.lines.findIndex(line=>line.text.includes('снимает фартук'));
@@ -94,7 +94,7 @@ it('trial food, gift and kiss never overwrite canon, and codes do not bypass a c
 it('content16 updates only the unplayed edited chapters, retaining the sixth and first-season cursors and answers',()=>{
  const source=galleryAt('c7.gallery.replay');source.continuation='decline';source.unlocked=[1,2,3,4,5,6,7,8,9,10];
  const raw=JSON.stringify({...source,contentVersion:16}),snapshot=JSON.parse(raw),updated=parseSave(raw);
- expect(JSON.parse(raw)).toEqual(snapshot);expect(updated.campaign.records[6]).toEqual(source.campaign.records[6]);expect(updated.campaign.records[5]).toEqual(source.campaign.records[5]);expect(updated.campaign.completed).toEqual([1,2,3,4,5,6]);expect(updated.campaign.active).toBeNull();expect(updated.campaign.startStates[7]).toBeUndefined();expect(updated.continuation).toBe('decline');expect(updated.unlocked).toEqual(source.unlocked);expect(updated.contentVersion).toBe(17);
+ expect(JSON.parse(raw)).toEqual(snapshot);expect(updated.campaign.records[6]).toEqual(source.campaign.records[6]);expect(updated.campaign.records[5]).toEqual(source.campaign.records[5]);expect(updated.campaign.completed).toEqual([1,2,3,4,5,6]);expect(updated.campaign.active).toBeNull();expect(updated.campaign.startStates[7]).toBeUndefined();expect(updated.continuation).toBe('decline');expect(updated.unlocked).toEqual(source.unlocked);expect(updated.contentVersion).toBe(18);
 });
 
 it('writes and restores a new eighth and its trial through the two-bank CloudStorage protocol',async()=>{

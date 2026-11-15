@@ -6,6 +6,7 @@ import { effectiveVenue } from './season2';
 import type { Run } from '../engine/types';
 export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:string;background:string}> = {
   'c6.photo.walk':{chapter:6,title:'Пока светло',caption:'Двадцать один ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
+  'c9.courtyard':{chapter:9,title:'С крышей разберёмся',caption:'Её дворик и ваш вечер под неожиданным дождём.',quote:'',motif:'cinema',background:'bg.courtyard9.open'},
   'c8.supper':{chapter:8,title:'Половина кухни',caption:'Каждому нашлось место за одним столом.',quote:'',motif:'tea-for-two',background:'bg.supper8.kitchen'},
   'c7.gallery':{chapter:7,title:'На шаг левее',caption:'Три работы, две находки.',quote:'',motif:'gallery',background:'bg.gallery7.hall'},
   'c6.photo.friends':{chapter:6,title:'До встречи',caption:'Вы остались друзьями.',quote:'',motif:'leaf',background:'bg.photo6.sun'},
@@ -51,7 +52,7 @@ export const umbrellaCaptions={patched:'Облако-нашивка на пам�
 export const kitchenCaptions={feast:'Целый пир на экране',snack:'Один большой бутерброд',chaos:'Зато красиво сервировали',skipped:'Печенье без обучения'};
 export function archivedEpisodeCard(id:CardId){return ['c6.photo.friends','c6.photo.romance','c5.romantic','c5.comic','c5.gaming','c5.friendly','c8.kiss','c8.near','c8.tea','c9.kiss','c9.hug','c9.film'].includes(id);}
 export function cardDetail(card:CardRecord){return archivedEpisodeCard(card.id)?'Из прежнего сценария · встреча '+card.chapter:card.chapter>=8?`После титров · ${card.chapter-5} / 5`:card.chapter===7?'После титров · вторая встреча':card.chapter===6?'После титров · первая встреча':card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===3?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
-export function cardBackground(card:CardRecord){return card.id==='c8.supper'?'bg.supper8.kitchen':(card.id==='c6.photo.romance'||card.id==='c6.photo.walk')?(card.variant==='upper'?'bg.photo6.upper':'bg.photo6.shade'):card.id==='c10.overnight'?'bg.s2.kitchen.morning':card.chapter>=8?(card.venue==='home'?(card.chapter===8?'bg.s2.kitchen.evening':'bg.home.living'):cards[card.id].background):cards[card.id].background;}
+export function cardBackground(card:CardRecord){return card.id==='c9.courtyard'?'bg.courtyard9.open':card.id==='c8.supper'?'bg.supper8.kitchen':(card.id==='c6.photo.romance'||card.id==='c6.photo.walk')?(card.variant==='upper'?'bg.photo6.upper':'bg.photo6.shade'):card.id==='c10.overnight'?'bg.s2.kitchen.morning':card.chapter>=8?(card.venue==='home'?(card.chapter===8?'bg.s2.kitchen.evening':'bg.home.living'):cards[card.id].background):cards[card.id].background;}
 export function cardCharacter(id:CardId,venue?:CardRecord['venue']){const chapter=cards[id].chapter;return chapter>=8&&venue==='home'?'vlad.casual.warm':chapter>=6?'vlad.city.smile':chapter===3?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
 export function cardTeam(card:CardRecord){return card.teamName?teamNames[card.teamName]:'';}
 export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run['results']):CardRecord {
@@ -70,6 +71,7 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
   else if(chapter===7&&story.c7Ending){id=`c7.${story.c7Ending}`;variant='evening';}
   else if(chapter===8&&story.c8Shape){id='c8.supper';variant=story.c8Shape;}
   else if(chapter===8&&story.c8Close){id=`c8.r3.${story.c8Close}`;variant='evening';}
+  else if(chapter===9&&story.c9Rain){id='c9.courtyard';variant=story.c9Rain;}
   else if(chapter===9&&story.c9Close){id=`c9.r3.${story.c9Close}`;variant='evening';}
   else if(chapter===10&&story.c10Ending){id=`c10.${story.c10Ending}`;variant=story.c10Ending==='overnight'?'morning':'evening';}
   else throw new Error('История ещё не завершена');
@@ -78,6 +80,7 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
 
 // The same postcard ID keeps the old wording when reconstructing an edition2 record.
 export function cardMeta(card:CardRecord){
+  if(card.id==='c9.courtyard')return {...cards[card.id],caption:card.variant==='canopy'?'Показ продолжился. Вы вернулись на свои места.':card.variant==='arch'?'Ты нашла другое место. Оттуда было видно весь экран.':'Фильм остался без развязки. Зато вы успели укрыть от дождя целую полку книг.'};
   if(card.id==='c8.supper')return {...cards[card.id],caption:card.variant==='fold'?'Вместо одного рулета получились маленькие конверты. Хрустящий край вы поделили на двоих.':'Каждому кусочку нашлось место на противне. Даже самой маленькой порции хватило на двоих.'};
   if(card.id==='c7.gallery')return {...cards[card.id],caption:card.variant==='together'?'Три работы, один ряд. Вы прошли его от первой ступеньки до синей двери.':'В одном зале уместились две экскурсии. Каждый привёл другого к своей находке.'};
   if(card.id==='c6.photo.friends')return {...cards[card.id],caption:card.variant==='walk'?'У поворота каждый пошёл своей дорогой. Вы остались друзьями.':'Вы попрощались у набережной. Вы остались друзьями.'};

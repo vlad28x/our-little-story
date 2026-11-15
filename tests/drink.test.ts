@@ -70,7 +70,7 @@ it('reads and continues all fourteen frozen edition2 snapshots without assigning
  const states=JSON.parse(readFileSync('tests/fixtures/season1-v13/states.json','utf8')) as SaveV1[];
  expect(states).toHaveLength(14);
  for(const old of states){
-  let s=parseSave(JSON.stringify(old));expect(s).toEqual({...old,contentVersion:17});
+  let s=parseSave(JSON.stringify(old));expect(s).toEqual({...old,contentVersion:18});
   const trial=!!s.trial;
   while(trial?s.trial:s.campaign.active){const r=(trial?s.trial?.run:s.campaign.active)!;expect(getChapter(5,r.story)?.firstSeasonEdition).toBe(2);s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command5(r)});expect(parseSave(JSON.stringify(s))).toEqual(s);}
   expect(s.campaign.records[5]?.story.c5FirstTaste).toBeUndefined();expect(s.campaign.records[5]?.story.c5Recommendation).toBeUndefined();

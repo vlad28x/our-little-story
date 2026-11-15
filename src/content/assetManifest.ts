@@ -3,6 +3,13 @@ type Asset={file:string;alt:string;status:'generated'|'original-vector'};
 // Register each shipped asset before the manifest is exported. Scene rendering
 // must never depend on later mutations that can be stale across a dev update.
 export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
+  'bg.courtyard9.open':{file:'backgrounds/courtyard9-open-v2.webp',alt:'',status:'generated'},
+  'bg.courtyard9.canopy':{file:'backgrounds/courtyard9-canopy.webp',alt:'',status:'generated'},
+  'bg.courtyard9.arch':{file:'backgrounds/courtyard9-arch.webp',alt:'',status:'generated'},
+  'bg.courtyard9.books':{file:'backgrounds/courtyard9-books.webp',alt:'',status:'generated'},
+  'bg.courtyard9.books-closed':{file:'backgrounds/courtyard9-books-closed.webp',alt:'',status:'generated'},
+  'bg.courtyard9.lab':{file:'backgrounds/courtyard9-lab.webp',alt:'',status:'generated'},
+  'bg.courtyard9.lab-red':{file:'backgrounds/courtyard9-lab-red.webp',alt:'',status:'generated'},
   'bg.s2.kitchen.morning':{file:'backgrounds/s2-kitchen-morning.webp',alt:'',status:'generated'},
   'bg.s2.gallery.evening':{file:'backgrounds/gallery-evening.webp',alt:'',status:'generated'},
   'bg.supper8.kitchen':{file:'backgrounds/supper8-kitchen-evening.webp',alt:'',status:'generated'},

@@ -10,6 +10,7 @@ export function DeveloperRecovery(){
   <button className="primary" onClick={()=>open(6)}>Открыть шестую встречу</button>
   <button onClick={()=>open(7)}>Открыть седьмую встречу</button>
   <button onClick={()=>open(8)}>Открыть восьмую встречу</button>
+  <button onClick={()=>open(9)}>Открыть девятую встречу</button>
   <button className="text-button" onClick={()=>{location.href=`${location.pathname}#/chapters`;}}>Вернуться к обычной игре</button>
  </section>;
 }

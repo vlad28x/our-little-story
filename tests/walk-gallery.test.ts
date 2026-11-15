@@ -81,7 +81,7 @@ it('rejects invented facts, skipped actions, relabelled editions and old future 
  const s=galleryAt('c7.gallery.replay');for(const effect of [{c7GalleryGift:'chip'},{c7Cheek:true},{c7Film:'six'}]){const bad=structuredClone(s);Object.assign(bad.campaign.active!.story,effect);expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
  const initial=startPhotoSix();initial.campaign.active!.story.s2Direction='romance';expect(()=>parseSave(JSON.stringify(initial))).toThrow();
  const bad=photoAt('c6.photo.roll');bad.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(bad))).toThrow();
- for(const id of [9,10] as const){expect(getChapter(id)).toBeUndefined();expect(reduceSave(s,{type:'unlock',code:chapters.find(c=>c.id===id)!.code!})).toEqual(s);}
+ for(const id of [10] as const){expect(getChapter(id)).toBeUndefined();expect(reduceSave(s,{type:'unlock',code:chapters.find(c=>c.id===id)!.code!})).toEqual(s);}
  const wrong=startPhotoSix();wrong.campaign.active!.scriptRevision=4;expect(()=>parseSave(JSON.stringify(wrong))).toThrow();
  for(const contentVersion of [14,15])expect(()=>parseSave(JSON.stringify({...photoAt('c6.photo.roll'),contentVersion}))).toThrow();
 });

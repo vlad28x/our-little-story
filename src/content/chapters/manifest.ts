@@ -8,7 +8,7 @@ export const chapters: {id:ChapterId;title:string;available:boolean;code?:string
   {id:6,title:'Пока светло',available:true,code:'VECHER-8F2N',motif:'Один аппарат на двоих и свет, который не стал ждать'},
   {id:7,title:'На шаг левее',available:true,code:'STROKI-3N7Q',motif:'Три работы, две находки и взгляд с другой стороны'},
   {id:8,title:'Половина кухни',available:true,code:'CHAI-5K9R',motif:'Ужин на двоих, новый план и несколько шагов рядом'},
-  {id:9,title:'Фильм подождёт',available:false,code:'KINO-2V8M',motif:'Устроимся по-твоему. Фильм может подождать'},
+  {id:9,title:'С крышей разберёмся',available:true,code:'KINO-2V8M',motif:'Её дворик, неожиданный дождь и крыша на двоих'},
   {id:10,title:'Оставим свет?',available:false,code:'SVET-7P4L',motif:'Последний вечер. Продолжение выбираете вы'},
 ];
 export function checkCode(input:string) { return chapters.find(c=>c.code===input.trim().toUpperCase()); }

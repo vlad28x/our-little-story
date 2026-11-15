@@ -1,172 +1,68 @@
 import type { Chapter } from '../../engine/types';
-// R3: outputs/SEASON_02_R3_SCRIPT_*.md
+// Approved local draft: outputs/CHAPTER_09_COURTYARD_DRAFT_2026_11_14.md, revised November 15.
 export const chapter9:Chapter={
   "id": 9,
-  "contentVersion": 12,
-  "scriptRevision": 3,
-  "title": "Фильм подождёт",
-  "entry": "c9.r3.entry",
+  "contentVersion": 18,
+  "scriptRevision": 5,
+  "title": "С крышей разберёмся",
+  "entry": "c9.courtyard.entry",
   "nodes": {
-    "c9.r3.entry": {
-      "id": "c9.r3.entry",
+    "c9.courtyard.entry": {
+      "id": "c9.courtyard.entry",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Влад присылает название короткого фильма."
-        },
-        {
-          "speaker": "vlad",
-          "text": "нашёл кино. человек собирается в поездку, кот явно не согласен."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И чью сторону ты выбрал?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "посмотрим. кот пока убедительнее в трейлере."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты всё-таки посмотрел трейлер."
-        },
-        {
-          "speaker": "vlad",
-          "text": "целиком. подготовка серьёзная."
-        }
-      ],
-      "next": "c9.r3.place"
-    },
-    "c9.r3.place": {
-      "id": "c9.r3.place",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.river.evening",
-        "character": "vlad.city.warm"
-      },
-      "prompt": "Где будем смотреть?",
-      "choices": [
-        {
-          "id": "home",
-          "text": "Посмотрим у тебя",
-          "next": "c9.r3.arrival.home",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9Place",
-              "value": "home"
-            },
-            {
-              "kind": "set",
-              "key": "c9LipKiss",
-              "value": "no"
-            }
-          ]
-        },
-        {
-          "id": "courtyard",
-          "text": "Пойдём в кинодворик",
-          "next": "c9.r3.arrival.courtyard",
+          "text": "Влад ждёт у кирпичной арки. В руках у него маленький бумажный пакет. Из дворика доносится скрежет стульев.",
           "effects": [
             {
               "kind": "set",
               "key": "c9Place",
               "value": "courtyard"
-            },
-            {
-              "kind": "set",
-              "key": "c9LipKiss",
-              "value": "no"
             }
           ]
-        }
-      ]
-    },
-    "c9.r3.arrival.home": {
-      "id": "c9.r3.arrival.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "На столике уже стоят две пустые чашки. Влад держит пульт, но экран пока не включён."
         },
         {
           "speaker": "vlad",
-          "text": "в этот раз сначала удобно устроимся. потом буду изображать кинокритика."
+          "text": "привет. я правильно пришёл? кот с афиши пока не встретил."
         },
         {
           "speaker": "heroine",
-          "text": "Рецензию подготовил?"
+          "text": "У него подготовка к главной роли. Пойдём, я покажу."
         },
-        {
-          "speaker": "vlad",
-          "text": "три очень уверенных слова. постараюсь распределить на весь фильм."
-        }
-      ],
-      "next": "c9.r3.hoodie.route"
-    },
-    "c9.r3.arrival.courtyard": {
-      "id": "c9.r3.arrival.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
         {
           "speaker": "narrator",
-          "text": "Вы приходите чуть раньше показа. Во дворе загораются небольшие лампы."
-        },
-        {
-          "speaker": "vlad",
-          "text": "успели выбрать места. это уже половина моего хорошего плана."
+          "text": "Ты проводишь Влада мимо кассы. Над рядами стульев натянуты гирлянды, у стены белеет экран. Сбоку стоят столики под широким навесом."
         },
         {
           "speaker": "heroine",
-          "text": "А вторая?"
+          "text": "Я выбрала этот дворик, потому что отсюда не видно дороги. Будто зашла в чей-то большой двор."
         },
         {
           "speaker": "vlad",
-          "text": "не съесть всё до начала."
+          "text": "и сразу села смотреть телевизор хозяевам."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Билеты я всё-таки купила."
+        },
+        {
+          "speaker": "vlad",
+          "text": "тогда официально. угощение к просмотру."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он приоткрывает пакет. Внутри пять круглых печений, одно чуть надломлено."
         }
       ],
-      "next": "c9.r3.hoodie.route"
+      "next": "c9.courtyard.hoodieRoute"
     },
-    "c9.r3.hoodie.route": {
-      "id": "c9.r3.hoodie.route",
+    "c9.courtyard.hoodieRoute": {
+      "id": "c9.courtyard.hoodieRoute",
       "kind": "route",
       "cases": [
         {
@@ -176,71 +72,26 @@ export const chapter9:Chapter={
               "equals": "borrowed"
             }
           ],
-          "next": "c9.r3.hoodie.callback"
+          "next": "c9.courtyard.hoodie"
         }
       ],
-      "fallback": "c9.r3.setup.intro"
+      "fallback": "c9.courtyard.camera"
     },
-    "c9.r3.hoodie.callback": {
-      "id": "c9.r3.hoodie.callback",
+    "c9.courtyard.hoodie": {
+      "id": "c9.courtyard.hoodie",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
-          "speaker": "vlad",
-          "text": "кстати, как там моё худи?"
-        },
-        {
           "speaker": "heroine",
-          "text": "Ты по нему соскучился?"
+          "text": "И твой карман с бонусной салфеткой тоже приехал."
         },
         {
-          "speaker": "vlad",
-          "text": "я по тебе соскучился. худи просто удачно вспомнилось."
-        }
-      ],
-      "next": "c9.r3.hoodie"
-    },
-    "c9.r3.hoodie": {
-      "id": "c9.r3.hoodie",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Что скажешь про худи?",
-      "choices": [
-        {
-          "id": "return",
-          "text": "Вернуть: «На чай я всё равно ещё приду»",
-          "next": "c9.r3.hoodie.return",
+          "speaker": "narrator",
+          "text": "Ты достаёшь сложенное худи. Влад берёт его и перебрасывает через руку.",
           "effects": [
             {
               "kind": "set",
@@ -250,9 +101,707 @@ export const chapter9:Chapter={
           ]
         },
         {
+          "speaker": "vlad",
+          "text": "салфетка цела?"
+        },
+        {
+          "speaker": "heroine",
+          "text": "Уехала раньше. Отдельным рейсом."
+        },
+        {
+          "speaker": "vlad",
+          "text": "ладно. одежду принимаю без комплектации."
+        }
+      ],
+      "next": "c9.courtyard.camera"
+    },
+    "c9.courtyard.camera": {
+      "id": "c9.courtyard.camera",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "До начала ещё светло. Ты достаёшь аппарат. Влад придерживает край пакета, чтобы тот не попал перед объективом."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Девять осталось. Хочу сегодня сдать аппарат в проявку. Тут как раз есть на что потратить."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вон на третьем стуле уже сидит чужая сумка. тоже пришла заранее."
+        }
+      ],
+      "next": "c9.courtyard.frameChoice"
+    },
+    "c9.courtyard.frameChoice": {
+      "id": "c9.courtyard.frameChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "prompt": "Какой кадр оставишь с этого вечера?",
+      "choices": [
+        {
+          "id": "vlad",
+          "text": "Сниму тебя с этим пакетом",
+          "next": "c9.courtyard.frameVlad",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Frame",
+              "value": "vlad"
+            }
+          ]
+        },
+        {
+          "id": "seats",
+          "text": "Давай наши места до начала фильма",
+          "next": "c9.courtyard.frameSeats",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Frame",
+              "value": "seats"
+            }
+          ]
+        },
+        {
+          "id": "yard",
+          "text": "Хочу поймать весь дворик",
+          "next": "c9.courtyard.frameYard",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Frame",
+              "value": "yard"
+            }
+          ]
+        }
+      ]
+    },
+    "c9.courtyard.frameVlad": {
+      "id": "c9.courtyard.frameVlad",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Не прячь печенье. Оно тоже приглашено."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад держит пакет на уровне груди. За плечом видны арка и ещё пустой край экрана."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вот теперь точно официальный состав."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты нажимаешь кнопку. Он опускает пакет и заглядывает внутрь: всё ли пережило съёмку.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Film",
+              "value": "key"
+            }
+          ]
+        }
+      ],
+      "next": "c9.courtyard.cameraEnd"
+    },
+    "c9.courtyard.frameSeats": {
+      "id": "c9.courtyard.frameSeats",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Положи пакет между стульями. Пока у нас всё целое и никто не шуршит."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Два соседних стула стоят чуть неровно. Влад поправляет один, но ты поднимаешь ладонь."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Оставь. Так видно, что мы уже пришли."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты снимаешь два стула с пакетом между ними. В верхнем углу остаётся верёвка с бумажным номером ряда.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Film",
+              "value": "key"
+            }
+          ]
+        }
+      ],
+      "next": "c9.courtyard.cameraEnd"
+    },
+    "c9.courtyard.frameYard": {
+      "id": "c9.courtyard.frameYard",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Подержи секунду сумку. Отсюда арка вся помещается."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты снимаешь дворик от входа: ряды стульев, край навеса и белый экран между стенами.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Film",
+              "value": "key"
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "меня, если что, искать возле печенья."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты опускаешь аппарат. Влад уже занялся разворачиванием пакета."
+        }
+      ],
+      "next": "c9.courtyard.cameraEnd"
+    },
+    "c9.courtyard.cameraEnd": {
+      "id": "c9.courtyard.cameraEnd",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Пока дворик заполняется, вы доснимаете оставшиеся восемь: номер ряда, гирлянду, плющ на кирпиче, кассовое окошко. Аппарат ещё несколько раз переходит из рук в руки."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Последним Влад снимает тень решётки на светлой стене. Колёсико проворачивается до конца. Ты убираешь аппарат в сумку.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Film",
+              "value": "empty"
+            }
+          ]
+        },
+        {
+          "speaker": "heroine",
+          "text": "Всё. Теперь уже точно не подглядишь."
+        },
+        {
+          "speaker": "vlad",
+          "text": "придётся доверять фотографам."
+        }
+      ],
+      "next": "c9.courtyard.seats"
+    },
+    "c9.courtyard.seats": {
+      "id": "c9.courtyard.seats",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Вы садитесь. Сотрудница проходит вдоль рядов, просит убрать телефоны и предупреждает, что у выхода лежат пледы."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы съедаете по печенью. Тебе достаётся надломленное; оставшиеся три Влад прикрывает краем пакета."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Давай сначала посмотрим. А то я сейчас сама всё придумаю вместо фильма."
+        },
+        {
+          "speaker": "vlad",
+          "text": "договорились. пока кот с афиши удерживает пассажира до выяснения обстоятельств."
+        }
+      ],
+      "next": "c9.courtyard.filmStart"
+    },
+    "c9.courtyard.filmStart": {
+      "id": "c9.courtyard.filmStart",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Гирлянды гаснут. На экране человек кладёт в чемодан рубашку. Стоит ему отвернуться за другой, как первая оказывается на полу."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Кот устраивается на освободившемся месте. Человек достаёт его, поворачивается за рубашкой — и кот снова лежит в чемодане."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад молча подвигает к тебе открытый пакет. Вы берёте ещё по печенью; в глубине остаётся последнее."
+        },
+        {
+          "speaker": "narrator",
+          "text": "На столе возле чемодана стоит фотография: тот же человек гораздо моложе, рядом женщина с этим котом ещё маленьким. Человек выпрямляет рамку и кладёт на стол ключ."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Раздаётся глухой стук. Ты сначала ищешь его на экране, но следующая капля падает тебе на запястье."
+        }
+      ],
+      "next": "c9.courtyard.rain"
+    },
+    "c9.courtyard.rain": {
+      "id": "c9.courtyard.rain",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "По рядам раскрываются первые зонты. На белом экране застывает рука с ключом. У стены загорается рабочий свет."
+        },
+        {
+          "speaker": "attendant",
+          "text": "Пожалуйста, пройдите под навес. Технику сейчас прикроем. Если дождь не усилится, продолжим через несколько минут."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты подхватываешь сумку. Влад складывает пакет и забирает его со стула. Под навесом уже тесно; у соседней арки ещё свободно."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Я так хотела показать тебе этот дворик. Чтобы тебе тоже здесь понравилось."
+        },
+        {
+          "speaker": "vlad",
+          "text": "мне нравится. дождь у вас тут, конечно, с размахом."
+        },
+        {
+          "speaker": "heroine",
+          "text": "В следующий раз проверю, есть ли крыша."
+        },
+        {
+          "speaker": "vlad",
+          "text": "бери место, которое тебе нравится. с крышей разберёмся."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он стряхивает капли с пакета и ждёт, пока ты оглядываешь дворик."
+        }
+      ],
+      "next": "c9.courtyard.rainAside"
+    },
+    "c9.courtyard.rainAside": {
+      "id": "c9.courtyard.rainAside",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "devil",
+          "text": "Хорошо хоть печенье без электричества работает."
+        },
+        {
+          "speaker": "angel",
+          "text": "Но крыша ему тоже нужна."
+        }
+      ],
+      "next": "c9.courtyard.rainChoice",
+      "presentation": "adviser-aside"
+    },
+    "c9.courtyard.rainChoice": {
+      "id": "c9.courtyard.rainChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile"
+      },
+      "prompt": "Как продолжим вечер?",
+      "choices": [
+        {
+          "id": "canopy",
+          "text": "Переждём здесь. Хочу досмотреть",
+          "next": "c9.courtyard.canopy",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Rain",
+              "value": "canopy"
+            }
+          ]
+        },
+        {
+          "id": "arch",
+          "text": "Давай проверим ту арку — отсюда экран почти не видно",
+          "next": "c9.courtyard.arch",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Rain",
+              "value": "arch"
+            }
+          ]
+        },
+        {
+          "id": "leave",
+          "text": "Не хочу ждать под дождём. Давай уйдём",
+          "next": "c9.courtyard.leave",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9Rain",
+              "value": "leave"
+            }
+          ]
+        }
+      ]
+    },
+    "c9.courtyard.canopy": {
+      "id": "c9.courtyard.canopy",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ты находишь место у высокого столика. Влад становится рядом и кладёт пакет в сухую середину."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Смотри, оттуда хотя бы край экрана видно. Когда начнут, подвинемся."
+        },
+        {
+          "speaker": "vlad",
+          "text": "я пока покараулю это место. сходишь за пледом?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты берёшь один из пледов у выхода. Когда возвращаешься, Влад уже освободил тебе место у стены, куда не достают брызги."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Нам достался весь столик."
+        },
+        {
+          "speaker": "vlad",
+          "text": "за него пока никто не внёс печенье."
+        }
+      ],
+      "next": "c9.courtyard.hoodieRainRoute"
+    },
+    "c9.courtyard.arch": {
+      "id": "c9.courtyard.arch",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.arch",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ты показываешь Владу на сухую полосу вдоль стены. Под аркой стоят два складных стула и ящик с пледами."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Подержи сумку. Я спрошу, сюда можно."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты подходишь к сотруднице. Она кивает на стулья: отсюда тоже разрешают смотреть. Вернувшись, ты забираешь сумку у Влада."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Можно. Только левый качается."
+        },
+        {
+          "speaker": "vlad",
+          "text": "тогда мой левый. у стены устоит."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он ставит качающийся стул вплотную к стене. Ты разворачиваешь второй к экрану. Сбоку виден весь прямоугольник, а над головой больше не капает."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты берёшь из ящика плед и кладёшь на спинку своего стула."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Вот. И возвращаться никуда не надо."
+        }
+      ],
+      "next": "c9.courtyard.hoodieRainRoute"
+    },
+    "c9.courtyard.leave": {
+      "id": "c9.courtyard.leave",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [],
+            "fromLine": 2,
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Не хочу ждать под дождём. Давай уйдём."
+        },
+        {
+          "speaker": "vlad",
+          "text": "пойдём. с этой стороны выход сухой."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы обходите ряды вдоль стены. За аркой дождь стучит по жестяному козырьку, а на углу светится витрина булочной."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты становишься у витрины. Между булками и отражением улицы видны ваши два мокрых плеча."
+        },
+        {
+          "speaker": "heroine",
+          "text": "А кот так и остался в чемодане."
+        },
+        {
+          "speaker": "vlad",
+          "text": "у него хотя бы сухо."
+        }
+      ],
+      "next": "c9.courtyard.hoodieRainRoute"
+    },
+    "c9.courtyard.hoodieRainRoute": {
+      "id": "c9.courtyard.hoodieRainRoute",
+      "kind": "route",
+      "cases": [
+        {
+          "all": [
+            {
+              "key": "c8Hoodie",
+              "equals": "borrowed"
+            }
+          ],
+          "next": "c9.courtyard.hoodieRain"
+        }
+      ],
+      "fallback": "c9.courtyard.warmth"
+    },
+    "c9.courtyard.hoodieRain": {
+      "id": "c9.courtyard.hoodieRain",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Влад снимает с руки худи и протягивает тебе. У твоего плеча промок край рукава."
+        },
+        {
+          "speaker": "vlad",
+          "text": "его мы пока никуда не сдаём. накинь."
+        }
+      ],
+      "next": "c9.courtyard.hoodieChoiceRoute"
+    },
+    "c9.courtyard.hoodieChoiceRoute": {
+      "id": "c9.courtyard.hoodieChoiceRoute",
+      "kind": "route",
+      "cases": [
+        {
+          "all": [
+            {
+              "key": "c9Rain",
+              "equals": "leave"
+            }
+          ],
+          "next": "c9.courtyard.hoodieChoiceLeave"
+        }
+      ],
+      "fallback": "c9.courtyard.hoodieChoice"
+    },
+    "c9.courtyard.hoodieChoice": {
+      "id": "c9.courtyard.hoodieChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Худи снова пригодилось. Возьмёшь?",
+      "choices": [
+        {
           "id": "keep",
-          "text": "Можно я пока оставлю? Мне в нём уютно",
-          "next": "c9.r3.hoodie.keep",
+          "text": "Возьму ещё до следующего раза",
+          "next": "c9.courtyard.hoodieKeep"
+        },
+        {
+          "id": "return",
+          "text": "Я лучше укроюсь пледом, худи забирай",
+          "next": "c9.courtyard.hoodieReturn"
+        }
+      ]
+    },
+    "c9.courtyard.hoodieChoiceLeave": {
+      "id": "c9.courtyard.hoodieChoiceLeave",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Худи снова пригодилось. Возьмёшь?",
+      "choices": [
+        {
+          "id": "keep",
+          "text": "Возьму ещё до следующего раза",
+          "next": "c9.courtyard.hoodieKeep"
+        },
+        {
+          "id": "return",
+          "text": "Я лучше застегнусь, худи забирай",
+          "next": "c9.courtyard.hoodieReturn"
+        }
+      ]
+    },
+    "c9.courtyard.hoodieKeep": {
+      "id": "c9.courtyard.hoodieKeep",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ты надеваешь худи поверх своей одежды. Мокрый край рукава прячется в сухую манжету.",
           "effects": [
             {
               "kind": "set",
@@ -260,1593 +809,923 @@ export const chapter9:Chapter={
               "value": "kept"
             }
           ]
-        }
-      ]
-    },
-    "c9.r3.hoodie.return": {
-      "id": "c9.r3.hoodie.return",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Ты протягиваешь Владу сложенное худи."
         },
         {
           "speaker": "heroine",
-          "text": "На чай я всё равно ещё приду."
+          "text": "Тогда ещё немного побудет у меня."
         },
         {
           "speaker": "vlad",
-          "text": "приходи. я тебя и без обмена вещами рад видеть."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он откладывает худи и возвращается к столу."
+          "text": "бери."
         }
       ],
-      "next": "c9.r3.setup.intro"
+      "next": "c9.courtyard.next"
     },
-    "c9.r3.hoodie.keep": {
-      "id": "c9.r3.hoodie.keep",
+    "c9.courtyard.hoodieReturn": {
+      "id": "c9.courtyard.hoodieReturn",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
           "speaker": "heroine",
-          "text": "Можно я пока оставлю? Мне в нём уютно."
-        },
-        {
-          "speaker": "vlad",
-          "text": "оставь. мне приятно, что тебе в нём хорошо."
+          "text": "Я лучше укроюсь пледом, худи забирай.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c9Rain",
+                  "equals": "leave"
+                }
+              ],
+              "text": "Я лучше застегнусь, худи забирай."
+            }
+          ]
         },
         {
           "speaker": "narrator",
-          "text": "Влад подаёт тебе чашку. Больше возвращать худи сегодня никто не предлагает."
+          "text": "Влад убирает худи к себе; ты подтягиваешь плед к плечам.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c9Rain",
+                  "equals": "leave"
+                }
+              ],
+              "text": "Ты застёгиваешь свою куртку. Влад убирает худи к себе."
+            }
+          ]
+        },
+        {
+          "speaker": "vlad",
+          "text": "ладно."
         }
       ],
-      "next": "c9.r3.setup.intro"
+      "next": "c9.courtyard.next"
     },
-    "c9.r3.setup.intro": {
-      "id": "c9.r3.setup.intro",
+    "c9.courtyard.warmth": {
+      "id": "c9.courtyard.warmth",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
-          "speaker": "vlad",
-          "text": "я рад тебя видеть."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Даже раньше начала фильма?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "особенно. успеем поговорить до того, как кот начнёт спорить за нас."
+          "speaker": "narrator",
+          "text": "Ты подтягиваешь плед к плечам. Влад пододвигает пакет подальше от края, куда долетают капли.",
+          "variants": [
+            {
+              "when": [
+                {
+                  "key": "c9Rain",
+                  "equals": "leave"
+                }
+              ],
+              "text": "Ты застёгиваешь куртку. Влад становится с краю козырька, оставляя тебе сухое место у витрины."
+            }
+          ]
         }
       ],
-      "next": "c9.r3.before.screen"
+      "next": "c9.courtyard.next"
     },
-    "c9.r3.setup": {
-      "id": "c9.r3.setup",
-      "kind": "minigame",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "game": "movie-setup",
-      "next": "c9.r3.aside"
-    },
-    "c9.r3.aside": {
-      "id": "c9.r3.aside",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "devil",
-          "text": "Пульт у него. Посмотрим, надолго ли."
-        },
-        {
-          "speaker": "angel",
-          "text": "Пусть сначала включит."
-        }
-      ],
-      "next": "c9.r3.start.route",
-      "presentation": "adviser-aside"
-    },
-    "c9.r3.start.route": {
-      "id": "c9.r3.start.route",
+    "c9.courtyard.next": {
+      "id": "c9.courtyard.next",
       "kind": "route",
       "cases": [
         {
           "all": [
             {
-              "key": "c9Place",
-              "equals": "home"
+              "key": "plan",
+              "equals": "coop"
             }
           ],
-          "next": "c9.r3.start.home"
+          "next": "c9.courtyard.nextCoop"
         }
       ],
-      "fallback": "c9.r3.start.courtyard"
+      "fallback": "c9.courtyard.nextOther"
     },
-    "c9.r3.start.home": {
-      "id": "c9.r3.start.home",
+    "c9.courtyard.nextCoop": {
+      "id": "c9.courtyard.nextCoop",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
-          "speaker": "narrator",
-          "text": "Когда всё готово, Влад убирает упаковку со столика."
+          "speaker": "heroine",
+          "text": "Кстати, есть ещё одно место, куда мы так и не добрались. Ты обещал показать, как довести двух путешественников до домика."
         },
         {
           "speaker": "vlad",
-          "text": "всё. теперь можно делать вид, что мы собрались именно смотреть."
+          "text": "помню. коробка всё ещё ждёт второго человека."
         },
         {
           "speaker": "heroine",
-          "text": "А ты?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "я правда хочу узнать, уедет ли этот человек."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Пульт не сразу реагирует. Влад проверяет, куда его направил."
-        },
-        {
-          "speaker": "heroine",
-          "text": "На чашку не действует?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "пока нет. хотя полезная была бы функция."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Экран наконец загорается."
+          "text": "Тогда в следующий раз приноси. Посмотрим, кто у тебя там всё время теряется."
         }
       ],
-      "next": "c9.r3.film.first"
+      "next": "c9.courtyard.nextDate"
     },
-    "c9.r3.start.courtyard": {
-      "id": "c9.r3.start.courtyard",
+    "c9.courtyard.nextOther": {
+      "id": "c9.courtyard.nextOther",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Когда всё готово, Влад убирает упаковку с соседнего места."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я правда хочу узнать, уедет ли этот человек."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Экран загорается раньше, чем Влад заканчивает фразу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "всё, меня опередили."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Попробуй досказать после."
-        },
-        {
-          "speaker": "vlad",
-          "text": "если вспомню."
-        }
-      ],
-      "next": "c9.r3.film.first"
-    },
-    "c9.r3.film.first": {
-      "id": "c9.r3.film.first",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "leave"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "На экране человек складывает вещи в чемодан. Кот по очереди вытаскивает их обратно и садится внутрь."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ну всё. поездка отменяется."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Он ещё даже билет не показал."
-        },
-        {
-          "speaker": "vlad",
-          "text": "кот уже принял решение."
-        }
-      ],
-      "next": "c9.r3.debate"
-    },
-    "c9.r3.debate": {
-      "id": "c9.r3.debate",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "На чьей ты стороне?",
-      "choices": [
-        {
-          "id": "cat",
-          "text": "Я за кота. Человек плохо объяснил план",
-          "next": "c9.r3.debate.cat"
-        },
-        {
-          "id": "human",
-          "text": "Дайте человеку хоть раз спокойно собраться",
-          "next": "c9.r3.debate.human"
-        },
-        {
-          "id": "both",
-          "text": "Они оба делают вид, что не понимают друг друга",
-          "next": "c9.r3.debate.both"
-        }
-      ]
-    },
-    "c9.r3.debate.cat": {
-      "id": "c9.r3.debate.cat",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
           "speaker": "vlad",
-          "text": "согласен. никаких обсуждений, сразу чемодан."
+          "text": "давай в следующий раз достанем ту настолку, с которой я в первый вечер пришёл в кафе. с двумя путешественниками."
         },
         {
           "speaker": "heroine",
-          "text": "А кот явно рассчитывал на вечер дома."
+          "text": "Которым надо добраться до домика?"
         },
         {
           "speaker": "vlad",
-          "text": "узнаю твою способность найти сильный аргумент у того, кто молчит."
+          "text": "да. хотя бы у них крыша в комплекте."
         }
       ],
-      "next": "c9.r3.closeness.route"
+      "next": "c9.courtyard.nextDate"
     },
-    "c9.r3.debate.human": {
-      "id": "c9.r3.debate.human",
+    "c9.courtyard.nextDate": {
+      "id": "c9.courtyard.nextDate",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
-          "speaker": "vlad",
-          "text": "наконец-то у него появился адвокат."
-        },
-        {
           "speaker": "heroine",
-          "text": "Ты попробуй собраться, когда тебе всё вытаскивают."
+          "text": "В «Паузе»? За тем столом у окна."
         },
         {
           "speaker": "vlad",
-          "text": "ладно, признаю. хотя кот играет лучше."
-        }
-      ],
-      "next": "c9.r3.closeness.route"
-    },
-    "c9.r3.debate.both": {
-      "id": "c9.r3.debate.both",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "вот это, кажется, точнее всего."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Один мог бы открыть вторую сумку."
-        },
-        {
-          "speaker": "vlad",
-          "text": "другой — хотя бы один раз из неё выйти."
+          "text": "давай. я принесу коробку."
         },
         {
           "speaker": "narrator",
-          "text": "На экране кот как раз выбирается и тут же залезает обратно."
+          "text": "Укрыв телефон от брызг, ты сверяешь с Владом свободный вечер и сохраняешь время."
         }
       ],
-      "next": "c9.r3.closeness.route"
+      "next": "c9.courtyard.afterPause"
     },
-    "c9.r3.closeness.route": {
-      "id": "c9.r3.closeness.route",
+    "c9.courtyard.afterPause": {
+      "id": "c9.courtyard.afterPause",
       "kind": "route",
       "cases": [
         {
           "all": [
             {
-              "key": "c9Place",
-              "equals": "home"
+              "key": "c9Rain",
+              "equals": "leave"
             }
           ],
-          "next": "c9.r3.closeness.home"
+          "next": "c9.courtyard.earlyWalk"
         }
       ],
-      "fallback": "c9.r3.closeness.courtyard"
+      "fallback": "c9.courtyard.bet"
     },
-    "c9.r3.closeness.home": {
-      "id": "c9.r3.closeness.home",
+    "c9.courtyard.bet": {
+      "id": "c9.courtyard.bet",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
-          "speaker": "vlad",
-          "text": "ладно. досмотрим аргументы обеих сторон."
-        },
-        {
           "speaker": "narrator",
-          "text": "Следующие несколько кадров вы смотрите молча. Человек ставит возле чемодана маленькую переноску."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад немного отодвигает чашки и поворачивается к тебе."
+          "text": "В пакете остаётся одно печенье. Влад вытряхивает с края несколько крошек и загибает бумагу, чтобы оно не отсырело."
         },
         {
           "speaker": "vlad",
-          "text": "хочешь ко мне под руку? так удобнее смотреть вдвоём."
+          "text": "я думаю, он никуда не уедет. ключ положил — и сам же к нему вернётся."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Последнее печенье на кон?"
+        },
+        {
+          "speaker": "vlad",
+          "text": "принимается. какая у тебя версия?"
         }
       ],
-      "next": "c9.r3.closeness"
+      "next": "c9.courtyard.betChoice"
     },
-    "c9.r3.closeness.courtyard": {
-      "id": "c9.r3.closeness.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "ладно. досмотрим аргументы обеих сторон."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Следующие несколько кадров вы смотрите молча. Человек ставит возле чемодана маленькую переноску."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад поправляет край своего пледа, не натягивая его на тебя."
-        },
-        {
-          "speaker": "vlad",
-          "text": "если хочешь, можно устроиться ближе. плед большой."
-        }
-      ],
-      "next": "c9.r3.closeness"
-    },
-    "c9.r3.closeness": {
-      "id": "c9.r3.closeness",
+    "c9.courtyard.betChoice": {
+      "id": "c9.courtyard.betChoice",
       "kind": "choice",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
-      "prompt": "Как устроишься?",
+      "prompt": "Какая у тебя версия?",
       "choices": [
         {
-          "id": "shoulder",
-          "text": "Давай. Я на плечо устроюсь",
-          "next": "c9.r3.closeness.shoulder",
+          "id": "together",
+          "text": "Он поедет и возьмёт кота с собой",
+          "next": "c9.courtyard.betTogether",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Closeness",
-              "value": "shoulder"
-            },
-            {
-              "kind": "set",
-              "key": "c9Moment",
-              "value": "shoulder"
+              "key": "c9Bet",
+              "value": "together"
             }
           ]
         },
         {
-          "id": "near",
-          "text": "Сяду ближе, но пока без объятий",
-          "next": "c9.r3.closeness.near",
+          "id": "alone",
+          "text": "Он уедет один, а кот останется ждать",
+          "next": "c9.courtyard.betAlone",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Closeness",
-              "value": "near"
-            },
-            {
-              "kind": "set",
-              "key": "c9Moment",
-              "value": "watch"
+              "key": "c9Bet",
+              "value": "alone"
             }
           ]
         },
         {
-          "id": "separate",
-          "text": "Мне удобно здесь",
-          "next": "c9.r3.closeness.separate",
+          "id": "skip",
+          "text": "Не хочу спорить. Давай сразу пополам",
+          "next": "c9.courtyard.betSkip",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Closeness",
-              "value": "separate"
-            },
-            {
-              "kind": "set",
-              "key": "c9Moment",
-              "value": "watch"
+              "key": "c9Bet",
+              "value": "skip"
             }
           ]
         }
       ]
     },
-    "c9.r3.closeness.shoulder": {
-      "id": "c9.r3.closeness.shoulder",
+    "c9.courtyard.betTogether": {
+      "id": "c9.courtyard.betTogether",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Ты придвигаешься и опираешься на его плечо. Влад обнимает тебя так, чтобы экран оставался виден."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот. теперь можно даже переживать за чемодан с удобством."
-        }
-      ],
-      "next": "c9.r3.prediction.intro"
-    },
-    "c9.r3.closeness.near": {
-      "id": "c9.r3.closeness.near",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "leave"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Ты пересаживаешься ближе. Влад оставляет руки при себе."
-        },
-        {
-          "speaker": "vlad",
-          "text": "хорошо. отсюда кот ещё убедительнее."
-        }
-      ],
-      "next": "c9.r3.prediction.intro"
-    },
-    "c9.r3.closeness.separate": {
-      "id": "c9.r3.closeness.separate",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда отлично."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он возвращается к экрану и пододвигает свой напиток ближе к себе."
-        }
-      ],
-      "next": "c9.r3.prediction.intro"
-    },
-    "c9.r3.prediction.intro": {
-      "id": "c9.r3.prediction.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Человек закрывает чемодан, уходит за курткой и оставляет на столе билет. Кот смотрит на билет слишком внимательно."
-        },
-        {
-          "speaker": "vlad",
-          "text": "маленькое пари. что он сейчас сделает?"
-        }
-      ],
-      "next": "c9.r3.prediction"
-    },
-    "c9.r3.prediction": {
-      "id": "c9.r3.prediction",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Твоя версия?",
-      "choices": [
-        {
-          "id": "ticket",
-          "text": "Спрячет билет",
-          "next": "c9.r3.prediction.ticket"
-        },
-        {
-          "id": "follow",
-          "text": "Пойдёт за хозяином",
-          "next": "c9.r3.prediction.follow"
-        },
-        {
-          "id": "case",
-          "text": "Ляжет на чемодан. Классика",
-          "next": "c9.r3.prediction.case"
-        }
-      ]
-    },
-    "c9.r3.prediction.ticket": {
-      "id": "c9.r3.prediction.ticket",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Кот сталкивает билет за стол, после чего спокойно садится на закрытый чемодан."
-        },
-        {
-          "speaker": "vlad",
-          "text": "угадала. буду осторожнее оставлять при тебе сюжетные подсказки."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Просто он слишком явно смотрел."
-        },
-        {
-          "speaker": "vlad",
-          "text": "всё равно красиво."
-        }
-      ],
-      "next": "c9.r3.prediction.after"
-    },
-    "c9.r3.prediction.follow": {
-      "id": "c9.r3.prediction.follow",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Кот сталкивает билет за стол, после чего спокойно садится на закрытый чемодан."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я тоже думал, что он передумает."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Может, ещё пойдёт."
-        },
-        {
-          "speaker": "vlad",
-          "text": "давай дадим ему шанс исправиться."
-        }
-      ],
-      "next": "c9.r3.prediction.after"
-    },
-    "c9.r3.prediction.case": {
-      "id": "c9.r3.prediction.case",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Кот сталкивает билет за стол, после чего спокойно садится на закрытый чемодан."
-        },
-        {
-          "speaker": "vlad",
-          "text": "технически ты тоже права."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Именно. Про билет я просто не стала спойлерить."
-        },
-        {
-          "speaker": "vlad",
-          "text": "принимается. очень удобно споришь."
-        }
-      ],
-      "next": "c9.r3.prediction.after"
-    },
-    "c9.r3.prediction.after": {
-      "id": "c9.r3.prediction.after",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
           "speaker": "heroine",
-          "text": "А ты что загадал?"
+          "text": "Он поедет и возьмёт кота с собой."
         },
         {
           "speaker": "vlad",
-          "text": "что он сядет в переноску. кажется, я слишком оптимистично думаю о котах."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На экране человек возвращается и начинает искать билет."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы уже какое-то время сидите перед экраном. Влад замечает, что сам так и не притронулся к напитку."
-        },
-        {
-          "speaker": "vlad",
-          "text": "подожди. предлагаю вспомнить, что мы его вообще выбрали."
+          "text": "тогда печенье пока под охраной."
         }
       ],
-      "next": "c9.r3.break"
+      "next": "c9.courtyard.resume"
     },
-    "c9.r3.break": {
-      "id": "c9.r3.break",
-      "kind": "choice",
+    "c9.courtyard.betAlone": {
+      "id": "c9.courtyard.betAlone",
+      "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
-      "prompt": "Небольшой перерыв?",
-      "choices": [
+      "lines": [
         {
-          "id": "stretch",
-          "text": "Давай немного прервёмся и разомнёмся",
-          "next": "c9.r3.break.route",
-          "effects": [
+          "speaker": "heroine",
+          "text": "Он уедет один, а кот останется ждать."
+        },
+        {
+          "speaker": "vlad",
+          "text": "тогда у нас две разные дороги. если оба промахнёмся, делим."
+        }
+      ],
+      "next": "c9.courtyard.resume"
+    },
+    "c9.courtyard.betSkip": {
+      "id": "c9.courtyard.betSkip",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Влад разламывает печенье. Вы берёте по половине, пока он придерживает пакет под крошками."
+        }
+      ],
+      "next": "c9.courtyard.resume"
+    },
+    "c9.courtyard.resume": {
+      "id": "c9.courtyard.resume",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Дождь редеет. Сотрудница поднимает руку у экрана: показ продолжается. Человек с ключом снова двигается, и разговоры под навесом стихают."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Вы возвращаетесь в ряд. Сотрудница вытирает сиденья, а ты раскладываешь плед поперёк колен.",
+          "variants": [
             {
-              "kind": "set",
-              "key": "c9Break",
-              "value": "stretch"
-            },
-            {
-              "kind": "set",
-              "key": "c9Moment",
-              "value": "pause"
+              "when": [
+                {
+                  "key": "c9Rain",
+                  "equals": "arch"
+                }
+              ],
+              "text": "Ты разворачиваешься на своём стуле. Влад придвигается к стене; из-под арки виден весь экран."
             }
           ]
         },
         {
-          "id": "drink",
-          "text": "Подай, пожалуйста, мой напиток",
-          "next": "c9.r3.break.drink",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9Break",
-              "value": "drink"
-            }
-          ]
+          "speaker": "narrator",
+          "text": "Человек возвращается за рамкой с фотографией. Он заворачивает её в рубашку и устраивает между вещами."
         },
         {
-          "id": "watch",
-          "text": "Сначала досмотрим эту сцену",
-          "next": "c9.r3.break.watch",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9Break",
-              "value": "watch"
-            }
-          ]
+          "speaker": "narrator",
+          "text": "Кот впервые выбирается из чемодана сам. Человек закрывает крышку, берёт ключ и стоит перед дверью. На несколько секунд кот остаётся один в комнате."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Дверь открывается снова. Внизу появляется переноска. Кот обнюхивает дверцу, заглядывает на оставленное внутри полотенце и забирается сам."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Последний план — окно поезда. Рядом с человеком стоит переноска, а в стекле отражаются два силуэта. Кот трогает лапой бегущую за окном полосу света."
+        },
+        {
+          "speaker": "narrator",
+          "text": "На экране появляются титры. Во дворике снова загораются гирлянды."
         }
-      ]
+      ],
+      "next": "c9.courtyard.betResult"
     },
-    "c9.r3.break.route": {
-      "id": "c9.r3.break.route",
+    "c9.courtyard.betResult": {
+      "id": "c9.courtyard.betResult",
       "kind": "route",
       "cases": [
         {
           "all": [
             {
-              "key": "c9Place",
-              "equals": "home"
+              "key": "c9Bet",
+              "equals": "together"
             }
           ],
-          "next": "c9.r3.break.home"
-        }
-      ],
-      "fallback": "c9.r3.break.courtyard"
-    },
-    "c9.r3.break.home": {
-      "id": "c9.r3.break.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад ставит фильм на паузу. Вы встаёте и проходите до кухни."
+          "next": "c9.courtyard.won"
         },
-        {
-          "speaker": "vlad",
-          "text": "кажется, кот наконец получил то, чего хотел. мы тоже никуда не уезжаем."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Но у нас хотя бы добровольно."
-        }
-      ],
-      "next": "c9.r3.second.intro"
-    },
-    "c9.r3.break.courtyard": {
-      "id": "c9.r3.break.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы тихо выходите из ряда к столику сбоку. Фильм продолжает идти."
-        },
-        {
-          "speaker": "vlad",
-          "text": "надеюсь, он не найдёт билет именно сейчас."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Успеем понять по довольному лицу."
-        }
-      ],
-      "next": "c9.r3.second.intro"
-    },
-    "c9.r3.break.drink": {
-      "id": "c9.r3.break.drink",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад передаёт тебе выбранный напиток, проверив, что ты удобно взяла его."
-        },
-        {
-          "speaker": "vlad",
-          "text": "держи."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Спасибо."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он возвращается к экрану; в следующем кадре кот делает вид, что спит."
-        }
-      ],
-      "next": "c9.r3.second.intro"
-    },
-    "c9.r3.break.watch": {
-      "id": "c9.r3.break.watch",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "давай."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы смотрите, как человек находит билет под столом и победно поднимает его перед котом."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ну наконец-то."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я бы пока не праздновал."
-        }
-      ],
-      "next": "c9.r3.second.intro"
-    },
-    "c9.r3.second.intro": {
-      "id": "c9.r3.second.intro",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы снова удобно устраиваетесь перед экраном."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мне нравится смотреть с тобой. даже когда спорим больше, чем смотрим."
-        }
-      ],
-      "next": "c9.r3.second"
-    },
-    "c9.r3.second": {
-      "id": "c9.r3.second",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Как продолжим?",
-      "choices": [
-        {
-          "id": "hug",
-          "text": "Обними меня. Хочу ещё немного так посидеть",
-          "next": "c9.r3.second.hug.route",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9SecondMoment",
-              "value": "hug"
-            }
-          ]
-        },
-        {
-          "id": "banter",
-          "text": "Скажи честно: ты бы поехал без кота?",
-          "next": "c9.r3.second.banter.route",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9SecondMoment",
-              "value": "banter"
-            },
-            {
-              "kind": "set",
-              "key": "c9Moment",
-              "value": "banter"
-            }
-          ]
-        },
-        {
-          "id": "watch",
-          "text": "Давай досмотрим. Я уже переживаю",
-          "next": "c9.r3.second.watch",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9SecondMoment",
-              "value": "watch"
-            }
-          ]
-        }
-      ]
-    },
-    "c9.r3.second.hug.route": {
-      "id": "c9.r3.second.hug.route",
-      "kind": "route",
-      "cases": [
         {
           "all": [
             {
-              "key": "c9Place",
-              "equals": "home"
+              "key": "c9Bet",
+              "equals": "alone"
             }
           ],
-          "next": "c9.r3.pause.hug"
+          "next": "c9.courtyard.bothMissed"
         }
       ],
-      "fallback": "c9.r3.second.hug"
+      "fallback": "c9.courtyard.afterFilm"
     },
-    "c9.r3.pause.hug": {
-      "id": "c9.r3.pause.hug",
+    "c9.courtyard.won": {
+      "id": "c9.courtyard.won",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад ставит фильм на паузу, чтобы вы могли отвлечься."
-        }
-      ],
-      "next": "c9.r3.second.hug"
-    },
-    "c9.r3.second.banter.route": {
-      "id": "c9.r3.second.banter.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c9Place",
-              "equals": "home"
-            }
-          ],
-          "next": "c9.r3.pause.banter"
-        }
-      ],
-      "fallback": "c9.r3.second.banter"
-    },
-    "c9.r3.pause.banter": {
-      "id": "c9.r3.pause.banter",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "leave"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад ставит фильм на паузу, чтобы вы могли отвлечься."
-        }
-      ],
-      "next": "c9.r3.second.banter"
-    },
-    "c9.r3.second.hug": {
-      "id": "c9.r3.second.hug",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
       "lines": [
         {
           "speaker": "vlad",
-          "text": "иди сюда."
+          "text": "ладно. пассажира всё-таки зарегистрировали."
         },
         {
           "speaker": "narrator",
-          "text": "Ты придвигаешься, и Влад обнимает тебя."
+          "text": "Он подаёт тебе пакет с последним печеньем."
         },
         {
           "speaker": "heroine",
-          "text": "Хорошо устроились."
+          "text": "Можешь откусить. Но сначала признай, что кот сам собрался."
         },
         {
           "speaker": "vlad",
-          "text": "да. претензий к фильму стало меньше."
+          "text": "кот сам собрался. человек только донёс багаж."
         },
         {
           "speaker": "narrator",
-          "text": "Влад смотрит на тебя и чуть поворачивается, не притягивая ближе."
-        },
-        {
-          "speaker": "vlad",
-          "text": "можно я тебя поцелую?"
+          "text": "Ты откусываешь первой и передаёшь остаток Владу. Он доедает печенье и складывает пустой пакет."
         }
       ],
-      "next": "c9.r3.kiss"
+      "next": "c9.courtyard.afterFilm"
     },
-    "c9.r3.kiss": {
-      "id": "c9.r3.kiss",
-      "kind": "choice",
+    "c9.courtyard.bothMissed": {
+      "id": "c9.courtyard.bothMissed",
+      "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile",
         "variants": [
           {
             "when": [
               {
-                "key": "c9Place",
-                "equals": "home"
+                "key": "c9Rain",
+                "equals": "arch"
               }
             ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
           }
         ]
       },
-      "prompt": "Что ответишь?",
-      "choices": [
+      "lines": [
         {
-          "id": "yes",
-          "text": "Да",
-          "next": "c9.r3.kiss.yes",
+          "speaker": "heroine",
+          "text": "Я кота оставила, ты человека. Оба мимо."
+        },
+        {
+          "speaker": "vlad",
+          "text": "а они уехали, пока мы тут делили имущество."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты разламываешь печенье пополам. Вы съедаете по половине; Влад ловит крошки пакетом."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Тогда обоим по половине."
+        }
+      ],
+      "next": "c9.courtyard.afterFilm"
+    },
+    "c9.courtyard.afterFilm": {
+      "id": "c9.courtyard.afterFilm",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.open",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.books",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "vlad",
+          "text": "хорошо, что дождались."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Да. Я уже думала, так и останемся с этим ключом в руке."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты складываешь плед. Влад относит его в ящик, затем возвращается за тобой к арке."
+        }
+      ],
+      "next": "c9.courtyard.lab"
+    },
+    "c9.courtyard.earlyWalk": {
+      "id": "c9.courtyard.earlyWalk",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.books",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [],
+            "fromLine": 7,
+            "background": "bg.courtyard9.books-closed",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ты замечаешь рядом с булочной маленький уличный шкаф с надписью «Обмен книгами». Дверца приоткрыта. Из нижней полки торчит книга, по её обложке стекает вода."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Подожди. Там сейчас всё зальёт."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты подхватываешь книгу. Влад кладёт пакет с печеньем на сухой подоконник и придерживает дверцу, пока ты освобождаешь зажатый угол."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вот кто тут не давал закрыться."
+        },
+        {
+          "speaker": "narrator",
+          "text": "На нижней полке уже собралась вода. Влад поднимает оставшиеся книги, а ты освобождаешь для них верхнюю. Последняя не помещается корешком наружу; ты поворачиваешь её боком."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Теперь пробуй."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Дверца закрывается. Влад поворачивает деревянную щеколду. Вы на секунду остаётесь перед стеклом: книги теперь выше мокрой полки, капли бегут по дверце снаружи."
+        },
+        {
+          "speaker": "vlad",
+          "text": "крыша есть. жильцов расселили."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он забирает с подоконника пакет и разламывает последнее печенье. Вы съедаете по половине под козырьком."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Кота так и не проводили. Зато этих устроили."
+        },
+        {
+          "speaker": "vlad",
+          "text": "целую полку. идём сдавать аппарат?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты выбираешь дорогу вдоль домов. Дождь становится мельче; на перекрёстке уже светлеет край неба."
+        }
+      ],
+      "next": "c9.courtyard.lab"
+    },
+    "c9.courtyard.lab": {
+      "id": "c9.courtyard.lab",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "На соседней улице за стеклом фотолаборатории горит небольшая лампа. Дверь уже закрыта, но рядом с ней устроен приёмный ящик. Над ним лежат бумажные пакеты и бланки."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты достаёшь аппарат. Влад берёт с полочки пакет для проявки и держит его раскрытым, пока ты заполняешь короткий бланк. Затем ты кладёшь аппарат внутрь и заклеиваешь край."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты опускаешь пакет в ящик и убираешь отрывную квитанцию в кошелёк.",
           "effects": [
             {
               "kind": "set",
-              "key": "c9LipKiss",
-              "value": "yes"
+              "key": "c9Film",
+              "value": "submitted"
             }
           ]
         },
         {
-          "id": "her",
-          "text": "Я сама хочу",
-          "next": "c9.r3.kiss.her.route",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c9LipKiss",
-              "value": "yes"
-            }
-          ]
+          "speaker": "heroine",
+          "text": "Когда будут готовы, заберу. Принесу тебе посмотреть."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вместе посмотрим. я хочу узнать, что у нас там с первой прогулки."
+        }
+      ],
+      "next": "c9.courtyard.goodbye"
+    },
+    "c9.courtyard.goodbye": {
+      "id": "c9.courtyard.goodbye",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "На перекрёстке вам в разные стороны. На мокром бордюре дрожат огни светофора."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Влад убирает телефон, на котором проверял дорогу домой. До зелёного ещё есть несколько секунд."
+        }
+      ],
+      "next": "c9.courtyard.goodbyeChoice"
+    },
+    "c9.courtyard.goodbyeChoice": {
+      "id": "c9.courtyard.goodbyeChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
+      },
+      "prompt": "Как попрощаешься?",
+      "choices": [
+        {
+          "id": "kiss",
+          "text": "Поцеловать его первой",
+          "next": "c9.courtyard.kiss"
         },
         {
           "id": "hug",
-          "text": "Давай пока просто обниматься",
-          "next": "c9.r3.kiss.hug"
+          "text": "Обнять на прощание",
+          "next": "c9.courtyard.hug"
+        },
+        {
+          "id": "words",
+          "text": "До следующей встречи, Влад",
+          "next": "c9.courtyard.words"
         }
       ]
     },
-    "c9.r3.kiss.yes": {
-      "id": "c9.r3.kiss.yes",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад коротко целует тебя в губы."
-        },
-        {
-          "speaker": "vlad",
-          "text": "рад, что у этого вечера есть паузы."
-        }
-      ],
-      "next": "c9.r3.kiss.past"
-    },
-    "c9.r3.kiss.her.route": {
-      "id": "c9.r3.kiss.her.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c9Place",
-              "equals": "home"
-            }
-          ],
-          "next": "c9.r3.kiss.her.home"
-        }
-      ],
-      "fallback": "c9.r3.kiss.her.courtyard"
-    },
-    "c9.r3.kiss.her.home": {
-      "id": "c9.r3.kiss.her.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "иди ко мне."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Ты целуешь его, и Влад улыбается."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Хорошо, что поставили на паузу."
-        }
-      ],
-      "next": "c9.r3.kiss.past"
-    },
-    "c9.r3.kiss.her.courtyard": {
-      "id": "c9.r3.kiss.her.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "иди ко мне."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Ты целуешь его, и Влад улыбается."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Теперь точно пропустили кадр."
-        }
-      ],
-      "next": "c9.r3.kiss.past"
-    },
-    "c9.r3.kiss.past": {
-      "id": "c9.r3.kiss.past",
+    "c9.courtyard.kiss": {
+      "id": "c9.courtyard.kiss",
       "kind": "route",
       "cases": [
         {
@@ -1856,1442 +1735,179 @@ export const chapter9:Chapter={
               "equals": "yes"
             }
           ],
-          "next": "c9.r3.kiss.repeat"
+          "next": "c9.courtyard.kissAgain"
         }
       ],
-      "fallback": "c9.r3.kiss.first"
+      "fallback": "c9.courtyard.kissFirst"
     },
-    "c9.r3.kiss.repeat": {
-      "id": "c9.r3.kiss.repeat",
+    "c9.courtyard.kissAgain": {
+      "id": "c9.courtyard.kissAgain",
       "kind": "dialogue",
       "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "нравится снова быть с тобой вот так рядом."
-        }
-      ],
-      "next": "c9.r3.resume.route"
-    },
-    "c9.r3.kiss.first": {
-      "id": "c9.r3.kiss.first",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
       },
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Вы ещё ненадолго остаётесь рядом, не торопясь возвращаться к экрану."
-        }
-      ],
-      "next": "c9.r3.resume.route"
-    },
-    "c9.r3.kiss.hug": {
-      "id": "c9.r3.kiss.hug",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "хорошо."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы остаётесь в объятии. Влад снова смотрит на экран."
-        }
-      ],
-      "next": "c9.r3.resume.route"
-    },
-    "c9.r3.second.banter": {
-      "id": "c9.r3.second.banter",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "сначала попытался бы договориться."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Он же кот."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот поэтому разговор был бы коротким."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А потом?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "искал бы место, куда можно с ним. я уже на его стороне, да?"
-        }
-      ],
-      "next": "c9.r3.resume.route"
-    },
-    "c9.r3.second.watch": {
-      "id": "c9.r3.second.watch",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда я пока помолчу."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы возвращаетесь к фильму."
-        }
-      ],
-      "next": "c9.r3.resume.route"
-    },
-    "c9.r3.resume.route": {
-      "id": "c9.r3.resume.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c9Place",
-              "equals": "home"
-            }
-          ],
-          "next": "c9.r3.resume.home"
-        }
-      ],
-      "fallback": "c9.r3.resume.courtyard"
-    },
-    "c9.r3.resume.home": {
-      "id": "c9.r3.resume.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "продолжим? хочу проверить, кто кого всё-таки уговорил."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад проверяет, что фильм идёт, и возвращает пульт на столик."
-        }
-      ],
-      "next": "c9.r3.film.end"
-    },
-    "c9.r3.resume.courtyard": {
-      "id": "c9.r3.resume.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "На экране начинается последняя сцена. Вы снова смотрите вперёд."
-        }
-      ],
-      "next": "c9.r3.film.end"
-    },
-    "c9.r3.film.end": {
-      "id": "c9.r3.film.end",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Человек открывает дверь. Кот сам заходит в переноску, но только после того, как туда кладут его маленький плед."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Всё это было из-за пледа?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "хочется верить, что ещё немного из-за любви."
-        },
-        {
-          "speaker": "heroine",
-          "text": "К пледу."
-        },
-        {
-          "speaker": "vlad",
-          "text": "сильное чувство. не буду спорить."
-        },
-        {
-          "speaker": "narrator",
-          "text": "В последнем кадре чемодан стоит у другого окна, а кот всё так же сидит рядом."
-        }
-      ],
-      "next": "c9.r3.after.screen"
-    },
-    "c9.r3.film.discuss": {
-      "id": "c9.r3.film.discuss",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Как тебе развязка?",
-      "choices": [
-        {
-          "id": "together",
-          "text": "Он просто хотел ехать вместе",
-          "next": "c9.r3.film.together"
-        },
-        {
-          "id": "human",
-          "text": "Нет, это человек наконец научился собираться",
-          "next": "c9.r3.film.human"
-        },
-        {
-          "id": "both",
-          "text": "Мне нравится, что никто никого не победил",
-          "next": "c9.r3.film.both"
-        }
-      ]
-    },
-    "c9.r3.film.together": {
-      "id": "c9.r3.film.together",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "да. а сказать нормально не мог."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Кот."
-        },
-        {
-          "speaker": "vlad",
-          "text": "прекрасное оправдание."
-        }
-      ],
-      "next": "c9.r3.note"
-    },
-    "c9.r3.film.human": {
-      "id": "c9.r3.film.human",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "согласен. плед в списке теперь навсегда."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И немного терпения."
-        },
-        {
-          "speaker": "vlad",
-          "text": "его лучше взять с запасом."
-        }
-      ],
-      "next": "c9.r3.note"
-    },
-    "c9.r3.film.both": {
-      "id": "c9.r3.film.both",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "вот поэтому я и хотел это посмотреть."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Без злодея?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "и без необходимости кого-нибудь перевоспитывать."
-        }
-      ],
-      "next": "c9.r3.note"
-    },
-    "c9.r3.note": {
-      "id": "c9.r3.note",
-      "kind": "note",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "questionId": "s2.r3.q9",
-      "maxCodePoints": 280,
-      "prompt": "Что делает обычный киновечер хорошим именно для тебя?",
-      "context": "Фильм закончился, а разговор о нём продолжается.",
-      "answerOptions": [
-        {
-          "id": "preset.1",
-          "kind": "preset",
-          "text": "Когда можно спорить о героях и смеяться вместе."
-        },
-        {
-          "id": "preset.2",
-          "kind": "preset",
-          "text": "Когда удобно устроились и никто никуда не торопится."
-        },
-        {
-          "id": "custom",
-          "kind": "custom",
-          "text": "Своими словами ✎"
-        }
-      ],
-      "placeholder": "Мне бы хотелось…",
-      "submitLabel": "Сохранить ответ",
-      "skipLabel": "Пропустить",
-      "next": "c9.r3.closing"
-    },
-    "c9.r3.closing": {
-      "id": "c9.r3.closing",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "на следующий показ ты выбираешь. интересно, за кого мы будем спорить там."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Сразу готовишься?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. но победить не обещаю."
-        }
-      ],
-      "next": "c9.r3.ending"
-    },
-    "c9.r3.ending": {
-      "id": "c9.r3.ending",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Как закончить этот киновечер?",
-      "choices": [
-        {
-          "id": "talk",
-          "text": "Давай ещё обсудим концовку",
-          "next": "c9.r3.finish.talk",
+          "text": "Ты ловишь его ладонь, когда он собирается отступить к своему углу. Влад поворачивается к тебе; ты тянешь его чуть ближе и целуешь. Он отвечает, придерживая тебя за спину.",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Close",
-              "value": "talk"
+              "key": "c9LipKiss",
+              "value": "yes"
+            },
+            {
+              "kind": "set",
+              "key": "c9Goodbye",
+              "value": "kiss"
             }
           ]
         },
         {
-          "id": "quiet",
-          "text": "Посидим немного без разговоров",
-          "next": "c9.r3.finish.quiet",
+          "speaker": "heroine",
+          "text": "Теперь до настолки."
+        },
+        {
+          "speaker": "vlad",
+          "text": "вот теперь до настолки."
+        }
+      ],
+      "next": "c9.courtyard.kissEnd"
+    },
+    "c9.courtyard.kissFirst": {
+      "id": "c9.courtyard.kissFirst",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Влад, подожди."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты касаешься его руки и подходишь ближе. Он остаётся напротив, глядя на тебя."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Я ещё не попрощалась."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты поднимаешь лицо к нему. Влад наклоняется навстречу; ты целуешь его в губы. Он отвечает и осторожно обнимает тебя за спину.",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Close",
-              "value": "quiet"
+              "key": "c9LipKiss",
+              "value": "yes"
+            },
+            {
+              "kind": "set",
+              "key": "c9Goodbye",
+              "value": "kiss"
             }
           ]
         },
         {
-          "id": "credits",
-          "text": "Давай собираться. Следующий фильм с меня",
-          "next": "c9.r3.finish.credits",
+          "speaker": "vlad",
+          "text": "хорошо, что остановила."
+        }
+      ],
+      "next": "c9.courtyard.kissEnd"
+    },
+    "c9.courtyard.kissEnd": {
+      "id": "c9.courtyard.kissEnd",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Вы отпускаете друг друга. Когда загорается зелёный, ты переходишь улицу; Влад остаётся на своём углу."
+        }
+      ],
+      "next": "c9.courtyard.end"
+    },
+    "c9.courtyard.hug": {
+      "id": "c9.courtyard.hug",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ты обнимаешь Влада. Он прижимает тебя к себе в ответ, затем отступает, чтобы пропустить к переходу.",
           "effects": [
             {
               "kind": "set",
-              "key": "c9Close",
-              "value": "credits"
+              "key": "c9LipKiss",
+              "value": "no"
+            },
+            {
+              "kind": "set",
+              "key": "c9Goodbye",
+              "value": "hug"
+            }
+          ]
+        },
+        {
+          "speaker": "heroine",
+          "text": "До настолки."
+        },
+        {
+          "speaker": "vlad",
+          "text": "до настолки."
+        }
+      ],
+      "next": "c9.courtyard.end"
+    },
+    "c9.courtyard.words": {
+      "id": "c9.courtyard.words",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.lab-red",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "До следующей встречи, Влад."
+        },
+        {
+          "speaker": "vlad",
+          "text": "до встречи. спасибо, что позвала."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ты поднимаешь ладонь, отойдя к переходу. Он машет тебе в ответ.",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9LipKiss",
+              "value": "no"
+            },
+            {
+              "kind": "set",
+              "key": "c9Goodbye",
+              "value": "words"
             }
           ]
         }
-      ]
-    },
-    "c9.r3.finish.talk": {
-      "id": "c9.r3.finish.talk",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "я всё ещё считаю, что кот с самого начала хотел поехать."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Тогда зачем прятал билет?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "не одобрил сборы."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы придумываете ещё одну версию и смеётесь, когда она окончательно перестаёт совпадать с фильмом."
-        }
       ],
-      "next": "c9.r3.outro.route"
+      "next": "c9.courtyard.end"
     },
-    "c9.r3.finish.quiet": {
-      "id": "c9.r3.finish.quiet",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад кивает. Вы остаётесь рядом, пока экран гаснет."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мне хорошо."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он говорит это негромко и не пытается заполнить следующую паузу."
-        }
-      ],
-      "next": "c9.r3.outro.route"
-    },
-    "c9.r3.finish.credits": {
-      "id": "c9.r3.finish.credits",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "запомнил."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Только не изучай заранее."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ладно. хотя бы постараюсь удивляться честно."
-        }
-      ],
-      "next": "c9.r3.outro.route"
-    },
-    "c9.r3.outro.route": {
-      "id": "c9.r3.outro.route",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c9Place",
-              "equals": "home"
-            }
-          ],
-          "next": "c9.r3.outro.home"
-        }
-      ],
-      "fallback": "c9.r3.outro.courtyard"
-    },
-    "c9.r3.outro.home": {
-      "id": "c9.r3.outro.home",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Влад собирает чашки. У телевизора оказывается забытая упаковка."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот теперь всё выглядит как настоящий киновечер."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А до этого?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "слишком аккуратно."
-        },
-        {
-          "speaker": "narrator",
-          "text": "У двери вы возвращаетесь к спору о коте ещё на пару фраз."
-        }
-      ],
-      "next": "c9.r3.card"
-    },
-    "c9.r3.outro.courtyard": {
-      "id": "c9.r3.outro.courtyard",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Вы выходите из ряда, пока другие зрители тоже собираются."
-        },
-        {
-          "speaker": "vlad",
-          "text": "теперь по дороге буду замечать все чемоданы."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И проверять, нет ли рядом кота?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "обязательно."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы идёте к выходу из дворика, продолжая разговор."
-        }
-      ],
-      "next": "c9.r3.card"
-    },
-    "c9.r3.card": {
-      "id": "c9.r3.card",
-      "kind": "route",
-      "cases": [
-        {
-          "all": [
-            {
-              "key": "c9Close",
-              "equals": "talk"
-            }
-          ],
-          "next": "c9.r3.end.talk"
-        },
-        {
-          "all": [
-            {
-              "key": "c9Close",
-              "equals": "quiet"
-            }
-          ],
-          "next": "c9.r3.end.quiet"
-        }
-      ],
-      "fallback": "c9.r3.end.credits"
-    },
-    "c9.r3.end.talk": {
-      "id": "c9.r3.end.talk",
+    "c9.courtyard.end": {
+      "id": "c9.courtyard.end",
       "kind": "end",
-      "cardId": "c9.r3.talk",
-      "endingId": "c9.r3.talk"
-    },
-    "c9.r3.end.quiet": {
-      "id": "c9.r3.end.quiet",
-      "kind": "end",
-      "cardId": "c9.r3.quiet",
-      "endingId": "c9.r3.quiet"
-    },
-    "c9.r3.end.credits": {
-      "id": "c9.r3.end.credits",
-      "kind": "end",
-      "cardId": "c9.r3.credits",
-      "endingId": "c9.r3.credits"
-    },
-    "c9.r3.before.screen": {
-      "id": "c9.r3.before.screen",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "До начала фильма остаётся немного времени. Влад переворачивает карточку с его названием."
-        },
-        {
-          "speaker": "vlad",
-          "text": "смешно, как иногда описание обещает совсем не то, что потом показывают."
-        },
-        {
-          "speaker": "heroine",
-          "text": "С этим будет так же?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "надеюсь, хотя бы кот останется."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А если окажется, что весь сюжет про чемодан?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "тогда я буду защищать чемодан. надо же держать слово про интересный вечер."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он смеётся и возвращает карточку на место."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты вообще умеешь смотреть фильм без комментариев?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "умею. если никто не сидит рядом и не делает очень убедительное лицо."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Какое?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "“ты тоже это заметил?”"
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад показывает это выражение, затем сам первым не выдерживает серьёзного вида."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Всё. Теперь буду узнавать."
-        },
-        {
-          "speaker": "vlad",
-          "text": "только не заставляй меня повторять в самый важный момент."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Вы ещё раз проверяете, удобно ли стоят напитки."
-        },
-        {
-          "speaker": "vlad",
-          "text": "а что тебя обычно цепляет в историях?"
-        },
-        {
-          "speaker": "heroine",
-          "text": "Хороший персонаж хотя бы."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. мне хочется понять, зачем он делает свою глупость."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Даже если всё равно глупость?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "особенно тогда. просто идеального человека интересно смотреть недолго."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На экране появляется первый неподвижный кадр: дверь и один оставленный у неё ботинок."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Уже похоже, что кто-то торопился."
-        },
-        {
-          "speaker": "vlad",
-          "text": "или второй ботинок у кота."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты его ещё даже не видел."
-        },
-        {
-          "speaker": "vlad",
-          "text": "а репутацию уже построил."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад устраивается на своём месте и возвращает карточку с названием на стол."
-        },
-        {
-          "speaker": "vlad",
-          "text": "ладно. сегодня попробую хотя бы иногда давать фильму объяснить себя самому."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Это обещание?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "предложение, которое мы можем вместе нарушить."
-        }
-      ],
-      "next": "c9.r3.before.screen.choice"
-    },
-    "c9.r3.before.screen.choice": {
-      "id": "c9.r3.before.screen.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Как будем смотреть?",
-      "choices": [
-        {
-          "id": "comment",
-          "text": "Комментарии разрешены. Особенно смешные",
-          "next": "c9.r3.before.screen.comment"
-        },
-        {
-          "id": "pause",
-          "text": "Если захочется обсудить — найдём удобный момент",
-          "next": "c9.r3.before.screen.pause"
-        },
-        {
-          "id": "watch",
-          "text": "Сначала посмотрим. Потом вынесем приговор",
-          "next": "c9.r3.before.screen.watch"
-        }
-      ]
-    },
-    "c9.r3.before.screen.comment": {
-      "id": "c9.r3.before.screen.comment",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда постараюсь различать смешные и просто мои."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Можно проверять на мне."
-        },
-        {
-          "speaker": "vlad",
-          "text": "опасное предложение, мне нравится."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он поворачивает карточку с названием к тебе."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Но сюжет всё-таки не пропускаем."
-        },
-        {
-          "speaker": "vlad",
-          "text": "договорились."
-        }
-      ],
-      "next": "c9.r3.setup"
-    },
-    "c9.r3.before.screen.pause": {
-      "id": "c9.r3.before.screen.pause",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "хорошо. не будем перекрикивать экран."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И заставлять друг друга срочно всё объяснять."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. иногда достаточно дождаться следующей сцены."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад кивает и снова смотрит вперёд."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Звучит как рабочий план."
-        },
-        {
-          "speaker": "vlad",
-          "text": "неожиданно взрослый для вечера с котом."
-        }
-      ],
-      "next": "c9.r3.setup"
-    },
-    "c9.r3.before.screen.watch": {
-      "id": "c9.r3.before.screen.watch",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "принимается. временно убираю уверенные три слова."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Оставь на финал."
-        },
-        {
-          "speaker": "vlad",
-          "text": "главное, не потратить их на заставку."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он делает серьёзное лицо и демонстративно замолкает."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Пока получается."
-        },
-        {
-          "speaker": "vlad",
-          "text": "не сбивай."
-        }
-      ],
-      "next": "c9.r3.setup"
-    },
-    "c9.r3.after.screen": {
-      "id": "c9.r3.after.screen",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Начинаются титры. Влад не сразу поднимает взгляд от экрана."
-        },
-        {
-          "speaker": "vlad",
-          "text": "мне понравилось, что человек в конце просто подождал."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Вместо того чтобы снова прятать переноску?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. понял, что у кота тоже есть маленькая версия происходящего."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Теперь ты совсем на его стороне."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я с самого начала был ненадёжным судьёй."
-        },
-        {
-          "speaker": "narrator",
-          "text": "На экране ещё раз показывают двор из первой сцены, теперь уже пустой."
-        },
-        {
-          "speaker": "heroine",
-          "text": "А это зачем оставили?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "может, чтобы было видно, что они всё-таки уехали."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Или просто красивый кадр."
-        },
-        {
-          "speaker": "vlad",
-          "text": "тоже достаточная причина."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Последняя строчка титров сменяется тёмным экраном."
-        },
-        {
-          "speaker": "vlad",
-          "text": "люблю, когда после фильма ещё пару минут не хочется включать другой."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Нужно спор закончить?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "иногда. а иногда просто дать истории немного остаться."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он переводит взгляд на тебя."
-        },
-        {
-          "speaker": "vlad",
-          "text": "интересно, ты вообще за какой жанр будешь в следующий раз?"
-        },
-        {
-          "speaker": "heroine",
-          "text": "Уже пытаешься подготовиться?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "пытаюсь понять, насколько мне страшно."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ужасы выдержишь?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "выдержу. но буду очень убедительно объяснять персонажам, куда не надо идти."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Они тебя не послушают."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот поэтому жанр и напряжённый."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад улыбается и наконец отставляет свой напиток."
-        }
-      ],
-      "next": "c9.r3.after.screen.choice"
-    },
-    "c9.r3.after.screen.choice": {
-      "id": "c9.r3.after.screen.choice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "prompt": "Что тебе ближе для следующего раза?",
-      "choices": [
-        {
-          "id": "comedy",
-          "text": "Что-нибудь смешное. Мне нравится обсуждать с тобой глупости",
-          "next": "c9.r3.after.screen.comedy"
-        },
-        {
-          "id": "surprise",
-          "text": "Я выберу и пока не скажу",
-          "next": "c9.r3.after.screen.surprise"
-        },
-        {
-          "id": "different",
-          "text": "А можно в следующий раз вообще без фильма?",
-          "next": "c9.r3.after.screen.different"
-        }
-      ]
-    },
-    "c9.r3.after.screen.comedy": {
-      "id": "c9.r3.after.screen.comedy",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "тогда постараюсь выбрать глупости хорошего качества."
-        },
-        {
-          "speaker": "heroine",
-          "text": "В этот раз справился."
-        },
-        {
-          "speaker": "vlad",
-          "text": "приятно. даже кот не подвёл."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он смотрит на погасший экран ещё раз."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Только без второй части прямо сегодня."
-        },
-        {
-          "speaker": "vlad",
-          "text": "согласен. эту мы ещё не закончили обсуждать."
-        }
-      ],
-      "next": "c9.r3.film.discuss"
-    },
-    "c9.r3.after.screen.surprise": {
-      "id": "c9.r3.after.screen.surprise",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "хорошо. приду без подготовки."
-        },
-        {
-          "speaker": "heroine",
-          "text": "И без трейлера."
-        },
-        {
-          "speaker": "vlad",
-          "text": "вот это уже серьёзное условие."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Справишься?"
-        },
-        {
-          "speaker": "vlad",
-          "text": "попробую довериться интересной компании."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Он улыбается и не задаёт следующего вопроса о названии."
-        }
-      ],
-      "next": "c9.r3.film.discuss"
-    },
-    "c9.r3.after.screen.different": {
-      "id": "c9.r3.after.screen.different",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.s2.cinema.courtyard",
-        "character": "vlad.city.warm",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c9Place",
-                "equals": "home"
-              }
-            ],
-            "background": "bg.home.living",
-            "character": "vlad.casual.warm"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "vlad",
-          "text": "конечно. найдём другое занятие."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Ты быстро отпустил свою идею."
-        },
-        {
-          "speaker": "vlad",
-          "text": "я ведь хотел вечер с тобой, а не победу телевизора."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Влад пожимает плечами, будто это самая простая часть договорённости."
-        },
-        {
-          "speaker": "heroine",
-          "text": "Тогда придумаем."
-        },
-        {
-          "speaker": "vlad",
-          "text": "да. и мне уже интересно."
-        }
-      ],
-      "next": "c9.r3.film.discuss"
+      "endingId": "c9.courtyard",
+      "cardId": "c9.courtyard"
     }
   }
 };

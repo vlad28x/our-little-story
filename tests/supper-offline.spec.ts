@@ -7,7 +7,7 @@ import {parseSave} from '../src/persistence/validateSave';
 const key='five-meetings:/:save';
 async function saved(page:Page){return parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);}
 
-test('four supper paths finish with actual food, independent closeness and hoodie; no later chapter starts',async({page})=>{
+test('four supper paths finish with actual food, independent closeness and hoodie; later chapters require a new start',async({page})=>{
  test.setTimeout(180000);
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  const paths:Partial<SupperPath>[]=[{filling:'simple',shape:'fold',frame:'boardVlad',step:'sit',kiss:false,hoodie:'pass'},{filling:'mix',shape:'open',frame:'foodHer',step:'lead',kiss:true,hoodie:'borrow'},{filling:'mushroom',shape:'open',frame:'foodVlad',step:'play',kiss:false,hoodie:'wear'},{step:'follow',kiss:true}];
@@ -39,7 +39,7 @@ test('four supper paths finish with actual food, independent closeness and hoodi
   const done=await saved(page);expect(done.campaign.records[7]).toEqual(base.campaign.records[7]);
   expect(done.campaign.records[8]!.story).toMatchObject({c8LipKiss:path.kiss?'yes':'no',c8Film:'nine'});
   await expect(page.getByRole('heading',{name:'Половина кухни',exact:true})).toBeVisible();
-  await expect(page.getByText('Следующая встреча в кинодворике ещё готовится.',{exact:true})).toBeVisible();
+  await expect(page.getByText('Следующая встреча в кинодворике ещё готовится.',{exact:true})).toHaveCount(0);
   if(i===0)await page.screenshot({path:'work/SUPPER8_RESULT_320.png',animations:'disabled'});
   for(const id of [9,10]){await openOffline(page,done,`/play/${id}`);await expect(page.locator('[data-node]')).toHaveCount(0);}
  }
