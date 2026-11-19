@@ -3,8 +3,9 @@ import { openOffline } from './offlineApp';
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
 import { commandFor } from './helpers';
-import { completeTwo,thirdCode,command3 } from './chapter3Helpers';
+import { thirdCode,command3 } from './chapter3Helpers';
 import type { SaveV1 } from '../src/state/types';
+import {finishSky} from './sky3Helpers';
 import { startFour } from './chapter4Helpers';
 import { startFive } from './chapter5Helpers';
 const key='five-meetings:/:save';
@@ -19,7 +20,7 @@ function firstAt(id?:string){
   return s;
 }
 function thirdAt(id?:string){
-  let s=reduceSave(completeTwo(),{type:'unlock',code:thirdCode});s=reduceSave(s,{type:'start',chapter:3});
+  let s=reduceSave(finishSky(),{type:'unlock',code:thirdCode});s=reduceSave(s,{type:'start',chapter:4});
   for(let i=0;id&&s.campaign.active?.nodeId!==id&&i<180;i++)s=reduceSave(s,{type:'command',target:'campaign',command:command3(s.campaign.active!)});
   return s;
 }
@@ -53,7 +54,7 @@ test('hair and cat react on a small screen without changing saved story, then cl
 });
 
 test('one cookie per chapter visit is cosmetic, survives pause and is keyboard accessible with reduced motion',async({page,context})=>{
-  await page.setViewportSize({width:785,height:600});await page.emulateMedia({reducedMotion:'reduce'});const errors=await open(page,thirdAt(),3);
+  await page.setViewportSize({width:785,height:600});await page.emulateMedia({reducedMotion:'reduce'});const errors=await open(page,thirdAt(),4);
   const cookie=page.getByRole('button',{name:'Взять печеньку'});await expect(cookie).toBeVisible();const raw=await stored(page);
   await expect(cookie.locator('.easter-spark')).toHaveCount(1);
   const before=await cookie.locator('svg circle').count();await cookie.focus();await page.keyboard.press('Enter');
@@ -65,16 +66,16 @@ test('one cookie per chapter visit is cosmetic, survives pause and is keyboard a
   await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(cookie).toBeDisabled();expect(errors).toEqual([]);
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await page.getByRole('button',{name:'Вернуться к истории'}).click();await expect(cookie).toBeDisabled();
   await expect(cookie.locator('.easter-spark')).toHaveCount(0);
-  const reopened=await context.newPage();await reopened.setViewportSize({width:320,height:568});await open(reopened,JSON.parse(raw!),3);
+  const reopened=await context.newPage();await reopened.setViewportSize({width:320,height:568});await open(reopened,JSON.parse(raw!),4);
   const freshCookie=reopened.getByRole('button',{name:'Взять печеньку'});await expect(freshCookie).toBeEnabled();await expect(freshCookie.locator('.easter-spark')).toHaveCount(1);await freshCookie.click();await expect(freshCookie.locator('.easter-spark')).toHaveCount(0);
   const note=await reopened.getByLabel('Маленькая реакция',{exact:true}).boundingBox(),plate=await freshCookie.boundingBox();expect(note!.y+note!.height).toBeLessThanOrEqual(plate!.y);
   await reopened.screenshot({path:'outputs/EASTER_COOKIE_MOBILE.png',fullPage:true,animations:'disabled'});
 });
 
 test('two cookies remain after finishing the kitchen, while an untouched plate still has three after skipping it',async({page,context})=>{
-  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c3.tutorial'),3);
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c4.tutorial'),4);
   const cookie=page.getByRole('button',{name:'Взять печеньку'});await cookie.click();const remaining=await cookie.locator('svg circle').count();
-  for(let i=0;i<8&&!await page.locator('[data-node="c3.kitchen"]').count();i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  for(let i=0;i<8&&!await page.locator('[data-node="c4.kitchen"]').count();i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
   await expect(page.locator('.kitchen-game')).toBeVisible();await expect(page.locator('.scene-easter')).toHaveCount(0);
   for(const ingredient of ['Хлеб','Томат']){
     await page.getByRole('button',{name:ingredient,exact:true}).click();await page.getByRole('button',{name:'Передать Владу',exact:true}).click();await page.getByRole('button',{name:'Подать',exact:true}).click();
@@ -85,25 +86,25 @@ test('two cookies remain after finishing the kitchen, while an untouched plate s
     if(round<2)await page.getByRole('button',{name:'Следующий раунд',exact:true}).click();
   }
   await page.getByRole('button',{name:'Закончить игру',exact:false}).click();
-  await expect(page.locator('[data-node="c3.debrief.chaos"]')).toBeVisible();await expect(cookie).toBeDisabled();expect(await cookie.locator('svg circle').count()).toBe(remaining);
+  await expect(page.locator('[data-node="c4.debrief.chaos"]')).toBeVisible();await expect(cookie).toBeDisabled();expect(await cookie.locator('svg circle').count()).toBe(remaining);
   await expect(cookie.locator('.easter-spark')).toHaveCount(0);
   await page.screenshot({path:'outputs/COOKIE_AFTER_KITCHEN.png',fullPage:true,animations:'disabled'});
-  const clean=await context.newPage();await open(clean,thirdAt('c3.tutorial'),3);
+  const clean=await context.newPage();await open(clean,thirdAt('c4.tutorial'),4);
   const untouched=clean.getByRole('button',{name:'Взять печеньку'});const original=await untouched.locator('svg circle').count();expect(original).toBeGreaterThan(remaining);
-  for(let i=0;i<8&&!await clean.locator('[data-node="c3.kitchen"]').count();i++)await clean.getByRole('button',{name:'Дальше',exact:false}).click();
+  for(let i=0;i<8&&!await clean.locator('[data-node="c4.kitchen"]').count();i++)await clean.getByRole('button',{name:'Дальше',exact:false}).click();
   await clean.getByRole('button',{name:'Продолжить историю без кухни',exact:true}).click();await expect(untouched).toBeEnabled();expect(await untouched.locator('svg circle').count()).toBe(original);expect(errors).toEqual([]);
 });
 
 test('scene eggs leave minigames, controller props and pause controls alone',async({page,context})=>{
   const search=await open(page,firstAt('c1.search'));await expect(page.locator('.search-game')).toBeVisible();await expect(page.locator('.scene-easter')).toHaveCount(0);expect(search).toEqual([]);
-  const dead=await context.newPage();await open(dead,thirdAt('c3.pad.dead'),3);await expect(dead.locator('.controller-scene')).toBeVisible();await expect(dead.getByRole('button',{name:'Взять печеньку'})).toHaveCount(0);
+  const dead=await context.newPage();await open(dead,thirdAt('c4.pad.dead'),4);await expect(dead.locator('.controller-scene')).toBeVisible();await expect(dead.getByRole('button',{name:'Взять печеньку'})).toHaveCount(0);
   await dead.getByRole('button',{name:'Потрогать кудри Влада'}).click();await dead.getByRole('button',{name:'Открыть меню',exact:true}).click();await expect(dead.getByRole('heading',{name:'Маленькая пауза'})).toBeVisible();await expect(dead.locator('.scene-easter')).toHaveCount(0);
   await dead.getByRole('button',{name:'Вернуться к истории'}).click();await expect(dead.getByLabel('Маленькая реакция',{exact:true})).toHaveCount(0);
-  const kitchen=await context.newPage();await open(kitchen,thirdAt('c3.kitchen'),3);await expect(kitchen.locator('.kitchen-game')).toBeVisible();await expect(kitchen.locator('.scene-easter')).toHaveCount(0);
+  const kitchen=await context.newPage();await open(kitchen,thirdAt('c4.kitchen'),4);await expect(kitchen.locator('.kitchen-game')).toBeVisible();await expect(kitchen.locator('.scene-easter')).toHaveCount(0);
 });
 
 test('blanket, TV and tea are optional touch reactions before the game, TV disappears after it',async({page,context})=>{
-  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt(),4),raw=await stored(page);
   const objects=[['Приподнять край пледа','это тебе. я даже плед положил'],['Посмотреть на телевизор','он вообще без приглашения'],['Коснуться кружки','это чай. он сам']];
   await page.screenshot({path:'outputs/EASTER_HOME_PROPS_320.png',fullPage:true,animations:'disabled'});
   for(const [name,text] of objects){
@@ -116,12 +117,12 @@ test('blanket, TV and tea are optional touch reactions before the game, TV disap
     await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(button).toBeFocused();
   }
   await page.getByRole('button',{name:'Взять печеньку'}).click();await expect(page.getByRole('status')).toContainText('план был дожить до начала игры');expect(await stored(page)).toBe(raw);
-  const after=await context.newPage();await open(after,thirdAt('c3.support'),3);await expect(after.getByRole('button',{name:'Посмотреть на телевизор',exact:true})).toHaveCount(0);await expect(after.getByRole('button',{name:'Приподнять край пледа',exact:true})).toBeVisible();expect(errors).toEqual([]);
+  const after=await context.newPage();await open(after,thirdAt('c4.support'),4);await expect(after.getByRole('button',{name:'Посмотреть на телевизор',exact:true})).toHaveCount(0);await expect(after.getByRole('button',{name:'Приподнять край пледа',exact:true})).toBeVisible();expect(errors).toEqual([]);
 });
 
 test('each visible cookie accepts a real tap even underneath another scene reaction',async({context})=>{
   for(const [width,height] of [[320,568],[375,667]])for(let index=0;index<3;index++){
-    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),4),raw=await stored(page);
     await page.getByRole('button',{name:index===1?'Потрогать кудри Влада':'Посмотреть на телевизор',exact:true}).click();
     const cookie=page.getByRole('button',{name:'Взять печеньку',exact:true}),pieces=cookie.locator('svg>g').first().locator('circle');
     const point=(await pieces.nth(index).boundingBox())!,count=await pieces.count();
@@ -133,7 +134,7 @@ test('each visible cookie accepts a real tap even underneath another scene react
 
 test('plate stays bottom left and wins overlapping taps while the exposed blanket still reacts',async({context})=>{
   for(const [width,height] of [[320,568],[375,667],[870,850],[960,900]]){
-    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),3),raw=await stored(page);
+    const page=await context.newPage();await page.setViewportSize({width,height});const errors=await open(page,thirdAt(),4),raw=await stored(page);
     const cookie=page.getByRole('button',{name:'Взять печеньку',exact:true}),blanket=page.getByRole('button',{name:'Приподнять край пледа',exact:true});
     await expect(blanket).toBeVisible();const plate=(await cookie.boundingBox())!,fold=(await blanket.boundingBox())!,stage=(await page.locator('.scene-stage').boundingBox())!;
     expect(plate.x-stage.x).toBeCloseTo(stage.width*.06,0);expect(stage.y+stage.height-plate.y-plate.height).toBeCloseTo(width<=600?28:34,0);expect(plate.width).toBeLessThanOrEqual(105);
@@ -147,7 +148,7 @@ test('plate stays bottom left and wins overlapping taps while the exposed blanke
 });
 
 test('only the repaired second controller reacts, keyboard focus returns and pause disables it',async({page,context})=>{
-  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c3.pad.ready'),3),raw=await stored(page);
+  await page.setViewportSize({width:320,height:568});const errors=await open(page,thirdAt('c4.pad.ready'),4),raw=await stored(page);
   const pad=page.getByRole('button',{name:'Проверить второй геймпад',exact:true});await expect(pad).toBeVisible();const box=(await pad.boundingBox())!;
   await expect(pad.locator('.easter-spark')).toHaveCount(1);
   expect(box.width).toBeGreaterThanOrEqual(48);expect(box.height).toBeGreaterThanOrEqual(48);
@@ -156,11 +157,11 @@ test('only the repaired second controller reacts, keyboard focus returns and pau
   await page.screenshot({path:'outputs/EASTER_REPAIRED_PAD_320.png',fullPage:true,animations:'disabled'});await page.getByRole('button',{name:'Скрыть маленькую реакцию'}).click();await expect(pad).toBeFocused();
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await expect(pad).toHaveCount(0);await page.getByRole('button',{name:'Вернуться к истории'}).click();await expect(pad).toBeVisible();
   await expect(pad.locator('.easter-spark')).toHaveCount(0);
-  const broken=await context.newPage();await open(broken,thirdAt('c3.pad.dead'),3);await expect(broken.getByRole('button',{name:'Проверить второй геймпад',exact:true})).toHaveCount(0);expect(errors).toEqual([]);
+  const broken=await context.newPage();await open(broken,thirdAt('c4.pad.dead'),4);await expect(broken.getByRole('button',{name:'Проверить второй геймпад',exact:true})).toHaveCount(0);expect(errors).toEqual([]);
 });
 
 test('riverside star and fifth-chapter sign react without advancing; reduced motion leaves readable static details',async({page,context})=>{
-  await page.setViewportSize({width:320,height:568});await page.emulateMedia({reducedMotion:'reduce'});const errors=await open(page,startFour(),4),raw=await stored(page);
+  await page.setViewportSize({width:320,height:568});await page.emulateMedia({reducedMotion:'reduce'});const errors=await open(page,startFour(),3),raw=await stored(page);
   await expect(page.locator('.easter-star .easter-spark')).toHaveCount(1);
   await page.getByRole('button',{name:'Коснуться звезды над набережной',exact:true}).click();await expect(page.getByRole('status')).toContainText('успела? говорить не обязательно');expect(await stored(page)).toBe(raw);
   await expect(page.locator('.easter-star .easter-spark')).toHaveCount(0);

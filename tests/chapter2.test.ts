@@ -1,16 +1,16 @@
-import { legacyContent,prePolishSnapshot } from './legacySave';
-import { chapters as chapterManifest } from '../src/content/chapters/manifest';
-const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
-import { describe,it,expect } from 'vitest';
+import { describe,expect,it } from 'vitest';
 import { chapter2 } from '../src/content/chapters/ch02';
+import { chapters as chapterManifest } from '../src/content/chapters/manifest';
 import { step } from '../src/engine/step';
-import { reduceSave } from '../src/state/reducer';
-import { initialState } from '../src/state/initialState';
-import { parseSave } from '../src/persistence/validateSave';
-import { validateContent } from '../src/engine/validateContent';
-import { completeSave,defaultPath,commandFor } from './helpers';
 import type { Command,Run,StoryState,UmbrellaResult } from '../src/engine/types';
+import { validateContent } from '../src/engine/validateContent';
+import { validateSave as parseSave } from '../src/persistence/validateSave';
+import { initialState } from '../src/state/initialState';
+import { reduceSave } from '../src/state/reducer';
 import type { SaveV1 } from '../src/state/types';
+import { completeSave,defaultPath } from './helpers';
+import { legacyContent } from './legacySave';
+const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
 type Route2={rain:NonNullable<StoryState['rainRoute']>;cat:NonNullable<StoryState['catApproach']>;umbrella:UmbrellaResult['outcome'];mood:NonNullable<StoryState['eveningMood']>};
 const default2:Route2={rain:'shelter',cat:'wait',umbrella:'patched',mood:'quiet'};
 function command2(run:Run,path:Route2):Command{
@@ -62,14 +62,6 @@ describe('chapter two',()=>{
   it('rewriting chapter two retains the first; rewriting one removes subsequent canonical results',()=>{
     const main=finish2(completeSave());const second=reduceSave(main,{type:'rewrite',chapter:2});expect(second.campaign.records[1]).toEqual(main.campaign.records[1]);expect(second.campaign.completed).toEqual([1]);expect(second.campaign.active?.story).toEqual(main.campaign.records[1]?.story);expect(second.campaign.records[2]).toBeUndefined();expect(parseSave(JSON.stringify(second))).toEqual(second);
     const first=reduceSave(main,{type:'rewrite',chapter:1});expect(first.campaign.completed).toEqual([]);expect(first.campaign.records).toEqual({});expect(first.collection).toEqual(main.collection);expect(first.unlocked).toContain(2);expect(first.campaign.startStates[2]).toBeUndefined();
-  });
-  it('migrates every first chapter cursor and its completed/trial state without changing progress',()=>{
-    let s=reduceSave(initialState(),{type:'start'});
-    for(let i=0;i<180;i++){
-      const legacy=legacyContent(s,1);expect(parseSave(JSON.stringify(legacy))).toEqual(prePolishSnapshot(s));
-      if(!s.campaign.active)break;s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active)});
-    }
-    s=reduceSave(s,{type:'trial'});expect(parseSave(JSON.stringify(legacyContent(s,1)))).toEqual(prePolishSnapshot(s));
   });
   it('rejects contradictory inherited decisions and forged completed prefixes',()=>{
     const main=finish2(completeSave());const wrong=structuredClone(main);wrong.campaign.records[2]!.story.plan='coop';expect(()=>parseSave(JSON.stringify(wrong))).toThrow();const prefix=structuredClone(main);prefix.campaign.completed=[2];expect(()=>parseSave(JSON.stringify(prefix))).toThrow();

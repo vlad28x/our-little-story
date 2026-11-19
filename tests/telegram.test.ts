@@ -1,16 +1,17 @@
-import { describe,it,expect,vi } from 'vitest';
-import type { CloudAPI } from '../src/telegram/bridge';
-import { TelegramCloud,CloudSession,CloudConflict,cloudRaw,splitCloudText,cloudErrorText } from '../src/telegram/cloud';
+import { CONTENT_VERSION } from '../src/content/version';
+import { describe,expect,it,vi } from 'vitest';
+import { preserveLocalPrivateData } from '../src/persistence/notes';
+import { validateSave as parseSave } from '../src/persistence/validateSave';
 import { initialState } from '../src/state/initialState';
 import { reduceSave } from '../src/state/reducer';
-import { finishFive } from './chapter5Helpers';
+import type { CloudAPI } from '../src/telegram/bridge';
+import { CloudConflict,cloudErrorText,cloudRaw,CloudSession,splitCloudText,TelegramCloud } from '../src/telegram/cloud';
 import { defaultFourth,finishFour } from './chapter4Helpers';
-import { runTo } from './helpers';
-import { createHash } from 'node:crypto';
-import { withLegacyJournal,legacyCloudData } from './legacySave';
+import { finishFive } from './chapter5Helpers';
 import { finishArc } from './finalArcHelpers';
-import { preserveLocalPrivateData } from '../src/persistence/notes';
-import { parseSave } from '../src/persistence/validateSave';
+import { runTo } from './helpers';
+import {legacyCloudData} from './legacySave';
+import type {SaveV1} from '../src/state/types';
 class FakeCloud implements CloudAPI {
   data=new Map<string,string>();failKey='';failReads=false;setCalls:string[]=[];
   getItem(key:string,done:(error:string|null,value:string)=>void){done(this.failReads?'offline':null,this.data.get(key)??'');}
@@ -19,6 +20,14 @@ class FakeCloud implements CloudAPI {
 }
 const HEAD='five_meetings_v1_head';
 describe('Telegram cloud snapshots',()=>{
+  it('resets old cloud progress once while preserving settings and code rights',async()=>{
+    const old=finishArc(10);old.settings.sound=true;old.unlocked=[1,2,3,4,5,6,7,8,9,10];
+    const api=new FakeCloud();for(const [key,value]of Object.entries(legacyCloudData({...old,contentVersion:CONTENT_VERSION-1} as unknown as SaveV1)))api.data.set(key,value);
+    const cloud=new TelegramCloud(api),snapshot=await cloud.read(),save=snapshot.save!;
+    expect(save.contentVersion).toBe(CONTENT_VERSION);expect(save.campaign.completed).toEqual([]);expect(save.campaign.active).toBeNull();expect(save.settings).toEqual(old.settings);expect(save.unlocked).toEqual(old.unlocked);expect(snapshot.needsRewrite).toBe(true);
+    await cloud.write(save,snapshot.head);const next=await new TelegramCloud(api).read();expect(next.save).toEqual(save);expect(next.needsRewrite).toBe(false);
+    const started=reduceSave(save,{type:'start'});await cloud.write(started,next.head);expect((await new TelegramCloud(api).read()).save).toEqual(started);expect(started.campaign.active?.nodeId).toBe('c1.prologue');
+  });
   it.each(['accept','her','none'] as const)('preserves goodbye4=%s in JSON and a fresh Telegram client',async goodbye=>{
     const save=finishFive(finishFour(undefined,{...defaultFourth,goodbye}));
     const imported=parseSave(JSON.stringify(save));expect(imported).toEqual(save);
@@ -41,28 +50,11 @@ describe('Telegram cloud snapshots',()=>{
     const text='я'.repeat(3499)+'💗'+'a'.repeat(3498)+'🙂'+'\\"\n\u0000\ud800'.repeat(400);const chunks=splitCloudText(text);
     expect(chunks.join('')).toBe(text);for(const chunk of chunks){expect(Buffer.byteLength(JSON.stringify(chunk),'utf8')).toBeLessThanOrEqual(3000);expect(chunk.endsWith('\ud83d')).toBe(false);}
   });
-  it('reproduces DATA_TOO_LONG with the old Cyrillic chunk and saves the same active chapter with byte-sized chunks',async()=>{
+  it('bounds Cyrillic storage requests and saves canonical snapshots with byte-sized chunks',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'}),save={...base,campaign:{...base.campaign,active:runTo('c1.plan')}};
-    const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw.length).toBeGreaterThan(3500);
+    const raw='я'.repeat(3500);
     await new Promise<void>(resolve=>api.setItem('old_chunk',raw.slice(0,3500),error=>{expect(error).toBe('DATA_TOO_LONG');resolve();}));
-    await cloud.write(legacy,'');expect((await cloud.read()).save).toEqual(save);expect(cloudRaw(legacy)).not.toContain('journal');
-  });
-  it('reads legacy 3500-unit banks, preserves them on interrupted migration and commits a new bank without losing progress',async()=>{
-    const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'}),save={...base,campaign:{...base.campaign,active:runTo('c1.plan')}};
-    for(const [key,value] of Object.entries(legacyCloudData(save)))api.data.set(key,value);
-    const head=api.data.get(HEAD)!,part=JSON.parse(head).current;
-    expect(await cloud.read()).toMatchObject({save,needsRewrite:true});const original=new Map(api.data),next={...save,revision:save.revision+1};
-    api.failKey=HEAD;await expect(cloud.write(next,head)).rejects.toThrow();expect(api.data.get(HEAD)).toBe(head);expect((await cloud.read()).save).toEqual(save);for(const [key,value] of original)expect(api.data.get(key)).toBe(value);
-    api.failKey='';await cloud.write(next,head);expect((await cloud.read()).save).toEqual(next);expect(JSON.parse(api.data.get(HEAD)!).previous).toEqual(part);
-  });
-  it('reads a large legacy journal in bounded batches, then writes only the compact progress',async()=>{
-    const api=new FakeCloud(),cloud=new TelegramCloud(api),base=reduceSave(initialState(),{type:'start'});
-    const journal=Array.from({length:100},(_,i)=>({key:`large-import:${i}`,nodeId:'c1.entry' as const,speaker:'narrator' as const,text:'"\\'.repeat(500)}));
-    const save={...base,campaign:{...base.campaign,active:{...base.campaign.active!,journal}}};
-    const raw=JSON.stringify(save),chunks=splitCloudText(raw);chunks.forEach((value,i)=>api.data.set(`five_meetings_v1_a_${i}`,value));
-    const head=JSON.stringify({version:1,current:{slot:'a',count:chunks.length,length:raw.length,hash:createHash('sha256').update(raw).digest('hex')},previous:null});api.data.set(HEAD,head);
-    expect(chunks.length).toBeGreaterThan(32);expect(await cloud.read()).toMatchObject({save:base,needsRewrite:true});
-    const next={...base,revision:base.revision+1};await cloud.write(next,head);expect(await cloud.read()).toMatchObject({save:next,needsRewrite:false});expect(api.data.size).toBeLessThanOrEqual(353);
+    await cloud.write(save,'');expect((await cloud.read()).save).toEqual(save);expect(cloudRaw(save)).not.toContain('journal');
   });
   it('round trips the entire five-chapter story and real-life preference in legal chunks',async()=>{
     const api=new FakeCloud(),cloud=new TelegramCloud(api),save=reduceSave(finishFive(),{type:'continuation',value:'game'});

@@ -1,10 +1,10 @@
-import {test,expect,type Page} from '@playwright/test';
-import {openOffline} from './offlineApp';
-import {photoAt,finishPhotoSix,startPhotoSix} from './photo6Helpers';
-import {galleryAt,finishGallery,startGallery,oldPhoto4} from './gallery7Helpers';
-import {parseSave} from '../src/persistence/validateSave';
-import {TelegramCloud} from '../src/telegram/cloud';
-import {initialState} from '../src/state/initialState';
+import { expect,test,type Page } from '@playwright/test';
+import { parseSave } from '../src/persistence/validateSave';
+import { initialState } from '../src/state/initialState';
+import { TelegramCloud } from '../src/telegram/cloud';
+import { finishGallery,galleryAt } from './gallery7Helpers';
+import { openOffline } from './offlineApp';
+import { finishPhotoSix,photoAt,startPhotoSix } from './photo6Helpers';
 const key='five-meetings:/:save';
 const next=(page:Page)=>page.getByRole('button',{name:'Дальше',exact:false}).click();
 async function until(page:Page,id:string){for(let i=0;i<160&&await page.locator('[data-node]').getAttribute('data-node')!==id;i++)await next(page);await expect(page.locator(`[data-node="${id}"]`)).toBeVisible();}
@@ -25,9 +25,9 @@ test('six gallery combinations cover both tours and works, every gift/frame/fare
  for(let i=0;i<6;i++){
   const route=i%2?'apart':'together',work=Math.floor(i/2)%2?'chip':'blue',gift=(['chip','blue','none'] as const)[i%3],frame=(['vlad','her','both'] as const)[i%3],farewell=i%2?'words':'cheek';
   await page.setViewportSize({width:[320,390,960][i%3],height:i%3===2?900:844});await openOffline(page,galleryAt('c7.gallery.route'),'/play/7');await page.getByRole('button',{name:route==='apart'?'Разойдёмся, а потом каждый проведёт другого к своей находке':'Пройдём всю серию вдвоём, слева направо',exact:false}).click();await openOffline(page,await read(page),'/play/7');await until(page,'c7.gallery.pick');
-  await page.getByRole('button',{name:work==='blue'?'Выбираю «Просвет». Покажу, что видно в синем':'Мне тоже интереснее «Скол». Покажу свою деталь',exact:false}).click();await openOffline(page,await read(page),'/play/7');await expect(page.locator('.gallery-art-'+work+' img')).toBeVisible();await expect(page.locator('.photo-camera')).toHaveCount(0);if(i<2)await page.screenshot({path:`work/GALLERY7_${work}_${i===0?'320':'390'}.png`,animations:'disabled'});
-  await until(page,'c7.gallery.card');await expect(page.locator('.gallery-art-cards img')).toHaveCount(2);await page.getByRole('button',{name:gift==='chip'?'Подарю Владу «Скол»':gift==='blue'?'Подарю Владу «Просвет»':'Оставлю открытки на стойке',exact:false}).click();await until(page,'c7.gallery.frame');await expect(page.locator('.photo-camera')).toContainText('21');
-  await page.getByRole('button',{name:frame==='vlad'?'Я сниму тебя у афиши':frame==='her'?'Теперь ты меня. Силуэт на пороге':'Давай сниму нас обоих в стекле',exact:false}).click();await until(page,'c7.gallery.film');await expect(page.locator('.photo-camera')).toContainText('20');await openOffline(page,await read(page),'/play/7');for(let j=0;j<3;j++)await next(page);expect((await read(page)).campaign.active?.story.c7Film).toBe('six');await until(page,'c7.gallery.farewell');await page.getByRole('button',{name:farewell==='cheek'?'Хочу поцеловать его в щёку':'Попрощаюсь словами',exact:false}).click();await finish(page);
+  await page.getByRole('button',{name:work==='blue'?"Мне больше нравится «Просвет":"Мне тоже нравится «Скол",exact:false}).click();await openOffline(page,await read(page),'/play/7');await expect(page.locator('.gallery-art-'+work+' img')).toBeVisible();await expect(page.locator('.photo-camera')).toHaveCount(0);if(i<2)await page.screenshot({path:`work/GALLERY7_${work}_${i===0?'320':'390'}.png`,animations:'disabled'});
+  await until(page,'c7.gallery.card');await expect(page.locator('.gallery-art-cards img')).toHaveCount(2);await page.getByRole('button',{name:gift==='chip'?"Подарю Владу «Скол":gift==='blue'?"Подарю Владу «Просвет":'Оставлю открытки на стойке',exact:false}).click();await until(page,'c7.gallery.frame');await expect(page.locator('.photo-camera')).toContainText('21');
+  await page.getByRole('button',{name:frame==='vlad'?'Я сниму тебя у афиши':frame==='her'?'Теперь ты меня. Силуэт на пороге':'Давай сниму нас обоих в стекле',exact:false}).click();await until(page,'c7.gallery.film');await expect(page.locator('.photo-camera')).toContainText('20');await openOffline(page,await read(page),'/play/7');for(let j=0;j<3;j++)await next(page);expect((await read(page)).campaign.active?.story.c7Film).toBe('six');await until(page,'c7.gallery.farewell');await page.getByRole('button',{name:farewell==='cheek'?"Задержать его руку и шагнуть к нему совсем близко":"Улыбнуться ему и не спеша попрощаться",exact:false}).click();await finish(page);
   const done=await read(page);expect(done.campaign.records[7]?.story).toMatchObject({c7GalleryRoute:route,c7GalleryWork:work,c7GalleryGift:gift,c7GalleryFrame:frame,c7GalleryFarewell:farewell,c7Film:'six',c7CameraHolder:'her'});await openOffline(page,done,'/result/7');await expect(page.getByRole('heading',{name:'На шаг левее',exact:true})).toBeVisible();await expect(page.getByText('Следующая встреча за ужином ещё готовится.',{exact:true})).toHaveCount(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);if(i===0)await page.screenshot({path:'work/GALLERY7_RESULT_320.png',animations:'disabled'});await page.getByRole('button',{name:'К встречам',exact:true}).click();await expect(page.getByRole('button',{name:'После титров',exact:false})).toHaveAttribute('aria-pressed','true');
  }
 });
@@ -35,9 +35,6 @@ test('no-touch canonical walk opens seven with a code; trial gift and kiss keep 
  const six=finishPhotoSix(undefined,{gesture:'none'});await openOffline(page,six,'/chapters');await page.getByRole('button',{name:'После титров',exact:false}).click();await page.getByLabel('Код',{exact:true}).fill('STROKI-3N7Q');await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await page.getByRole('button',{name:'Начать встречу 7',exact:false}).click();await expect(page.locator('[data-node="c7.gallery.entry"]')).toBeVisible();await expect(page.locator('.photo-camera')).toHaveCount(0);
  const seven=finishGallery(six,{gift:'blue',farewell:'words'});await openOffline(page,seven,'/result/7');await page.getByRole('button',{name:'Посмотреть другой вариант',exact:true}).click();expect((await read(page)).campaign).toEqual(seven.campaign);await expect(page.locator('.trial-label')).toBeVisible();
  for(const id of [9,10]){await openOffline(page,seven,`/play/${id}`);await expect(page.locator('[data-node]')).toHaveCount(0);}
-});
-test('old completed walk enters seven; old friendship card survives a deliberate fresh walk',async({page})=>{
- const old=parseSave(JSON.stringify(oldPhoto4('friends')));await openOffline(page,old,'/result/6');await expect(page.getByRole('heading',{name:'До встречи',exact:true})).toBeVisible();await page.getByRole('button',{name:'Начать новую прогулку',exact:true}).click();await expect(page.locator('[data-node="c6.photo.entry"]')).toBeVisible();const s=await read(page);expect(s.collection.cards.some(c=>c.id==='c6.photo.friends')).toBe(true);expect(s.campaign.records[5]).toEqual(old.campaign.records[5]);await openOffline(page,startGallery(parseSave(JSON.stringify(oldPhoto4()))),'/play/7');await expect(page.locator('[data-node="c7.gallery.entry"]')).toBeVisible();
 });
 test('gallery saves restore on another synthetic Telegram client including actual gift and 20 remaining',async({context})=>{
  const save=galleryAt('c7.gallery.film',{gift:'blue',frame:'her'}),cloudKey='five-meetings:/:telegram:our_little_story_game_bot:42:save',data:Record<string,string>={};

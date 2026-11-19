@@ -1,20 +1,15 @@
-import {it,expect} from 'vitest';
-import {readFileSync} from 'node:fs';
-import {createHash} from 'node:crypto';
-import {chapter5} from '../src/content/chapters/ch05';
-import {getChapter} from '../src/content/chapters';
-import {validateContent} from '../src/engine/validateContent';
-import {parseSave} from '../src/persistence/validateSave';
-import {cloudRaw} from '../src/telegram/cloud';
-import {reduceSave} from '../src/state/reducer';
-import {cardFromStory,cardMeta} from '../src/content/cards';
-import {finishFour,defaultFourth} from './chapter4Helpers';
-import {startFive,finishFive,command5} from './chapter5Helpers';
-import {finishFive as edition2Five} from './edition2FifthHelpers';
-import {finishPhotoSix} from './photo6Helpers';
-import {completeTwo,finishThree,defaultThird} from './chapter3Helpers';
-import type {SaveV1} from '../src/state/types';
-import {resolveScene} from '../src/engine/step';
+import { expect,it } from 'vitest';
+import { chapter5 } from '../src/content/chapters/ch05';
+import { resolveScene } from '../src/engine/step';
+import { validateContent } from '../src/engine/validateContent';
+import { validateSave as parseSave } from '../src/persistence/validateSave';
+import { reduceSave } from '../src/state/reducer';
+import type { SaveV1 } from '../src/state/types';
+import { cloudRaw } from '../src/telegram/cloud';
+import { completeTwo,defaultThird,finishThree } from './chapter3Helpers';
+import { defaultFourth,finishFour } from './chapter4Helpers';
+import { command5,finishFive,startFive } from './chapter5Helpers';
+import { finishPhotoSix } from './photo6Helpers';
 
 const initial=finishFour();
 it('contains exactly two scene menus and one common ending, with no status or real invitation inside the graph',()=>{
@@ -30,7 +25,7 @@ it('contains exactly two scene menus and one common ending, with no status or re
    const run={...startFive(initial).campaign.active!,nodeId:exit.id,lineIndex};
    expect(resolveScene(exit.scene,run.story,run).background).toBe(lineIndex<2?'bg.cafe.sunset':'bg.cafe.exterior');
   }
-  expect(validateContent({...chapter5,nodes:{...chapter5.nodes,[exit.id]:{...exit,scene:{...exit.scene,variants:[{when:[],fromLine:6,background:'bg.cafe.exterior',character:'vlad.elegant.smile'}]}}}})).toContain('Invalid scene line c5.exit');
+  expect(validateContent({...chapter5,nodes:{...chapter5.nodes,[exit.id]:{...exit,scene:{...exit.scene,variants:[{when:[],fromLine:60,background:'bg.cafe.exterior',character:'vlad.elegant.smile'}]}}}})).toContain('Invalid scene line c5.exit');
  }
 });
 it('all nine taste/recommendation combinations retain every cursor, comparison and exact callback through JSON/cloud',()=>{
@@ -66,30 +61,6 @@ it('rejects early answers, impossible enums, mismatched reasons and callbacks, f
  check(at,b=>{b.campaign.active!.story.c5Edition=2;});
  check(at,b=>{b.campaign.active!.nodeId='c5.drink.echo.vanilla';});
 });
-it('reads and continues all fourteen frozen edition2 snapshots without assigning a taste or changing their postcard',()=>{
- const states=JSON.parse(readFileSync('tests/fixtures/season1-v13/states.json','utf8')) as SaveV1[];
- expect(states).toHaveLength(14);
- for(const old of states){
-  let s=parseSave(JSON.stringify(old));expect(s).toEqual({...old,contentVersion:18});
-  const trial=!!s.trial;
-  while(trial?s.trial:s.campaign.active){const r=(trial?s.trial?.run:s.campaign.active)!;expect(getChapter(5,r.story)?.firstSeasonEdition).toBe(2);s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command5(r)});expect(parseSave(JSON.stringify(s))).toEqual(s);}
-  expect(s.campaign.records[5]?.story.c5FirstTaste).toBeUndefined();expect(s.campaign.records[5]?.story.c5Recommendation).toBeUndefined();
-  const record=s.campaign.records[5];if(record){const card=cardFromStory(record.story,5,record.results);expect(card.c5Edition).toBeUndefined();expect(cardMeta(card).quote).toBe('мой любимый незапланированный перерыв.');}
- }
- const golden=JSON.parse(readFileSync('tests/fixtures/season1-v13/hash.json','utf8')) as {file:string;hash:string};
- expect(createHash('sha256').update(readFileSync(golden.file)).digest('hex')).toBe(golden.hash);
-},30000);
-it('new trials and explicit replay keep the old canonical taste/history and real answer independent',()=>{
- const old=reduceSave(edition2Five(),{type:'continuation',value:'movie'});
- const first=finishFive(initial,{memory:'skipped',ending:'friendly',firstTaste:'sweet',recommendation:'fresh'});
- const main=reduceSave(first,{type:'continuation',value:'walk'});
- for(const base of [old,main]){
-  const copy=structuredClone(base.campaign),trial=finishFive(base,{memory:'viewed',ending:'friendly',firstTaste:'vanilla',recommendation:'both'},true,true);
-  expect(trial.campaign).toEqual(copy);expect(trial.continuation).toBe(base.continuation);expect(parseSave(cloudRaw(trial))).toEqual(trial);
-  const canonicalCard=cardFromStory(trial.campaign.records[5]!.story,5,trial.campaign.records[5]!.results);
-  expect(cardMeta(canonicalCard).quote).toBe(base===old?'мой любимый незапланированный перерыв.':'чай с характером. компания тоже.');
- }
-});
 it('uses the saved team, work style, sky and goodbye independently from the drink recommendation',()=>{
  const team=['dumpling','calm','accident'] as const,styles=['planner','improv'] as const;
  for(const kitchenStyle of styles)for(const teamName of team)for(const shape of ['cat','controllers','teapot'] as const){
@@ -102,10 +73,12 @@ it('uses the saved team, work style, sky and goodbye independently from the drin
  }
  const text=(id:string)=>{const n=chapter5.nodes[id as keyof typeof chapter5.nodes];return n.kind==='dialogue'?n.lines.map(l=>l.text).join(' '):'';};
  expect(text('c5.drink.team.dumpling')).toContain('Пельмень и партнёры');expect(text('c5.drink.team.calm')).toContain('Два спокойных человека');expect(text('c5.drink.team.accident')).toContain('Отдел случайных побед');
- for(const shape of ['cat','controllers','teapot'] as const)expect(text(`c5.drink.sky.${shape}`)).toBe('Ты кладёшь подписанную рекомендацию рядом с чашками.');
- const tasting=Object.values(chapter5.nodes).filter(n=>n.id.startsWith('c5.drink.')&&n.kind==='dialogue').flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]).join(' ');
+ expect(text('c5.drink.sky.cat')).toContain('силуэт кота из вашего созвездия');
+ expect(text('c5.drink.sky.controllers')).toContain('геймпад с вашего неба на набережной');
+ expect(text('c5.drink.sky.teapot')).toContain('чайник из вашего созвездия');
+ const tasting=Object.values(chapter5.nodes).filter(n=>n.id.startsWith('c5.drink.')&&!n.id.startsWith('c5.drink.sky.')&&n.kind==='dialogue').flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]).join(' ');
  expect(tasting).not.toMatch(/созвезд|вчерашн.*неб|маленький геймпад|кота с узнаваемыми ушами/);
- expect(text('c5.letter')).toContain('Внутри ваш рисунок созвездия и два жетона с желаниями.');
+ expect(text('c5.letter')).toContain('Внутри рядом с рисунком созвездия лежат два гладких деревянных жетона.');
  for(const goodbye of ['her','accept','none'] as const){const prior=finishFour(undefined,{...defaultFourth,goodbye}),s=finishFive(prior);expect(s.campaign.records[5]?.story.c4Goodbye).toBe(goodbye);}
 });
 it('new drink decisions pass unchanged into the photo-six prefix',()=>{

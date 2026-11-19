@@ -3,6 +3,9 @@ type Asset={file:string;alt:string;status:'generated'|'original-vector'};
 // Register each shipped asset before the manifest is exported. Scene rendering
 // must never depend on later mutations that can be stale across a dev update.
 export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
+  'bg.travellers10.morning':{file:'backgrounds/travellers10-morning-tea.webp',alt:'Короткое утро перед чаем, два стакана на пустом столе',status:'generated'},
+  'bg.travellers10.home':{file:'backgrounds/travellers10-home-night.webp',alt:'Ночь дома у Влада: два стакана воды',status:'generated'},
+  'bg.travellers10.cafe':{file:'backgrounds/travellers10-cafe-night.webp',alt:'Вечерний стол у окна Паузы',status:'generated'},
   'bg.courtyard9.open':{file:'backgrounds/courtyard9-open-v2.webp',alt:'',status:'generated'},
   'bg.courtyard9.canopy':{file:'backgrounds/courtyard9-canopy.webp',alt:'',status:'generated'},
   'bg.courtyard9.arch':{file:'backgrounds/courtyard9-arch.webp',alt:'',status:'generated'},
@@ -16,10 +19,10 @@ export const assetManifest:Readonly<Record<string,Asset>> = Object.freeze({
   'bg.s2.kitchen.evening':{file:'backgrounds/s2-kitchen-evening.webp',alt:'',status:'generated'},
   'bg.s2.cinema.courtyard':{file:'backgrounds/s2-cinema-courtyard.webp',alt:'',status:'generated'},
   'bg.s2.cafe.terrace':{file:'backgrounds/s2-cafe-terrace.webp',alt:'',status:'generated'},
-  'bg.gallery7.hall':{file:'backgrounds/gallery7-hall.webp',alt:'',status:'generated'},
+  'bg.gallery7.hall':{file:'backgrounds/gallery7-hall-light-notch.webp',alt:'',status:'generated'},
   'bg.gallery7.outside':{file:'backgrounds/gallery7-outside.webp',alt:'',status:'generated'},
   'gallery7.row':{file:'gallery7/row.webp',alt:'Ряд',status:'generated'},
-  'gallery7.chip':{file:'gallery7/chip.webp',alt:'Скол',status:'generated'},
+  'gallery7.chip':{file:'gallery7/chip-light-notch.webp',alt:'Скол',status:'generated'},
   'gallery7.blue':{file:'gallery7/blue.webp',alt:'Просвет',status:'generated'},
   'bg.photo6.sun':{file:'backgrounds/photo6-lower-sun.webp',alt:'',status:'generated'},
   'bg.photo6.shade':{file:'backgrounds/photo6-lower-shade.webp',alt:'',status:'generated'},

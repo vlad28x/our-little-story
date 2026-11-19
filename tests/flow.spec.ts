@@ -11,26 +11,26 @@ test('the short prologue shows only the cafe, survives reload and leads into the
   await expect(page.locator('.scene-background')).toHaveAttribute('src',/cafe-approach-day\.webp$/);
   await expect(page.locator('.scene-stage')).toHaveAttribute('aria-label','У «Паузы» · перед встречей');
   await expect(page.locator('.scene-stage .character,.scene-stage .scene-cat,.scene-stage .easter-hair,.fallen-tokens')).toHaveCount(0);
-  await expect(page.getByText('Дела на сегодня закончены.',{exact:false})).toBeVisible();
+  await expect(page.getByText('Рабочий день наконец закончился.',{exact:false})).toBeVisible();
   await expect.poll(()=>page.locator('.scene-background').evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:'outputs/CHAPTER_01_PROLOGUE_320.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'work/polish23/prologue-320.png',fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:'Дальше',exact:false}).click();
   await page.reload();
-  await expect(page.getByText('За стеклом горит тёплая лампа,',{exact:false})).toBeVisible();
+  await expect(page.getByText('На вывеске — «Пауза».',{exact:false})).toBeVisible();
   await page.setViewportSize({width:960,height:900});
-  await page.screenshot({path:'outputs/CHAPTER_01_PROLOGUE_960.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'work/polish23/prologue-960.png',fullPage:true,animations:'disabled'});
   for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
   await expect(page.locator('[data-node="c1.before"]')).toBeVisible();
   await expect(page.locator('.scene-background')).toHaveAttribute('src',/cafe-entry\.webp$/);
   await expect(page.locator('.scene-stage .character')).toBeVisible();
   await page.reload();
-  await expect(page.getByText('А внутри кафе Влад допивает кофе.',{exact:false})).toBeVisible();
-  await page.screenshot({path:'outputs/CHAPTER_01_VLAD_BEFORE_960.png',fullPage:true,animations:'disabled'});
+  await expect(page.getByText('По ту сторону стекла Влад допивает остывший кофе.',{exact:false})).toBeVisible();
+  await page.screenshot({path:'work/polish23/vlad-before-960.png',fullPage:true,animations:'disabled'});
   await page.setViewportSize({width:320,height:568});
   for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:'outputs/CHAPTER_01_VLAD_BEFORE_320.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'work/polish23/vlad-before-320.png',fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:'Дальше',exact:false}).click();
   await expect(page.locator('[data-node="c1.entry"]')).toBeVisible();
   await expect(page.locator('.scene-stage .character')).toBeVisible();
@@ -38,7 +38,7 @@ test('the short prologue shows only the cafe, survives reload and leads into the
 });
 async function advanceUntil(page:Page,target:string){for(let i=0;i<110;i++){if(await page.locator(`[data-node="${target}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error(`Did not reach ${target}`);}
 async function start(page:Page){await page.goto('./');await page.getByRole('button',{name:'К встречам',exact:true}).click();await page.locator('.chapter-list li').first().getByRole('button',{name:'Начать встречу',exact:false}).click();await advanceUntil(page,'c1.approach');await page.getByRole('button',{name:'Давай сначала освободим проход'}).click();await advanceUntil(page,'c1.search');}
-async function finish(page:Page,ending:'tea'|'banter'|'coop'){await advanceUntil(page,'c1.pace');await page.getByRole('button',{name:'Есть пять минут. Только давай спокойно'}).click();await advanceUntil(page,'c1.detail');await page.getByRole('button',{name:'На минуту отвлечься на окно'}).click();await advanceUntil(page,'c1.plan');await page.getByRole('button',{name:ending==='tea'?'Давай всё-таки возьмём чай':ending==='banter'?'У меня ещё пять минут на твою авторскую методику':'В следующий раз покажешь эту игру?'}).click();for(let i=0;i<8;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.postcard')).toBeVisible();}
+async function finish(page:Page,ending:'tea'|'banter'|'coop'){await advanceUntil(page,'c1.pace');await page.getByRole('button',{name:'Есть пять минут. Только давай спокойно'}).click();await advanceUntil(page,'c1.detail');await page.getByRole('button',{name:'На минуту отвлечься на окно'}).click();await advanceUntil(page,'c1.plan');await page.getByRole('button',{name:ending==='tea'?'Давай всё-таки возьмём чай':ending==='banter'?'У меня ещё пять минут на твою авторскую методику':'В следующий раз покажешь эту игру?'}).click();for(let i=0;i<30&&await page.locator('[data-node]').count();i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();await expect(page.locator('.postcard')).toBeVisible();}
 test('complete chapter, secret, reload, result navigation, trial, export and restore',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
   await start(page);await page.getByRole('button',{name:'Осмотреть: Кот',exact:true}).click();await page.waitForTimeout(280);await page.getByRole('button',{name:'Собрать вместе с Владом'}).click();await finish(page,'tea');

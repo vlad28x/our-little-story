@@ -51,7 +51,7 @@ function SecretConversation({onClose}:{onClose:()=>void}){
           <p id="secret-code-message" className="small" role="status">{error||'Введи код шестой встречи.'}</p>
           <button className="primary" disabled={!code.trim()}>Проверить код</button>
         </form>:<div className="stack">
-          <p className="small" role="status">Шестая встреча «Ещё пять минут» открыта.{!ready?' Сначала заверши текущую встречу или закрой пробный вариант.':''}</p>
+          <p className="small" role="status">Шестая встреча «Пока светло» открыта.{!ready?' Сначала заверши текущую встречу или закрой пробный вариант.':''}</p>
           {ready&&<button className="primary" onClick={continueStory}>{completed?'Мой финал шестой встречи':active?'Продолжить шестую встречу':'Начать шестую встречу'} →</button>}
         </div>}
         <div className="stack"><button onClick={()=>{onClose();go('/chapters');}}>К карте встреч</button><button className="text-button" onClick={onClose}>Пока оставим интригу</button></div>

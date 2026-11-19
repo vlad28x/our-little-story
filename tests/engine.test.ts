@@ -1,7 +1,7 @@
 import { describe,it,expect } from 'vitest';
 import { step } from '../src/engine/step';
 import { reduceSave } from '../src/state/reducer';
-import { parseSave } from '../src/persistence/validateSave';
+import { validateSave as parseSave } from '../src/persistence/validateSave';
 import { chapter,completeSave,defaultPath,runTo,type Path } from './helpers';
 describe('chapter one story engine',()=>{
   it('all 405 choice/result combinations end without dead ends and validate',()=>{

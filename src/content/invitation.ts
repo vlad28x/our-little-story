@@ -1,27 +1,22 @@
-import type { StoryState } from '../engine/types';
 import type { SaveV1 } from '../state/types';
-export const invitationIntro=['слушай, а помнишь тот игровой вечер?','я тут снова два геймпада подготовил','и даже проверил оба на этот раз'];
-export const invitationEcho:Record<NonNullable<StoryState['controllerReaction']>,string>={tease:'полторы штуки больше не выдаю за комплект',help:'запасные батарейки тоже рядом. спасибо за прошлый раз',absurd:'скамейка запасных сегодня пустует'};
-export const invitationText='можем устроить игровой вечер у меня. или киновечер — с фильмом, пледом и чем-нибудь вкусным. если хочется выбраться из дома, давай в кафе или просто погуляем';
+export const invitationTitle='Может, как-нибудь увидимся?';
+export const invitationText=[
+  'можно заглянуть в кафе или выбраться на прогулку.',
+  'а если захочется спокойного вечера — поиграть во что-нибудь или посмотреть фильм вместе.',
+];
 export type MeetingChoice='game'|'movie'|'cafe'|'walk'|'decline';
-export const invitationBridge='а теперь обращаюсь уже к тебе, по эту сторону экрана.';
-export function invitationConversation(story:StoryState):string[][]{return [
-  [invitationBridge,'хочу пригласить тебя на настоящую встречу. что тебе было бы по душе?'],
-  [...invitationIntro,...(story.controllerReaction?[invitationEcho[story.controllerReaction]]:[])],
-  [invitationText,'выбирай, что тебе ближе. если пока не хочется встречаться — можно воздержаться, без объяснений.'],
-];}
 export const invitationReplies:Record<MeetingChoice,{heroine:string;vlad:string}>={
   game:{heroine:'Давай устроим игровой вечер.',vlad:'такс, тогда выбираем игру на двоих. вкусняшки с меня, удобный день подберём вместе.'},
   movie:{heroine:'Хочу киновечер.',vlad:'договорились. фильм выберем вместе. если половину вечера будем его выбирать — тоже неплохой план.'},
-  cafe:{heroine:'Давай встретимся в кафе.',vlad:'давай. выберем уютное место и время, когда обоим удобно. коробку с жетонами могу оставить дома.'},
+  cafe:{heroine:'Давай встретимся в кафе.',vlad:'давай. выберем уютное место и время, когда обоим удобно.'},
   walk:{heroine:'Я бы просто погуляла с тобой.',vlad:'мне нравится. маршрут выберем вместе, а дождь в программу включать не будем.'},
   decline:{heroine:'Пока воздержусь от встречи.',vlad:'хорошо, не торопимся. спасибо, что прошла эту историю.'},
 };
 export const continuationOptions:{value:MeetingChoice;label:string}[]=[
-  {value:'game',label:'Игровой вечер'},
-  {value:'movie',label:'Киновечер'},
   {value:'cafe',label:'Встретиться в кафе'},
   {value:'walk',label:'Погулять вместе'},
+  {value:'game',label:'Игровой вечер'},
+  {value:'movie',label:'Киновечер'},
   {value:'decline',label:'Пока воздержусь'},
 ];
 export function continuationDraft(value:SaveV1['continuation']){

@@ -5,7 +5,6 @@ import { reduceSave } from '../src/state/reducer';
 import { TelegramCloud } from '../src/telegram/cloud';
 import type { SaveV1 } from '../src/state/types';
 import { runTo } from './helpers';
-import { withLegacyJournal } from './legacySave';
 import { parseSave } from '../src/persistence/validateSave';
 import { finishFive } from './chapter5Helpers';
 const key='five-meetings:/:telegram:our_little_story_game_bot:42:save';
@@ -39,9 +38,9 @@ test('meeting choice uploads from an old device-only save and restores with chan
   await expect(third.locator('#continuation-message')).toHaveValue(/Пока воздержусь/);
   await second.close();await third.close();
 });
-test('legacy Cyrillic progress becomes compact after choosing the device, then restores on another client',async({page,context})=>{
+test('canonical device progress synchronizes in bounded chunks and restores on another client',async({page,context})=>{
   const base=reduceSave(initialState(),{type:'start'}),local={...base,campaign:{...base.campaign,active:runTo('c1.plan')}},data=await cloudData(base);
-  await openOffline(page,initialState(),'/play/1',{seedBrowser:false,local:{[key]:JSON.stringify(withLegacyJournal(local))},telegram:{id:42,data,maxRequestBytes:4096}});
+  await openOffline(page,initialState(),'/play/1',{seedBrowser:false,local:{[key]:JSON.stringify(local)},telegram:{id:42,data,maxRequestBytes:4096}});
   await page.getByRole('button',{name:/Продолжить с этого устройства/}).click();await expect(page.locator('[data-node="c1.plan"]')).toBeVisible();await expect(page.locator('.telegram-sync')).toContainText('История сохранена в Telegram');
   const committed=await remote(page);for(const [key,value] of Object.entries(committed))expect(new TextEncoder().encode(JSON.stringify({key,value})).length).toBeLessThanOrEqual(4096);
   const second=await context.newPage();await openOffline(second,initialState(),'/play/1',{seedBrowser:false,telegram:{id:42,data:committed,maxRequestBytes:4096}});

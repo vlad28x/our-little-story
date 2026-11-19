@@ -29,9 +29,9 @@ export function CourtyardFilmArt({phase='packing'}:{phase?:FilmPhase}){
 export function CourtyardScene({run}:{run:Run}){
  const node=run.nodeId.replace('c9.courtyard.',''),i=run.lineIndex;
  const filmStart=node==='filmStart',resume=node==='resume';
- const inPause=['rain','rainAside','rainChoice','canopy','arch','hoodieRain','hoodieChoice','hoodieChoiceLeave','hoodieKeep','hoodieReturn','warmth','nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip'].includes(node)&&run.story.c9Rain!=='leave';
+ const inPause=['rain','rainAside','rainChoice','canopy','arch','warmth','nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip'].includes(node)&&run.story.c9Rain!=='leave';
  const film=filmStart||resume||inPause;
- const phase:FilmPhase=filmStart?(i>=3?'key':'packing'):resume?(['key','key','photo','alone','door','train','train'] as const)[i]??'train':'key';
+ const phase:FilmPhase=filmStart?(i>=3?'key':'packing'):resume?(['key','key','photo','train','train'] as const)[i]??'train':'key';
  const position=resume?(run.story.c9Rain==='arch'?'arch':'open'):run.story.c9Rain==='arch'?'arch':run.story.c9Rain==='canopy'?'canopy':'open';
  const transform=position==='arch'?'matrix(.89 -.125 0 .92 827 330)':position==='canopy'?'translate(808 329) scale(.777 .817)':'translate(689 312) scale(1.24 1.195)';
  const atLab=['lab','goodbye','goodbyeChoice','kissAgain','kissFirst','kissEnd','hug','words'].includes(node);

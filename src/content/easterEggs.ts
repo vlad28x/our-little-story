@@ -15,9 +15,9 @@ export type ScenePropId=Exclude<EasterEggId,'hair'|'cat'|'cookie'|'controller'>;
 // Availability follows authored scenes, never saved flags or cosmetic clicks.
 export function sceneEggProps(background:string,sceneId:string):ScenePropId[]{
   const props:ScenePropId[]=[];
-  if(background==='bg.home.living'&&!['c3.pad.dead','c3.pad.ready'].includes(sceneId)){
+  if(background==='bg.home.living'&&!['c4.pad.dead','c4.pad.ready'].includes(sceneId)){
     props.push('blanket','mug');
-    if(['c3.sofa','c3.pad.setup','c3.pad.press','c3.team','c3.role','c3.tutorial'].includes(sceneId)||['c3.mood.','c3.team.','c3.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
+    if(['c4.sofa','c4.pad.setup','c4.pad.press','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
   }
   if(background==='bg.river.evening')props.push('star');
   if(background==='bg.cafe.sunset'&&sceneId.startsWith('c5.'))props.push('sign');

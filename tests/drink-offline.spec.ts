@@ -1,11 +1,10 @@
-import {test,expect,type Page} from '@playwright/test';
-import {openOffline} from './offlineApp';
-import {startFive,finishFive,command5} from './chapter5Helpers';
-import {finishFive as edition2Five} from './edition2FifthHelpers';
-import {reduceSave} from '../src/state/reducer';
-import {parseSave} from '../src/persistence/validateSave';
-import {legacyCloudData} from './legacySave';
-import type {SaveV1} from '../src/state/types';
+import { expect,test,type Page } from '@playwright/test';
+import { parseSave } from '../src/persistence/validateSave';
+import { reduceSave } from '../src/state/reducer';
+import type { SaveV1 } from '../src/state/types';
+import { command5,finishFive,startFive } from './chapter5Helpers';
+import { legacyCloudData } from './legacySave';
+import { openOffline } from './offlineApp';
 const key='five-meetings:/:save';
 const state=(p:Page)=>p.evaluate(k=>JSON.parse(localStorage.getItem(k)!) as SaveV1,key);
 function atFirst(){let s=startFive();while(s.campaign.active!.nodeId!=='c5.drink.first')s=reduceSave(s,{type:'command',target:'campaign',command:command5(s.campaign.active!)});return s;}
@@ -29,17 +28,9 @@ for(const firstTaste of ['vanilla','sweet','compare'] as const)test(`first opini
   const saved=await state(page);expect(saved.campaign.records[5]?.story).toMatchObject({c5Edition:3,c5FirstTaste:firstTaste,c5Recommendation:recommendation});expect(parseSave(JSON.stringify(saved))).toEqual(saved);
   await expect(page.locator('.postcard h1')).toHaveText('Пять встреч');await expect(page.locator('.vlad-quote')).toContainText('чай с характером. компания тоже.');
   const invite=(await page.locator('.final-conversation').boundingBox())!,postcard=(await page.locator('.postcard').boundingBox())!;expect(invite.y+invite.height).toBeLessThan(postcard.y);
-  await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await page.getByRole('button',{name:'Продолжить разговор',exact:false}).click();await page.getByRole('button',{name:'Пока воздержусь',exact:true}).click();
+  await page.getByRole('button',{name:'Пока воздержусь',exact:true}).click();
   expect((await state(page)).campaign).toEqual(saved.campaign);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.close();
  }
-});
-test('an edition2 result retains its old postcard while its new tasting trial stays independent',async({page})=>{
- const main=reduceSave(edition2Five(),{type:'continuation',value:'movie'});await openOffline(page,main,'/result/5');await expect(page.locator('.vlad-quote')).toContainText('мой любимый незапланированный перерыв.');
- await page.getByRole('button',{name:'Посмотреть другой вариант',exact:false}).click();await until(page,'c5.drink.first');await page.getByRole('button',{name:firstLabels.sweet,exact:false}).click();await until(page,'c5.drink.recommend');await page.getByRole('button',{name:recommendations.both,exact:false}).click();
- for(let i=0;i<100;i++){const s=await state(page);if(!s.trial)break;await next(page);}
- await expect(page.locator('.postcard')).toBeVisible();await expect(page.locator('.vlad-quote')).toContainText('чай с характером. компания тоже.');await expect(page.locator('.final-conversation')).toHaveCount(0);
- const saved=await state(page);expect(saved.campaign).toEqual(main.campaign);expect(saved.continuation).toBe('movie');
- await openOffline(page,saved,'/result/5?source=campaign');await expect(page.locator('.vlad-quote')).toContainText('мой любимый незапланированный перерыв.');
 });
 test('the floating devil card fits browser and Telegram safe areas with round corners and an unobstructed close button',async({context})=>{
  for(const telegram of [false,true])for(const [width,height] of [[320,568],[390,844],[667,375],[960,900]]){

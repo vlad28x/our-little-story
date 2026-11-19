@@ -1,15 +1,16 @@
 import { getChapter } from '../content/chapters';
 import { matches,startRun,step } from '../engine/step';
-import type { ChapterId,Command,Run,StoryState } from '../engine/types';
-import { sameValue } from './validateEpisode';
+import type { Command,Run,StoryState } from '../engine/types';
+import { sameValue } from './sameValue';
 
-const own4=['c4Edition','bench','constellation','wish','c4Goodbye'];
-const own5=['c5Edition','ending','c5FirstTaste','c5Recommendation'];
-// Only the two new finite graphs. Replaying verifies both early/future fields
-// and the exact saved action count; the old graphs keep their old contract.
-export function replayFirstSeason(id:4|5,story:StoryState,results:Run['results'],cursor?:{nodeId:Run['nodeId'];lineIndex:number;turn?:number}):Run|null{
+const skyFields=['c4Edition','bench','constellation','wish','c4Goodbye'];
+const gameFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
+const own5=['c5Edition','c5FirstTaste','c5Recommendation'];
+// Replaying the canonical first-season graphs checks early/future fields
+// and the exact saved action count. Fifth-chapter imports retain their existing contract.
+export function replayFirstSeason(id:3|4|5,story:StoryState,results:Run['results'],cursor?:{nodeId:Run['nodeId'];lineIndex:number;turn?:number}):Run|null{
   const chapter=getChapter(id,story)!;
-  const own=id===4?own4:own5;
+  const own=id===3?skyFields:id===4?gameFields:own5;
   const prior=Object.fromEntries(Object.entries(story).filter(([key])=>!own.includes(key))) as StoryState;
   const stack=[startRun(chapter,prior)];
   while(stack.length){
@@ -30,5 +31,3 @@ export function replayFirstSeason(id:4|5,story:StoryState,results:Run['results']
   }
   return null;
 }
-
-export function firstSeasonEdition(story:StoryState,id:ChapterId){return id===4?story.c4Edition:id===5?story.c5Edition:undefined;}

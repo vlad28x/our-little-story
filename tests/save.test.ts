@@ -1,65 +1,55 @@
-import { legacyContent,prePolishSnapshot } from './legacySave';
 import { describe,it,expect } from 'vitest';
-import { load,persist,type StorageLike } from '../src/persistence/storage';
-import { parseSave } from '../src/persistence/validateSave';
 import { initialState } from '../src/state/initialState';
+import { CONTENT_VERSION } from '../src/content/version';
 import { reduceSave } from '../src/state/reducer';
-import { chapter,commandFor,completeSave,defaultPath } from './helpers';
-import { withLegacyJournal } from './legacySave';
-import { completeTwo,finishThree } from './chapter3Helpers';
-import { finishFour } from './legacy4Helpers';
-import { chapters } from '../src/content/chapters/manifest';
-import type { ChapterId } from '../src/engine/types';
-class MemoryStorage implements StorageLike { data=new Map<string,string>();getItem(k:string){return this.data.get(k)??null;}setItem(k:string,v:string){this.data.set(k,v);}removeItem(k:string){this.data.delete(k);}}
+import { parseSave,validateSave } from '../src/persistence/validateSave';
+import { load,persist,type StorageLike } from '../src/persistence/storage';
+import { defaultPath,commandFor,completeSave } from './helpers';
+import { finishFive } from './chapter5Helpers';
+class MemoryStorage implements StorageLike {
+ data=new Map<string,string>();
+ getItem(key:string){return this.data.get(key)??null;}
+ setItem(key:string,value:string){this.data.set(key,value);}
+ removeItem(key:string){this.data.delete(key);}
+}
 const key='test:save';
-describe('save and restore',()=>{
-  it('keeps an old door cursor and action count instead of replaying the new prologue',()=>{
-    const save=reduceSave(initialState(),{type:'start'});
-    save.campaign.active={chapter:1,nodeId:'c1.entry',lineIndex:4,turn:4,story:{},results:{},earned:[]};
-    expect(parseSave(JSON.stringify(save))).toEqual(save);
-    const next=reduceSave(save,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:4}});
-    expect(next.campaign.active).toMatchObject({nodeId:'c1.door',lineIndex:0,turn:5});
-    expect(parseSave(JSON.stringify(next))).toEqual(next);
-  });
-  it('resumes the renamed Pages site without changing the old snapshot and writes subsequent progress to the new key',()=>{
-    const s=new MemoryStorage(),oldKey='five-meetings:/little-projects/:save',newKey='five-meetings:/our-little-story/:save';
-    const before=reduceSave(initialState(),{type:'start'}),raw=JSON.stringify(before);s.setItem(oldKey,raw);
-    const loaded=load(s,newKey);expect(loaded.save).toEqual(before);expect(loaded.recovery).toBe(false);expect(s.getItem(newKey)).toBeNull();
-    const after=reduceSave(loaded.save,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});
-    expect(persist(s,after,before.revision,newKey)).toBe('saved');expect(load(s,newKey).save).toEqual(after);expect(s.getItem(oldKey)).toBe(raw);
-  });
-  it('preserves old damaged data and backup recovery across the rename',()=>{
-    const s=new MemoryStorage(),newKey='five-meetings:/our-little-story/:save',good=completeSave();
-    s.setItem('five-meetings:/little-projects/:save','{broken');s.setItem('five-meetings:/little-projects/:backup',JSON.stringify(good));
-    const result=load(s,newKey);expect(result.recovery).toBe(true);expect(result.backup).toEqual(good);expect(result.raw).toBe('{broken');expect(s.getItem(newKey)).toBeNull();
-    s.removeItem('five-meetings:/little-projects/:save');expect(load(s,newKey).backup).toEqual(good);
-  });
-  it('prefers any existing new-site data and never imports legacy progress into another base or sandbox',()=>{
-    const s=new MemoryStorage(),newKey='five-meetings:/our-little-story/:save',good=completeSave();
-    s.setItem('five-meetings:/little-projects/:save',JSON.stringify(good));
-    for(const other of ['five-meetings:/:save','five-meetings:/preview-test/:save','five-meetings:/our-little-story/:dev:save'])expect(load(s,other).save).toEqual({...initialState(),updatedAt:expect.any(String)});
-    const fresh=initialState();s.setItem(newKey,JSON.stringify(fresh));expect(load(s,newKey).save).toEqual(fresh);
-    s.setItem(newKey,'{broken');expect(load(s,newKey).recovery).toBe(true);expect(load(s,newKey).backup).toBeNull();
-    s.removeItem(newKey);s.setItem(newKey.replace(':save',':backup'),JSON.stringify(fresh));expect(load(s,newKey).backup).toEqual(fresh);
-  });
-  it('every visible cursor round trips without accumulating a journal and preserves effects',()=>{let s=reduceSave(initialState(),{type:'start'});let steps=0;while(s.campaign.active){expect(parseSave(JSON.stringify(s))).toEqual(s);expect(parseSave(JSON.stringify(withLegacyJournal(s)))).toEqual(s);expect(JSON.stringify(s)).not.toContain('"journal"');expect(chapter.nodes[s.campaign.active.nodeId].kind).not.toBe('route');s=reduceSave(s,{type:'command',target:'campaign',command:commandFor(s.campaign.active,defaultPath)});if(++steps>180)throw Error('loop');}expect(steps).toBeGreaterThan(60);expect(parseSave(JSON.stringify(s))).toEqual(s);});
-  it('migrates active and trial journals in all five chapters without changing any other field',()=>{
-    const bases=[initialState(),completeSave(),completeTwo(),finishThree(),finishFour()];
-    for(const [index,base] of bases.entries()){
-      const chapter=(index+1) as ChapterId,code=chapters.find(c=>c.id===chapter)?.code;
-      let save=reduceSave(code?reduceSave(base,{type:'unlock',code}):base,{type:'start',chapter});save=reduceSave(save,{type:'trial',chapter});
-      for(const run of [save.campaign.active,save.trial?.run])if(run){delete run.story.c4Edition;delete run.story.c5Edition;}
-      const legacy=withLegacyJournal(save),raw=JSON.stringify(legacy);expect(raw).toContain('"journal"');expect(parseSave(raw)).toEqual(save);expect(parseSave(JSON.stringify(legacyContent(legacy,chapter)))).toEqual(prePolishSnapshot(save));expect(JSON.stringify(legacy)).toBe(raw);
-      const storage=new MemoryStorage();storage.setItem(key,raw);expect(load(storage,key).save).toEqual(save);expect(storage.getItem(key)).toBe(raw);
-      expect(persist(storage,legacy,save.revision,key)).toBe('saved');expect(storage.getItem(key)).not.toContain('"journal"');expect(parseSave(storage.getItem('test:backup')!)).toEqual(save);
-    }
-  });
-  it('stores one consistent envelope and rotates a valid previous snapshot',()=>{const storage=new MemoryStorage();const a=reduceSave(initialState(),{type:'start'});expect(persist(storage,a,0,key)).toBe('saved');const b=reduceSave(a,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});expect(persist(storage,b,a.revision,key)).toBe('saved');expect(parseSave(storage.getItem('test:backup')!)).toEqual(a);expect(load(storage,key).save).toEqual(b);});
-  it('keeps corrupt main intact and offers valid backup',()=>{const storage=new MemoryStorage();const good=completeSave();storage.setItem(key,'{broken');storage.setItem('test:backup',JSON.stringify(good));const result=load(storage,key);expect(result.recovery).toBe(true);expect(result.backup).toEqual(good);expect(storage.getItem(key)).toBe('{broken');});
-  it('also recovers when main is missing but backup remains',()=>{const s=new MemoryStorage();s.setItem('test:backup',JSON.stringify(completeSave()));expect(load(s,key).recovery).toBe(true);});
-  it('handles completely damaged storage without silently writing anything',()=>{const s=new MemoryStorage();s.setItem(key,'x');s.setItem('test:backup','y');expect(load(s,key).backup).toBeNull();expect(load(s,key).recovery).toBe(true);expect(s.getItem(key)).toBe('x');});
-  it('blocked storage remains playable in memory and persistence reports failure',()=>{const blocked:StorageLike={getItem(){throw new Error('blocked');},setItem(){throw new Error('quota');},removeItem(){}};expect(load(blocked,key).error).toContain('не сохраняется');expect(()=>persist(blocked,initialState(),0,key)).toThrow();});
-  it('detects cross-tab revision conflict rather than overwriting',()=>{const s=new MemoryStorage();const full=completeSave();s.setItem(key,JSON.stringify(full));expect(persist(s,initialState(),0,key)).toBe('conflict');expect(parseSave(s.getItem(key)!)).toEqual(full);});
-  it.each(['future','foreign','cursor','ending','result','prototype','oversize','unknown'])('rejects %s import',kind=>{const s=completeSave();let raw='';switch(kind){case 'future':raw=JSON.stringify({...s,schemaVersion:99});break;case 'foreign':raw=JSON.stringify({...s,appId:'other'});break;case 'cursor':{const r=reduceSave(initialState(),{type:'start'});r.campaign.active!.nodeId='c1.unknown';raw=JSON.stringify(r);break;}case 'ending':s.campaign.records[1]!.cardId='c1.banter';raw=JSON.stringify(s);break;case 'result':s.campaign.records[1]!.story.catNoticed=true;raw=JSON.stringify(s);break;case 'prototype':raw=JSON.stringify(s).replace('"appId"','"__proto__":{},"appId"');break;case 'oversize':raw=' '.repeat(262145);break;default:raw=JSON.stringify({...s,unexpected:true});}expect(()=>parseSave(raw)).toThrow();});
-  it('valid replacement advances local revision instead of trusting imported one',()=>{const current=completeSave();const imported=initialState();const s=reduceSave(current,{type:'replace',save:imported});expect(s.revision).toBe(current.revision+1);expect(s.campaign.completed).toEqual([]);});
+describe('current content save and restore',()=>{
+ it.each(Array.from({length:CONTENT_VERSION-1},(_,i)=>i+1))('restarts content%s once, keeping settings and code entitlements',contentVersion=>{
+  const old=finishFive();old.settings={sound:true,volume:.6,textMode:'type',motion:'reduced'};old.unlocked=[1,2,3,4,5,6,7,8,9,10];old.continuation='cafe';
+  const raw=JSON.stringify({...old,contentVersion}),next=parseSave(raw);
+  expect(next).toEqual({...initialState(),settings:old.settings,unlocked:old.unlocked,revision:old.revision,updatedAt:old.updatedAt});
+  expect(parseSave(JSON.stringify(next))).toEqual(next);
+  expect(raw).toBe(JSON.stringify({...old,contentVersion}));
+  const started=reduceSave(next,{type:'start'});expect(started.campaign.active?.nodeId).toBe('c1.prologue');expect(parseSave(JSON.stringify(started))).toEqual(started);
+ });
+ it('round trips every visible first chapter cursor and canonical/trial results',()=>{
+  let save=reduceSave(initialState(),{type:'start'});let count=0;
+  while(save.campaign.active){expect(parseSave(JSON.stringify(save))).toEqual(save);save=reduceSave(save,{type:'command',target:'campaign',command:commandFor(save.campaign.active,defaultPath)});if(++count>200)throw Error('Loop');}
+  expect(count).toBeGreaterThan(60);expect(parseSave(JSON.stringify(save))).toEqual(save);
+  const trial=completeSave({...defaultPath,plan:'coop'},save,'trial');expect(trial.campaign).toEqual(save.campaign);expect(parseSave(JSON.stringify(trial))).toEqual(trial);
+ });
+ it.each(['cursor','line','history','journal'] as const)('restarts invalid current %s without losing codes or settings',kind=>{
+  const save=kind==='history'?finishFive():reduceSave(initialState(),{type:'start'});save.settings.sound=true;save.unlocked=[1,2,3,4,5,6];
+  if(kind==='cursor')save.campaign.active!.nodeId='c1.unknown';else if(kind==='line')save.campaign.active!.lineIndex=999;else if(kind==='journal')Object.assign(save.campaign.active!,{journal:[]});else save.campaign.records[5]!.story.wish='impossible' as never;
+  expect(()=>validateSave(JSON.stringify(save))).toThrow();const reset=parseSave(JSON.stringify(save));expect(reset.campaign.completed).toEqual([]);expect(reset.campaign.active).toBeNull();expect(reset.unlocked).toEqual(save.unlocked);expect(reset.settings).toEqual(save.settings);
+ });
+ it.each(['future','foreign','prototype','oversize','unknown','settings','rights'] as const)('rejects an invalid %s envelope',kind=>{
+  const save:Record<string,unknown>={...initialState()};let raw='';
+  if(kind==='future')save.contentVersion=CONTENT_VERSION+1;if(kind==='foreign')save.appId='other';if(kind==='unknown')save.unexpected=true;if(kind==='settings')save.settings={sound:'yes'};if(kind==='rights')save.unlocked=[1,99];
+  raw=kind==='oversize'?' '.repeat(262145):JSON.stringify(save);if(kind==='prototype')raw=raw.replace('"appId"','"__proto__":{},"appId"');expect(()=>parseSave(raw)).toThrow();
+ });
+ it('stores a consistent envelope, rotates the previous snapshot and rejects stale writes',()=>{
+  const storage=new MemoryStorage(),first=reduceSave(initialState(),{type:'start'});expect(persist(storage,first,0,key)).toBe('saved');
+  const next=reduceSave(first,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}});expect(persist(storage,next,first.revision,key)).toBe('saved');expect(parseSave(storage.getItem('test:backup')!)).toEqual(first);expect(load(storage,key).save).toEqual(next);expect(persist(storage,first,0,key)).toBe('conflict');
+ });
+ it('does not normalize broken internal progress into a destructive write',()=>{
+  const storage=new MemoryStorage(),save=reduceSave(initialState(),{type:'start'});save.campaign.active!.lineIndex=999;expect(()=>persist(storage,save,0,key)).toThrow();expect(storage.getItem(key)).toBeNull();
+ });
+ it('keeps unreadable bytes intact and offers a valid backup',()=>{
+  const storage=new MemoryStorage(),save=completeSave();storage.setItem(key,'broken');storage.setItem('test:backup',JSON.stringify(save));const result=load(storage,key);expect(result.recovery).toBe(true);expect(result.backup).toEqual(save);expect(storage.getItem(key)).toBe('broken');
+ });
+ it('remains playable in memory when storage is blocked',()=>{
+  const blocked:StorageLike={getItem(){throw Error('blocked');},setItem(){throw Error('quota');},removeItem(){}};expect(load(blocked,key).error).toContain('не сохраняется');expect(()=>persist(blocked,initialState(),0,key)).toThrow();
+ });
+ it('advances the local revision when explicitly importing another save',()=>{const current=completeSave();const imported=reduceSave(current,{type:'replace',save:initialState()});expect(imported.revision).toBe(current.revision+1);expect(imported.campaign.completed).toEqual([]);});
 });

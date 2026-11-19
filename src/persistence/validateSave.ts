@@ -1,15 +1,13 @@
-import {updatePhoto4} from './updatePhoto4';
+import {initialState} from '../state/initialState';
+import {travellerFields,replayTravellers,completedCourtyard} from './travellers';
 import {replayPhotoSix,replayGallery,replaySupper,replayCourtyard,completedWalk,completedGallery,completedSupper,galleryFields,supperFields,courtyardFields} from './photoSix';
-import {resetEditedChapters,resetOldSecondSeason} from './resetOldSeason';
-import { replayFirstSeason,firstSeasonEdition } from './replayFirstSeason';
-import { parseSave as parseR2Save } from '../legacy/r2/persistence/validateSave';
-import { parseSave as parseLegacySave } from '../legacy/r1/persistence/validateSave';
+import { replayFirstSeason } from './replayFirstSeason';
 import { getChapter } from '../content/chapters';
+import { CONTENT_VERSION } from '../content/version';
 import { kitchenOutcome } from '../minigames/kitchenModel';
 import { cards,cardFromStory } from '../content/cards';
 import type { ChapterId,Run,StoryState,EpisodeChapter } from '../engine/types';
 import type { SaveV1 } from '../state/types';
-import { validLightResult } from '../minigames/eveningLightModel';
 import { normalizeWord,validWord } from './words';
 import { episodeStart } from '../content/season2';
 export const MAX_SAVE_BYTES=256*1024;
@@ -21,22 +19,20 @@ function integer(x:unknown,max=1000000){if(typeof x!=='number'||!Number.isSafeIn
 function one(x:unknown,values:readonly unknown[]){if(!values.includes(x))fail();}
 const firstFields=['approach','searchResult','catNoticed','pace','plan'];
 const secondFields=['rainRoute','catApproach','umbrella','eveningMood'];
-const thirdFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
-const fourthFields=['c4Edition','bench','constellation','bond','wish','c4Goodbye'];
-const sixthFields=['c6Edition','s2Direction','c6FriendExit','c6PhotoPlace','c6PhotoSubject','c6Gesture','c6Film','c6CameraHolder'];
+const thirdFields=['c4Edition','bench','constellation','wish','c4Goodbye'];
+const fourthFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
+const sixthFields=['c6Edition','c6PhotoPlace','c6PhotoSubject','c6Gesture','c6Film','c6CameraHolder'];
 const seventhFields=galleryFields;
 const eighthFields=supperFields;
 const ninthFields=courtyardFields;
-const tenthFields=["c10Place", "c10Venue", "c10Memory", "c10Aside", "c10Note", "c10Intent", "c10Ending", "c10Move", "c10Affection", "c10Morning", "c10LipKiss", "c10EveningKiss", "c10MorningPreference", "c10Talk", "c10EveningMoment", "c10Night"];
-const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['c5Edition','ending','c5FirstTaste','c5Recommendation'],sixthFields,seventhFields,eighthFields,ninthFields,tenthFields].slice(0,id).flat();
-const storyEnums={c9Frame:['vlad','seats','yard'],c9Film:['key','empty','submitted'],c9Rain:['canopy','arch','leave'],c9Bet:['together','alone','skip'],c9Goodbye:['kiss','hug','words'],c8Filling:['pepper','mushroom','mix','simple'],c8Shape:['fold','open'],c8Frame:['foodHer','foodVlad','boardHer','boardVlad'],c8Film:['key','nine'],c8Step:['follow','lead','play','sit'],c6Edition:[5],c7GalleryRoute:['together','apart'],c7GalleryWork:['blue','chip'],c7GalleryGift:['chip','blue','none'],c7GalleryFrame:['vlad','her','both'],c7GalleryFarewell:['cheek','words'],c7Cheek:[true],c7Film:['key','six'],c7CameraHolder:['her','vlad'],s2Direction:['friends','romance'],c6FriendExit:['walk','goodbye'],c6PhotoPlace:['upper','water'],c6PhotoSubject:['vlad','her','place'],c6Gesture:['hand','hug','none'],c6Film:['loaded','key','accidental','six'],c6CameraHolder:['her','vlad'],c4Edition:[2],c5Edition:[2,3],c5FirstTaste:['vanilla','sweet','compare'],c5Recommendation:['vanilla','fresh','both'],"approach": ["joke", "help", "space"], "searchResult": ["tidy", "detour", "skipped"], "catNoticed": [true, false], "pace": ["quiet", "playful", "flirt"], "plan": ["tea", "banter", "coop"], "rainRoute": ["shelter", "arcade"], "catApproach": ["wait", "help"], "umbrella": ["patched", "borrowed", "skipped"], "eveningMood": ["quiet", "playful"], "controllerReaction": ["tease", "help", "absurd"], "teamName": ["dumpling", "calm", "accident"], "kitchenStyle": ["planner", "improv"], "kitchenResult": ["feast", "snack", "chaos", "skipped"], "gameAftercare": ["team", "rematch"], "bench": ["near", "space"], "constellation": ["cat", "controllers", "teapot"], "bond": ["romantic", "friendly", "undecided"], "wish": ["adventure", "calm"], "c4Goodbye": ["accept", "her", "none"], "ending": ["romantic", "comic", "gaming", "friendly"], "c6Voice": ["tease", "lead", "quiet"], "c6Moment": ["hug", "hand", "talk", "walk"], "c6Note": ["saved", "skipped"], "c6Ending": ["hand", "lap", "home"], "c7Aside": ["hush", "joke", "ignore"], "c7Moment": ["cheek", "collar", "near", "space"], "c7Reply": ["kind", "hand", "pause"], "c7Note": ["saved", "skipped"], "c7Ending": ["open", "promise", "calm"], "c8Place": ["home", "cafe"], "c8Word": ["minute", "slow", "taks", "none", "custom"], "c8Dance": ["close", "lead", "playful"], "c8Tender": ["curls", "hair", "cheek", "neck", "dance"], "c8Hoodie": ["borrowed", "evening", "none"], "c8Note": ["saved", "skipped"], "c8Approach": ["her", "ask", "none"], "c8Ending": ["kiss", "near", "tea"], "c9Place": ["home", "courtyard"], "c9Hoodie": ["returned", "kept"], "c9Moment": ["pause", "shoulder", "banter", "watch"], "c9Note": ["saved", "skipped"], "c9Approach": ["her", "ask", "none"], "c9Ending": ["kiss", "hug", "film"], "c10Place": ["home", "terrace"], "c10Venue": ["home", "terrace"], "c10Memory": ["pause", "laugh", "initiative", "none"], "c10Aside": ["self", "last", "quiet"], "c10Note": ["saved", "skipped"], "c10Intent": ["private", "overnight", "stay", "goodnight"], "c10Ending": ["stay", "goodnight", "private", "overnight"], "c10Move": ["home", "stay"], "c10Affection": ["her", "ask", "none", "hug"], "c10Morning": ["hug", "breakfast", "coffee"], "c6Keepsake": ["cat", "house", "cup"], "c7Story": ["weekend", "awkward", "hobby"], "c7Rain": ["sit", "out", "art"], "c8Cheek": ["no", "yes"], "c8LipKiss": ["no", "yes"], "c8FirstGesture": ["curls", "shoulder", "playful"], "c8LateMode": ["dance", "seated", "story"], "c8LateTender": ["neck", "hair", "hold", "step"], "c8Close": ["dance", "tea", "next"], "c9LipKiss": ["no", "yes"], "c9Closeness": ["shoulder", "near", "separate"], "c9Break": ["stretch", "drink", "watch"], "c9SecondMoment": ["hug", "banter", "watch"], "c9Close": ["talk", "quiet", "credits"], "c10LipKiss": ["no", "yes"], "c10EveningKiss": ["no", "yes"], "c10MorningPreference": ["breakfast", "quiet", "company"], "c10Talk": ["kind", "plain", "funny"], "c10EveningMoment": ["hug", "kiss", "talk"], "c10Night": ["hug", "kiss", "talk"]};
-// Added on 2026-10-23: older saves have no goodbye memory, including cursors
-// inside c4.goodbye.hug. Validate its enum when present, never require it.
-function requireFields(s:StoryState,fields:string[]){if(fields.some(k=>!['c4Goodbye','c4Edition','c5Edition','s2Direction'].includes(k)&&!(k==='bond'&&s.c4Edition===2)&&!(k==='ending'&&!!s.c5Edition)&&!(['c5FirstTaste','c5Recommendation'].includes(k)&&s.c5Edition!==3)&&s[k as keyof StoryState]===undefined))fail();}
+const tenthFields=travellerFields;
+const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['c5Edition','c5FirstTaste','c5Recommendation'],sixthFields,seventhFields,eighthFields,ninthFields,tenthFields].slice(0,id).flat();
+const storyEnums={"approach":["joke","help","space"],"searchResult":["tidy","detour","skipped"],"catNoticed":[true,false],"pace":["quiet","playful","flirt"],"plan":["tea","banter","coop"],"rainRoute":["shelter","arcade"],"catApproach":["wait","help"],"umbrella":["patched","borrowed","skipped"],"eveningMood":["quiet","playful"],"c4Edition":[2],"bench":["near","space"],"constellation":["cat","controllers","teapot"],"wish":["adventure","calm"],"c4Goodbye":["accept","her","none"],"controllerReaction":["tease","help","absurd"],"teamName":["dumpling","calm","accident"],"kitchenStyle":["planner","improv"],"kitchenResult":["feast","snack","chaos","skipped"],"gameAftercare":["team","rematch"],"c5Edition":[3],"c5FirstTaste":["vanilla","sweet","compare"],"c5Recommendation":["vanilla","fresh","both"],"c6Edition":[5],"c6PhotoPlace":["upper","water"],"c6PhotoSubject":["vlad","her","place"],"c6Gesture":["hand","hug","none"],"c6Film":["loaded","key","accidental","six"],"c6CameraHolder":["her","vlad"],"c7GalleryRoute":["together","apart"],"c7GalleryWork":["blue","chip"],"c7GalleryGift":["chip","blue","none"],"c7GalleryFrame":["vlad","her","both"],"c7GalleryFarewell":["cheek","words"],"c7Cheek":[true],"c7Film":["key","six"],"c7CameraHolder":["her","vlad"],"c8Place":["home","cafe"],"c8Filling":["pepper","mushroom","mix","simple"],"c8Shape":["fold","open"],"c8Frame":["foodHer","foodVlad","boardHer","boardVlad"],"c8Film":["key","nine"],"c8Step":["follow","lead","play","sit"],"c8LipKiss":["no","yes"],"c8Hoodie":["borrowed","evening","none"],"c9Place":["home","courtyard"],"c9Frame":["vlad","seats","yard"],"c9Film":["key","empty","submitted"],"c9Rain":["canopy","arch","leave"],"c9Bet":["together","alone","skip"],"c9Goodbye":["kiss","hug","words"],"c9LipKiss":["no","yes"],"c9Hoodie":["returned"],"c10Edition":[5],"c10River":["ford","bridge"],"c10Quarry":["tunnel","contour"],"c10Arrival":["marsh","upper"],"c10RiverHelp":[true],"c10QuarryHelp":[true],"c10ArrivalHelp":[true],"c10Continuation":["cafe","home"],"c10CafeGoodbye":["kiss","hug","words"],"c10HomeTender":["kiss","hug","near"],"c10Finale":["cafe","lateLeave","morning","private"],"c10LipKiss":["no","yes"]};
+function requireFields(s:StoryState,required:string[]){if(required.some(k=>s[k as keyof StoryState]===undefined))fail();}
 function story(x:unknown,id:ChapterId,complete=false):StoryState{
   const o=obj(x);keys(o,fields(id));
   for(const [k,v]of Object.entries(o))one(v,storyEnums[k as keyof typeof storyEnums]);
-  const s=o as StoryState;if(s.c4Edition===2&&s.bond!==undefined||!!s.c5Edition&&s.ending!==undefined||s.c4Edition===2&&id>=5&&!s.c5Edition||s.c5Edition!==3&&(s.c5FirstTaste!==undefined||s.c5Recommendation!==undefined))fail();if(complete)requireFields(s,fields(id).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)));
+  const s=o as StoryState;if(complete)requireFields(s,fields(id).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)));
   if((s.searchResult===undefined)!==(s.catNoticed===undefined)||(s.searchResult==='tidy'&&s.catNoticed))fail();
   return s;
 }
@@ -49,33 +45,35 @@ function keepPrefix(s:StoryState,prior:StoryState,id:ChapterId){
 function results(x:unknown,s:StoryState,id:ChapterId){
   const o=obj(x);
   if(id===8||id===9){keys(o,[]);return;}
-  if(id===10){keys(o,['evening-light']);if(o['evening-light']!==undefined&&!validLightResult(o['evening-light']))fail();return;}
+  if(id===10){keys(o,[]);return;}
   if(id===7){keys(o,[]);return;}
   if(id===6){keys(o,[]);return;}
   if(id===5){keys(o,['memories']);if(o.memories!==undefined){const r=obj(o.memories);keys(r,['kind','outcome']);one(r.kind,['memories']);one(r.outcome,['viewed','skipped']);}return;}
-  const game=id===1?'token-search':id===2?'umbrella-patch':id===3?'kitchen':'constellation',outcome=id===1?s.searchResult:id===2?s.umbrella:id===3?s.kitchenResult:s.constellation;
+  const game=id===1?'token-search':id===2?'umbrella-patch':id===4?'kitchen':'constellation',outcome=id===1?s.searchResult:id===2?s.umbrella:id===4?s.kitchenResult:s.constellation;
   keys(o,[game]);if(outcome===undefined){if(o[game]!==undefined)fail();return;}
-  const r=obj(o[game]);keys(r,id===1?['kind','outcome','catNoticed']:id===2?['kind','outcome']:id===3?['kind','outcome','served','mode']:['kind','outcome','usedPreset']);
-  if(id===3){integer(r.served,9);one(r.mode,['timed','calm']);if(r.outcome!=='skipped'&&r.outcome!==kitchenOutcome(r.served as number))fail();}
-  if(id===4){one(r.usedPreset,[true,false]);if(r.usedPreset&&r.outcome!=='teapot')fail();}
+  const r=obj(o[game]);keys(r,id===1?['kind','outcome','catNoticed']:id===2?['kind','outcome']:id===4?['kind','outcome','served','mode']:['kind','outcome','usedPreset']);
+  if(id===4){integer(r.served,9);one(r.mode,['timed','calm']);if(r.outcome!=='skipped'&&r.outcome!==kitchenOutcome(r.served as number))fail();}
+  if(id===3){one(r.usedPreset,[true,false]);if(r.usedPreset&&r.outcome!=='teapot')fail();}
   if(r.kind!==game||r.outcome!==outcome||(id===1&&r.catNoticed!==s.catNoticed))fail();
 }
 function attemptId(x:unknown):asserts x is string {if(typeof x!=='string'||!x.length||x.length>64||!/^[a-zA-Z0-9_-]+$/.test(x))fail();}
 function record(x:unknown,id:ChapterId){
   const r=obj(x);keys(r,['endingId','cardId','story','results',...(id>=6?['scriptRevision','attemptId','episode']:[])]);
   const st=story(r.story,id,true);results(r.results,st,id);
-  if((id===4||id===5)&&!!firstSeasonEdition(st,id)&&!replayFirstSeason(id,st,r.results as Run['results']))fail();
+  if(id===3&&!replayFirstSeason(3,st,r.results as Run['results']))fail();
+  if((id===4||id===5)&&!replayFirstSeason(id,st,r.results as Run['results']))fail();
   const card=cardFromStory(st,id,r.results as Run['results']);if(r.cardId!==card.id||r.endingId!==card.id)fail();
   if(id===5&&obj(r.results).memories===undefined)fail();
   if(id===6){one(r.scriptRevision,[st.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||!replayPhotoSix(st))fail();}
   if(id===7){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedWalk(st)||!replayGallery(st))fail();}
   if(id===8){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedGallery(st)||!replaySupper(st))fail();}
   if(id===9){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedSupper(st)||!replayCourtyard(st))fail();}
+  if(id===10){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedCourtyard(st)||!replayTravellers(st))fail();}
   return r;
 }
 export function validateRun(x:unknown,maxChapter=10):Run{
   const r=obj(x);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));
-  keys(r,['chapter','nodeId','lineIndex','turn','story','journal','results','earned',...(Number(r.chapter)>=6?['scriptRevision','attemptId','episode','activity']:[])]);
+  keys(r,['chapter','nodeId','lineIndex','turn','story','results','earned',...(Number(r.chapter)>=6?['scriptRevision','attemptId','episode','activity']:[])]);
   const id=r.chapter as ChapterId,chapter=getChapter(id,obj(r.story) as StoryState),node=chapter?.nodes[r.nodeId as keyof typeof chapter.nodes];
   if(!node||node.kind==='end'||node.kind==='route')fail('Сцена этой копии недоступна. Восстановите резервную копию или начните главу заново.');
   integer(r.lineIndex,node.kind==='dialogue'?node.lines.length-1:0);integer(r.turn);
@@ -94,67 +92,28 @@ export function validateRun(x:unknown,maxChapter=10):Run{
     if((stage.startsWith('c2.pause.')&&stage!=='c2.pause.intro'||stage==='c2.end')&&!s.eveningMood)fail();
     if(['c2.rain.shelter','c2.rain.arcade'].includes(stage)&&stage!==`c2.rain.${s.rainRoute}`)fail();
   }
-  if(id===3){
-    requireFields(s,fields(2));
-    const beforeReaction=['c3.sofa','c3.mood.quiet','c3.mood.playful','c3.pad.setup','c3.pad.press','c3.pad.dead','c3.pad.reaction'];
-    if(!beforeReaction.includes(stage)&&!s.controllerReaction)fail();
-    if((stage.startsWith('c3.team.')||stage==='c3.role'||stage.startsWith('c3.pad.echo')||stage==='c3.tutorial'||stage==='c3.kitchen'||stage.startsWith('c3.debrief')||stage.startsWith('c3.support')||stage==='c3.end')&&!s.teamName)fail();
-    if((stage.startsWith('c3.pad.echo')||stage==='c3.tutorial'||stage==='c3.kitchen'||stage.startsWith('c3.debrief')||stage.startsWith('c3.support')||stage==='c3.end')&&!s.kitchenStyle)fail();
-    if((stage.startsWith('c3.debrief')||stage.startsWith('c3.support')||stage==='c3.end')&&!s.kitchenResult)fail();
-    if((stage.startsWith('c3.support.')||stage==='c3.end')&&!s.gameAftercare)fail();
-    for(const [prefix,value] of [['c3.pad.',s.controllerReaction],['c3.pad.echo.',s.controllerReaction],['c3.team.',s.teamName],['c3.debrief.',s.kitchenResult],['c3.support.',s.gameAftercare]]){
-      if(stage.startsWith(prefix!)&&Object.values(storyEnums).some(list=>(list as readonly unknown[]).includes(stage.slice(prefix!.length)))&&stage!==prefix!+value)fail();
-    }
-  }
-  if(id===4){
-    requireFields(s,fields(3));
-    if(stage.startsWith('c4.goodbye'))requireFields(s,fourthFields);
-    const beforeBench=['c4.walk','c4.team.dumpling','c4.team.calm','c4.team.accident','c4.after.team','c4.after.rematch','c4.distance'];
-    if(!beforeBench.includes(stage)&&!s.bench)fail();
-    if((['c4.stars.cat','c4.stars.controllers','c4.stars.teapot','c4.honest','c4.bond'].includes(stage)||stage.startsWith('c4.bond.')||stage.startsWith('c4.wish')||stage==='c4.end')&&!s.constellation)fail();
-    if(s.c4Edition!==2&&(stage.startsWith('c4.bond.')||stage.startsWith('c4.wish')||stage==='c4.end')&&!s.bond)fail();
-    if((['c4.wish.adventure','c4.wish.calm','c4.end'].includes(stage))&&!s.wish)fail();
-    for(const [prefix,value] of [['c4.distance.',s.bench],['c4.bond.',s.bond],['c4.stars.',s.constellation],['c4.wish.',s.wish]]){
-      const suffix=stage.slice(prefix!.length);if(stage.startsWith(prefix!)&&suffix!=='intro'&&stage!==prefix!+value)fail();
-    }
-  }
-  if(id===5){
-    requireFields(s,fields(4));
-    if(stage.startsWith('c5.hug.')&&stage!==`c5.hug.${s.c4Goodbye}`)fail();
-    const afterAlbum=stage==='c5.close'||stage==='c5.letter'||stage.startsWith('c5.tone.')||stage.startsWith('c5.ending.')||stage.startsWith('c5.gaming.');
-    if(afterAlbum&&obj(r.results).memories===undefined)fail();
-    if((stage.startsWith('c5.ending.')||stage.startsWith('c5.gaming.'))&&!s.ending)fail();
-    if(stage.startsWith('c5.ending.')&&stage!==`c5.ending.${s.ending}`)fail();
-    if(stage.startsWith('c5.gaming.')&&s.ending!=='gaming')fail();
-    if(stage==='c5.tone.friendly'&&s.bond!=='friendly'||stage==='c5.tone.open'&&s.bond==='friendly')fail();
-    for(const [prefix,value] of [['c5.rain.',s.rainRoute],['c5.souvenir.',s.umbrella],['c5.cat.',s.catApproach],['c5.approach.',s.approach]])if(stage.startsWith(prefix!)&&stage!==prefix!+value)fail();
-  }
-  if((id===4||id===5)&&!!firstSeasonEdition(s,id)&&!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене. Исходная копия сохранена.');
+  if(id===3&&s.bond!==undefined)fail();
+  if(id===3||id===4){requireFields(s,fields((id-1) as ChapterId));if(!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
+  if(id===5)requireFields(s,fields(4));
+  if(id===5&&!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене. Исходная копия сохранена.');
   if(id===6){requireFields(s,fields(5));one(r.scriptRevision,[s.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!replayPhotoSix(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
   if(id===7){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedWalk(s)||!replayGallery(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения галереи противоречат сцене.');}
   if(id===8){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedGallery(s)||!replaySupper(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения ужина противоречат сцене.');}
   if(id===9){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedSupper(s)||!replayCourtyard(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения кинодворика противоречат сцене.');}
-  // Legacy saves may carry the removed reading journal. Validate its old bounded
-  // format, then discard only that optional field; all progress stays unchanged.
-  if(Object.hasOwn(r,'journal')){
-    for(const e of arr(r.journal,150)){const j=obj(e);keys(j,['key','nodeId','speaker','text','emotion']);if(typeof j.key!=='string'||j.key.length>100||!chapter?.nodes[j.nodeId as keyof typeof chapter.nodes])fail();one(j.speaker,['narrator','vlad','heroine','nina']);if(typeof j.text!=='string'||j.text.length>2000)fail();if(j.emotion!==undefined)one(j.emotion,['neutral','smile','awkward','thinking','laugh','warm','surprised']);}
-    delete r.journal;
-  }
-  const earned=arr(r.earned,1),achievement=['cat-supervisor','dry-plan','full-table','own-sky','five-meetings'][id-1];
+  if(id===10){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedCourtyard(s)||!replayTravellers(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения путешественников противоречат сцене.');}
+  const earned=arr(r.earned,1),achievement=['cat-supervisor','dry-plan','own-sky','full-table','five-meetings'][id-1];
   const gameResults=obj(r.results);
-  const shouldEarn=id===1?!!s.catNoticed:id===2?s.umbrella==='patched':id===3?gameResults.kitchen!==undefined&&obj(gameResults.kitchen).served===9&&s.kitchenResult!=='skipped':id===4?gameResults.constellation!==undefined&&!obj(gameResults.constellation).usedPreset:false;
+  const shouldEarn=id===1?!!s.catNoticed:id===2?s.umbrella==='patched':id===4?gameResults.kitchen!==undefined&&obj(gameResults.kitchen).served===9&&s.kitchenResult!=='skipped':id===3?gameResults.constellation!==undefined&&!obj(gameResults.constellation).usedPreset:false;
   earned.forEach(a=>one(a,[achievement]));if(earned.includes(achievement)!==shouldEarn)fail();
   return r as unknown as Run;
 }
-function parseCurrentSave(raw:string,version:12|13|14|15|16|17|18=18):SaveV1{
+export function validateSave(raw:string):SaveV1{
   if(new TextEncoder().encode(raw).length>MAX_SAVE_BYTES)fail('Копия слишком большая. Максимум 256 КБ.');
   const s=obj(JSON.parse(raw,(key,value:unknown)=>{if(['__proto__','prototype','constructor'].includes(key))fail();return value;}));
-  keys(s,['appId','schemaVersion','contentVersion','revision','updatedAt','settings','unlocked','campaign','trial','lastResult','collection','continuation',...(Number(s.contentVersion)>=6?['privateNotes','localNoteRevision']:[]),...(Number(s.contentVersion)>=8?['privateWords']:[])]);
+  keys(s,['appId','schemaVersion','contentVersion','revision','updatedAt','settings','unlocked','campaign','trial','lastResult','collection','continuation','continuation10','privateNotes','localNoteRevision','privateWords']);
   if(s.appId!=='five-meetings')fail('Это сохранение другой игры.');
-  if(s.schemaVersion!==1||s.contentVersion!==version)fail('Эта копия создана другой версией игры. Обновите страницу или сохраните исходную копию. Текущий прогресс не изменён.');
-  if(version===12&&/"c[45]Edition"\s*:/.test(raw))fail();
-  if(version===13&&/"c5Edition"\s*:\s*3\b/.test(raw))fail();
-  const maxChapter=Number(version>=18?9:version>=17?8:version>=16?7:6),chapterIds=Array.from({length:maxChapter},(_,i)=>i+1) as ChapterId[];
+  if(s.schemaVersion!==1||s.contentVersion!==CONTENT_VERSION)fail('Эта копия создана другой версией игры. Обновите страницу или сохраните исходную копию. Текущий прогресс не изменён.');
+  const maxChapter=10,chapterIds=Array.from({length:maxChapter},(_,i)=>i+1) as ChapterId[];
   integer(s.revision);if(typeof s.updatedAt!=='string'||s.updatedAt.length>40||!Number.isFinite(Date.parse(s.updatedAt)))fail();
   const settings=obj(s.settings);keys(settings,['sound','volume','textMode','motion']);one(settings.sound,[true,false]);one(settings.textMode,['instant','type']);one(settings.motion,['system','reduced','full']);if(typeof settings.volume!=='number'||!Number.isFinite(settings.volume)||settings.volume<0||settings.volume>1)fail();
   const unlocked=arr(s.unlocked,10);unlocked.forEach(n=>one(n,[1,2,3,4,5,6,7,8,9,10]));if(!unlocked.includes(1)||new Set(unlocked).size!==unlocked.length)fail();
@@ -172,8 +131,8 @@ function parseCurrentSave(raw:string,version:12|13|14|15|16|17|18=18):SaveV1{
   for(const id of chapterIds.filter(id=>id>1))if(starts[id]!==undefined){const prev=(id-1) as ChapterId;if(!done.includes(prev))fail();const prior=episodeStart(id,story(obj(records[prev]).story,prev,true),obj(records[prev]).results as Run['results']);const start=story(starts[id],id===7?7:prev);requireFields(start,fields(prev).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)));if(!sameStory(start,prior))fail();}
   if(c.active!==null){const run=validateRun(c.active,maxChapter);if(run.chapter!==done.length+1||!starts[run.chapter]||!unlocked.includes(run.chapter))fail();if(run.chapter>1)keepPrefix(run.story,story(starts[run.chapter],run.chapter===7?7:(run.chapter-1) as ChapterId),(run.chapter-1) as ChapterId);}
   if(s.trial!==null){const t=obj(s.trial);keys(t,['chapter','run']);one(t.chapter,chapterIds);const run=validateRun(t.run,maxChapter);if(t.chapter!==run.chapter||!starts[run.chapter]||run.chapter>=6&&(!done.includes(run.chapter)||run.attemptId===obj(records[run.chapter]).attemptId))fail();if(run.chapter>1)keepPrefix(run.story,story(starts[run.chapter],run.chapter===7?7:(run.chapter-1) as ChapterId),(run.chapter-1) as ChapterId);}
-  const collection=obj(s.collection);keys(collection,['cards','achievements',...(maxChapter>=6?['memories','secrets']:[])]);const cs=arr(collection.cards,maxChapter===1?3:maxChapter===2?5:maxChapter===3?6:maxChapter===4?8:maxChapter===5?13:35),ids:string[]=[];
-  for(const item of cs){const card=obj(item);keys(card,['c5Edition','id','chapter','endingId','variant','captionId',...(maxChapter>=3?['teamName']:[]),...(maxChapter>=4?['usedPreset']:[]),...(maxChapter>=8?['venue']:[])]);if(typeof card.id!=='string'||!Object.hasOwn(cards,card.id)||version===12&&card.id==='c5.story')fail();if(card.c5Edition!==undefined&&(card.c5Edition!==3||card.id!=='c5.story'||version<14))fail();const meta=cards[card.id as keyof typeof cards];if(meta.chapter===6&&!['c6.photo.friends','c6.photo.romance','c6.photo.walk'].includes(String(card.id)))fail();if(meta.chapter===7&&card.id!=='c7.gallery')fail();if(meta.chapter===8&&(version<17||card.id!=='c8.supper'||card.venue!=='home'))fail();if(meta.chapter===9&&(version<18||card.id!=='c9.courtyard'||card.venue!=='courtyard'))fail();if(version<16&&['c6.photo.walk','c7.gallery'].includes(String(card.id)))fail();if(card.endingId!==card.id||card.chapter!==meta.chapter||meta.chapter>maxChapter)fail();one(card.variant,meta.chapter===1?['tidy','detour','skipped']:meta.chapter===2?['patched','borrowed','skipped']:meta.chapter===3?['feast','snack','chaos','skipped']:meta.chapter===4?['cat','controllers','teapot']:card.id==='c10.overnight'?['morning']:card.id==='c6.photo.friends'?['walk','goodbye']:['c6.photo.romance','c6.photo.walk'].includes(String(card.id))?['upper','water']:card.id==='c7.gallery'?['together','apart']:card.id==='c8.supper'?['fold','open']:card.id==='c9.courtyard'?['canopy','arch','leave']:meta.chapter>=6?['evening']:['adventure','calm']);if(card.captionId!==`${card.id}.${card.variant}`)fail();if(meta.chapter===3)one(card.teamName,storyEnums.teamName);else if(card.teamName!==undefined)fail();if(meta.chapter===4){one(card.usedPreset,[true,false]);if(card.usedPreset&&card.variant!=='teapot')fail();}else if(card.usedPreset!==undefined)fail();if(meta.chapter>=8)one(card.venue,meta.chapter===8?['home','cafe']:meta.chapter===9?['home','courtyard']:['home','terrace']);else if(card.venue!==undefined)fail();if((card.id==='c10.private'||card.id==='c10.overnight')&&card.venue!=='home')fail();ids.push(card.id);}
+  const collection=obj(s.collection);keys(collection,['cards','achievements',...(maxChapter>=6?['memories','secrets']:[])]);const cs=arr(collection.cards,35),ids:string[]=[];
+  for(const item of cs){const card=obj(item);keys(card,['c5Edition','id','chapter','endingId','variant','captionId',...(maxChapter>=3?['teamName']:[]),...(maxChapter>=4?['usedPreset']:[]),...(maxChapter>=8?['venue']:[])]);if(typeof card.id!=='string'||!Object.hasOwn(cards,card.id))fail();if(card.c5Edition!==undefined&&(card.c5Edition!==3||card.id!=='c5.story'))fail();const meta=cards[card.id as keyof typeof cards];if(meta.chapter===6&&!['c6.photo.friends','c6.photo.romance','c6.photo.walk'].includes(String(card.id)))fail();if(meta.chapter===7&&card.id!=='c7.gallery')fail();if(meta.chapter===8&&(card.id!=='c8.supper'||card.venue!=='home'))fail();if(meta.chapter===9&&(card.id!=='c9.courtyard'||card.venue!=='courtyard'))fail();if(card.endingId!==card.id||card.chapter!==meta.chapter||meta.chapter>maxChapter)fail();if(meta.chapter===10&&(card.id!=='c10.travellers'||card.venue!==(card.variant==='cafe'?'cafe':'home')))fail();one(card.variant,card.id==='c10.travellers'?['cafe','lateLeave','morning','private']:meta.chapter===1?['tidy','detour','skipped']:meta.chapter===2?['patched','borrowed','skipped']:meta.chapter===4?['feast','snack','chaos','skipped']:meta.chapter===3?['cat','controllers','teapot']:card.id==='c10.overnight'?['morning']:card.id==='c6.photo.friends'?['walk','goodbye']:['c6.photo.romance','c6.photo.walk'].includes(String(card.id))?['upper','water']:card.id==='c7.gallery'?['together','apart']:card.id==='c8.supper'?['fold','open']:card.id==='c9.courtyard'?['canopy','arch','leave']:meta.chapter>=6?['evening']:['adventure','calm']);if(card.captionId!==`${card.id}.${card.variant}`)fail();if(meta.chapter===4)one(card.teamName,storyEnums.teamName);else if(card.teamName!==undefined)fail();if(meta.chapter===3){one(card.usedPreset,[true,false]);if(card.usedPreset&&card.variant!=='teapot')fail();}else if(card.usedPreset!==undefined)fail();if(meta.chapter>=8)one(card.venue,meta.chapter===8?['home','cafe']:meta.chapter===9?['home','courtyard']:['home','cafe']);else if(card.venue!==undefined)fail();if((card.id==='c10.private'||card.id==='c10.overnight')&&card.venue!=='home')fail();ids.push(card.id);}
   if(new Set(ids).size!==ids.length)fail();const earned=arr(collection.achievements,maxChapter);earned.forEach(a=>one(a,['cat-supervisor','dry-plan','full-table','own-sky','five-meetings'].slice(0,maxChapter)));if(new Set(earned).size!==earned.length)fail();
   for(const id of done)if(!ids.includes(String(obj(records[id as string]).cardId)))fail();
   if(s.lastResult!==null){const r=obj(s.lastResult);keys(r,['chapter','cardId','source',...(maxChapter>=6?['episodeRecord']:[])]);one(r.chapter,Array.from({length:maxChapter},(_,i)=>i+1));one(r.source,['campaign','trial']);if(!ids.includes(String(r.cardId))||cards[r.cardId as keyof typeof cards].chapter!==r.chapter)fail();if(r.source==='campaign'&&obj(records[r.chapter as string]).cardId!==r.cardId)fail();
@@ -186,34 +145,23 @@ function parseCurrentSave(raw:string,version:12|13|14|15|16|17|18=18):SaveV1{
   if(done.includes(5)&&!earned.includes('five-meetings'))fail();
   one(s.continuation,maxChapter>=5?[null,'game','movie','cafe','walk','decline','public','chat','later']:[null]);if(s.continuation!==null&&!done.includes(5))fail();
   if(arr(collection.memories,0).length||arr(collection.secrets,0).length||Object.keys(obj(s.privateNotes)).length||Object.keys(obj(s.privateWords)).length)fail();integer(s.localNoteRevision);
-  // The envelope has not changed. Version 1 contains only chapter one; upgrading
-  // its content version preserves every cursor, choice, card, setting and right.
   if(maxChapter>=8){const words=obj(s.privateWords);keys(words,['campaign','trial']);for(const value of Object.values(words)){const w=obj(value);keys(w,['chapter','labelId','attemptId','status','text']);one(w.chapter,[8]);one(w.labelId,['s2.word8']);attemptId(w.attemptId);one(w.status,['saved','deleted']);if(typeof w.text!=='string'||normalizeWord(w.text)!==w.text||w.status==='deleted'&&w.text!==''||w.status==='saved'&&!validWord(w.text))fail();}}else s.privateWords={};
-  s.contentVersion=18;
+  one(s.continuation10,[null,'game','movie','cook','out','decline']);if(s.continuation10!==null&&!done.includes(10))fail();
+  s.contentVersion=CONTENT_VERSION;
   return s as unknown as SaveV1;
 }
 
-// The owner authorized discarding old 6–10, so no conversion/restart prompt is needed.
-// Keep the provider/cloud integration contract while preserving first-season parsers.
-export function legacySource(save:SaveV1):string|null{void save;return null;}
+// Older editions restart once; no legacy graph or cursor migration is loaded.
 export function parseSave(raw:string):SaveV1{
  if(new TextEncoder().encode(raw).length>MAX_SAVE_BYTES)fail('Копия слишком большая. Максимум 256 КБ.');
- const header=obj(JSON.parse(raw));
- if(header.contentVersion===18)return parseCurrentSave(raw);
- if(header.contentVersion===17)return parseCurrentSave(raw,17);
- // Owner confirmed on November 13 that 6–10 have never been played. Only the
- // edited seventh and later material is reset; the entire sixth is retained.
- if(header.contentVersion===16){const next=resetEditedChapters(header);next.contentVersion=18;return parseCurrentSave(JSON.stringify(next));}
- if(header.contentVersion===15&&/"(?:c6Edition|c7Gallery[A-Za-z]*)"\s*:/.test(raw))fail('Редакция этой копии не соответствует её содержимому.');
- if(header.contentVersion===15)return parseCurrentSave(JSON.stringify(updatePhoto4(parseCurrentSave(raw,15))));
- if(!Number.isInteger(header.contentVersion)||Number(header.contentVersion)<1||Number(header.contentVersion)>14)fail('Эта копия создана другой версией игры.');
- if(/"(?:s2Direction|c6Edition|c6Film|c6PhotoPlace|c7Gallery[A-Za-z]*)"\s*:/.test(raw))fail('Эта копия создана другой версией игры.');
- const clean=JSON.stringify(resetOldSecondSeason(header));
- if(Number(header.contentVersion)>=12)return parseCurrentSave(clean,header.contentVersion as 12|13|14);
- const fromR2=header.contentVersion===11;
- const old=fromR2?parseR2Save(clean):parseLegacySave(clean);
- const next=structuredClone(old) as unknown as SaveV1;next.contentVersion=18;
- delete (next.collection as unknown as Record<string,unknown>).bonuses;
- next.collection.memories=[];next.collection.secrets=[];next.privateNotes={};next.privateWords={};
- return parseCurrentSave(JSON.stringify(next));
+ const header=obj(JSON.parse(raw,(key,value:unknown)=>{if(['__proto__','prototype','constructor'].includes(key))fail();return value;}));
+ keys(header,['appId','schemaVersion','contentVersion','revision','updatedAt','settings','unlocked','campaign','trial','lastResult','collection','continuation','continuation10','privateNotes','privateWords','localNoteRevision']);
+ if(header.appId!=='five-meetings'||header.schemaVersion!==1)fail('Это сохранение другой игры или неподдерживаемого формата.');
+ integer(header.contentVersion,CONTENT_VERSION);if(Number(header.contentVersion)<1)fail();
+ integer(header.revision);if(typeof header.updatedAt!=='string'||header.updatedAt.length>40||!Number.isFinite(Date.parse(header.updatedAt)))fail();
+ const settings=obj(header.settings);keys(settings,['sound','volume','textMode','motion']);one(settings.sound,[true,false]);one(settings.textMode,['instant','type']);one(settings.motion,['system','reduced','full']);if(typeof settings.volume!=='number'||!Number.isFinite(settings.volume)||settings.volume<0||settings.volume>1)fail();
+ const unlocked=arr(header.unlocked,10);unlocked.forEach(id=>one(id,[1,2,3,4,5,6,7,8,9,10]));if(!unlocked.includes(1)||new Set(unlocked).size!==unlocked.length)fail();
+ const fresh:SaveV1={...initialState(),settings:settings as SaveV1['settings'],unlocked:unlocked as ChapterId[],revision:header.revision as number,updatedAt:header.updatedAt};
+ if(Number(header.contentVersion)<CONTENT_VERSION)return fresh;
+ try{return validateSave(raw);}catch{return fresh;}
 }

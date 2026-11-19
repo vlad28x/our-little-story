@@ -7,7 +7,10 @@ export function validateContent(chapter:Chapter):string[] {
     if(stack.includes(id)){errors.push(`Cycle ${id}`);return;}
     if(seen.has(id))return;seen.add(id);
     if(n.id!==id)errors.push(`ID mismatch ${id}`);
-    if('scene' in n)for(const asset of [n.scene,...(n.scene.variants??[])].flatMap(s=>[s.background,s.character]))if(!assetManifest[asset])errors.push(`Missing asset ${asset}`);
+    if('scene' in n)for(const {background,character} of [n.scene,...(n.scene.variants??[])]){
+      if(!assetManifest[background])errors.push(`Missing asset ${background}`);
+      if(character!==undefined&&!assetManifest[character])errors.push(`Missing asset ${character}`);
+    }
     if('scene' in n)for(const variant of n.scene.variants??[])if(variant.fromLine!==undefined&&(n.kind!=='dialogue'||!Number.isInteger(variant.fromLine)||variant.fromLine<0||variant.fromLine>=n.lines.length))errors.push(`Invalid scene line ${id}`);
     let next:NodeId[]=[];
     if(n.kind==='dialogue'){if(!n.lines.length)errors.push(`No lines ${id}`);next=[n.next];}

@@ -1,7 +1,7 @@
 import {assetUrl} from '../content/assetManifest';
 export type GalleryView='hall'|'overview'|'row'|'chip'|'blue'|'cards'|'poster';
 const names={row:'Ряд',chip:'Скол',blue:'Просвет'};
-const descriptions={row:'Пять светлых кромок ступеней на сером бетоне',chip:'Треугольный скол и его зубец в тени на нижней ступени',blue:'Синяя дверь, тёплая щель справа и порог внизу'};
+const descriptions={row:'Пять светлых кромок ступеней на сером бетоне',chip:'Треугольный скол со светлыми камешками и светлая треугольная выемка в тени на нижней ступени',blue:'Синяя дверь, тёплая щель справа и порог внизу'};
 export function GalleryArt({view='hall'}:{view?:GalleryView}){
  // The wide hall and outside poster are composited into their shared background.
  if(view==='hall'||view==='overview'||view==='poster')return null;
@@ -12,9 +12,9 @@ export function GalleryArt({view='hall'}:{view?:GalleryView}){
 }
 export function galleryView(node:string,line:number):GalleryView{
  if(node==='c7.gallery.first'&&line===0)return 'overview';
- if(node==='c7.gallery.together')return line<4?'row':line<11?'chip':'blue';
- if(node==='c7.gallery.apart')return line<6?'blue':line<7?'chip':'hall';
- if(node==='c7.gallery.blue')return line<10?'blue':'hall';
+ if(node==='c7.gallery.together')return line<2?'row':line<7?'chip':'blue';
+ if(node==='c7.gallery.apart')return line===4||line===5?'blue':'hall';
+ if(node==='c7.gallery.blue')return 'blue';
  if(node==='c7.gallery.chip')return 'chip';
  if(['rack','card','giveChip','giveBlue','leaveCards'].some(n=>node==='c7.gallery.'+n))return 'cards';
  if(['entry','outside','frame','shotVlad','shotHer','shotBoth','film'].some(n=>node==='c7.gallery.'+n))return 'poster';

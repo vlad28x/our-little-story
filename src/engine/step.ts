@@ -23,7 +23,7 @@ export function matches(story:StoryState, conditions:Condition[] = [],run?:Run) 
 }
 export function resolveLine(line:Line,story:StoryState):Line{
   const variant=line.variants?.find(v=>matches(story,v.when));
-  return variant?{...line,text:variant.text}:line;
+  return variant?{...line,text:variant.text,effects:variant.effects??line.effects}:line;
 }
 function settle(chapter:Chapter, run:Run):StepResult {
   for (let hop = 0; hop < 32; hop++) {
@@ -45,7 +45,7 @@ function settle(chapter:Chapter, run:Run):StepResult {
 }
 export function startRun(chapter:Chapter, story:StoryState = {},attemptId?:string):Run {
   if((chapter.id>=6)&&!attemptId)throw new Error('Для новой встречи нужен ID попытки');
-  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story,...(chapter.id===6&&chapter.scriptRevision===5?{c6Edition:5 as const}:{}),...(chapter.firstSeasonEdition?{[chapter.id===4?'c4Edition':'c5Edition']:chapter.firstSeasonEdition}:{})},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,...((chapter.scriptRevision??3)>=4?{}:{episode:{}})}:{})});
+  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story,...(chapter.id===10?{c10Edition:5 as const}:{}),...(chapter.id===6&&chapter.scriptRevision===5?{c6Edition:5 as const}:{}),...(chapter.firstSeasonEdition?{[chapter.id===5?'c5Edition':'c4Edition']:chapter.firstSeasonEdition}:{})},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,...((chapter.scriptRevision??3)>=4?{}:{episode:{}})}:{})});
   if (result.kind !== 'ready') throw new Error('Глава должна начинаться с доступной сцены');
   return result.run;
 }
@@ -56,7 +56,8 @@ export function step(chapter:Chapter, current:Run, command:Command):StepResult {
   if (!node) return {kind:'rejected',reason:'Не удалось найти сцену.'};
   const run:Run = structuredClone(current);
   if (command.kind === 'advance' && node.kind === 'dialogue') {
-    for(const effect of node.lines[run.lineIndex].effects??[])Object.assign(run.story,{[effect.key]:effect.value});
+    const line=resolveLine(node.lines[run.lineIndex],run.story);
+    for(const effect of line.effects??[])Object.assign(run.story,{[effect.key]:effect.value});
     if (run.lineIndex + 1 < node.lines.length) run.lineIndex++;
     else { run.nodeId = node.next; run.lineIndex = 0; }
   } else if (command.kind === 'choose' && node.kind === 'choice') {

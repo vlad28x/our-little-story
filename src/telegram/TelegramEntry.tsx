@@ -1,4 +1,3 @@
-import { legacySource } from '../persistence/validateSave';
 import { useEffect,useState,type ReactNode } from 'react';
 import { GameProvider,DEV_SANDBOX,activeStorageKey } from '../app/GameProvider';
 import { load,persist,type Loaded,type StorageLike,storageKey } from '../persistence/storage';
@@ -12,12 +11,7 @@ import { preserveLocalNotes } from '../persistence/notes';
 const storage:StorageLike={getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v),removeItem:k=>localStorage.removeItem(k)};
 type Ready={key:string;loaded:Loaded;session?:CloudSession;app?:TelegramApp};
 type Choice={app:TelegramApp;key:string;local:Loaded;browser:Loaded;snapshot:CloudSnapshot;cloud:TelegramCloud};
-function sameEntryCopy(a:SaveV1,b:SaveV1){
- const left=legacySource(a),right=legacySource(b);
- // Two different R1 seasons can produce the same first-five preview. Keep the
- // explicit chooser rather than treating those original copies as identical.
- return left!==null||right!==null?left!==null&&right!==null&&left===right:cloudRaw(a)===cloudRaw(b);
-}
+function sameEntryCopy(a:SaveV1,b:SaveV1){return cloudRaw(a)===cloudRaw(b);}
 export function TelegramEntry({children}:{children:ReactNode}){
   const [ready,setReady]=useState<Ready|null>(null),[choice,setChoice]=useState<Choice|null>(null),[error,setError]=useState(''),[attempt,setAttempt]=useState(0);
   const [localKey,setLocalKey]=useState(activeStorageKey);
@@ -39,8 +33,8 @@ export function TelegramEntry({children}:{children:ReactNode}){
         if(snapshot.save&&!local.recovery&&(!local.raw||sameEntryCopy(local.save,snapshot.save))){
           const save=local.raw?local.save:snapshot.save;
           let error:string|null=null;
-          if(!local.raw&&!legacySource(save)){try{if(persist(storage,save,local.save.revision,key)==='conflict')throw new Error('conflict');}catch{error='Не удалось записать копию на устройстве. Скачай резервный файл в настройках.';}}
-          setReady({key,loaded:{save,recovery:false,backup:null,raw:legacySource(save)??JSON.stringify(save),error},session:new CloudSession(cloud,snapshot.head,snapshot.needsRewrite?null:cloudRaw(snapshot.save)),app});return;
+          if(!local.raw){try{if(persist(storage,save,local.save.revision,key)==='conflict')throw new Error('conflict');}catch{error='Не удалось записать копию на устройстве. Скачай резервный файл в настройках.';}}
+          setReady({key,loaded:{save,recovery:false,backup:null,raw:JSON.stringify(save),error},session:new CloudSession(cloud,snapshot.head,snapshot.needsRewrite?null:cloudRaw(snapshot.save)),app});return;
         }
         setChoice({app,key,local,browser:load(storage,storageKey),snapshot,cloud});setError('');
       }catch(e){if(alive)setError(e instanceof Error?e.message:'Не удалось проверить облачную копию.');}
@@ -48,14 +42,14 @@ export function TelegramEntry({children}:{children:ReactNode}){
   },[attempt]);
   function choose(save:SaveV1,useCloud=true){
     if(!choice)return;
-    if(!legacySource(save)&&(save===choice.snapshot.save||save===choice.snapshot.backup))save=preserveLocalNotes(save,choice.local.recovery&&choice.local.backup?choice.local.backup:choice.local.save);
+    if((save===choice.snapshot.save||save===choice.snapshot.backup))save=preserveLocalNotes(save,choice.local.recovery&&choice.local.backup?choice.local.backup:choice.local.save);
     const session=useCloud?new CloudSession(choice.cloud,choice.snapshot.head,choice.snapshot.save&&!choice.snapshot.needsRewrite?cloudRaw(choice.snapshot.save):null):undefined;
     let localError:string|null=null;
     try{
       const old=load(storage,choice.key);
-      if(!legacySource(save)&&persist(storage,save,old.save.revision,choice.key)==='conflict')throw new Error('Локальная копия изменилась. Перепроверь сохранения.');
+      if(persist(storage,save,old.save.revision,choice.key)==='conflict')throw new Error('Локальная копия изменилась. Перепроверь сохранения.');
     }catch{localError='Копия на этом устройстве сейчас не записывается. Скачай резервный файл в настройках.';}
-    setReady({key:choice.key,loaded:{save,recovery:false,backup:null,raw:legacySource(save)??JSON.stringify(save),error:localError},session,app:choice.app});
+    setReady({key:choice.key,loaded:{save,recovery:false,backup:null,raw:JSON.stringify(save),error:localError},session,app:choice.app});
   }
   if(DEV_SANDBOX)return <GameProvider>{children}</GameProvider>;
   if(ready)return <GameProvider key={ready.key} storageId={ready.key} initialLoaded={ready.loaded} cloudSession={ready.session} telegramApp={ready.app}>{children}</GameProvider>;
@@ -73,7 +67,7 @@ export function TelegramEntry({children}:{children:ReactNode}){
         {!choice.local.raw&&choice.browser.raw&&!choice.browser.recovery&&<SaveChoice title="Перенести историю из этого браузера" save={choice.browser.save} onChoose={()=>choose(choice.browser.save)}/>}
         {!choice.snapshot.save&&!choice.snapshot.damaged&&!choice.local.raw&&<button className="primary" onClick={()=>choose(initialState())}>Начать с сохранением в Telegram</button>}
         {choice.local.raw&&<SaveExportButton raw={choice.local.raw} name="five-meetings-device.json" app={choice.app}>Скачать копию устройства</SaveExportButton>}
-        {(choice.snapshot.save||choice.snapshot.backup)&&<SaveExportButton raw={legacySource((choice.snapshot.save??choice.snapshot.backup)!)??JSON.stringify(choice.snapshot.save??choice.snapshot.backup)} name="five-meetings-telegram.json" app={choice.app}>Скачать копию Telegram</SaveExportButton>}
+        {(choice.snapshot.save||choice.snapshot.backup)&&<SaveExportButton raw={JSON.stringify(choice.snapshot.save??choice.snapshot.backup)} name="five-meetings-telegram.json" app={choice.app}>Скачать копию Telegram</SaveExportButton>}
         <button className="text-button" onClick={()=>setReady({key:choice.key,loaded:choice.local,app:choice.app})}>Пока играть только на этом устройстве</button>
       </div><p className="small">Выбранная история станет основной в Telegram; копии не объединяются. Если они отличаются, сначала скачай нужные резервные файлы.</p>
     </>:<><h1>Находим твою историю…</h1><p role="status">Проверяем сохранения перед встречей.</p></>}

@@ -21,7 +21,7 @@ for(const gesture of ['hand','hug','none'] as const)test(`served sixth goodbye r
  while(save.campaign.active!.lineIndex!==4)save=reduceSave(save,{type:'command',target:'campaign',command:photoCommand(save.campaign.active!,{gesture})});
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
  await page.goto('./#/play/6');await page.reload();
- const text=gesture==='hand'?'чуть сжимает пальцы':gesture==='hug'?'накрывает твою ладонь своей':'поднимаешь ладонь на прощание';
+ const text=gesture==='hand'?'Влад коротко сжимает твои пальцы':gesture==='hug'?'накрывает твою руку своей':'Ты машешь ему на прощание';
  await expect(page.locator('.dialogue-text')).toContainText(text);
  expect(parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!).campaign.records).toEqual(save.campaign.records);
 });
@@ -32,7 +32,7 @@ for(const kiss of [false,true])test(`served eighth goodbye preserves actual kiss
  while(save.campaign.active!.lineIndex!==node.lines.length-1)save=reduceSave(save,{type:'command',target:'campaign',command:supperCommand(save.campaign.active!,{kiss,step:'sit'})});
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
  await page.goto('./#/play/8');await page.reload();
- await expect(page.locator('.dialogue-text')).toContainText(kiss?'На пороге вы задерживаетесь, улыбаясь друг другу.':'Ты прощаешься на пороге его квартиры.');
+ await expect(page.locator('.dialogue-text')).toContainText(kiss?'Влад ещё раз притягивает тебя к себе':'У порога Влад придерживает дверь');
  expect(parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!).campaign.active?.story.c8LipKiss).toBe(kiss?'yes':'no');
  if(kiss)await page.screenshot({path:'work/nov14/goodbye-kiss-390.png',animations:'disabled'});
 });

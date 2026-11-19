@@ -1,6 +1,9 @@
+import {parseSave} from '../persistence/validateSave';
+import {completedCourtyard} from '../persistence/travellers';
 import {completedWalk,completedGallery,completedSupper} from '../persistence/photoSix';
 import { replayFirstSeason } from '../persistence/replayFirstSeason';
 import { getChapter } from '../content/chapters';
+import { CONTENT_VERSION } from '../content/version';
 import { checkCode,chapters } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
 import { startRun, step } from '../engine/step';
@@ -16,11 +19,13 @@ export type Action =
   | {type:'note-edit';chapter?:EpisodeChapter;target:'campaign'|'trial';attemptId:string;text?:string;remove?:boolean}
   | {type:'word-edit';target:'campaign'|'trial';attemptId:string;text?:string;remove?:boolean}
   | {type:'settings';settings:Settings}
+  | {type:'continuation10';value:SaveV1['continuation10']}
   | {type:'continuation';value:SaveV1['continuation']}
   | {type:'replace';save:SaveV1}
   | {type:'dev-jump';nodeId:NodeId;story:StoryState};
-export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&!(id===8&&!completedGallery(save.campaign.records[7]?.story))&&!(id===9&&!completedSupper(save.campaign.records[8]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
+export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&!(id===8&&!completedGallery(save.campaign.records[7]?.story))&&!(id===9&&!completedSupper(save.campaign.records[8]?.story))&&!(id===10&&!completedCourtyard(save.campaign.records[9]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
 export function reduceSave(current:SaveV1,action:Action):SaveV1 {
+  if(current.contentVersion!==CONTENT_VERSION)return reduceSave(parseSave(JSON.stringify(current)),action);
   let s=structuredClone(current);
   switch(action.type){
     case 'start':{
@@ -49,7 +54,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       if(!chapter||!start||!canStart(s,id))return current;
       if((id>=6)&&(!action.attemptId||action.attemptId===s.campaign.records[id]?.attemptId))return current;
       for(const key of Object.keys(s.campaign.startStates).map(Number) as ChapterId[])if(key>=id){delete s.campaign.records[key];delete s.campaign.startStates[key];}
-      s.campaign.completed=s.campaign.completed.filter(n=>n<id);s.campaign.startStates[id]=structuredClone(start);s.campaign.active=startRun(chapter,start,action.attemptId);s.trial=null;s.lastResult=null;if(current.trial&&current.trial.chapter>=6)delete s.privateNotes[current.trial.chapter as EpisodeChapter]?.trial;if(current.trial?.chapter===8)delete s.privateWords.trial;if(id<=8)s.privateWords={};for(const n of [6,7,8,9,10] as const)if(n>=id)delete s.privateNotes[n];if(id<=5)s.continuation=null;break;
+      s.campaign.completed=s.campaign.completed.filter(n=>n<id);s.campaign.startStates[id]=structuredClone(start);s.campaign.active=startRun(chapter,start,action.attemptId);s.trial=null;s.lastResult=null;if(current.trial&&current.trial.chapter>=6)delete s.privateNotes[current.trial.chapter as EpisodeChapter]?.trial;if(current.trial?.chapter===8)delete s.privateWords.trial;if(id<=8)s.privateWords={};for(const n of [6,7,8,9,10] as const)if(n>=id)delete s.privateNotes[n];if(id<=5)s.continuation=null;s.continuation10=null;break;
     }
     case 'note-edit':{
       const id=action.chapter??6;const record=action.target==='campaign'?s.campaign.records[id]:s.lastResult?.source==='trial'&&s.lastResult.chapter===id?s.lastResult.episodeRecord:undefined;
@@ -66,6 +71,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       s.privateWords[action.target]={chapter:8,labelId:'s2.word8',attemptId:action.attemptId,status:action.remove?'deleted':'saved',text:action.remove?'':text};s.localNoteRevision++;return s;
     }
     case 'settings':s.settings={...action.settings};break;
+    case 'continuation10':if(!s.campaign.completed.includes(10)||s.campaign.records[10]?.story.c10Edition!==5||s.trial||![null,'game','movie','cook','out','decline'].includes(action.value)||s.continuation10===action.value)return current;s.continuation10=action.value;break;
     case 'continuation':if(!s.campaign.completed.includes(5)||s.trial||![null,'game','movie','cafe','walk','decline','public','chat','later'].includes(action.value)||s.continuation===action.value)return current;s.continuation=action.value;break;
     case 'replace':s=structuredClone(action.save);break;
     case 'dev-jump':{
@@ -73,7 +79,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       const id=Number(action.nodeId.match(/^c(\d+)\./)?.[1]) as ChapterId,chapter=getChapter(id),node=chapter?.nodes[action.nodeId];
       if(id>=6)return current; // Chapter six is exercised through isolated full-save fixtures.
       if(!chapter||!node||node.kind==='route'||node.kind==='end')return current;
-      const run=startRun(chapter);run.nodeId=action.nodeId;run.story={...action.story,...(id===4?{c4Edition:2 as const}:id===5?{c4Edition:2 as const,c5Edition:3 as const,c4Goodbye:action.story.c4Goodbye??'none'}:{})};
+      const run=startRun(chapter);run.nodeId=action.nodeId;run.story={...action.story,...(id===3?{c4Edition:2 as const}:id===5?{c4Edition:2 as const,c5Edition:3 as const,c4Goodbye:action.story.c4Goodbye??'none'}:{})};
       if(id===1&&run.story.searchResult){run.results['token-search']={kind:'token-search',outcome:run.story.searchResult,catNoticed:!!run.story.catNoticed};if(run.story.catNoticed)run.earned=['cat-supervisor'];}
       if(id===2&&run.story.umbrella){run.results['umbrella-patch']={kind:'umbrella-patch',outcome:run.story.umbrella};if(run.story.umbrella==='patched')run.earned=['dry-plan'];}
       if(id===1)s.campaign={completed:[],startStates:{1:{}},records:{},active:run};
@@ -86,23 +92,23 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
           const card2=cardFromStory(prior2,2);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card2.id),card2];
           if(prior2.umbrella==='patched')s.collection.achievements=[...new Set([...s.collection.achievements,'dry-plan'])];
           s.campaign.completed.push(2);s.campaign.startStates[3]=prior2;s.campaign.records[2]={endingId:card2.id,cardId:card2.id,story:prior2,results:{'umbrella-patch':{kind:'umbrella-patch',outcome:prior2.umbrella!}}};s.unlocked=[...new Set([...s.unlocked,3 as const])];
-          if(id===3&&run.story.kitchenResult){const served=run.story.kitchenResult==='feast'?9:run.story.kitchenResult==='snack'?4:0;run.results.kitchen={kind:'kitchen',outcome:run.story.kitchenResult,served,mode:'calm'};if(served===9)run.earned=['full-table'];}
+          if(id===3&&run.story.constellation){run.results.constellation={kind:'constellation',outcome:run.story.constellation,usedPreset:false};run.earned=['own-sky'];}
           if(id>=4){
-            const prior3:StoryState={...prior2,controllerReaction:action.story.controllerReaction??'help',teamName:action.story.teamName??'calm',kitchenStyle:action.story.kitchenStyle??'planner',kitchenResult:action.story.kitchenResult??'skipped',gameAftercare:action.story.gameAftercare??'team'};
-            const card3=cardFromStory(prior3,3),served=prior3.kitchenResult==='feast'?9:prior3.kitchenResult==='snack'?4:0;
-            s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card3.id),card3];if(served===9)s.collection.achievements=[...new Set([...s.collection.achievements,'full-table'])];
-            s.campaign.completed.push(3);s.campaign.startStates[4]=prior3;s.campaign.records[3]={endingId:card3.id,cardId:card3.id,story:prior3,results:{kitchen:{kind:'kitchen',outcome:prior3.kitchenResult!,served,mode:'calm'}}};s.unlocked=[...new Set([...s.unlocked,4 as const])];
-            if(id===4&&run.story.constellation){run.results.constellation={kind:'constellation',outcome:run.story.constellation,usedPreset:false};run.earned=['own-sky'];}
+            const prior3:StoryState={...prior2,c4Edition:2,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',wish:action.story.wish??'calm',c4Goodbye:action.story.c4Goodbye??'none'};
+            const results3={constellation:{kind:'constellation' as const,outcome:prior3.constellation!,usedPreset:false}},card3=cardFromStory(prior3,3,results3);
+            s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card3.id),card3];s.collection.achievements=[...new Set([...s.collection.achievements,'own-sky'])];
+            s.campaign.completed.push(3);s.campaign.startStates[4]=prior3;s.campaign.records[3]={endingId:card3.id,cardId:card3.id,story:prior3,results:results3};s.unlocked=[...new Set([...s.unlocked,4 as const])];
+            if(id===4){run.story={...prior3,...run.story};if(run.story.kitchenResult){const served=run.story.kitchenResult==='feast'?9:run.story.kitchenResult==='snack'?4:0;run.results.kitchen={kind:'kitchen',outcome:run.story.kitchenResult,served,mode:'calm'};if(served===9)run.earned=['full-table'];}}
             if(id===5){
-              const prior4:StoryState={...prior3,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',c4Edition:2,wish:action.story.wish??'calm',c4Goodbye:action.story.c4Goodbye??'none'};
-              const results4={constellation:{kind:'constellation' as const,outcome:prior4.constellation!,usedPreset:false}},card4=cardFromStory(prior4,4,results4);
-              s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card4.id),card4];s.collection.achievements=[...new Set([...s.collection.achievements,'own-sky'])];s.campaign.completed.push(4);s.campaign.startStates[5]=prior4;s.campaign.records[4]={endingId:card4.id,cardId:card4.id,story:prior4,results:results4};s.unlocked=[...new Set([...s.unlocked,5 as const])];
+              const prior4:StoryState={...prior3,controllerReaction:action.story.controllerReaction??'help',teamName:action.story.teamName??'calm',kitchenStyle:action.story.kitchenStyle??'planner',kitchenResult:action.story.kitchenResult??'skipped',gameAftercare:action.story.gameAftercare??'team'};
+              const served=prior4.kitchenResult==='feast'?9:prior4.kitchenResult==='snack'?4:0,results4={kitchen:{kind:'kitchen' as const,outcome:prior4.kitchenResult!,served,mode:'calm' as const}},card4=cardFromStory(prior4,4,results4);
+              s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card4.id),card4];if(served===9)s.collection.achievements=[...new Set([...s.collection.achievements,'full-table'])];s.campaign.completed.push(4);s.campaign.startStates[5]=prior4;s.campaign.records[4]={endingId:card4.id,cardId:card4.id,story:prior4,results:results4};s.unlocked=[...new Set([...s.unlocked,5 as const])];
               if(action.nodeId==='c5.close'||action.nodeId==='c5.letter'||action.nodeId.startsWith('c5.tone.')||action.nodeId.startsWith('c5.ending.')||action.nodeId.startsWith('c5.gaming.'))run.results.memories={kind:'memories',outcome:'viewed'};
             }
           }
         }
       }
-      if(id===4||id===5){
+      if(id===3||id===4||id===5){
         const verified=replayFirstSeason(id,run.story,run.results,{nodeId:run.nodeId,lineIndex:0});
         if(!verified)return current;
         s.campaign.active=verified;
@@ -139,5 +145,5 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
     }
   }
   if((JSON.stringify(s.privateNotes)!==JSON.stringify(current.privateNotes)||JSON.stringify(s.privateWords)!==JSON.stringify(current.privateWords))&&s.localNoteRevision===current.localNoteRevision)s.localNoteRevision++;
-  s.contentVersion=18;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
+  s.contentVersion=CONTENT_VERSION;s.revision=current.revision+1;s.updatedAt=new Date().toISOString();return s;
 }

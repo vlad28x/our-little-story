@@ -1,13 +1,13 @@
 import { test,expect } from '@playwright/test';
 import { openOffline } from './offlineApp';
-import { startFour,command4,finishFour,defaultFourth } from './chapter4Helpers';
+import { startSky as startFour,skyCommand as command4,finishSky as finishFour,defaultSky as defaultFourth } from './sky3Helpers';
 import { reduceSave } from '../src/state/reducer';
 import { constellationDrawings,drawingStars,drawingSegments,skyShapes } from '../src/minigames/constellationModel';
 const key='five-meetings:/:save';
-function atDrawing(){let save=startFour();for(let i=0;i<150&&save.campaign.active?.nodeId!=='c4.stars';i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active!)});return save;}
+function atDrawing(){let save=startFour();for(let i=0;i<150&&save.campaign.active?.nodeId!=='c3.stars';i++)save=reduceSave(save,{type:'command',target:'campaign',command:command4(save.campaign.active!)});return save;}
 
 for(const shape of skyShapes)test(`approved ${shape} drawing works on a 320px phone, including separate contours, pause and the same postcard`,async({page,context})=>{
-  await page.setViewportSize({width:320,height:568});const save=atDrawing(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await openOffline(page,save,'/play/4');
+  await page.setViewportSize({width:320,height:568});const save=atDrawing(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await openOffline(page,save,'/play/3');
   await expect(page.locator('.scene-stage')).toBeHidden();await page.getByRole('button',{name:constellationDrawings[shape].label,exact:true}).click();
   const stars=drawingStars(shape),finish=page.getByRole('button',{name:'Оставить наше созвездие',exact:false});await expect(finish).toBeDisabled();
   for(const star of stars){
@@ -23,11 +23,11 @@ for(const shape of skyShapes)test(`approved ${shape} drawing works on a 320px ph
   await page.locator('.star-board').scrollIntoViewIfNeeded();await page.screenshot({path:`outputs/CONSTELLATION_GAME_${shape.toUpperCase()}_320.png`,fullPage:false,animations:'disabled'});
   await page.getByRole('button',{name:'Отменить последнюю звезду',exact:true}).click();await expect(finish).toBeDisabled();await expect(page.locator('.star-board .sky-details')).toHaveCount(0);await page.getByRole('button',{name:`Звезда ${stars.length}`,exact:true}).click();
   await finish.click();const after=JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(after.campaign.active.results.constellation).toEqual({kind:'constellation',outcome:shape,usedPreset:false});expect(after.campaign.active.turn).toBe(save.campaign.active!.turn+1);
-  const postcard=await context.newPage();await openOffline(postcard,finishFour(undefined,{...defaultFourth,result:{kind:'constellation',outcome:shape,usedPreset:false}}),'/result/4');expect(await postcard.locator('.postcard .sky-lines').innerHTML()).toBe(fullLines);await expect(postcard.getByText(constellationDrawings[shape].name,{exact:true})).toBeVisible();expect(errors).toEqual([]);
+  const postcard=await context.newPage();await openOffline(postcard,finishFour(undefined,{...defaultFourth,result:{kind:'constellation',outcome:shape,usedPreset:false}}),'/result/3');expect(await postcard.locator('.postcard .sky-lines').innerHTML()).toBe(fullLines);await expect(postcard.getByText(constellationDrawings[shape].name,{exact:true})).toBeVisible();expect(errors).toEqual([]);
 });
 
 test('changing a sketch resets only the local drawing and keyboard completion focuses the explicit finish',async({page})=>{
-  const save=atDrawing();await openOffline(page,save,'/play/4');await page.getByRole('button',{name:'Кот',exact:true}).click();await page.getByRole('button',{name:'Звезда 1',exact:true}).click();await page.getByRole('button',{name:'Другой рисунок',exact:true}).click();
+  const save=atDrawing();await openOffline(page,save,'/play/3');await page.getByRole('button',{name:'Кот',exact:true}).click();await page.getByRole('button',{name:'Звезда 1',exact:true}).click();await page.getByRole('button',{name:'Другой рисунок',exact:true}).click();
   await page.getByRole('button',{name:'Геймпад',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.getByLabel('Соединено звёзд',{exact:true})).toHaveText('0 / 12');
   const target=page.getByRole('button',{name:'Звезда 1',exact:true});await target.dispatchEvent('keydown',{key:'Enter',repeat:true});await expect(page.getByLabel('Соединено звёзд',{exact:true})).toHaveText('0 / 12');
   for(let i=0;i<12;i++)await page.keyboard.press('Enter');await expect(page.getByRole('button',{name:'Оставить наше созвездие',exact:false})).toBeFocused();expect(JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!)).toEqual(save);

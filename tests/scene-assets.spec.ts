@@ -50,6 +50,8 @@ test('an expression failure does not stick when the scene moves to another image
   await expect(page.getByRole('button',{name:'Повторить загрузку'})).toBeVisible();
   await page.getByRole('button',{name:'Дальше',exact:false}).click();
   await expect(page.locator('[data-node="c1.door"]')).toBeVisible();
+  while(await page.locator('[data-node="c1.door"]').count())await page.getByRole('button',{name:'Дальше',exact:false}).click();
+  await page.getByRole('button',{name:'Держи коробку. Я помогу собрать',exact:false}).click();
   await expectLoaded(page.locator('.character'));
   await expectLoaded(page.locator('.scene-background'));
   await expect(page.locator('.art-error')).toHaveCount(0);

@@ -1,19 +1,21 @@
-import { getChapter } from '../src/content/chapters';
-import { chapters } from '../src/content/chapters/manifest';
-import { reduceSave } from '../src/state/reducer';
-import { parseSave } from '../src/persistence/validateSave';
-import { finishThree } from './chapter3Helpers';
-import type { Command,ConstellationResult,Run,StoryState } from '../src/engine/types';
-export const fourthCode=chapters.find(c=>c.id===4)!.code!;
-export type FourthPath={bench:NonNullable<StoryState['bench']>;result:ConstellationResult;bond:NonNullable<StoryState['bond']>;wish:NonNullable<StoryState['wish']>;goodbye?:'accept'|'her'|'none'};
-export const defaultFourth:FourthPath={bench:'space',result:{kind:'constellation',outcome:'teapot',usedPreset:false},bond:'friendly',wish:'calm'};
-export function command4(r:Run,p=defaultFourth):Command{
-  const n=getChapter(4,r.story)!.nodes[r.nodeId];if(n.kind==='dialogue')return {kind:'advance',expectedTurn:r.turn};
-  if(n.kind==='minigame')return {kind:'game-result',expectedTurn:r.turn,result:p.result};
-  if(n.kind==='choice')return {kind:'choose',expectedTurn:r.turn,choiceId:n.id==='c4.distance'?p.bench:n.id==='c4.bond'?p.bond:n.id==='c4.goodbye'?p.goodbye??'none':p.wish};
-  throw Error('Hidden node');
-}
-export function startFour(base=finishThree(),trial=false){return reduceSave(reduceSave(base,{type:'unlock',code:fourthCode}),{type:trial?'trial':'start',chapter:4});}
-export function finishFour(base=finishThree(),p=defaultFourth,trial=false,check=false){
-  let s=startFour(base,trial);for(let i=0;i<180;i++){const r=trial?s.trial?.run:s.campaign.active;if(!r)return s;if(check)parseSave(JSON.stringify(s));s=reduceSave(s,{type:'command',target:trial?'trial':'campaign',command:command4(r,p)});}throw Error('Loop');
+// Shared first-four fixture: stars first, then the game. Sky options remain convenient for fifth-chapter tests.
+import {completeTwo,finishThree,defaultThird} from './chapter3Helpers';
+import {finishSky,skyCommand,defaultSky,type SkyPath,startSky} from './sky3Helpers';
+import {reduceSave} from '../src/state/reducer';
+import type {SaveV1} from '../src/state/types';
+export type FourthPath=SkyPath;
+export const defaultFourth=defaultSky;
+export const fourthCode='NEBO-4L8N';
+export const command4=skyCommand;
+export const startFour=startSky;
+export function finishFour(base?:SaveV1,p=defaultSky,trial=false,check=false):SaveV1{
+ if(trial)return finishSky(base??finishFour(),p,true,check);
+ let save=base??completeTwo();
+ const oldGame=save.campaign.records[4],result=oldGame?.results.kitchen;
+ const game=oldGame&&result?{reaction:oldGame.story.controllerReaction!,team:oldGame.story.teamName!,style:oldGame.story.kitchenStyle!,after:oldGame.story.gameAftercare!,result}:defaultThird;
+ if(save.campaign.completed.includes(3)){
+  save=reduceSave(save,{type:'rewrite',chapter:3});
+  for(let i=0;i<180&&save.campaign.active;i++){const run=save.campaign.active;save=reduceSave(save,{type:'command',target:'campaign',command:skyCommand(run,p)});}
+ }else save=finishSky(save,p,false,check);
+ return finishThree(save,game,false,check);
 }

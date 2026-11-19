@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useGame, DEV_SANDBOX } from '../app/GameProvider';
-import { parseSave, MAX_SAVE_BYTES,legacySource } from '../persistence/validateSave';
+import { parseSave, MAX_SAVE_BYTES } from '../persistence/validateSave';
 import { SaveExportButton } from './SaveExportButton';
 import type { SaveV1 } from '../state/types';
 import { Modal } from './Modal';
 import { BOT_URL } from '../telegram/bridge';
 export function SettingsPanel(){
-  const {seasonUpdateRaw,save,send,recovery,cloudStatus,telegramApp}=useGame();const [pending,setPending]=useState<SaveV1|null>(null);const [message,setMessage]=useState('');const [reset,setReset]=useState(false),[paste,setPaste]=useState('');
-  const exportRaw=seasonUpdateRaw??JSON.stringify(save,null,2);
+  const {save,send,recovery,cloudStatus,telegramApp}=useGame();const [pending,setPending]=useState<SaveV1|null>(null);const [message,setMessage]=useState('');const [reset,setReset]=useState(false),[paste,setPaste]=useState('');
+  const exportRaw=JSON.stringify(save,null,2);
   function chooseText(raw:string){try{const next=parseSave(raw);setPending(next);setMessage('');}catch(e){setMessage(e instanceof Error?e.message:'Не удалось прочитать копию');}}
   async function chooseFile(file:File|undefined){if(!file)return;try{if(file.size>MAX_SAVE_BYTES)throw new Error('Максимальный размер копии — 256 КБ.');chooseText(await file.text());}catch(e){setMessage(e instanceof Error?e.message:'Не удалось прочитать файл');}}
   return <section className="settings-panel"><h2>В твоём темпе</h2>
@@ -19,7 +19,7 @@ export function SettingsPanel(){
     {cloudStatus==='none'&&!DEV_SANDBOX&&<p className="small">Для продолжения между устройствами есть <a href={BOT_URL} target="_blank" rel="noreferrer">игра в Telegram</a>. Уже пройденную историю перенеси файлом через «Скачать копию» и «Загрузить копию».</p>}
     {!DEV_SANDBOX?<div className="stack">{!recovery&&<SaveExportButton raw={exportRaw} name="five-meetings-save.json" app={telegramApp}>Скачать копию прогресса</SaveExportButton>}<label className="file-button">Загрузить копию<input aria-label="Загрузить копию" type="file" accept=".json,application/json" onChange={e=>{void chooseFile(e.target.files?.[0]);e.target.value='';}}/></label><details><summary>Вставить текст копии</summary><label className="manual-copy">Текст сохранения<textarea aria-label="Текст сохранения" value={paste} maxLength={MAX_SAVE_BYTES} spellCheck={false} onChange={e=>setPaste(e.target.value)}/></label><button disabled={!paste.trim()} onClick={()=>chooseText(paste)}>Проверить текст копии</button></details>{!recovery&&<button className="text-button" onClick={()=>setReset(true)}>Начать историю заново</button>}</div>:<p className="small">Тестовый прогресс изолирован. Экспорт и импорт здесь отключены.</p>}
     {message&&<p role="alert">{message}</p>}
-    {pending&&<Modal title="Заменить текущий прогресс?" onClose={()=>setPending(null)}>{legacySource(pending)&&<p>Во втором сезоне этой копии старый сценарий. После подтверждения он начнётся заново; первые пять встреч сохранятся. Исходник останется отдельной резервной копией.</p>}<p>В копии пройдено глав: {pending.campaign.completed.length}. {pending.campaign.active?'Есть незавершённая глава.':''}</p><p className="small">Дата копии: {new Date(pending.updatedAt).toLocaleString('ru-RU')}. Текущая история будет заменена, альбомы не объединяются.</p><div className="stack"><SaveExportButton raw={exportRaw} name="five-meetings-save.json" app={telegramApp}>Сначала скачать текущую копию</SaveExportButton><button className="primary" onClick={()=>{send({type:'replace',save:pending});setPending(null);setPaste('');setMessage('Копия загружена. Можно продолжать историю.');}}>{legacySource(pending)?'Загрузить копию и начать второй сезон заново':'Заменить прогресс'}</button><button onClick={()=>setPending(null)}>Отмена</button></div></Modal>}
+    {pending&&<Modal title="Заменить текущий прогресс?" onClose={()=>setPending(null)}><p>В копии пройдено глав: {pending.campaign.completed.length}. {pending.campaign.active?'Есть незавершённая глава.':''}</p><p className="small">Дата копии: {new Date(pending.updatedAt).toLocaleString('ru-RU')}. Текущая история будет заменена, альбомы не объединяются.</p><div className="stack"><SaveExportButton raw={exportRaw} name="five-meetings-save.json" app={telegramApp}>Сначала скачать текущую копию</SaveExportButton><button className="primary" onClick={()=>{send({type:'replace',save:pending});setPending(null);setPaste('');setMessage('Копия загружена. Можно продолжать историю.');}}>Заменить прогресс</button><button onClick={()=>setPending(null)}>Отмена</button></div></Modal>}
     {reset&&<Modal title="Изменить историю с начала?" onClose={()=>setReset(false)}><p>Основная история будет начата заново, результаты следующих глав и личные заметки будут удалены. Альбом, найденные бонусы и достижения останутся.</p><div className="stack"><button className="primary" onClick={()=>{send({type:'rewrite'});setReset(false);location.hash='/play/1';}}>Начать заново</button><button onClick={()=>setReset(false)}>Оставить как есть</button></div></Modal>}
   </section>;
 }
