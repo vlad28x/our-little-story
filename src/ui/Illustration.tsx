@@ -178,9 +178,24 @@ export function Illustration({kind,className=''}:{kind:string;className?:string}
       <circle cx="68" cy="75" r="3.4" fill="#e6a4b6" stroke="#854f62" strokeWidth="1.5"/>
     </>,
     scarf:<>
-      <path d="M25 20Q50 6 75 20L69 44L51 40L54 83L31 90L29 44L18 40Z" fill="#cec3e6" stroke="#624a5e" strokeWidth="2.4"/>
-      <path d="M25 29L68 31M34 50L49 48M34 61L50 60M35 73L51 71" stroke="#f5d58e" strokeWidth="2.8"/>
-      <path d="M33 89V96M41 87V95M49 85V93" stroke="#624a5e" strokeWidth="2.2"/>
+      <ellipse cx="48" cy="92" rx="28" ry="4.5" fill="#3a2212" opacity=".14" stroke="none"/>
+      {/* Back scarf tail in softer shadow */}
+      <path d="M51 39q15 2 20 12l6 28q-9 4-19 2l-7-31Z" fill="#9a95a3" stroke="#534d59" strokeWidth="2.2"/>
+      <path d="M56 53l15-2M58 63l16-2M61 73l15-2" stroke="#c8c2cf" strokeWidth="1.6" opacity=".7"/>
+      <path d="M61 82l2 7M66 82l2 7M71 81l2 7M75 80l2 7" stroke="#534d59" strokeWidth="2"/>
+      {/* Soft knitted collar loop */}
+      <path d="M19 32q-5-11 8-17q24-10 49-1q11 5 6 18q-4 11-18 13q-18 3-34-1q-9-2-11-12Z" fill="#bdb8c6" stroke="#534d59" strokeWidth="2.4"/>
+      <path d="M23 23q26-10 51-1q5 4 2 10q-26 9-52 0q-4-4-1-9Z" fill="#d3cedb" stroke="none"/>
+      <path d="M26 21q10-4 22-4M27 32q20 4 42-1" stroke="#857f8f" strokeWidth="1.8" opacity=".75"/>
+      <path d="M28 26q22-4 44 0" stroke="#f0e5d1" strokeWidth="2.4" strokeDasharray="5 4" opacity=".85"/>
+      {/* Front draped scarf tail with knit ribs & stripes */}
+      <path d="M31 37q12 4 23 1l-3 46q-12 6-24 2l4-49Z" fill="#c7c2d0" stroke="#534d59" strokeWidth="2.4"/>
+      <path d="M34 40l-2 43q8 3 15 0l2-42Z" fill="#dad5e2" stroke="none" opacity=".6"/>
+      <path d="M31 48q11 3 22 0M30 58q11 3 22 0M29 68q11 3 22 0M28 77q11 3 22 0" stroke="#9992a3" strokeWidth="1.6" opacity=".65"/>
+      <path d="M30 53q11 3 22 0M29 73q11 3 22 0" stroke="#f2e6cf" strokeWidth="2.6"/>
+      <path d="M36 42l-2 40M44 43l-1 40" stroke="#8c8696" strokeWidth="1.2" strokeDasharray="3 4" opacity=".55"/>
+      {/* Swaying fringe tassels */}
+      <path d="M29 87l-2 8M34 88l-1 8M39 88v8M44 87l1 8M49 85l2 8" stroke="#534d59" strokeWidth="2.1"/>
     </>,
     envelope:<>
       <ellipse cx="50" cy="83" rx="38" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>

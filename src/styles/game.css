@@ -104,6 +104,7 @@ html[data-telegram=true]{--app-safe-top:calc(max(env(safe-area-inset-top,0px),va
 .easter-prop>svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
 .easter-cookie{z-index:2;border-radius:12px}
 .easter-mug>svg{transform:translateY(-14px)}
+.easter-tv>svg{transform:translateY(-22%) scale(1.18)}
 .tv-player{position:absolute;left:8%;right:8%;bottom:12%;font-size:9px;line-height:1.05;color:#fff7ed;background:#554652ee;border-radius:3px;padding:3px 1px;pointer-events:none}
 .easter-star{right:3%;top:12%;width:66px;height:66px;filter:drop-shadow(0 0 8px #ffe7a890)}
 .easter-sign{left:3%;top:50px;width:132px;height:66px}
