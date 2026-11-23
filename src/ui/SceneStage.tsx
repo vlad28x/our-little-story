@@ -51,10 +51,13 @@ export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.c
       onError={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous:[...previous,layer.url])}
       onLoad={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous.filter(url=>url!==layer.url):previous)}/>;
   }
+  const showEasterEggs=easterEggs&&currentFailures.length===0&&!fade
+    &&!['c1.prologue','c1.before','c9.courtyard.filmStart','c9.courtyard.resume'].includes(sceneId)
+    &&(!exhibit||exhibit==='hall'||exhibit==='poster');
   const dance=({'c8.supper.follow':'close','c8.supper.lead':'lead','c8.supper.play':'playful'} as Record<string,string>)[sceneId]??/^c8\.r3\.dance\.(close|lead|playful)$/.exec(sceneId)?.[1];
   return <div ref={stage} className={`scene-stage ${courtyard?'courtyard-stage':''} ${travellers?'travellers-stage':''} ${background==='bg.travellers10.cafe'?'traveller-cafe-stage':''} ${background==='bg.travellers10.home'?'traveller-home-stage':''} ${exhibit?`exhibit-${exhibit}`:''} ${advisers?'has-advisers adviser-aside':''} ${bench?`bench-${bench}`:''} ${galleryPlace?`gallery-${galleryPlace}`:''} ${fade?'scene-fade':''} ${dance?`dancing-${dance}`:''} ${reducedMotion?'dance-still':''}`} aria-label={location}>
     <div className="scene-art-clip">
-    {easterEggs&&!['c1.prologue','c1.before'].includes(sceneId)&&currentFailures.length===0&&<SceneEasterEggs stage={stage} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c4.pad.dead','c4.pad.ready'].includes(sceneId)} controller={sceneId==='c4.pad.ready'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} discovered={discoveredEggs} onDiscover={id=>setDiscoveredEggs(previous=>new Set([...previous,id]))} reduced={reducedMotion} onSound={onEasterSound}/>}
+    {showEasterEggs&&<SceneEasterEggs stage={stage} background={background} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c4.pad.dead','c4.pad.ready'].includes(sceneId)} controller={sceneId==='c4.pad.ready'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} discovered={discoveredEggs} onDiscover={id=>setDiscoveredEggs(previous=>new Set([...previous,id]))} reduced={reducedMotion} onSound={onEasterSound}/>}
     {renderLayer('background')}
     {exhibit&&<GalleryArt view={exhibit}/>}
     {background==='bg.s2.window.evening'&&currentFailures.length===0&&<ShopBreakSign stage={stage}/>}

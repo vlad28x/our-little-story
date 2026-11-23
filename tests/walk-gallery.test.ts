@@ -8,7 +8,7 @@ import { chapters } from '../src/content/chapters/manifest';
 import { resolveLine } from '../src/engine/step';
 import { validateContent } from '../src/engine/validateContent';
 import { filmLeft } from '../src/persistence/photoSix';
-import { validateSave as parseSave } from '../src/persistence/validateSave';
+import { parseSave as loadSave,validateSave as parseSave } from '../src/persistence/validateSave';
 import { canStart,reduceSave } from '../src/state/reducer';
 import { cloudRaw } from '../src/telegram/cloud';
 import { finishFive } from './chapter5Helpers';
@@ -30,7 +30,7 @@ it('all eighteen walks preserve first five and reload at every cursor with no st
  for(const place of ['upper','water'] as const)for(const subject of ['vlad','her','place'] as const)for(const gesture of ['hand','hug','none'] as const){
   let s=startPhotoSix(base);const counts=new Set<number>();const texts:string[]=[];
   while(s.campaign.active){const r=s.campaign.active,n=chapter6.nodes[r.nodeId];expect(parseSave(JSON.stringify(s))).toEqual(s);const left=filmLeft(r.story);if(left!==undefined)counts.add(left);if(n.kind==='dialogue')texts.push(resolveLine(n.lines[r.lineIndex],r.story).text);const cmd=photoCommand(r,{place,subject,gesture});s=reduceSave(s,{type:'command',target:'campaign',command:cmd});expect(reduceSave(s,{type:'command',target:'campaign',command:cmd})).toEqual(s);}
-  expect([...counts]).toEqual([27,26,25,21]);expect(s.campaign.records[6]?.story).toMatchObject({c6Edition:5,c6PhotoPlace:place,c6PhotoSubject:subject,c6Gesture:gesture,c6Film:'six',c6CameraHolder:'her'});expect(s.campaign.records[6]?.story.s2Direction).toBeUndefined();
+  expect([...counts]).toEqual([12,11,10,9]);expect(s.campaign.records[6]?.story).toMatchObject({c6Edition:5,c6PhotoPlace:place,c6PhotoSubject:subject,c6Gesture:gesture,c6Film:'six',c6CameraHolder:'her'});expect(s.campaign.records[6]?.story.s2Direction).toBeUndefined();
   if(gesture==='none')expect(texts.join(' ')).not.toMatch(/Ты вкладываешь ладонь|обнимает тебя в ответ|размыкаете руки|чтобы не выпускать его руку|ощущение его руки|после его объятия/);
   const farewell=texts.slice(-6).join(' ');
   expect(farewell.includes('Влад коротко сжимает твои пальцы')).toBe(gesture==='hand');
@@ -42,12 +42,12 @@ it('all eighteen walks preserve first five and reload at every cursor with no st
   expect(s.campaign.records[5]).toEqual(base.campaign.records[5]);expect(parseSave(cloudRaw(s))).toEqual(s);expect(canStart({...s,unlocked:[...s.unlocked,7]},7)).toBe(true);
  }
 },90000);
-it('all 72 gallery paths preserve exact facts, independent gift, conditional tours and 21→20→15 film',()=>{
+it('all 72 gallery paths preserve exact facts, independent gift, conditional tours and 9→8→6 film',()=>{
  let count=0;const six=finishPhotoSix(base,{gesture:'none'});
  for(const route of ['together','apart'] as const)for(const work of ['blue','chip'] as const)for(const gift of ['chip','blue','none'] as const)for(const frame of ['vlad','her','both'] as const)for(const farewell of ['cheek','words'] as const){
   const path:GalleryPath={route,work,gift,frame,farewell};let s=startGallery(six);const texts:string[]=[],counts=new Set<number>();
   while(s.campaign.active){const r=s.campaign.active,n=chapter7.nodes[r.nodeId];expect(parseSave(JSON.stringify(s))).toEqual(s);const left=filmLeft(r.story);if(left!==undefined)counts.add(left);if(n.kind==='dialogue')texts.push(resolveLine(n.lines[r.lineIndex],r.story).text);s=reduceSave(s,{type:'command',target:'campaign',command:galleryCommand(r,path)});}
-  const st=s.campaign.records[7]!.story;expect(st).toMatchObject({c7GalleryRoute:route,c7GalleryWork:work,c7GalleryGift:gift,c7GalleryFrame:frame,c7GalleryFarewell:farewell,c7Film:'six',c7CameraHolder:'her'});expect(st.c7Cheek).toBe(farewell==='cheek'?true:undefined);expect([...counts]).toEqual([21,20,15]);
+  const st=s.campaign.records[7]!.story;expect(st).toMatchObject({c7GalleryRoute:route,c7GalleryWork:work,c7GalleryGift:gift,c7GalleryFrame:frame,c7GalleryFarewell:farewell,c7Film:'six',c7CameraHolder:'her'});expect(st.c7Cheek).toBe(farewell==='cheek'?true:undefined);expect([...counts]).toEqual([9,8,6]);
   expect(texts.join(' ')).toContain('приготовить настоящий ужин вместе с тобой');expect(texts.join(' ')).toContain('продукты с меня');
   expect(texts.join(' ')).not.toMatch(/полосы снова сходятся|Две линии почти касаются|колено до подбородка|как заделали|обе зазубрины оказываются/);
   if(farewell==='words')expect(texts.join(' ')).not.toContain('Ты целуешь его');
@@ -71,4 +71,19 @@ it('rejects invented facts, skipped actions, relabelled editions and old future 
 });
 it('real invitation values do not select a relationship or change the new walk entry',()=>{
  for(const value of [null,'game','movie','cafe','walk','decline','public','chat','later'] as const){const s=startPhotoSix(reduceSave(base,{type:'continuation',value}));expect(s.campaign.active?.nodeId).toBe('c6.photo.entry');expect(s.campaign.active?.story).toEqual({...base.campaign.records[5]!.story,c6Edition:5});expect(s.continuation).toBe(value);}
+});
+
+it('keeps a pre-update content24 save through chapter seven and starts supper with six frames',()=>{
+ const raw=fs.readFileSync('tests/fixtures/content24-through7.json','utf8');
+ const before=JSON.parse(raw);
+ expect(before).toMatchObject({contentVersion:24,campaign:{active:null,completed:[1,2,3,4,5,6,7],records:{6:{story:{c6Film:'six'}},7:{story:{c7Film:'six'}}}}});
+ const restored=loadSave(raw);
+ expect(restored).toEqual(before);
+ expect(parseSave(raw)).toEqual(before);
+ const started=reduceSave(restored,{type:'start',chapter:8,attemptId:'content24-supper'});
+ expect(started.campaign.active?.nodeId).toBe('c8.supper.entry');
+ expect(filmLeft(started.campaign.active!.story)).toBe(6);
+ expect(started.campaign.records).toEqual(before.campaign.records);
+ expect(started.collection.cards).toEqual(before.collection.cards);
+ expect(parseSave(JSON.stringify(started))).toEqual(started);
 });

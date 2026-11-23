@@ -1,0 +1,21 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Доска с тёртым сыром и свежей зеленью">
+  <ellipse cx="160" cy="166" rx="138" ry="16" fill="#3a2212" opacity=".22"/>
+  <rect x="20" y="24" width="280" height="138" rx="22" fill="#cfa476" stroke="#8e6945" stroke-width="3"/>
+  <path d="M40 48H280M36 96H284M44 136H276" stroke="#be9163" stroke-width="2" opacity=".45"/>
+  <circle cx="94" cy="94" r="41" fill="#f7ecd6" stroke="#b09471" stroke-width="3"/>
+  <circle cx="94" cy="94" r="32" fill="#f5d374"/>
+  <path d="M72 88l14-8m6 14l16-6m-28 12l15 5m8-24l10 10m-22 15l12-4" stroke="#dfae44" stroke-width="3" stroke-linecap="round"/>
+  <g fill="#6d8f52" stroke="#4c6b37" stroke-width="1.6">
+    <ellipse cx="182" cy="70" rx="18" ry="10" transform="rotate(-26 182 70)"/>
+    <ellipse cx="222" cy="64" rx="17" ry="9.5" transform="rotate(16 222 64)"/>
+    <ellipse cx="254" cy="88" rx="17" ry="9.5" transform="rotate(-12 254 88)"/>
+    <ellipse cx="186" cy="112" rx="18" ry="10" transform="rotate(20 186 112)"/>
+    <ellipse cx="228" cy="118" rx="16" ry="9" transform="rotate(-22 228 118)"/>
+  </g>
+  <g stroke="#92b574" stroke-width="1.5" stroke-linecap="round">
+    <path d="M172 74l20-8M212 62l20 4M244 90l20-4M176 109l20 6M218 121l20-6"/>
+  </g>
+  <g fill="#5b7c43">
+    <circle cx="206" cy="90" r="2.8"/><circle cx="238" cy="96" r="2.4"/><circle cx="164" cy="94" r="2.5"/><circle cx="256" cy="116" r="2.6"/>
+  </g>
+</svg>

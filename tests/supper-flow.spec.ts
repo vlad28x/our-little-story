@@ -8,9 +8,9 @@ const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
 test('served eighth reloads food and shutter without overwriting the first seven',async({page})=>{
  const save=supperAt('c8.supper.foodClick',{filling:'mushroom',shape:'open',frame:'foodHer'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
- await page.goto('./#/play/8');await expect(page.locator('.photo-camera')).toContainText('15');
+ await page.goto('./#/play/8');await expect(page.locator('.photo-camera strong')).toHaveText('6');
  for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
- await page.reload();await expect(page.locator('.photo-camera')).toContainText('14');
+ await page.reload();await expect(page.locator('.photo-camera strong')).toHaveText('5');
  const stored=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(stored.campaign.active?.story).toMatchObject({c8Filling:'mushroom',c8Shape:'open',c8Film:'key'});expect(stored.campaign.records).toEqual(save.campaign.records);
  await expect.poll(()=>page.locator('.scene-background').evaluate((im:HTMLImageElement)=>im.naturalWidth>0)).toBe(true);
  expect(errors).toEqual([]);

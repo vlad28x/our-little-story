@@ -1,0 +1,33 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Доска с тёртым сыром и обжаренными грибами">
+  <ellipse cx="160" cy="166" rx="138" ry="16" fill="#3a2212" opacity=".22"/>
+  <rect x="20" y="24" width="280" height="138" rx="22" fill="#cfa476" stroke="#8e6945" stroke-width="3"/>
+  <path d="M40 48H280M36 96H284M44 136H276" stroke="#be9163" stroke-width="2" opacity=".45"/>
+  <circle cx="94" cy="94" r="41" fill="#f7ecd6" stroke="#b09471" stroke-width="3"/>
+  <circle cx="94" cy="94" r="32" fill="#f5d374"/>
+  <path d="M72 88l14-8m6 14l16-6m-28 12l15 5m8-24l10 10m-22 15l12-4" stroke="#dfae44" stroke-width="3" stroke-linecap="round"/>
+  <g transform="translate(178 72) rotate(-16) scale(1.05)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  <g transform="translate(224 68) rotate(14) scale(1)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  <g transform="translate(258 96) rotate(-8) scale(0.95)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  <g transform="translate(196 114) rotate(18) scale(1.05)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  <g transform="translate(240 122) rotate(-20) scale(0.95)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+</svg>

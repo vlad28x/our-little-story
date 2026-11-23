@@ -1,0 +1,85 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Четыре открытые запечённые порции: mushroom">
+  <ellipse cx="160" cy="166" rx="142" ry="18" fill="#3a2212" opacity=".24"/>
+  <ellipse cx="160" cy="98" rx="144" ry="70" fill="#f3e7cf" stroke="#a58b6b" stroke-width="3"/>
+  <ellipse cx="160" cy="98" rx="124" ry="54" fill="#fff8ea" stroke="#d8c6a8" stroke-width="2"/>
+  <g transform="translate(70 48) rotate(-10 35 26)">
+    <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
+
+    <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
+    <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
+    <g transform="translate(24 24) rotate(-14) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(46 22) rotate(16) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(36 36) rotate(-6) scale(0.58)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  </g>
+  <g transform="translate(170 46) rotate(8 35 26)">
+    <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
+
+    <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
+    <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
+    <g transform="translate(24 24) rotate(-14) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(46 22) rotate(16) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(36 36) rotate(-6) scale(0.58)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  </g>
+  <g transform="translate(164 96) rotate(5 35 26)">
+    <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
+
+    <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
+    <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
+    <g transform="translate(24 24) rotate(-14) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(46 22) rotate(16) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(36 36) rotate(-6) scale(0.58)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  </g>
+  <g transform="translate(76 98) rotate(-7 35 26)">
+    <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
+    <path d="M55 9q10 2 11 16q1 14-10 18q4-10 3-17q-1-9-4-17z" fill="#df8e2b" stroke="#9d5816" stroke-width="1.4"/>
+    <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
+    <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
+    <g transform="translate(24 24) rotate(-14) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(46 22) rotate(16) scale(0.62)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g><g transform="translate(36 36) rotate(-6) scale(0.58)">
+    <path d="M-13 2q0-14 13-14t13 14z" fill="#7c5b43" stroke="#533a29" stroke-width="1.6"/>
+    <path d="M-9 1q0-9 9-9t9 9z" fill="#9c795e" opacity=".65"/>
+    <rect x="-4.5" y="1" width="9" height="11" rx="3" fill="#d3b490" stroke="#7c5b43" stroke-width="1.5"/>
+  </g>
+  </g>
+</svg>

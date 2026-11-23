@@ -1,0 +1,14 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Доска после готовки: мучная запятая, ложка и крошки">
+  <ellipse cx="160" cy="166" rx="138" ry="16" fill="#3a2212" opacity=".22"/>
+  <rect x="20" y="24" width="280" height="138" rx="22" fill="#cfa476" stroke="#8e6945" stroke-width="3"/>
+  <path d="M40 48H280M36 96H284M44 136H276" stroke="#be9163" stroke-width="2" opacity=".45"/>
+  <path d="M62 72q34 22 12 45q-9 8 1 16" stroke="#fff5e0" stroke-width="10" fill="none" stroke-linecap="round" opacity=".9"/>
+  <circle cx="84" cy="126" r="4" fill="#fff5e0" opacity=".65"/>
+  <path d="M216 62l-56 60" stroke="#856552" stroke-width="10" stroke-linecap="round"/>
+  <ellipse cx="228" cy="50" rx="17" ry="24" transform="rotate(42 228 50)" fill="#b89984" stroke="#856552" stroke-width="3"/>
+  <circle cx="48" cy="136" r="3.5" fill="#eee0b8"/>
+  <circle cx="98" cy="118" r="3" fill="#eee0b8"/>
+  <circle cx="136" cy="134" r="3.5" fill="#eee0b8"/>
+  <circle cx="192" cy="120" r="3" fill="#eee0b8"/>
+  <circle cx="258" cy="134" r="3.5" fill="#eee0b8"/>
+</svg>

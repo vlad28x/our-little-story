@@ -31,4 +31,4 @@ export function completedSupper(story?:StoryState){return completedGallery(story
 export function completedGallery(story?:StoryState){return completedWalk(story)&&story?.c7Film==='six'&&story.c7CameraHolder==='her'&&!!story.c7GalleryFarewell&&!!story.c7GalleryGift;}
 // Only completed canonical records supply these events; a found card does not.
 export function completedWalk(story?:StoryState){return !!story&&story.c6Film==='six'&&story.c6CameraHolder==='her'&&!!story.c6PhotoPlace&&!!story.c6PhotoSubject&&!!story.c6Gesture&&story.c6Edition===5;}
-export function filmLeft(story:StoryState){return story.c9Film?{key:8,empty:0,submitted:0}[story.c9Film]:story.c8Film?{key:14,nine:9}[story.c8Film]:story.c7Film?{key:20,six:15}[story.c7Film]:story.c6Film?{loaded:27,key:26,accidental:25,six:21}[story.c6Film]:undefined;}
+export function filmLeft(story:StoryState){return story.c9Film?{key:2,rain:1,empty:0,submitted:0}[story.c9Film]:story.c8Film?{key:5,nine:3}[story.c8Film]:story.c7Film?{key:8,six:6}[story.c7Film]:story.c6Film?{loaded:12,key:11,accidental:10,six:9}[story.c6Film]:undefined;}

@@ -6,12 +6,12 @@ import { effectiveVenue } from './season2';
 import type { Run } from '../engine/types';
 export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:string;background:string}> = {
   'c10.travellers':{chapter:10,title:'Два путешественника',caption:'Дошли оба. В следующий раз поменяемся фигурками.',quote:'',motif:'token',background:'bg.cafe.window'},
-  'c6.photo.walk':{chapter:6,title:'Пока светло',caption:'Двадцать один ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
+  'c6.photo.walk':{chapter:6,title:'Пока светло',caption:'Девять ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
   'c9.courtyard':{chapter:9,title:'С крышей разберёмся',caption:'Её дворик и ваш вечер под неожиданным дождём.',quote:'',motif:'cinema',background:'bg.courtyard9.open'},
   'c8.supper':{chapter:8,title:'Половина кухни',caption:'Каждому нашлось место за одним столом.',quote:'',motif:'tea-for-two',background:'bg.supper8.kitchen'},
   'c7.gallery':{chapter:7,title:'На шаг левее',caption:'Три работы, две находки.',quote:'',motif:'gallery',background:'bg.gallery7.hall'},
   'c6.photo.friends':{chapter:6,title:'До встречи',caption:'Вы остались друзьями.',quote:'',motif:'leaf',background:'bg.photo6.sun'},
-  'c6.photo.romance':{chapter:6,title:'Пока светло',caption:'Двадцать один ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
+  'c6.photo.romance':{chapter:6,title:'Пока светло',caption:'Девять ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
   'c5.story':{chapter:5,title:'Пять встреч',caption:'Пять вечеров, знакомый столик и маленькая история в конверте.',quote:'мой любимый незапланированный перерыв.',motif:'envelope',background:'bg.cafe.sunset'},
   'c1.tea': {chapter:1,title:'Маленькая пауза',caption:'Иногда хороший день начинается с того, что никуда не торопишься',quote:'спасибо, что задержалась.',motif:'tea',background:'bg.cafe.window'},
   'c1.banter': {chapter:1,title:'Нелепо познакомились',caption:'План знакомиться красиво заменён на план смеяться вместе',quote:'хорошо посидели. неожиданно буквально.',motif:'scarf',background:'bg.cafe.window'},
@@ -85,9 +85,9 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
 export function cardMeta(card:CardRecord){
   if(card.id==='c10.travellers')return {...cards[card.id],quote:({cafe:'Свет в «Паузе» погас. Вы ещё немного стояли у двери.',lateLeave:'Фотографии у тебя в сумке. Коробка ждёт следующей партии.',morning:'Утром осталось поставить рядом два стакана.',private:'Утром на столе рядом с двумя чашками остался конверт с фотографиями.'} as Record<string,string>)[card.variant]};
   if(card.id==='c9.courtyard')return {...cards[card.id],caption:card.variant==='canopy'?'Показ продолжился, а вы так и досмотрели фильм под навесом под одним пледом.':card.variant==='arch'?'Ты нашла другое место. Оттуда было видно весь экран.':'Фильм остался без развязки. Зато вы успели укрыть от дождя целую полку книг.'};
-  if(card.id==='c8.supper')return {...cards[card.id],caption:card.variant==='fold'?'Вместо одного рулета получились маленькие конверты. Хрустящий край вы поделили на двоих.':'Каждому кусочку нашлось место на противне. Даже самой маленькой порции хватило на двоих.'};
+  if(card.id==='c8.supper')return {...cards[card.id],caption:card.variant==='fold'?'Вместо одного рулета получились маленькие конверты. Хрустящий край вы поделили на двоих.':'Четыре открытые порции под румяной сырной корочкой. Самый хрустящий край вы поделили на двоих.'};
   if(card.id==='c7.gallery')return {...cards[card.id],caption:card.variant==='together'?'Три работы, один ряд. Вы прошли его от первой ступеньки до синей двери.':'В одном зале уместились две экскурсии. Каждый привёл другого к своей находке.'};
   if(card.id==='c6.photo.friends')return {...cards[card.id],caption:card.variant==='walk'?'У поворота каждый пошёл своей дорогой. Вы остались друзьями.':'Вы попрощались у набережной. Вы остались друзьями.'};
-  if((card.id==='c6.photo.romance'||card.id==='c6.photo.walk'))return {...cards[card.id],caption:card.variant==='upper'?'За первым кадром пришлось подняться выше. Двадцать один ещё впереди.':'Первый кадр нашёлся у воды. Двадцать один ещё впереди.'};
+  if((card.id==='c6.photo.romance'||card.id==='c6.photo.walk'))return {...cards[card.id],caption:card.variant==='upper'?'За первым кадром пришлось подняться выше. Девять ещё впереди.':'Первый кадр нашёлся у воды. Девять ещё впереди.'};
   return card.id==='c5.story'&&card.c5Edition===3?{...cards[card.id],caption:'Знакомый столик, новый рецепт и маленький спор о вкусе.',quote:'чай с характером. компания тоже.'}:cards[card.id];
 }

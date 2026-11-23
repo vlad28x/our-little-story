@@ -25,6 +25,8 @@ test('three rain routes and skipped bet finish independently with one card and n
    if(r.nodeId==='c9.courtyard.betChoice')await page.screenshot({path:`work/nov15/pause-${path.rain}-${index}.png`,animations:'disabled'});
    if(r.nodeId==='c9.courtyard.resume'&&r.lineIndex===3){await expect(page.getByRole('img',{name:'Человек и кот уезжают вместе в поезде',exact:true}).first()).toBeVisible();if(index===0)await page.screenshot({path:'work/nov15/film-train-320.png',animations:'disabled'});}
    if(r.nodeId==='c9.courtyard.earlyWalk'&&r.lineIndex===3){await expect(page.locator('.scene-background')).toHaveAttribute('src',/^data:/);await page.screenshot({path:'work/nov15/books-closed-320.png',animations:'disabled'});}
+   if(r.nodeId==='c9.courtyard.cameraEnd')await expect(page.locator('.photo-camera strong')).toHaveText('2');
+   if(r.nodeId==='c9.courtyard.lastShots')await expect(page.locator('.photo-camera strong')).toHaveText(['2','1','1','0','0','0'][r.lineIndex]);
    if(command.kind==='choose'&&node.kind==='choice')await page.locator('.choices button').filter({hasText:node.choices.find(c=>c.id===command.choiceId)!.text}).click();
    else await page.getByRole('button',{name:'Дальше',exact:false}).click();
    await expect.poll(async()=>(await read(page)).campaign.active?.turn??-1).not.toBe(r.turn);

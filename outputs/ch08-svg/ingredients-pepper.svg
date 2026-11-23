@@ -1,0 +1,22 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Доска с тёртым сыром и нарезанным сладким перцем">
+  <ellipse cx="160" cy="166" rx="138" ry="16" fill="#3a2212" opacity=".22"/>
+  <rect x="20" y="24" width="280" height="138" rx="22" fill="#cfa476" stroke="#8e6945" stroke-width="3"/>
+  <path d="M40 48H280M36 96H284M44 136H276" stroke="#be9163" stroke-width="2" opacity=".45"/>
+  <g transform="translate(29 0)">
+    <circle cx="94" cy="94" r="41" fill="#f7ecd6" stroke="#b09471" stroke-width="3"/>
+    <circle cx="94" cy="94" r="32" fill="#f5d374"/>
+    <path d="M72 88l14-8m6 14l16-6m-28 12l15 5m8-24l10 10m-22 15l12-4" stroke="#dfae44" stroke-width="3" stroke-linecap="round"/>
+    <g stroke="#b94432" stroke-width="7.5" stroke-linecap="round" fill="none">
+      <path d="M162 60q20-6 42 4"/>
+      <path d="M158 82q22-5 46 5"/>
+      <path d="M164 104q20-4 42 6"/>
+      <path d="M160 125q18-5 38 4"/>
+    </g>
+    <g stroke="#e57358" stroke-width="2.4" stroke-linecap="round" fill="none">
+      <path d="M166 59q15-4 32 3"/>
+      <path d="M163 81q17-4 36 4"/>
+      <path d="M169 103q15-3 32 4"/>
+      <path d="M165 124q14-4 28 3"/>
+    </g>
+  </g>
+</svg>

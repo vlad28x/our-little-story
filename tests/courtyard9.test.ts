@@ -23,7 +23,7 @@ it('ships the revised courtyard script, one neutral card, and exposes the new te
  expect(Object.values(chapter9.nodes).filter(n=>n.kind==='minigame'||n.kind==='note')).toEqual([]);
 });
 
-it('1134 meaningful combinations preserve the fixed film, independent goodbye, hoodie and last nine frames',()=>{
+it('1134 meaningful combinations preserve the fixed film, independent goodbye, hoodie and three remaining frames',()=>{
  const base=finishSupper().campaign.records[8]!.story;let count=0;
  for(const plan of ['tea','banter','coop'] as const)for(const priorKiss of ['yes','no'] as const)for(const clothing of ['none','evening','borrowed'] as const)for(const frame of ['vlad','seats','yard'] as const)for(const rain of ['canopy','arch','leave'] as const)for(const bet of (rain==='leave'?['skip']:['together','alone','skip']) as CourtyardPath['bet'][])for(const goodbye of ['kiss','hug','words'] as const){
   const borrowed=clothing==='borrowed',prior={...base,plan,c8LipKiss:priorKiss,c8Hoodie:borrowed?'borrowed' as const:clothing as 'none'|'evening'};
@@ -34,16 +34,19 @@ it('1134 meaningful combinations preserve the fixed film, independent goodbye, h
    if(node.kind==='dialogue')text.push(resolveLine(node.lines[run.lineIndex],run.story).text);
    if(node.kind==='choice')menus++;
    counts.add(filmLeft(run.story)!);
+   if(node.id==='c9.courtyard.lastShots')expect(filmLeft(run.story)).toBe([2,2,1,1,0,0][run.lineIndex]);
    const next=step(chapter9,run,courtyardCommand(run,path));if(next.kind==='rejected')throw Error(next.reason);
    run=next.run;if(next.kind==='complete'){complete=true;expect(next.cardId).toBe('c9.courtyard');break;}
   }
-  expect(complete).toBe(true);expect([...counts]).toEqual([9,8,0]);
+  expect(complete).toBe(true);expect([...counts]).toEqual([3,2,1,0]);
   expect(run.story).toMatchObject({...prior,c9Frame:frame,c9Film:'submitted',c9Rain:rain,c9Place:'courtyard',c9Goodbye:goodbye,c9LipKiss:goodbye==='kiss'?'yes':'no'});
   expect(run.story.c9Hoodie).toBe(borrowed?'returned':undefined);
   expect(run.story.c9Bet).toBe(rain==='leave'?undefined:bet);
   expect(menus).toBe((rain==='leave'?3:4));
   expect(scenes.includes('c9.courtyard.resume')).toBe(rain!=='leave');
   expect(scenes.includes('c9.courtyard.earlyWalk')).toBe(rain==='leave');
+  expect(scenes.indexOf('c9.courtyard.lastShots')).toBeGreaterThan(scenes.indexOf(rain==='leave'?'c9.courtyard.earlyWalk':'c9.courtyard.resume'));
+  expect(scenes.indexOf('c9.courtyard.lab')).toBeGreaterThan(scenes.indexOf('c9.courtyard.lastShots'));
   expect(scenes.includes('c9.courtyard.won')).toBe(rain!=='leave'&&bet==='together');
   expect(scenes.includes('c9.courtyard.bothMissed')).toBe(rain!=='leave'&&bet==='alone');
   expect(scenes.includes('c9.courtyard.kissFirst')).toBe(goodbye==='kiss'&&priorKiss==='no');

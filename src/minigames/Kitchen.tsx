@@ -1,11 +1,84 @@
-import { useEffect,useReducer,useRef } from 'react';
+import { useEffect,useId,useReducer,useRef } from 'react';
 import type { KitchenResult,StoryState } from '../engine/types';
 import { initialKitchen,ingredientNames,kitchenReduce,kitchenResult,recipes,teamNames,visibleOrders,type Ingredient } from './kitchenModel';
 export function FoodArt({ingredient}:{ingredient:Ingredient}){
-  return <svg viewBox="0 0 80 60" className="food-art" aria-hidden="true">{ingredient==='bread'?<><path d="M18 50V26C2 10 23 3 40 8C58 3 78 11 62 26V50Z" fill="#e8b776" stroke="#79564b" strokeWidth="2"/><path d="M25 44V24Q12 13 40 16Q67 13 55 24V44Z" fill="#fff0cf"/></>:ingredient==='cheese'?<><path d="M10 44L62 13L72 42L13 53Z" fill="#f9d581" stroke="#79564b" strokeWidth="2"/><circle cx="45" cy="33" r="4" fill="#d5a76a"/><circle cx="27" cy="43" r="3" fill="#d5a76a"/></>:ingredient==='tomato'?<><ellipse cx="40" cy="34" rx="25" ry="22" fill="#dd8f89" stroke="#79564b" strokeWidth="2"/><path d="M40 17L28 9L36 10L41 4L45 11L55 9L48 18Z" fill="#91ae8c"/><path d="M23 33Q20 23 28 21" fill="none" stroke="#fff0df" strokeWidth="3"/></>:<><ellipse cx="40" cy="32" rx="30" ry="16" transform="rotate(-28 40 32)" fill="#a8bd8d" stroke="#60765c" strokeWidth="2"/><ellipse cx="19" cy="43" rx="9" ry="12" transform="rotate(-28 19 43)" fill="#d7dfb8" stroke="#60765c"/><path d="M30 23L57 13M33 31L61 21" stroke="#7f9a72" strokeWidth="2"/></>}</svg>;
+  const uid=useId().replace(/:/g,'');
+  return <svg viewBox="0 0 80 60" className="food-art" aria-hidden="true">
+    <defs>
+      <linearGradient id={`${uid}-crust`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d48e48"/><stop offset="1" stopColor="#9c5e27"/></linearGradient>
+      <radialGradient id={`${uid}-tom`} cx="35%" cy="30%" r="68%"><stop offset="0" stopColor="#f27a66"/><stop offset=".55" stopColor="#d44b3c"/><stop offset="1" stopColor="#962a22"/></radialGradient>
+      <linearGradient id={`${uid}-cuc`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#8eb570"/><stop offset="1" stopColor="#587d46"/></linearGradient>
+    </defs>
+    {ingredient==='bread'?<>
+      <ellipse cx="40" cy="54" rx="28" ry="5" fill="#3a2212" opacity=".18"/>
+      <path d="M16 51V26C1 11 21 2 40 6C59 2 79 11 64 26V51Q40 55 16 51Z" fill={`url(#${uid}-crust)`} stroke="#6e411d" strokeWidth="2.1"/>
+      <path d="M21 48V26C9 15 24 8 40 11C56 8 71 15 59 26V48Q40 50 21 48Z" fill="#faebc8"/>
+      <path d="M24 44V27C16 19 27 14 40 16C53 14 64 19 56 27V44Z" fill="#fff7e2" opacity=".7"/>
+      <ellipse cx="32" cy="31" rx="2.5" ry="1.8" fill="#dfc28f"/><circle cx="48" cy="27" r="1.9" fill="#dfc28f"/>
+      <ellipse cx="42" cy="39" rx="3" ry="1.7" fill="#dfc28f"/><circle cx="28" cy="40" r="1.4" fill="#dfc28f"/>
+      <path d="M27 21q13-4 26 0" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity=".8"/>
+    </>:ingredient==='cheese'?<>
+      <ellipse cx="42" cy="54" rx="32" ry="5.5" fill="#3a2212" opacity=".18"/>
+      <path d="M9 34L60 9L75 24L20 43Z" fill="#ffe896" stroke="#8f6122" strokeWidth="1.9" strokeLinejoin="round"/>
+      <path d="M9 34L20 43V54L9 46Z" fill="#d99a38" stroke="#8f6122" strokeWidth="1.9" strokeLinejoin="round"/>
+      <path d="M20 43L75 24V44L20 54Z" fill="#f7c454" stroke="#8f6122" strokeWidth="1.9" strokeLinejoin="round"/>
+      <ellipse cx="39" cy="40" rx="6" ry="4.5" fill="#b87d24"/><ellipse cx="38" cy="41.2" rx="4.4" ry="3.2" fill="#e0a43b"/>
+      <ellipse cx="59" cy="35" rx="4.5" ry="3.4" fill="#b87d24"/><ellipse cx="58" cy="36" rx="3.2" ry="2.3" fill="#e0a43b"/>
+      <ellipse cx="28" cy="47" rx="3" ry="2.2" fill="#b87d24"/><ellipse cx="49" cy="23" rx="5" ry="2.3" fill="#e3ad42"/>
+      <path d="M18 33l39-19" stroke="#fff9d6" strokeWidth="1.6" strokeLinecap="round" opacity=".75"/>
+    </>:ingredient==='tomato'?<>
+      <ellipse cx="40" cy="55" rx="24" ry="5" fill="#3a2212" opacity=".2"/>
+      <ellipse cx="40" cy="35" rx="26" ry="21.5" fill={`url(#${uid}-tom)`} stroke="#78241d" strokeWidth="2"/>
+      <path d="M21 29q3-11 13-13" fill="none" stroke="#ffd2c4" strokeWidth="3.6" strokeLinecap="round" opacity=".88"/>
+      <circle cx="23" cy="36" r="2" fill="#ffe3d9" opacity=".82"/>
+      <path d="M40 19L24 12L34 12L39 4L43 12L56 11L46 19L52 25L40 20L28 25Z" fill="#618748" stroke="#395229" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M40 18l-1-12q2-3 5-2" fill="none" stroke="#486934" strokeWidth="2.2" strokeLinecap="round"/>
+    </>:<>
+      <ellipse cx="41" cy="53" rx="30" ry="5" fill="#3a2212" opacity=".18"/>
+      <ellipse cx="42" cy="31" rx="30" ry="15" transform="rotate(-26 42 31)" fill={`url(#${uid}-cuc)`} stroke="#3f5d32" strokeWidth="2"/>
+      <path d="M27 28l32-15M32 36l31-15" stroke="#a6ca87" strokeWidth="2" strokeLinecap="round" opacity=".65"/>
+      <circle cx="52" cy="23" r="1.4" fill="#466838"/><circle cx="62" cy="24" r="1.3" fill="#466838"/><circle cx="44" cy="35" r="1.4" fill="#466838"/>
+      <ellipse cx="20" cy="42" rx="10" ry="13.5" transform="rotate(-26 20 42)" fill="#e7f0c9" stroke="#4b6b3c" strokeWidth="2"/>
+      <ellipse cx="20" cy="42" rx="6.5" ry="9" transform="rotate(-26 20 42)" fill="#cfe0a3" stroke="#9ab874" strokeWidth="1"/>
+      <g fill="#f7fae8">
+        <ellipse cx="18" cy="38" rx="1.2" ry="2.2" transform="rotate(-20 18 38)"/>
+        <ellipse cx="22" cy="40" rx="1.2" ry="2.2" transform="rotate(25 22 40)"/>
+        <ellipse cx="19" cy="45" rx="1.2" ry="2.2" transform="rotate(-30 19 45)"/>
+        <ellipse cx="23" cy="45" rx="1.2" ry="2.2" transform="rotate(15 23 45)"/>
+      </g>
+    </>}
+  </svg>;
 }
 function Chef({vlad=false,busy=false}:{vlad?:boolean;busy?:boolean}){
-  return <svg viewBox="0 0 100 100" className={`kitchen-chef ${busy?'is-cooking':''}`} aria-hidden="true"><path d="M20 98V79Q50 60 80 79V98" fill={vlad?'#c8d8ca':'#f3cbd9'} stroke="#79564b" strokeWidth="2"/><circle cx="50" cy="52" r="28" fill="#f3d0b7" stroke="#79564b" strokeWidth="2"/>{vlad?<path d="M22 43Q13 24 27 25Q20 10 37 15Q39 2 53 14Q67 5 72 22Q89 23 78 43L68 34Q53 41 44 29L32 44Z" fill="#ac8058" stroke="#79564b" strokeWidth="2"/>:<path d="M25 37V26Q11 24 20 12Q29 5 38 13Q49 -1 62 12Q76 4 82 18Q88 31 74 28V37Z" fill="#fff7ed" stroke="#79564b" strokeWidth="2"/>}<circle cx="39" cy="52" r="3" fill="#624c48"/><circle cx="61" cy="52" r="3" fill="#624c48"/><path d="M43 65Q50 71 58 64" fill="none" stroke="#79564b" strokeWidth="2"/></svg>;
+  const uid=useId().replace(/:/g,'');
+  return <svg viewBox="0 0 100 100" className={`kitchen-chef ${busy?'is-cooking':''}`} aria-hidden="true">
+    <defs>
+      <radialGradient id={`${uid}-skin`} cx="40%" cy="35%" r="65%"><stop offset="0" stopColor="#fce4cf"/><stop offset="1" stopColor="#eabfa0"/></radialGradient>
+      <linearGradient id={`${uid}-apron`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={vlad?'#9db9a3':'#f0b8c9'}/><stop offset="1" stopColor={vlad?'#75947c':'#d88ca4'}/></linearGradient>
+    </defs>
+    {/* Shoulders, sweater & apron */}
+    <path d="M18 98V80Q50 61 82 80V98Z" fill={`url(#${uid}-apron)`} stroke="#5e433c" strokeWidth="2.2"/>
+    <path d="M34 75v23M66 75v23" stroke="#fff7ec" strokeWidth="2.4" opacity=".8"/>
+    <path d="M36 86h28v12H36Z" fill="#fff7ec" stroke="#85655c" strokeWidth="1.4" opacity=".88"/>
+    {/* Neck & head */}
+    <rect x="44" y="67" width="12" height="10" rx="4" fill="#e0b292"/>
+    <circle cx="50" cy="52" r="25.5" fill={`url(#${uid}-skin)`} stroke="#6b4d44" strokeWidth="2.1"/>
+    {/* Hair or Chef Toque */}
+    {vlad?<>
+      <path d="M23 44Q15 25 29 25Q22 10 38 15Q41 3 54 14Q68 6 73 22Q88 23 77 44Q68 33 56 36Q46 27 35 37Q29 35 23 44Z" fill="#9a6e48" stroke="#5b3e28" strokeWidth="2" strokeLinejoin="round"/>
+      <path d="M33 21q8-6 17-1M55 20q8-5 14 2" fill="none" stroke="#c79a6d" strokeWidth="2.2" strokeLinecap="round" opacity=".75"/>
+    </>:<>
+      <path d="M25 46q-2-14 10-18h30q12 4 10 18q-10-10-25-9q-15-1-25 9Z" fill="#6b5046" stroke="#4a362f" strokeWidth="1.6"/>
+      <path d="M26 36V26Q13 24 21 12Q30 5 39 12Q50-1 62 12Q75 5 81 18Q86 30 74 28V36Z" fill="#fffaf0" stroke="#785d55" strokeWidth="2" strokeLinejoin="round"/>
+      <path d="M38 18v12M50 15v15M62 18v12M27 31h46" stroke="#dfd0be" strokeWidth="1.6" strokeLinecap="round"/>
+    </>}
+    {/* Expressive eyes, rosy cheeks & warm smile */}
+    <ellipse cx="39" cy="52" rx="3" ry="3.4" fill="#4f3a36"/><circle cx="38" cy="50.8" r="1" fill="#fffaf0"/>
+    <ellipse cx="61" cy="52" rx="3" ry="3.4" fill="#4f3a36"/><circle cx="60" cy="50.8" r="1" fill="#fffaf0"/>
+    <ellipse cx="32" cy="58" rx="4.5" ry="2.6" fill="#e59797" opacity=".48"/>
+    <ellipse cx="68" cy="58" rx="4.5" ry="2.6" fill="#e59797" opacity=".48"/>
+    <path d="M43 62Q50 69 57 62" fill="none" stroke="#6b4d44" strokeWidth="2.2" strokeLinecap="round"/>
+  </svg>;
 }
 export function Kitchen({style,team,reserveRemote,onComplete,onSound,suspended=false}:{style:NonNullable<StoryState['kitchenStyle']>;team:NonNullable<StoryState['teamName']>;reserveRemote:boolean;onComplete:(r:KitchenResult)=>void;onSound:()=>void;suspended?:boolean}){
   const [s,dispatch]=useReducer(kitchenReduce,style,initialKitchen);const done=useRef(false);

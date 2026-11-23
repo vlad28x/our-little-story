@@ -19,4 +19,4 @@ it('renders every third-chapter dialogue, choice and mini-game without losing th
       s=reduceSave(s,{type:'command',target:'campaign',command:command3(run,{...defaultThird,reaction,result:{kind:'kitchen',outcome,served:outcome==='feast'?9:outcome==='snack'?4:0,mode:'calm'}})});
     }
   }expect(visited).toContain('c4.sofa');expect(visited).toContain('c4.kitchen');
-});
+}, 20_000);

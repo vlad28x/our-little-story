@@ -1,0 +1,13 @@
+<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Лист лепёшки разошёлся по сгибу на две половины">
+  <ellipse cx="160" cy="166" rx="138" ry="16" fill="#3a2212" opacity=".22"/>
+  <rect x="20" y="24" width="280" height="138" rx="22" fill="#cfa476" stroke="#8e6945" stroke-width="3"/>
+  <path d="M40 48H280M36 96H284M44 136H276" stroke="#be9163" stroke-width="2" opacity=".45"/>
+  <path d="M46 56L146 46L142 74L153 91L141 110L148 139L50 133Z" fill="#f6dfb4" stroke="#b0844e" stroke-width="2.5"/>
+  <circle cx="82" cy="78" r="5" fill="#d9ad70" opacity=".45"/>
+  <circle cx="114" cy="112" r="7" fill="#d9ad70" opacity=".35"/>
+  <circle cx="72" cy="116" r="4" fill="#d9ad70" opacity=".4"/>
+  <path d="M172 47L272 56L264 134L172 141L164 111L175 91L165 73Z" fill="#f6dfb4" stroke="#b0844e" stroke-width="2.5"/>
+  <circle cx="212" cy="80" r="6" fill="#d9ad70" opacity=".4"/>
+  <circle cx="240" cy="108" r="5" fill="#d9ad70" opacity=".45"/>
+  <circle cx="195" cy="120" r="4" fill="#d9ad70" opacity=".35"/>
+</svg>

@@ -19,7 +19,9 @@ export function ResultScreen({route}:{route:string}){
   const chapter=Number(route.split('/')[2]?.split('?')[0]) as ChapterId;
   const isTrial=!wanted&&save.lastResult?.chapter===chapter&&save.lastResult?.source==='trial'&&params.get('source')!=='campaign';
   const canonical=save.campaign.records[chapter];
-  const card=wanted?save.collection.cards.find(c=>c.id===wanted&&c.chapter===chapter):isTrial?(chapter>=6&&save.lastResult?.episodeRecord?cardFromStory(save.lastResult.episodeRecord.story,chapter,save.lastResult.episodeRecord.results):save.collection.cards.find(c=>c.id===save.lastResult?.cardId)):canonical?cardFromStory(canonical.story,chapter,canonical.results):undefined;
+  const archived=wanted?save.collection.cards.find(c=>c.id===wanted&&c.chapter===chapter):undefined;
+  const archiveCard=archived?.id==='c8.supper'&&canonical?cardFromStory(canonical.story,chapter,canonical.results):archived;
+  const card=wanted?archiveCard:isTrial?(chapter>=6&&save.lastResult?.episodeRecord?cardFromStory(save.lastResult.episodeRecord.story,chapter,save.lastResult.episodeRecord.results):save.collection.cards.find(c=>c.id===save.lastResult?.cardId)):canonical?cardFromStory(canonical.story,chapter,canonical.results):undefined;
   if(!card)return <div className="page-content"><h2>Этот финал ещё впереди</h2><button onClick={()=>go('/chapters')}>К главам</button></div>;
   if(card.id==='c10.travellers')return <div ref={result} tabIndex={-1}><TravellersResult card={card} trial={isTrial} archive={!!wanted}/></div>;
   if(chapter===6||chapter===7||card.id==='c8.supper'||card.id==='c9.courtyard')return <div ref={result} tabIndex={-1}><PhotoChapterResult card={card} trial={isTrial} archive={!!wanted}/></div>;

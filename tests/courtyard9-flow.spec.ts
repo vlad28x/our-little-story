@@ -6,9 +6,9 @@ const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
 test('served shutter and reload retain the selected frame, real invitation and previous eight records',async({page})=>{
  const save=courtyardAt('c9.courtyard.frameVlad',{frame:'vlad'});save.continuation='decline';const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
- await page.goto('./#/play/9');await expect(page.locator('.photo-camera')).toContainText('9');
+ await page.goto('./#/play/9');await expect(page.locator('.photo-camera strong')).toHaveText('3');
  for(let i=0;i<4;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
- await page.reload();await expect(page.locator('.photo-camera')).toContainText('8');
+ await page.reload();await expect(page.locator('.photo-camera strong')).toHaveText('2');
  const stored=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(stored.campaign.active?.story).toMatchObject({c9Frame:'vlad',c9Film:'key'});expect(stored.campaign.records).toEqual(save.campaign.records);expect(stored.continuation).toBe('decline');
  await expect.poll(()=>page.locator('.scene-background').evaluate((im:HTMLImageElement)=>im.naturalWidth>0)).toBe(true);expect(errors).toEqual([]);
 });

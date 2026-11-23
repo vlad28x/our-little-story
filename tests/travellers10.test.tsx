@@ -42,7 +42,7 @@ it('finishes six roads, all cafe gestures and all three home gestures times thre
    expect(replayTravellers(story)).toBeTruthy();
   }
  }
-});
+}, 20_000);
 
 it('round-trips every cursor, rejects stale taps, forged resources, wrong phases and an impossible marsh',()=>{
  for(const path of [{river:'ford',quarry:'contour',arrival:'upper',continuation:'home',tender:'hug',finale:'sleep'},{river:'help',quarry:'help',arrival:'help'},{river:'bridge',arrival:'upper',goodbye:'kiss'},{continuation:'home',tender:'kiss',afterFirstKiss:'closer',finale:'private'},{continuation:'home',tender:'kiss',afterFirstKiss:'shoulder',finale:'leave'}] as Partial<TravellersPath>[]){

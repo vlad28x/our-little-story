@@ -7,12 +7,14 @@ import { chapter8 } from '../src/content/chapters/ch08';
 import { resolveLine,resolveScene,startRun,step } from '../src/engine/step';
 import { validateContent } from '../src/engine/validateContent';
 import { filmLeft } from '../src/persistence/photoSix';
-import { validateSave as parseSave,validateRun } from '../src/persistence/validateSave';
+import { parseSave as loadSave,validateSave as parseSave,validateRun } from '../src/persistence/validateSave';
 import { canStart,reduceSave } from '../src/state/reducer';
 import { cloudRaw,TelegramCloud } from '../src/telegram/cloud';
 import { finishGallery } from './gallery7Helpers';
 import { finishPhotoSix } from './photo6Helpers';
 import { finishSupper,startSupper,supperAt,supperCommand,type SupperPath } from './supperHelpers';
+import { finishCourtyard } from './courtyard9Helpers';
+import { finishTravellers } from './travellers10Helpers';
 const seven=finishGallery();
 
 it('ships the exact revised text and a complete eighth graph, without later content',()=>{
@@ -29,6 +31,7 @@ it('ships the exact revised text and a complete eighth graph, without later cont
  expect(Object.values(chapter8.nodes).filter(n=>n.kind==='end')).toHaveLength(1);
  const meal=chapter8.nodes['c8.supper.meal'];if(meal.kind!=='dialogue')throw Error('Missing meal');
  const remove=meal.lines.findIndex(line=>line.text.includes('развязывает фартук'));
+ expect(remove).toBe(15);
  expect(resolveScene(meal.scene,{},{...startRun(chapter8,seven.campaign.records[7]!.story,'apron-check'),lineIndex:remove-1}).character).toBe('vlad.apron.smile');
  expect(resolveScene(meal.scene,{},{...startRun(chapter8,seven.campaign.records[7]!.story,'apron-check'),lineIndex:remove}).character).toBe('vlad.casual.smile');
 });
@@ -47,7 +50,7 @@ it('all 768 paths retain food, camera, separate kiss and hoodie decisions',()=>{
    }
    run=result.run;
   }
-  expect([...counts]).toEqual([15,14,9]);
+  expect([...counts]).toEqual([6,5,3]);
   if(!kiss)expect(text.join(' ')).not.toMatch(/Ты целуешь его в губы|Влад целует тебя в губы/);
   if(dance==='sit')expect(text.join(' ')).not.toContain('Ты берёшь Влада за руку');
   expect(text.filter(t=>t==='Ты часто ужинаешь вот так, за этим столом?')).toHaveLength(1);
@@ -88,6 +91,36 @@ it('trial food, gift and kiss never overwrite canon, and codes do not bypass a c
  const done=finishSupper(seven,{shape:'open',kiss:false}),trial=finishSupper(done,{shape:'fold',kiss:true,hoodie:'borrow'},true);
  expect(trial.campaign).toEqual(done.campaign);expect(trial.lastResult?.episodeRecord?.story).toMatchObject({c8Shape:'fold',c8LipKiss:'yes'});expect(parseSave(cloudRaw(trial))).toEqual(trial);
  expect(canStart({...finishPhotoSix(),unlocked:[1,2,3,4,5,6,7,8]},8)).toBe(false);
+});
+
+it('restarts old supper progress through the completed gallery and preserves a new supper cursor',()=>{
+ const beforeMeal=supperAt('c8.supper.meal',{shape:'open'});
+ const oldMeal=structuredClone(beforeMeal);
+ oldMeal.campaign.active!.scriptRevision=5;
+ const later=finishTravellers({},finishCourtyard(finishSupper()));
+ later.campaign.records[8]!.scriptRevision=5;
+ later.continuation10='movie';
+ for(const old of [oldMeal,later]){
+  old.continuation='walk';
+  old.settings.motion='reduced';
+  const loaded=loadSave(JSON.stringify(old));
+  expect(loaded.campaign.completed).toEqual([1,2,3,4,5,6,7]);
+  expect(loaded.campaign.records[7]).toEqual(old.campaign.records[7]);
+  expect(loaded.campaign.records[6]).toEqual(old.campaign.records[6]);
+  expect(loaded.campaign.records[8]).toBeUndefined();
+  expect(loaded.campaign.records[9]).toBeUndefined();
+  expect(loaded.campaign.records[10]).toBeUndefined();
+  expect(loaded.campaign.active).toBeNull();
+  expect(loaded.collection.cards).toEqual(old.collection.cards.filter(card=>card.chapter<=7));
+  expect(loaded.unlocked).toEqual(old.unlocked);
+  expect(loaded.settings).toEqual(old.settings);
+  expect(loaded.continuation).toBe('walk');
+  expect(loaded.continuation10).toBeNull();
+  const restarted=reduceSave(loaded,{type:'start',chapter:8,attemptId:'supper-restart'});
+  expect(restarted.campaign.active).toMatchObject({nodeId:'c8.supper.entry',scriptRevision:6});
+  expect(filmLeft(restarted.campaign.active!.story)).toBe(6);
+ }
+ expect(loadSave(JSON.stringify(beforeMeal))).toEqual(beforeMeal);
 });
 
 it('writes and restores a new eighth and its trial through the two-bank CloudStorage protocol',async()=>{
