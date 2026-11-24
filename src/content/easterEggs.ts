@@ -48,7 +48,7 @@ export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'mug'|'star'|'sig
 type SceneryBox=readonly [cx:number,cy:number,width:number,height:number];
 type Scenery=Partial<Record<SeasonSceneryId,SceneryBox>>;
 
-const riverside:Scenery={kiosk6:[.75,.46,.12,.13],waterWindow6:[.35,.47,.12,.09],leaves6:[.13,.14,.13,.1]};
+const riverside:Scenery={kiosk6:[.75,.46,.12,.13],waterWindow6:[.237,.47,.12,.09],leaves6:[.185,.30,.13,.1]};
 const bakery:Scenery={bakery9:[.42,.48,.16,.12],bookcase9:[.16,.55,.12,.2]};
 
 // Coordinates refer to the original paintings, before object-fit cropping.
@@ -61,10 +61,10 @@ export const seasonScenery:Partial<Record<string,Scenery>>={
   'bg.supper8.kitchen':{utensils8:[.19,.25,.08,.08],kettle8:[.24,.33,.07,.08],sugar8:[.374,.59,.06,.07],fridge8:[.848,.42,.07,.1],lamp8:[.92,.27,.08,.10]},
   'bg.courtyard9.open':{blankets9:[.135,.60,.10,.12],garland9:[.48,.27,.15,.07],archChairs9:[.916,.54,.09,.11]},
   'bg.courtyard9.canopy':{blankets9:[.087,.72,.12,.15],garland9:[.61,.12,.18,.08]},
-  'bg.courtyard9.arch':{blankets9:[.11,.78,.12,.14],archChairs9:[.90,.73,.13,.17]},
+  'bg.courtyard9.arch':{blankets9:[.11,.78,.12,.14],archChairs9:[.86,.73,.13,.17]},
   'bg.courtyard9.books':bakery,
   'bg.courtyard9.books-closed':bakery,
-  'bg.courtyard9.lab':{dropbox9:[.455,.49,.115,.13],traffic9:[.667,.222,.06,.10]},
+  'bg.courtyard9.lab':{dropbox9:[.455,.49,.115,.13],traffic9:[.684,.327,.06,.10]},
   'bg.courtyard9.lab-red':{traffic9:[.687,.278,.06,.10]},
   'bg.travellers10.cafe':{cafeLamp10:[.15,.16,.10,.10],cafeShelf10:[.706,.13,.16,.09]},
   'bg.travellers10.home':{floorLamp10:[.125,.27,.11,.11],sofaBlanket10:[.125,.53,.12,.14],tv10:[.81,.33,.18,.15]},
@@ -74,9 +74,9 @@ export const seasonScenery:Partial<Record<string,Scenery>>={
 // Availability follows authored scenes, never saved flags or cosmetic clicks.
 export function sceneEggProps(background:string,sceneId:string):ScenePropId[]{
   const props:ScenePropId[]=[];
-  if(background==='bg.home.living'&&!['c4.pad.dead','c4.pad.ready'].includes(sceneId)){
+  if(background==='bg.home.living'){
     props.push('blanket','mug');
-    if(['c4.sofa','c4.pad.setup','c4.pad.press','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
+    if(['c4.sofa','c4.pad.setup','c4.pad.press','c4.pad.dead','c4.pad.ready','c4.pad.reaction','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
   }
   if(background==='bg.river.evening')props.push('star');
   if(background==='bg.cafe.sunset'&&sceneId.startsWith('c5.'))props.push('sign');

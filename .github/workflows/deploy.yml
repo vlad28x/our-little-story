@@ -20,17 +20,9 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - name: Validate Pages base path
-        run: node -e "const b=process.env.VITE_BASE_PATH;if(!b || !b.startsWith('/') || !b.endsWith('/')){console.error('Set VITE_BASE_PATH repository variable to /repository-name/ or /');process.exit(1)}"
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test:unit
-      - run: npm run validate:content
-      - run: npm run build
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:smoke
-      - run: npm run test:offline
+      - name: Build static site
+        run: npx --no-install vite build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

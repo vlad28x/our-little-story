@@ -3,10 +3,10 @@ import { useEffect,useRef } from 'react';
 import { useGame } from '../app/GameProvider';
 import { go } from '../app/router';
 import { assetUrl } from '../content/assetManifest';
-import { cardMeta, cardFromStory, cardDetail, cardTeam, cardCharacter,cardBackground } from '../content/cards';
+import { cardMeta, cardFromStory, cardDetail, cardTeam, cardCharacter,cardBackground,cardConstellation } from '../content/cards';
 import type { CardId,ChapterId } from '../engine/types';
 import { ConstellationArt } from './ConstellationArt';
-import type { ConstellationResult } from '../engine/types';
+import { constellationDrawings } from '../minigames/constellationModel';
 import { InvitationPanel } from './InvitationPanel';
 import { Illustration } from './Illustration';
 import {PhotoChapterResult} from './PhotoChapterResult';
@@ -25,14 +25,23 @@ export function ResultScreen({route}:{route:string}){
   if(!card)return <div className="page-content"><h2>Этот финал ещё впереди</h2><button onClick={()=>go('/chapters')}>К главам</button></div>;
   if(card.id==='c10.travellers')return <div ref={result} tabIndex={-1}><TravellersResult card={card} trial={isTrial} archive={!!wanted}/></div>;
   if(chapter===6||chapter===7||card.id==='c8.supper'||card.id==='c9.courtyard')return <div ref={result} tabIndex={-1}><PhotoChapterResult card={card} trial={isTrial} archive={!!wanted}/></div>;
-  const c=cardMeta(card);
+  const c=cardMeta(card),shape=cardConstellation(card);
+  const character=cardCharacter(card.id,card.venue);
+  const showsVlad=character.startsWith('vlad.');
+  const portrait=showsVlad&&(chapter===4||chapter===5);
   const episodeRecord=wanted?undefined:isTrial?save.lastResult?.episodeRecord:canonical;
   const showInvitation=chapter===5&&!wanted&&!isTrial&&!save.trial&&canonical&&save.campaign.completed.includes(5);
-  return <div ref={result} tabIndex={-1} className={`result-screen ${showInvitation?'has-final-conversation':''}`}>
+  return <div ref={result} tabIndex={-1} className={`result-screen ${chapter<=5?'first-season-palette':'second-season-palette'} ${showInvitation?'has-final-conversation':''}`}>
     <p className="eyebrow">{isTrial?'ДРУГОЙ ВАРИАНТ · ОСНОВНАЯ ИСТОРИЯ СОХРАНЕНА':chapter===1?'ПЕРВАЯ ВСТРЕЧА ОСТАНЕТСЯ С ТОБОЙ':chapter===2?'У КАЖДОЙ ПОГОДЫ ЕСТЬ СВОЯ ИСТОРИЯ':chapter===4?'ХОРОШАЯ КОМАНДА · ТЁПЛЫЙ ВЕЧЕР':chapter===3?'У ЭТОГО ВЕЧЕРА СВОЁ СОЗВЕЗДИЕ':chapter>=6?'ПОСЛЕ ТИТРОВ · СВОЯ ИСТОРИЯ':'ПЯТЬ ВСТРЕЧ · СВОЯ ИСТОРИЯ'}</p>
     {chapter===10&&!wanted&&<section className="season-finished"><span className="eyebrow">ПОСЛЕ ТИТРОВ</span><h2>Сезон «После титров» завершён</h2><p className="small">Спасибо за эти вечера. К любимым моментам можно вернуться.</p></section>}
     {showInvitation&&<><InvitationPanel/><p className="eyebrow invitation-memory-label">ЭТОТ ВЕЧЕР — НА ПАМЯТЬ</p></>}
-    <div className={showInvitation?'final-postcard':'postcard-frame'}><article className="postcard"><div className="postcard-art" style={{backgroundImage:`url(${assetUrl(cardBackground(card))})`}}>{chapter===3?<ConstellationArt shape={card.variant as ConstellationResult['outcome']}/>:<img src={assetUrl(cardCharacter(card.id,card.venue))} className={cardCharacter(card.id,card.venue).startsWith('vlad.')?'postcard-vlad':''} alt={cardCharacter(card.id,card.venue).startsWith('vlad.')?'Влад':'Пончик отдыхает у кафе'}/>}<span className="postcard-number">{chapter>=6?`После титров · ${chapter-5} / 5`:`${String(card.chapter).padStart(2,'0')} / 05`}</span></div><div className="postcard-copy"><Illustration kind={c.motif}/><h1>{c.title}</h1><p>{c.caption}</p><p className="vlad-quote">«{c.quote}»</p><span className="small">{cardDetail(card)}</span>{cardTeam(card)&&<p className="card-team">{cardTeam(card)}</p>}</div></article>{showInvitation&&<AfterCreditsTeaser/>}</div>
+    <div className={showInvitation?'final-postcard':'postcard-frame'}><article className="postcard">
+      <div className={`postcard-art${portrait?' portrait-postcard':''}`} style={{backgroundImage:`url(${assetUrl(cardBackground(card))})`}}>
+        {shape?<ConstellationArt shape={shape} label={constellationDrawings[shape].description}/>:<img src={assetUrl(character)} className={showsVlad?'postcard-vlad':''} alt={showsVlad?'Влад':'Пончик отдыхает у кафе'}/>}
+        <span className="postcard-number">{chapter>=6?`После титров · ${chapter-5} / 5`:`${String(card.chapter).padStart(2,'0')} / 05`}</span>
+      </div>
+      <div className="postcard-copy">{shape?<ConstellationArt shape={shape} ink className="illustration"/>:<Illustration kind={c.motif}/>}<h1>{c.title}</h1><p>{c.caption}</p><p className="vlad-quote">«{c.quote}»</p><span className="small">{cardDetail(card)}</span>{cardTeam(card)&&<p className="card-team">{cardTeam(card)}</p>}</div>
+    </article>{showInvitation&&<AfterCreditsTeaser/>}</div>
     {chapter===1&&save.collection.achievements.includes('cat-supervisor')&&<p className="achievement-ribbon">✧ Начальник найден · Пончик одобряет перерыв</p>}
     {chapter===2&&save.collection.achievements.includes('dry-plan')&&<p className="achievement-ribbon">✧ Прогноз без дыр · зонтик для витрины спасён</p>}
     {chapter===4&&save.collection.achievements.includes('full-table')&&<p className="achievement-ribbon">✧ Стол на всех · девять подач вместе</p>}

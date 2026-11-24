@@ -1,224 +1,221 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactElement } from 'react';
 
-export function Illustration({kind,className=''}:{kind:string;className?:string}){
-  const drawings:Record<string,ReactNode>={
-    cloud:<>
-      <ellipse cx="50" cy="77" rx="34" ry="5" fill="#3a2212" opacity=".14" stroke="none"/>
-      <path d="M20 67Q6 60 17 44Q20 22 41 29Q56 9 74 31Q94 29 91 54Q93 72 73 72H28Z" fill="#d9d0ec" stroke="#665068" strokeWidth="2.4"/>
-      <path d="M24 62Q15 56 22 45Q25 29 42 34Q54 18 70 35Q84 35 84 52Q85 65 71 66H30Z" fill="#ece6f8" stroke="none"/>
-      <path d="M27 68H72" stroke="#c3b4df" strokeWidth="2.4" strokeDasharray="4 4"/>
-      <path d="M35 49q4-3 8 0M57 49q4-3 8 0" stroke="#665068" strokeWidth="2.2"/>
-      <ellipse cx="32" cy="54" rx="4" ry="2.2" fill="#e8a7b8" stroke="none" opacity=".55"/>
-      <ellipse cx="68" cy="54" rx="4" ry="2.2" fill="#e8a7b8" stroke="none" opacity=".55"/>
+type IllustrationKind = 'bag' | 'mat' | 'paper' | 'cup' | 'umbrella' | 'token' | 'scarf' | 'tea' | 'hair' | 'button-piece' | 'triangle-piece' | 'ribbon-piece' | 'leaf' | 'spoon' | 'cloud' | 'umbrella-case' | 'star' | 'controller' | 'envelope' | 'cafe' | 'tea-for-two' | 'promenade' | 'cinema' | 'camera' | 'gallery' | 'evening-lamp' | 'box';
+
+export function Illustration({ kind, className = '', viewBox = '0 0 100 100' }: { kind: string; className?: string; viewBox?: string }) {
+  const id = useId().replace(/:/g, '');
+  const paint = (name: string) => `url(#${id}-${name})`;
+  const art = {
+    bag: () => <>
+      <path d="M38 38c0-11 2-17 12-17s13 6 13 17" fill="none" stroke="#776554" strokeWidth="5"/>
+      <path d="M38 37c0-10 3-15 12-15 8 0 12 6 12 15" fill="none" stroke="#b29b78" strokeWidth="2"/>
+      <path d="M19 42q28-10 61 0l5 36q-1 6-8 7l-56 1q-7-1-7-7Z" fill={paint('sage')} stroke="#657061" strokeWidth="1.6"/>
+      <path d="M69 40l10 2 6 36q-1 6-8 7H63q10-12 6-45Z" fill="#596557" opacity=".43"/>
+      <path d="M19 42q31-10 61 0l-3 10q-2 8-11 10l-33 1q-10-2-13-10Z" fill="#adba9d" stroke="#76806d" strokeWidth="1.45"/>
+      <path d="M23 44q21-6 51-2m-53 7q4 11 12 11l32-1q7-1 10-8M20 77q1 5 8 5l42-1" fill="none" stroke="#ead9ba" strokeWidth="1.25" strokeDasharray="2 2.7" opacity=".75"/>
+      <rect x="43" y="54" width="14" height="12" rx="2.5" fill={paint('brass')} stroke="#806344" strokeWidth="1.15"/>
+      <path d="M49 59v3" stroke="#7a654f" strokeWidth="1.3"/>
     </>,
-    'umbrella-case':<>
-      <ellipse cx="50" cy="89" rx="22" ry="4.5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M35 14Q50 5 65 14L69 78Q50 96 31 78Z" fill="#b7ccb8" stroke="#4f6652" strokeWidth="2.4"/>
-      <path d="M39 17Q50 11 61 17L64 76Q50 88 36 76Z" fill="#cfe0d0" stroke="none"/>
-      <path d="M36 27H64M50 30V76" stroke="#5b755f" strokeWidth="2.2"/>
-      <path d="M41 18H59" stroke="#e4c37b" strokeWidth="3.2"/>
-      <circle cx="50" cy="30" r="3.2" fill="#e4c37b" stroke="#7a5e2f" strokeWidth="1.5"/>
+    mat: () => <>
+      <path d="M17 32 78 27 90 69 22 78Z" fill="#825a55" opacity=".58" transform="translate(0 3)"/>
+      <path d="M17 32 78 27 90 69 22 78Z" fill={paint('rose')} stroke="#9c6e65" strokeWidth="1.3"/>
+      <path d="m22 36 53-4 9 34-59 8Z" fill="none" stroke="#e7b996" strokeWidth="2.1" opacity=".75"/>
+      <path d="m23 41 54-4m-53 11 55-5m-55 12 57-6m-56 13 58-7m-57 14 59-8" fill="none" stroke="#eed2b7" strokeWidth="1" strokeDasharray="1.1 2.05" opacity=".65"/>
+      <ellipse cx="52" cy="51" rx="11" ry="8" transform="rotate(-6 52 51)" fill="#e3b67e" stroke="#aa7958" strokeWidth="1.4"/>
+      <path d="M46 50q6-4 12 0m-9 3h.5m4.5 0h.5" fill="none" stroke="#966954" strokeWidth="1.15"/>
     </>,
-    controller:<>
-      <ellipse cx="50" cy="82" rx="37" ry="6" fill="#3a2212" opacity=".16" stroke="none"/>
-      <path d="M23 28Q50 18 77 28Q89 37 92 69Q91 86 76 73L66 61H34L24 73Q9 86 8 69Q11 37 23 28Z" fill="#cbc2e2" stroke="#5a4b63" strokeWidth="2.4"/>
-      <path d="M26 31Q50 23 74 31" stroke="#ece6f7" strokeWidth="2.4"/>
-      <path d="M28 35V52M20 43.5H36" stroke="#5a4b63" strokeWidth="3.8"/>
-      <circle cx="69" cy="36" r="3.4" fill="#b5d1ba" stroke="#536857" strokeWidth="1.6"/>
-      <circle cx="78" cy="44" r="3.4" fill="#efb8c9" stroke="#855164" strokeWidth="1.6"/>
-      <circle cx="60" cy="44" r="3.4" fill="#f7da8f" stroke="#99713b" strokeWidth="1.6"/>
-      <circle cx="69" cy="52" r="3.4" fill="#b5d1ba" stroke="#536857" strokeWidth="1.6"/>
-      <circle cx="44" cy="54" r="6.8" fill="#efe7dc" stroke="#6c5e72" strokeWidth="2"/>
-      <circle cx="44" cy="54" r="3.2" fill="#c7bdd6" stroke="none"/>
-      <circle cx="50" cy="31" r="2.6" fill="#c7e8a2" stroke="#5d7845" strokeWidth="1.3"/>
+    paper: () => <>
+      <path d="M24 17 70 22l9 56-57 6Z" transform="translate(1 3)" fill="#9c817b" opacity=".32"/>
+      <path d="M25 16 71 22l7 53q-2 4-7 5l-50 4Z" fill={paint('porcelain')} stroke="#a88777" strokeWidth="1.35"/>
+      <path d="M65 79q4-1 5-8l8 4q-2 6-13 4Z" fill="#b98f78" opacity=".68"/>
+      <path d="m34 26 5 4 8-6m-15 15 30 3m-31 4 33 3m-34 5 32 2m-33 6 32 1m-32 6 24-1" fill="none" stroke="#977a73" strokeWidth="1.45" opacity=".75"/>
+      <path d="m54 43 8 1m-7 12 7 1m-8 6 7-.2" fill="none" stroke="#826953" strokeWidth="1.65"/>
+      <path d="M27 19q21 2 40 5" fill="none" stroke="#fff1dc" strokeWidth="1.2" opacity=".7"/>
     </>,
-    'button-piece':<>
-      <ellipse cx="50" cy="82" rx="26" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <circle cx="50" cy="50" r="30" fill="#b4ccb8" stroke="#4f6853" strokeWidth="2.6"/>
-      <circle cx="50" cy="50" r="22" fill="#cbe0ce" stroke="#76947a" strokeWidth="1.8"/>
-      <circle cx="42" cy="42" r="3.4" fill="#4f6853" stroke="none"/><circle cx="58" cy="42" r="3.4" fill="#4f6853" stroke="none"/>
-      <circle cx="42" cy="58" r="3.4" fill="#4f6853" stroke="none"/><circle cx="58" cy="58" r="3.4" fill="#4f6853" stroke="none"/>
-      <path d="M42 42l16 16M58 42l-16 16" stroke="#fff7e8" strokeWidth="2.8"/>
+    cup: () => <>
+      <path d="M31 31q20 7 39 0l-6 49q-13 7-27 0Z" fill={paint('porcelain')} stroke="#a28375" strokeWidth="1.45"/>
+      <path d="M34 45q19 6 33 0l-3 20q-12 4-28 0Z" fill={paint('rose')} stroke="#ab7d78" strokeWidth="1.1"/>
+      <path d="M38 48l2 18m5 6 1 5" stroke="#f7e4c9" fill="none" strokeWidth="1.8" opacity=".7"/>
+      <path d="M30 24q20-5 41 0l2 7q-22 7-45 0Z" fill={paint('sage')} stroke="#74806d" strokeWidth="1.4"/>
+      <ellipse cx="50" cy="24" rx="20.4" ry="4.6" fill="#bcc4a8" stroke="#89927a" strokeWidth="1.1"/>
+      <path d="M46 56l3 3l6-6" fill="none" stroke="#f8edda" strokeWidth="1.8"/>
     </>,
-    'triangle-piece':<>
-      <ellipse cx="50" cy="83" rx="34" ry="5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M50 15L86 79H14Z" fill="#efb9cb" stroke="#854f62" strokeWidth="2.5"/>
-      <path d="M50 22L79 75H21Z" fill="#f7cfdc" stroke="none"/>
-      <path d="M50 27L74 72H26Z" stroke="#fff7fa" strokeWidth="2" strokeDasharray="4 4"/>
+    umbrella: () => <>
+      <path d="M52 25v50q0 12 8 12t9-8" fill="none" stroke="#795d4d" strokeWidth="4.1"/>
+      <path d="M53 27v47q0 10 6 11" fill="none" stroke="#c39d77" strokeWidth="1.4"/>
+      <path d="M12 48q11-30 40-31 29 0 38 31-13-8-25 1-13-8-26 0-13-7-27-1Z" fill={paint('wool')} stroke="#78637c" strokeWidth="1.5"/>
+      <path d="M39 49q3-22 13-31 12 9 13 31-14-8-26 0Z" fill="#cbbbcb" stroke="#8d778e" strokeWidth="1.3"/>
+      <path d="M18 42q11-15 25-19m19-1q13 4 21 16m-32-17v19" fill="none" stroke="#f0dfdc" strokeWidth="1.45" opacity=".63"/>
+      <circle cx="52" cy="17" r="1.9" fill="#b38f75"/>
     </>,
-    'ribbon-piece':<>
-      <ellipse cx="48" cy="73" rx="33" ry="5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M18 33L81 42L75 66L14 57Z" fill="#f5d484" stroke="#966c34" strokeWidth="2.5"/>
-      <path d="M21 38L77 46L73 61L18 53Z" fill="#fce4a6" stroke="none"/>
-      <path d="M22 41L74 49M20 52L72 60" stroke="#bf8c3d" strokeWidth="1.8" strokeDasharray="4 4"/>
+    token: () => <>
+      <ellipse cx="50" cy="53" rx="31" ry="30" fill="#a37546" stroke="#805f41" strokeWidth="1.5"/>
+      <circle cx="50" cy="48" r="30" fill={paint('brass')} stroke="#986e4c" strokeWidth="1.4"/>
+      <circle cx="50" cy="48" r="24.5" fill="none" stroke="#9e7045" strokeWidth="1.4" strokeDasharray="1.7 2.1"/>
+      <circle cx="50" cy="48" r="19.8" fill="#ebcb91" stroke="#d8a86d" strokeWidth="1.2"/>
+      <circle cx="41" cy="48" r="4" fill="#806050" stroke="#aa805e" strokeWidth="1.2"/>
+      <circle cx="59" cy="48" r="4" fill="#806050" stroke="#aa805e" strokeWidth="1.2"/>
+      <path d="M34 30q13-9 25-3m-15 33q9 1 15-3M27 57l2 6m42-1 2-4" fill="none" stroke="#fff0bc" strokeWidth="1.6" opacity=".69"/>
     </>,
-    leaf:<>
-      <ellipse cx="50" cy="84" rx="28" ry="5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M21 77Q10 25 81 17Q91 71 21 77Z" fill="#aac49c" stroke="#4f6b47" strokeWidth="2.5"/>
-      <path d="M24 72Q18 33 75 23Q58 55 24 72Z" fill="#c7dbba" stroke="none"/>
-      <path d="M16 83L68 30M34 62L33 44M48 50L66 50M45 38L44 29" stroke="#4f6b47" strokeWidth="2.2"/>
+    scarf: () => <>
+      <path d="M54 37q19 0 22 17l6 24-17 6-10-33Z" fill="#928591" stroke="#827482" strokeWidth="1.5"/>
+      <path d="m65 81 2 6m3-7 2 6m3-7 2 6m3-7 2 6" stroke="#8b7d8c" strokeWidth="1.65"/>
+      <path d="M20 27q3-13 27-16 21-2 33 9 6 8-1 17-8 9-28 10-19 0-27-7-6-4-4-13Z" fill={paint('wool')} stroke="#8b798b" strokeWidth="1.5"/>
+      <path d="M26 23q20-13 46-1m-46 9q20 9 47-3m-42 9q15 7 37 1" fill="none" stroke="#f4e2df" strokeWidth="1.55" opacity=".64"/>
+      <path d="M34 40q10 5 23 0l-5 43q-11 5-24 1Z" fill={paint('wool')} stroke="#8b798b" strokeWidth="1.5"/>
+      <path d="M34 48q10 3 21 0M32 58q11 3 22-1M32 68q10 3 20-1M30 78q9 3 21-1m-14-28-5 31m14-30-4 30" fill="none" stroke="#e8d6db" strokeWidth="1.4" opacity=".84"/>
+      <path d="m30 84-2 7m7-6-2 7m7-7-1 7m6-8v7m5-8 1 7" stroke="#938193" strokeWidth="1.65"/>
     </>,
-    spoon:<>
-      <ellipse cx="49" cy="91" rx="18" ry="4" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M49 48L37 88Q43 95 49 88L60 48" fill="#d9d1e0" stroke="#6c5f75" strokeWidth="2.4"/>
-      <ellipse cx="55" cy="29" rx="18" ry="23" fill="#e5deeb" stroke="#6c5f75" strokeWidth="2.4"/>
-      <ellipse cx="55" cy="29" rx="11.5" ry="15" fill="#f7f3fa" stroke="none"/>
-      <path d="M48 22q3-6 8-7" stroke="#ffffff" strokeWidth="2.2"/>
+    tea: () => <>
+      <ellipse cx="49" cy="77" rx="37" ry="9.5" fill={paint('porcelain')} stroke="#b18b81" strokeWidth="1.45"/>
+      <path d="M20 79q28 8 57-2" fill="none" stroke="#b98b86" strokeWidth="1.4"/>
+      <path d="M66 45q18-8 19 3 3 11-14 15l-5-1 1-5q10-1 12-7 0-5-10-1Z" fill={paint('porcelain')} stroke="#a8817c" strokeWidth="1.45"/>
+      <path d="M23 41h49l-2 15q-2 17-15 19-9 2-16-1-13-4-14-23Z" fill={paint('porcelain')} stroke="#a68177" strokeWidth="1.45"/>
+      <path d="M26 50q15 12 43 5M32 51q1 13 8 17" fill="none" stroke="#b88591" strokeWidth="1.35" opacity=".78"/>
+      <ellipse cx="47.5" cy="41" rx="24.5" ry="8" fill="#f8e5c4" stroke="#aa887a" strokeWidth="1.1"/>
+      <ellipse cx="47.5" cy="42" rx="21" ry="5.7" fill={paint('amber')}/>
+      <path d="M30 41q10-5 24-2m-18-9q-5-5 1-11m11 9q4-4 0-10-2-3 1-7m8 19q5-4 2-8" fill="none" stroke="#dcc2af" strokeWidth="1.5" opacity=".8"/>
     </>,
-    token:<>
-      <ellipse cx="50" cy="85" rx="29" ry="5.5" fill="#3a2212" opacity=".18" stroke="none"/>
-      <circle cx="50" cy="50" r="32" fill="#eab95c" stroke="#8a6024" strokeWidth="2.6"/>
-      <circle cx="50" cy="50" r="26" fill="#f6d687" stroke="#c9963d" strokeWidth="1.6" strokeDasharray="4 3"/>
-      <circle cx="50" cy="50" r="19" fill="#fae2a2" stroke="none"/>
-      <circle cx="40" cy="50" r="4.2" fill="#7c475f" stroke="#532d3f" strokeWidth="1.2"/>
-      <circle cx="60" cy="50" r="4.2" fill="#7c475f" stroke="#532d3f" strokeWidth="1.2"/>
-      <path d="M35 30q15-9 30 0" stroke="#fff7d9" strokeWidth="2.2" opacity=".8"/>
+
+    'button-piece': () => <>
+      <circle cx="50" cy="52" r="29" fill="#76806c" stroke="#5f685a" strokeWidth="1.5"/>
+      <circle cx="50" cy="49" r="28" fill={paint('sage')} stroke="#707969" strokeWidth="1.5"/>
+      <circle cx="50" cy="49" r="21" fill="none" stroke="#e4dac3" strokeWidth="1.55" opacity=".8"/>
+      <path d="M34 33q12-12 26-5m-2 39q9-3 13-11" fill="none" stroke="#f3e5c9" strokeWidth="1.5" opacity=".6"/>
+      <path d="M43 42l14 14m0-14L43 56" stroke="#f4ddc0" strokeWidth="2.2"/>
+      <path d="M43 42h.1m14 0h.1M43 56h.1m14 0h.1" stroke="#4d5a4c" strokeWidth="3.8"/>
     </>,
-    bag:<>
-      <ellipse cx="50" cy="87" rx="32" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <path d="M36 39V28Q50 8 64 28V39" stroke="#546b57" strokeWidth="3.2"/>
-      <path d="M21 40Q50 30 79 40L83 82Q50 92 17 82Z" fill="#b4ccb8" stroke="#4f6653" strokeWidth="2.4"/>
-      <path d="M21 40Q50 32 79 40L77 54Q50 63 23 54Z" fill="#cbe0ce" stroke="#4f6653" strokeWidth="2"/>
-      <rect x="44" y="50" width="12" height="12" rx="2" fill="#e9c478" stroke="#856330" strokeWidth="1.8"/>
+    'triangle-piece': () => <>
+      <path d="M49 18 87 77 13 80Z" fill={paint('rose')} stroke="#936d75" strokeWidth="1.4"/>
+      <path d="M49 25 79 73l-59 2Z" fill="none" stroke="#f6dfc9" strokeWidth="1.6" strokeDasharray="3 2.5"/>
+      <path d="M41 45l20 5m-25 4 30 6m-35 4 40 6" fill="none" stroke="#805f72" strokeWidth="1" opacity=".39"/>
     </>,
-    mat:<>
-      <ellipse cx="53" cy="82" rx="35" ry="5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M14 28L79 25L91 72L19 80Z" fill="#df9f95" stroke="#824d47" strokeWidth="2.4"/>
-      <path d="M21 35L74 32L84 67L24 73Z" fill="#ecc0b8" stroke="none"/>
-      <path d="M24 39L71 36M27 49L75 46M30 59L78 56M33 69L81 66" stroke="#b37269" strokeWidth="1.8"/>
-      <circle cx="52" cy="51" r="11" fill="#f7da8f" stroke="#99713b" strokeWidth="2"/>
+    'ribbon-piece': () => <>
+      <path d="M18 33 83 45l-7 21-61-10Z" fill={paint('brass')} stroke="#9b7553" strokeWidth="1.45"/>
+      <path d="m22 38 56 10M20 52l54 9" fill="none" stroke="#f8e2b6" strokeWidth="1.8" strokeDasharray="3 2.6"/>
+      <path d="m18 35-4 5m4 1-5 4m63 15 6-2" stroke="#b2885d" strokeWidth="1.2"/>
     </>,
-    paper:<>
-      <ellipse cx="48" cy="89" rx="30" ry="4.5" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M25 13L71 19L79 81L19 88Z" fill="#faf0dc" stroke="#7c5e4e" strokeWidth="2.4"/>
-      <path d="M29 19L67 24L74 77L24 83Z" fill="#fffaf0" stroke="none"/>
-      <path d="M34 36L62 39M32 48L65 51M30 61L66 64M29 73L56 75" stroke="#b99c85" strokeWidth="2.2"/>
-      <path d="M46 25l4 4l8-6" stroke="#c86b7a" strokeWidth="2.4"/>
+    leaf: () => <>
+      <path d="M19 74q-2-42 60-55 10 57-60 55Z" fill={paint('sage')} stroke="#68785f" strokeWidth="1.5"/>
+      <path d="M15 83q25-29 54-55M36 60l-1-19m13 7 20 1m-12-10 1-10" fill="none" stroke="#6e795e" strokeWidth="1.7"/>
+      <path d="M23 62q8-23 36-32" fill="none" stroke="#e1dfac" strokeWidth="1.8" opacity=".64"/>
     </>,
-    cup:<>
-      <ellipse cx="49" cy="85" rx="22" ry="4.5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <path d="M29 32H69L63 83H35Z" fill="#faf1df" stroke="#75554a" strokeWidth="2.4"/>
-      <path d="M33 48H65L63 66H35Z" fill="#e5aebf" stroke="#855164" strokeWidth="2"/>
-      <rect x="24" y="23" width="50" height="10" rx="3" fill="#b7ccb8" stroke="#536b57" strokeWidth="2.2"/>
-      <path d="M45 56l4 4l7-7" stroke="#fff8f0" strokeWidth="2.4"/>
+    spoon: () => <>
+      <path d="M47 47 35 83q-3 8 3 10 6 2 8-6l13-36" fill={paint('wool')} stroke="#81717d" strokeWidth="1.55"/>
+      <ellipse cx="55" cy="31" rx="16" ry="23" transform="rotate(11 55 31)" fill={paint('porcelain')} stroke="#9a837d" strokeWidth="1.55"/>
+      <path d="M46 35q-2-13 9-20m-6 25q6 7 11-3m-18 19-9 26" fill="none" stroke="#fff1d8" strokeWidth="1.8"/>
     </>,
-    umbrella:<>
-      <ellipse cx="50" cy="91" rx="22" ry="4" fill="#3a2212" opacity=".15" stroke="none"/>
-      <path d="M50 20V78Q50 93 64 84" stroke="#82583a" strokeWidth="3.8"/>
-      <path d="M13 46Q50 4 87 46Q74 37 62 48Q50 37 38 48Q26 37 13 46Z" fill="#cec3e6" stroke="#624a5e" strokeWidth="2.5"/>
-      <path d="M38 48Q40 25 50 21Q60 25 62 48Q50 37 38 48Z" fill="#e4dcf5" stroke="#624a5e" strokeWidth="2"/>
-      <path d="M50 21V42" stroke="#624a5e" strokeWidth="1.8"/>
+    cloud: () => <>
+      <path d="M20 67Q6 60 17 44Q20 22 41 29Q56 9 74 31Q94 29 91 54Q93 72 73 72H28Z" fill={paint('wool')} stroke="#866e84" strokeWidth="1.6"/>
+      <path d="M24 64q-10-6-4-18q6-19 22-13q16-16 31 2q15-2 14 17q1 15-15 15H30Z" fill="none" stroke="#f5e4da" strokeWidth="1.45" strokeDasharray="2.5 2.5"/>
+      <path d="M34 49q4-3 8 0m15 0q4-3 8 0m-19 7q4 3 8 0" fill="none" stroke="#765b70" strokeWidth="1.65"/>
+      <ellipse cx="30" cy="55" rx="4" ry="2.3" fill="#da9da9"/><ellipse cx="69" cy="55" rx="4" ry="2.3" fill="#da9da9"/>
     </>,
-    tea:<>
-      <ellipse cx="46" cy="86" rx="33" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <path d="M62 43Q89 39 81 59Q75 69 62 66" stroke="#75554a" strokeWidth="3.2"/>
-      <path d="M18 39H63V60Q61 81 40.5 81Q19 80 18 60Z" fill="#fff7e8" stroke="#75554a" strokeWidth="2.4"/>
-      <ellipse cx="40.5" cy="39" rx="22.5" ry="5.5" fill="#c98f54" stroke="#75554a" strokeWidth="2"/>
-      <path d="M26 50v16" stroke="#f0d9b8" strokeWidth="3" opacity=".8"/>
-      <path d="M13 84H75" stroke="#99775e" strokeWidth="3"/>
-      <path d="M31 28Q23 20 33 11M48 27Q40 19 50 11" stroke="#b99c8c" strokeWidth="2.2"/>
+    'umbrella-case': () => <>
+      <path d="M34 18q16-8 30 0l6 57q-19 15-39 1Z" fill={paint('sage')} stroke="#687663" strokeWidth="1.5"/>
+      <path d="M35 30q16 4 29-1M50 31v44m-13-52 24-2" fill="none" stroke="#ebd9b4" strokeWidth="1.7" opacity=".8"/>
+      <circle cx="50" cy="32" r="3.3" fill={paint('brass')} stroke="#87704f" strokeWidth="1"/>
     </>,
-    cafe:<>
-      <ellipse cx="50" cy="86" rx="37" ry="4.5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <rect x="20" y="36" width="60" height="48" fill="#faf0dc" stroke="#75554a" strokeWidth="2.4"/>
-      <path d="M25 24L31 13H69L75 24Z" fill="#d9a5b5" stroke="#75554a" strokeWidth="2.2"/>
-      <path d="M14 24H86L80 41Q72 48 65 41Q57 48 50 41Q43 48 35 41Q28 48 20 41Z" fill="#e6b0c0" stroke="#75554a" strokeWidth="2.3"/>
-      <path d="M36 25L35 41M50 25V41M64 25L65 41" stroke="#fff7f0" strokeWidth="2.2" opacity=".75"/>
-      <rect x="28" y="54" width="19" height="19" rx="2" fill="#ffe79e" stroke="#75554a" strokeWidth="2"/>
-      <path d="M37.5 54v19M28 63.5h19" stroke="#997458" strokeWidth="1.5"/>
-      <path d="M57 84V55q0-4 7.5-4t7.5 4v29Z" fill="#9c7258" stroke="#5d4233" strokeWidth="2.2"/>
-      <circle cx="68" cy="69" r="1.6" fill="#f7d882" stroke="none"/>
-      <path d="M15 84H85" stroke="#75554a" strokeWidth="2.6"/>
+    star: () => <>
+      <circle cx="50" cy="49" r="35" fill={paint('glow')}/>
+      <path d="M50 12 61 36 87 40 68 57l5 27-23-14-24 14 6-27-20-17 27-4Z" fill={paint('brass')} stroke="#a17a50" strokeWidth="1.55"/>
+      <path d="m50 20 7 19 19 3-15 9 3 18-14-9" fill="none" stroke="#fff0bc" strokeWidth="1.65" opacity=".75"/>
     </>,
-    promenade:<>
-      <path d="M12 78Q32 70 50 78T88 78M12 88Q32 80 50 88T88 88" stroke="#7f9ca8" strokeWidth="2.6"/>
-      <circle cx="27" cy="22" r="16" fill="#ffe69c" stroke="none" opacity=".45"/>
-      <path d="M27 72V30M20 72H34M27 14V9" stroke="#63514c" strokeWidth="2.6"/>
-      <path d="M18 30H36L33 14H21Z" fill="#ffeba6" stroke="#755a44" strokeWidth="2.2"/>
-      <rect x="48" y="54" width="34" height="13" rx="2" fill="#b7ccb8" stroke="#4f6653" strokeWidth="2.2"/>
-      <path d="M44 67H86M52 67V74M78 67V74M57 55V66M65 55V66M73 55V66" stroke="#63514c" strokeWidth="2.2"/>
-      <path d="M66 14L69 22L78 23L71 29L73 38L66 33L58 38L60 29L53 23L62 22Z" fill="#f7d680" stroke="#966e32" strokeWidth="1.8"/>
+    controller: () => <>
+      <path d="M22 32q7-11 28-11t28 11q10 12 13 34 1 11-5 12-6 2-14-8L63 60H37l-9 10q-8 10-14 8-6-1-5-12 3-22 13-34Z" fill={paint('wool')} stroke="#75617e" strokeWidth="1.6"/>
+      <path d="M15 55q3-14 10-21 8-8 25-8t25 8" fill="none" stroke="#f2dcd8" strokeWidth="1.75"/>
+      <path d="M28 33v17M20 41.5h16" stroke="#68546c" strokeWidth="4.5"/>
+      <circle cx="43" cy="53" r="6.5" fill="#907c94" stroke="#69596c" strokeWidth="1.4"/>
+      <g strokeWidth="1"><circle cx="70" cy="35" r="3.5" fill="#a6bdab" stroke="#627b69"/><circle cx="78" cy="43" r="3.5" fill="#dca2ad" stroke="#8b6477"/><circle cx="62" cy="43" r="3.5" fill="#e5bd77" stroke="#987952"/><circle cx="70" cy="51" r="3.5" fill="#a6bdab" stroke="#627b69"/></g>
+      <circle cx="50" cy="32" r="2.4" fill="#d0db9e" stroke="#84906f" strokeWidth="1.1"/>
     </>,
-    gallery:<>
-      <rect x="14" y="18" width="54" height="52" rx="3" fill="#e4c287" stroke="#7c5d3f" strokeWidth="2.4"/>
-      <rect x="21" y="25" width="40" height="38" fill="#fffaf0" stroke="#997c5e" strokeWidth="1.6"/>
-      <circle cx="49" cy="36" r="5.5" fill="#e6a7b8" stroke="none"/>
-      <path d="M22 62L35 43L47 56L54 48L60 62Z" fill="#a9c2aa" stroke="none"/>
-      <rect x="48" y="48" width="38" height="39" rx="3" fill="#cec3e6" stroke="#624a5e" strokeWidth="2.4"/>
-      <rect x="54" y="54" width="26" height="27" fill="#fffaf0" stroke="#8a748a" strokeWidth="1.4"/>
-      <path d="M58 75Q66 59 74 68Q79 78 66 78Z" fill="#e6a7b8" stroke="none"/>
+    envelope: () => <>
+      <path d="M12 29q37-4 75 0v47q-35 6-75 0Z" fill={paint('porcelain')} stroke="#a58677" strokeWidth="1.45"/>
+      <path d="M13 30q23 21 37 27 17-8 37-27M15 74l25-22m45 22L60 52" fill="none" stroke="#b69a83" strokeWidth="1.6"/>
+      <path d="M15 31q36-3 69-1L50 56Z" fill="#f8e6cc" opacity=".75"/>
+      <circle cx="50" cy="55" r="10" fill={paint('rose')} stroke="#935f69" strokeWidth="1.45"/>
+      <path d="M50 59q-10-5-4-7 3-1 4 2 3-4 6-1 3 3-6 6Z" fill="#f4d7c7"/>
     </>,
-    'tea-for-two':<>
-      <ellipse cx="50" cy="83" rx="40" ry="6" fill="#3a2212" opacity=".18" stroke="none"/>
-      <ellipse cx="50" cy="80" rx="39" ry="7" fill="#c9a57d" stroke="#7a593f" strokeWidth="2"/>
-      <path d="M43 49q13-3 10 8q-3 7-10 5" stroke="#75564c" strokeWidth="3.2"/>
-      <path d="M16 44H44V63Q44 76 30 76Q16 76 16 63Z" fill="#fff6e6" stroke="#75564c" strokeWidth="2.2"/>
-      <ellipse cx="30" cy="44" rx="14" ry="3.8" fill="#c98f55" stroke="#75564c" strokeWidth="1.8"/>
-      <path d="M21 52v11" stroke="#f0d9b8" strokeWidth="2.5"/>
-      <path d="M81 53q12-2 9 8q-2 6-9 4" stroke="#75564c" strokeWidth="3.2"/>
-      <path d="M56 49H81V66Q81 78 68.5 78Q56 78 56 66Z" fill="#e6b0bd" stroke="#75564c" strokeWidth="2.2"/>
-      <ellipse cx="68.5" cy="49" rx="12.5" ry="3.4" fill="#c98f55" stroke="#75564c" strokeWidth="1.8"/>
-      <path d="M62 56v10" stroke="#f5d2da" strokeWidth="2.2"/>
-      <path d="M26 35q-5-6 1-11q4-4 0-8M36 33q-4-5 1-10M68 40q-5-6 1-12" stroke="#b99c8c" strokeWidth="2" opacity=".8"/>
+    cafe: () => <>
+      <path d="M18 39h65v41H18Z" fill={paint('porcelain')} stroke="#9c7e72" strokeWidth="1.45"/>
+      <path d="M24 23h52l10 19q-8 10-18 2-9 8-18 0-9 8-18 0-9 8-18-2Z" fill={paint('rose')} stroke="#a27678" strokeWidth="1.5"/>
+      <path d="M31 24l-5 19m21-19-2 21m18-21 5 20" stroke="#f9ddc5" strokeWidth="2.1"/>
+      <path d="M27 54h22v15H27Zm29 25V58h15v21Z" fill={paint('brass')} stroke="#9a795d" strokeWidth="1.45"/>
+      <path d="M38 54v15m-11-7h22" stroke="#9b7c68" strokeWidth="1.1"/>
     </>,
-    cinema:<>
-      <ellipse cx="50" cy="84" rx="38" ry="4.5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <rect x="17" y="30" width="66" height="50" rx="4" fill="#faf0dc" stroke="#6d514b" strokeWidth="2.4"/>
-      <path d="M16 29L79 13L83 28L20 44Z" fill="#cec3e6" stroke="#624a5e" strokeWidth="2.4"/>
-      <path d="M29 26L39 39M47 21L57 34M65 17L75 30M17 46H83" stroke="#624a5e" strokeWidth="2.2"/>
-      <path d="M44 54L64 64L44 74Z" fill="#e6a4b6" stroke="#854f62" strokeWidth="2"/>
+    'tea-for-two': () => <>
+      <ellipse cx="49" cy="76" rx="35" ry="8" fill={paint('porcelain')} stroke="#b5988a" strokeWidth="1.4"/>
+      <path d="M16 44h29l-1 17q-2 10-14 10-11 0-13-10Zm42 6h24l-1 14q-3 10-11 10t-11-10Z" fill={paint('porcelain')} stroke="#a8877b" strokeWidth="1.45"/>
+      <path d="M44 49q12-4 9 5-2 6-9 5m37-4q11-3 9 4-2 6-9 5" fill="none" stroke="#a8877b" strokeWidth="2.3"/>
+      <ellipse cx="30.5" cy="44" rx="14.5" ry="4.8" fill={paint('amber')} stroke="#e7caaa" strokeWidth="1.6"/><ellipse cx="70" cy="50" rx="12" ry="4.1" fill={paint('amber')} stroke="#e7caaa" strokeWidth="1.5"/>
+      <path d="M24 36q-4-5 2-9m7 9q4-5 0-9m35 15q-5-7 1-10" fill="none" stroke="#c5a28e" strokeWidth="1.5"/>
     </>,
-    'evening-lamp':<>
-      <circle cx="50" cy="44" r="35" fill="#ffe599" stroke="none" opacity=".55"/>
-      <path d="M50 60V81" stroke="#7c5b4f" strokeWidth="3.6"/>
-      <path d="M34 85Q50 76 66 85Z" fill="#c9bede" stroke="#624a5e" strokeWidth="2.2"/>
-      <path d="M28 24H72L82 60H18Z" fill="#fff4d6" stroke="#87644f" strokeWidth="2.4"/>
-      <path d="M40 25L35 59M60 25L65 59" stroke="#dfbf8b" strokeWidth="1.8"/>
-      <path d="M68 60V72" stroke="#7c5b4f" strokeWidth="2"/>
-      <circle cx="68" cy="75" r="3.4" fill="#e6a4b6" stroke="#854f62" strokeWidth="1.5"/>
+    promenade: () => <>
+      <circle cx="27" cy="30" r="24" fill={paint('glow')}/>
+      <path d="M14 77q14-6 34 0t36 0m-64 7q15-5 30 0t31-1" fill="none" stroke="#8792a0" strokeWidth="1.6"/>
+      <path d="M27 69V31m-6 38h12m-6-47v-6" stroke="#7b6555" strokeWidth="2.3"/>
+      <path d="M19 33l3-12h10l3 12Z" fill={paint('brass')} stroke="#9f815d" strokeWidth="1.4"/>
+      <path d="M48 53q14-2 32 0v13H48Z" fill={paint('sage')} stroke="#71806a" strokeWidth="1.45"/>
+      <path d="M46 62h36m-30 4v8m24-8v8" fill="none" stroke="#7e6658" strokeWidth="2"/>
+      <path d="m68 17 2 7 7 2-7 2-2 7-2-7-7-2 7-2Z" fill="#f2c789"/>
     </>,
-    scarf:<>
-      <ellipse cx="48" cy="92" rx="28" ry="4.5" fill="#3a2212" opacity=".14" stroke="none"/>
-      {/* Back scarf tail in softer shadow */}
-      <path d="M51 39q15 2 20 12l6 28q-9 4-19 2l-7-31Z" fill="#9a95a3" stroke="#534d59" strokeWidth="2.2"/>
-      <path d="M56 53l15-2M58 63l16-2M61 73l15-2" stroke="#c8c2cf" strokeWidth="1.6" opacity=".7"/>
-      <path d="M61 82l2 7M66 82l2 7M71 81l2 7M75 80l2 7" stroke="#534d59" strokeWidth="2"/>
-      {/* Soft knitted collar loop */}
-      <path d="M19 32q-5-11 8-17q24-10 49-1q11 5 6 18q-4 11-18 13q-18 3-34-1q-9-2-11-12Z" fill="#bdb8c6" stroke="#534d59" strokeWidth="2.4"/>
-      <path d="M23 23q26-10 51-1q5 4 2 10q-26 9-52 0q-4-4-1-9Z" fill="#d3cedb" stroke="none"/>
-      <path d="M26 21q10-4 22-4M27 32q20 4 42-1" stroke="#857f8f" strokeWidth="1.8" opacity=".75"/>
-      <path d="M28 26q22-4 44 0" stroke="#f0e5d1" strokeWidth="2.4" strokeDasharray="5 4" opacity=".85"/>
-      {/* Front draped scarf tail with knit ribs & stripes */}
-      <path d="M31 37q12 4 23 1l-3 46q-12 6-24 2l4-49Z" fill="#c7c2d0" stroke="#534d59" strokeWidth="2.4"/>
-      <path d="M34 40l-2 43q8 3 15 0l2-42Z" fill="#dad5e2" stroke="none" opacity=".6"/>
-      <path d="M31 48q11 3 22 0M30 58q11 3 22 0M29 68q11 3 22 0M28 77q11 3 22 0" stroke="#9992a3" strokeWidth="1.6" opacity=".65"/>
-      <path d="M30 53q11 3 22 0M29 73q11 3 22 0" stroke="#f2e6cf" strokeWidth="2.6"/>
-      <path d="M36 42l-2 40M44 43l-1 40" stroke="#8c8696" strokeWidth="1.2" strokeDasharray="3 4" opacity=".55"/>
-      {/* Swaying fringe tassels */}
-      <path d="M29 87l-2 8M34 88l-1 8M39 88v8M44 87l1 8M49 85l2 8" stroke="#534d59" strokeWidth="2.1"/>
+    cinema: () => <>
+      <path d="M17 39h66v38H17Z" fill={paint('porcelain')} stroke="#957d78" strokeWidth="1.5"/>
+      <path d="M17 30 79 13l4 14-63 17Z" fill={paint('wool')} stroke="#856b80" strokeWidth="1.5"/>
+      <path d="m29 28 8 10m10-15 8 10m10-15 8 10M19 46h63" stroke="#f1dfdd" strokeWidth="1.9"/>
+      <path d="m44 53 17 9-17 10Z" fill={paint('rose')} stroke="#a4777e" strokeWidth="1.5"/>
     </>,
-    envelope:<>
-      <ellipse cx="50" cy="83" rx="38" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <rect x="12" y="27" width="76" height="52" rx="5" fill="#f7ebd6" stroke="#7c5d50" strokeWidth="2.4"/>
-      <path d="M14 77L42 52M86 77L58 52" stroke="#cbb498" strokeWidth="2"/>
-      <path d="M13 28L50 56L87 28" fill="#fff8ea" stroke="#7c5d50" strokeWidth="2.4"/>
-      <path d="M17 29L50 53L83 29" stroke="#e5d0b3" strokeWidth="1.4"/>
-      <circle cx="50" cy="56" r="10.5" fill="#c96f7b" stroke="#843f4b" strokeWidth="2"/>
-      <circle cx="50" cy="56" r="7" fill="none" stroke="#e89aa5" strokeWidth="1.3"/>
-      <path d="M50 59.5c-4-2.5-3.8-6-1.2-6c1 0 1.2 1 1.2 1s.2-1 1.2-1c2.6 0 2.8 3.5-1.2 6Z" fill="#ffe6ea" stroke="none"/>
+    camera: () => <>
+      <path d="M15 36q0-7 8-7h18l6-8h18l7 8h10q7 0 7 8v36q0 7-8 7H23q-8 0-8-7Z" fill={paint('sage')} stroke="#5c6153" strokeWidth="1.6"/>
+      <path d="M17 39q36-4 70 0V47H17Z" fill={paint('porcelain')} stroke="#a18777" strokeWidth="1.25"/>
+      <circle cx="53" cy="58" r="18" fill={paint('brass')} stroke="#846d62" strokeWidth="1.7"/>
+      <circle cx="53" cy="58" r="13" fill="#4b5b63" stroke="#605062" strokeWidth="1.3"/>
+      <path d="M43 55q3-9 12-9m5 21q5-3 5-7" fill="none" stroke="#c1ccd1" strokeWidth="2" opacity=".75"/>
+      <path d="M24 51h7m-6 19 8 1m43-20 4-1" stroke="#d7d4ae" strokeWidth="1.3" opacity=".8"/>
     </>,
-    star:<>
-      <circle cx="50" cy="52" r="34" fill="#ffe79e" stroke="none" opacity=".32"/>
-      <path d="M50 10L61 36L90 39L68 59L74 88L50 73L26 88L32 59L10 39L39 36Z" fill="#f7d57c" stroke="#966c2d" strokeWidth="2.4"/>
-      <path d="M50 18L57 38L77 41L62 55L66 75L50 65Z" fill="#ffeba8" stroke="none" opacity=".75"/>
+    gallery: () => <>
+      <path d="M18 23h64v54H18Z" fill={paint('brass')} stroke="#956e50" strokeWidth="1.6"/>
+      <path d="M24 29h52v42H24Z" fill={paint('porcelain')} stroke="#b59676" strokeWidth="1.35"/>
+      <path d="M30 36h40v30H30Z" fill="#737d8c"/>
+      <path d="M30 58 44 45 56 56 62 47 70 55v11H30Z" fill={paint('sage')}/>
+      <circle cx="60" cy="43" r="4" fill="#f5d9a3"/>
+      <path d="m25 25 24-1m10 51 16-1" stroke="#f1d5a5" strokeWidth="1.25"/>
     </>,
-    box:<>
-      <ellipse cx="51" cy="87" rx="34" ry="5" fill="#3a2212" opacity=".16" stroke="none"/>
-      <path d="M15 35L51 18L87 33L52 51Z" fill="#d9d0ec" stroke="#624a5e" strokeWidth="2.4"/>
-      <path d="M15 35V70L52 88V51Z" fill="#efb9cb" stroke="#7c4f61" strokeWidth="2.4"/>
-      <path d="M87 33V69L52 88V51Z" fill="#df9fb4" stroke="#7c4f61" strokeWidth="2.4"/>
-      <path d="M32 27L69 43M28 47L42 54M30 59L39 64" stroke="#fff7fa" strokeWidth="2.4"/>
+    'evening-lamp': () => <>
+      <circle cx="50" cy="50" r="37" fill={paint('glow')}/>
+      <path d="M48 44h4v34h-4Zm-15 33h34l5 7H28Z" fill={paint('brass')} stroke="#927658" strokeWidth="1.5"/>
+      <path d="M37 25q13-3 26 0l13 23H24Z" fill={paint('rose')} stroke="#a47b7f" strokeWidth="1.7"/>
+      <path d="M29 46h42M37 28l-6 16m26-16 7 15" fill="none" stroke="#f3dbc2" strokeWidth="1.5"/>
+      <path d="M66 55l1.5 5 5 1.5-5 1.5-1.5 5-1.5-5-5-1.5 5-1.5Z" fill="#f5d391"/>
     </>,
-  };
-  return <svg className={`illustration ${className}`} viewBox="0 0 100 100" fill="none" stroke="#70534f" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{drawings[kind]??drawings.token}</svg>;
+    box: () => <>
+      <path d="M17 50 48 63 85 48 84 72 49 88 16 75Z" fill={paint('brass')} stroke="#9b785f" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M20 38 52 26 85 41 51 56Z" fill={paint('porcelain')} stroke="#ac8976" strokeWidth="1.4"/>
+      <path d="M17 49 20 38 51 55 85 41 86 50 51 66Z" fill={paint('rose')} stroke="#9f786f" strokeWidth="1.3"/>
+      <path d="M51 67v17M22 52l24 13m10-1 26-12" fill="none" stroke="#f3dabb" strokeWidth="1.4" strokeDasharray="3 2"/>
+      <path d="m37 41 11-5 16 6-16 7Z" fill={paint('sage')} stroke="#7c806c" strokeWidth="1.2"/>
+    </>,
+    hair: () => <>
+      <path d="M33 83q30-9 31-28 2-15-18-22-12-4-7-13 5-7 16 1" fill="none" stroke="#765747" strokeWidth="13" opacity=".78"/>
+      <path d="M33 81q29-9 31-27 2-15-18-22-12-4-7-13 5-7 16 1" fill="none" stroke="#b88c67" strokeWidth="8"/>
+      <path d="M35 79q27-12 27-25 0-13-17-20-15-6-7-15" fill="none" stroke="#e8bb85" strokeWidth="2.5" opacity=".75"/>
+    </>,
+  } satisfies Record<IllustrationKind, () => ReactElement>;
+
+  const selected=Object.hasOwn(art,kind)?kind as IllustrationKind:'token';
+
+  return <svg className={`illustration ${className}`} viewBox={viewBox} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <defs>
+      <radialGradient id={`${id}-shade`}><stop stopColor="#67493f" stopOpacity=".32"/><stop offset="1" stopColor="#67493f" stopOpacity="0"/></radialGradient>
+      <linearGradient id={`${id}-sage`} x2=".72" y2="1"><stop stopColor="#c5ccac"/><stop offset=".55" stopColor="#9ca889"/><stop offset="1" stopColor="#6c7a66"/></linearGradient>
+      <linearGradient id={`${id}-rose`} x2=".78" y2="1"><stop stopColor="#e7bbac"/><stop offset=".55" stopColor="#c99188"/><stop offset="1" stopColor="#a66e73"/></linearGradient>
+      <linearGradient id={`${id}-brass`} x2=".82" y2="1"><stop stopColor="#ffe6a8"/><stop offset=".55" stopColor="#d5a469"/><stop offset="1" stopColor="#ae7e4e"/></linearGradient>
+      <linearGradient id={`${id}-porcelain`} x2=".85" y2="1"><stop stopColor="#fff5dc"/><stop offset=".6" stopColor="#eedbc0"/><stop offset="1" stopColor="#c8a09b"/></linearGradient>
+      <linearGradient id={`${id}-wool`} x2=".78" y2="1"><stop stopColor="#e0d4dd"/><stop offset=".58" stopColor="#b8a8bb"/><stop offset="1" stopColor="#9e90a6"/></linearGradient>
+      <linearGradient id={`${id}-amber`} x2=".92" y2="1"><stop stopColor="#ecc180"/><stop offset="1" stopColor="#a45c43"/></linearGradient>
+      <radialGradient id={`${id}-glow`}><stop stopColor="#fae1a0" stopOpacity=".7"/><stop offset="1" stopColor="#e7bd8a" stopOpacity="0"/></radialGradient>
+    </defs>
+    {selected !== 'hair' && <ellipse cx="50" cy={selected === 'scarf' ? 88 : 83} rx="41" ry="9" fill={paint('shade')}/>}
+    {art[selected]()}
+  </svg>;
 }

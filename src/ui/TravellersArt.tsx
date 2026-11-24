@@ -2,6 +2,7 @@ import {useId} from 'react';
 import type {Run,StoryState} from '../engine/types';
 import {travellerView,travellerResources} from '../content/travellers';
 import {assetUrl} from '../content/assetManifest';
+import {firstSeasonBackground,firstSeasonCat,firstSeasonVlad} from '../content/firstSeasonArt';
 import {SupperArt} from './SupperArt';
 
 export function FeetPrint(){
@@ -9,7 +10,7 @@ export function FeetPrint(){
  return <svg viewBox="0 0 180 110" role="img" aria-label="Косой отпечаток: земля и две пары обуви">
   <defs>
    <linearGradient id={`${uid}-ground`} x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stopColor="#b8a893"/><stop offset="1" stopColor="#8d7e6c"/>
+    <stop offset="0" stopColor="#b9a196"/><stop offset="1" stopColor="#8a7978"/>
    </linearGradient>
    <radialGradient id={`${uid}-vig`} cx="50%" cy="50%" r="72%">
     <stop offset=".6" stopColor="#2c2017" stopOpacity="0"/><stop offset="1" stopColor="#2c2017" stopOpacity=".28"/>
@@ -19,6 +20,7 @@ export function FeetPrint(){
   {/* Park stone pavement seams */}
   <path d="M0 32L180 78M58 0L24 110M148 0L116 110M0 78L180 28" stroke="#7d6f5f" strokeWidth="1.6" opacity=".65"/>
   <path d="M2 34L180 80M60 0L26 110" stroke="#cfc1ad" strokeWidth="1" opacity=".35"/>
+  <path d="M8 20l14 4m44-11 17 6m35-4 14 2m23 39 17 1M3 64l20 9m46 26 12 2m60-18 15 4" stroke="#e5c9aa" strokeWidth="1.2" strokeLinecap="round" opacity=".6"/>
   {/* Small fallen autumn leaves on pavement */}
   <g opacity=".85">
    <path d="M16 86q7-7 13-1q-6 6-13 1Z" fill="#c97a4b" stroke="#7c4729" strokeWidth=".8"/>
@@ -67,13 +69,13 @@ export function TravellersBoard({state,position,night=false}:{state:ReturnType<t
  return <svg className="travellers-board" viewBox="0 0 600 340" role="img" aria-label={`Два путешественника: ${position==='last'?'последний шаг':({start:'на старте',river:'за рекой',quarry:'за карьером',house:'у домика'} as Record<string,string>)[state.position]}. Солнц: ${state.suns}. Мостик: ${state.bridge==='carried'?'с собой':state.bridge==='river'?'у реки':'у болота'}. Фонарь ${charged?'заряжен':'пуст'}.`}>
   <defs>
    <linearGradient id={`${uid}-wood`} x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stopColor={night?'#7c5b43':'#a87c52'}/><stop offset=".5" stopColor={night?'#5f4432':'#875f3c'}/><stop offset="1" stopColor={night?'#463124':'#69472b'}/>
+    <stop offset="0" stopColor={night?'#7c5b43':'#ad8662'}/><stop offset=".5" stopColor={night?'#5f4432':'#967050'}/><stop offset="1" stopColor={night?'#463124':'#69472b'}/>
    </linearGradient>
    <radialGradient id={`${uid}-paper`} cx="46%" cy="38%" r="68%">
     <stop offset="0" stopColor={night?'#7a7494':'#fcf4de'}/><stop offset=".65" stopColor={night?'#6b6682':'#f0e2bd'}/><stop offset="1" stopColor={night?'#9a9186':'#dbc798'}/>
    </radialGradient>
    <linearGradient id={`${uid}-river`} x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stopColor={night?'#385e6b':'#4e8490'}/><stop offset=".5" stopColor={night?'#4f7b87':'#74adb5'}/><stop offset="1" stopColor={night?'#345966':'#4b808c'}/>
+    <stop offset="0" stopColor={night?'#385e6b':'#4e8490'}/><stop offset=".5" stopColor={night?'#4f7b87':'#7da5ad'}/><stop offset="1" stopColor={night?'#345966':'#4b808c'}/>
    </linearGradient>
    <radialGradient id={`${uid}-glow`} cx="50%" cy="50%" r="50%">
     <stop offset="0" stopColor="#ffea99" stopOpacity=".9"/><stop offset=".55" stopColor="#ffd570" stopOpacity=".32"/><stop offset="1" stopColor="#ffd570" stopOpacity="0"/>
@@ -99,12 +101,13 @@ export function TravellersBoard({state,position,night=false}:{state:ReturnType<t
   <rect x="17" y="16" width="566" height="307" rx="7" fill={`url(#${uid}-paper)`} stroke="#6d533b" strokeWidth="2"/>
   <g clipPath={`url(#${uid}-clip)`}>
    <path d="M17 242 Q125 205 245 236 T583 222 V323 H17 Z" fill={night?'#697566':'#c7ce96'} opacity=".5"/>
-   <path d="M17 264 Q180 234 345 266 T583 254 V323 H17 Z" fill={night?'#576558':'#a8b67d'} opacity=".55"/>
+   <path d="M17 264 Q180 234 345 266 T583 254 V323 H17 Z" fill={night?'#576558':'#a6ab82'} opacity=".55"/>
    <ellipse cx="495" cy="144" rx="86" ry="42" fill={night?'#687564':'#cdd49e'} opacity=".55"/>
    <g fill="none" stroke={night?'#9a94a8':'#b9a579'} strokeWidth="1" opacity=".38">
     <ellipse cx="82" cy="150" rx="52" ry="28"/><ellipse cx="82" cy="150" rx="34" ry="17"/>
     <ellipse cx="496" cy="138" rx="68" ry="30"/><path d="M230 50q65-22 135 5"/>
    </g>
+   <path d="M20 239q43-19 68-14m-51 44q43-12 87-9m245-22q23-11 44-8m54 30q60-10 109-27M27 302q72-16 123-3m256 5q57-15 172-12" fill="none" stroke={night?'#a9a9ad':'#f8e4b1'} strokeWidth="3" strokeLinecap="round" strokeDasharray="13 4 5 7" opacity=".45"/>
    <rect x="298" y="16" width="3" height="307" fill="#5e4a38" opacity=".18"/>
    <rect x="301" y="16" width="2" height="307" fill="#fffaf0" opacity=".35"/>
    <g transform="translate(58 55)" opacity={night?.35:.45}>
@@ -248,18 +251,19 @@ export function TravellersBoard({state,position,night=false}:{state:ReturnType<t
 function PortraitPrint({story,source}:{story:StoryState;source:6|7|9}){
  const subject=source===6?story.c6PhotoSubject:source===7?story.c7GalleryFrame:story.c9Frame;
  const background=source===6?story.c6PhotoPlace==='upper'?'bg.photo6.upper':'bg.photo6.shade':source===7?'bg.gallery7.outside':'bg.courtyard9.open';
- return <div className={`printed-scene print-${source} subject-${subject}`}><img className="printed-background" src={assetUrl(background)} alt=""/>
-  {subject==='vlad'&&<img className="printed-person" src={assetUrl('vlad.city.smile')} alt=""/>}
+ return <div className={`printed-scene print-${source} subject-${subject}`}><img className="printed-background" src={assetUrl(firstSeasonBackground(background))} alt=""/>
+  {subject==='vlad'&&<img className="printed-person" src={assetUrl(firstSeasonVlad('bg.cafe.window','smile'))} alt=""/>}
   {(subject==='her'||subject==='both')&&<svg className="printed-silhouette" viewBox="0 0 90 160" aria-hidden="true">
    {/* Graceful shadowed silhouette in autumn coat */}
    <path d="M28 16q17-12 34 0q10 15 6 38q-6-5-9-9q-14 4-28 0q-3 4-9 9q-4-23 6-38Z" fill="#463d42"/>
    <ellipse cx="45" cy="28" rx="13" ry="15" fill="#594e51"/>
    <path d="M35 41h20l4 10H31Z" fill="#826d75"/>
    <path d="M22 54q23-10 46 0l11 78q-34 8-68 0Z" fill="#555866" stroke="#3c3e4a" strokeWidth="1.5"/>
-   <path d="M30 48q15 10 30 0l-6 15q-9 4-18 0Z" fill="#9a828c"/>
+   <path d="M30 48q15 10 30 0l-6 15q-9 4-18 0Z" fill="#a99099"/>
+   <path d="M20 61q-3 27-7 56m44-63 8 14m4 2 7 43M34 63l9 6" stroke="#b5a399" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity=".42"/>
    <path d="M34 132l-4 28h11l4-27M56 132l4 28H49l-4-27" fill="#3f3d47"/>
   </svg>}
-  {subject==='both'&&<img className="printed-person print-reflected" src={assetUrl('vlad.city.smile')} alt=""/>}
+  {subject==='both'&&<img className="printed-person print-reflected" src={assetUrl(firstSeasonVlad('bg.cafe.window','smile'))} alt=""/>}
   {source===7&&subject==='vlad'&&<span className="print-poster">ЛИНИИ<br/>И СВЕТ</span>}
   {source===7&&subject==='both'&&<i className="print-window-frame"/>}
   {source===9&&subject==='vlad'&&<span className="print-bag"/>}
@@ -274,6 +278,7 @@ function PortraitPrint({story,source}:{story:StoryState;source:6|7|9}){
     <path d="M3 0v102M49 0v102" stroke="#694d3d" strokeWidth="5.5" strokeLinecap="round"/>
     <rect x="-1" y="54" width="54" height="11" rx="3" fill="#c79572" stroke="#5d4436" strokeWidth="2"/>
     <path d="M4 76h44" stroke="#694d3d" strokeWidth="4"/>
+    <path d="M9 10q12 4 33 0m-34 16 32-1M10 40q20-1 30 1M6 57q17 3 40 0" fill="none" stroke="#efcfaa" strokeWidth="1.2" strokeLinecap="round" opacity=".64"/>
    </g>)}
   </svg>}
  </div>;
@@ -288,6 +293,7 @@ export function SelectedPrint({story,source}:{story:StoryState;source:6|7|8|9|'f
     <path d="M-2 118l36-16q13-6 20 1q3 4-4 10l-12 6l14-4q10-2 10 6q0 6-9 9l-24 10l-31 13Z"/>
     <path d="M322 100l-34-12q-15-4-21 4q-2 5 5 9l11 5l-13 2q-9 3-6 9q3 5 11 6l23 6l24 8Z"/>
    </g>
+   <path d="M12 124l23-8m-17 14 21-6m258-12-17-6m22 17-21-7" stroke="#f6d9bd" strokeWidth="2" strokeLinecap="round" opacity=".62"/>
    <path d="M-2 114l16 36H-2Z" fill="#6d7c86"/><path d="M322 96l-14 40h14Z" fill="#b57e82"/>
   </svg>{!board&&(story.c7GalleryGift==='chip'||story.c7GalleryGift==='blue')?<img className="printed-gift" src={assetUrl(`gallery7.${story.c7GalleryGift}`)} alt={story.c7GalleryGift==='chip'?'Скол со светлой треугольной выемкой':'Просвет'}/>:!board?<span className="print-sugar"/>:null}{!board&&<svg className={`print-hand hand-${story.c8Frame}`} viewBox="0 0 200 100" aria-hidden="true">
    <path d="M202 82l-68-10q-16-2-27-10L80 46q-8-5-4-11q4-5 11-1l21 11l-18-16q-6-6-1-11q5-4 11 2l26 21l-14-21q-4-7 2-10q6-3 11 6l20 27l57 5Z" fill="#e2b99f" stroke="#99705b" strokeWidth="2" strokeLinejoin="round"/>
@@ -319,7 +325,8 @@ export function TravellersScene({run}:{run:Run}){
    <rect width="210" height="86" rx="4" fill="#d8c09f" stroke="#8b7057" strokeWidth="2.4"/>
    <path d="M4 82L78 44M206 82L132 44" stroke="#b99e7d" strokeWidth="2"/>
    <path d="M2 2L105 50L208 2" fill="#edd8b9" stroke="#8b7057" strokeWidth="2.2" strokeLinejoin="round"/>
-   <circle cx="105" cy="50" r="10" fill="#c7727c" stroke="#7d414a" strokeWidth="2"/>
+   <circle cx="105" cy="50" r="10" fill="#b87683" stroke="#794c5a" strokeWidth="2"/>
+   <path d="M99 47q4-5 9-3m-4 13q5 0 7-4M17 7l37 16m121-5 24-11" fill="none" stroke="#f4dbc4" strokeLinecap="round" strokeWidth="1.7" opacity=".66"/>
   </g>
   {s.c7GalleryGift&&s.c7GalleryGift!=='none'&&<g><rect x="946" y="531" width="92" height="118" fill="#f5ebd8"/><image x="950" y="535" width="84" height="110" preserveAspectRatio="xMidYMid meet" href={assetUrl(`gallery7.${s.c7GalleryGift}`)} aria-label="Подаренная открытка стоит рядом с монитором"/></g>}
   {n==='sleep'&&run.lineIndex>=3&&run.lineIndex<8&&<g>
@@ -330,7 +337,7 @@ export function TravellersScene({run}:{run:Run}){
   </g>}
  </svg>;
  if((n==='open'&&run.lineIndex<3)||(n==='arrived'&&run.lineIndex>=7))return <div className="traveller-props"><div className="game-box">Два<br/>путешественника</div></div>;
- if(playing)return <div className="traveller-props"><TravellersBoard state={r} position={r.position} night={r.night}/>{<div className="feet-by-board"><FeetPrint/></div>}{n==='cat'&&run.lineIndex<5&&<div className="cat-in-box" aria-label="Пончик в крышке коробки на памятке"><span/><img src={assetUrl('cat.idle')} alt="Пончик занял коробку"/></div>}{(n==='cat'&&run.lineIndex>=5||['catChoice','arrivalHelp','marsh','upperDay','upperNight','arrived'].includes(n))&&<div className="cat-chair" aria-label="Пончик на отдельном стуле с пледом"><span/><img src={assetUrl('cat.idle')} alt="Пончик отдыхает на пледе"/></div>}</div>;
- if(n==='entry'||n==='cafeLate')return <div className="traveller-props"><div className="game-box">Два<br/>путешественника</div>{n==='cafeLate'&&<div className="cat-chair"><span/><img src={assetUrl('cat.idle')} alt="Пончик на стуле с пледом"/></div>}</div>;
+ if(playing)return <div className="traveller-props"><TravellersBoard state={r} position={r.position} night={r.night}/>{<div className="feet-by-board"><FeetPrint/></div>}{n==='cat'&&run.lineIndex<5&&<div className="cat-in-box" aria-label="Пончик в крышке коробки на памятке"><span/><img src={assetUrl('cat.season2.gouache.box')} alt="Пончик занял коробку"/></div>}{(n==='cat'&&run.lineIndex>=5||['catChoice','arrivalHelp','marsh','upperDay','upperNight','arrived'].includes(n))&&<div className="cat-chair" aria-label="Пончик на отдельном стуле с пледом"><span/><img src={assetUrl(firstSeasonCat)} alt="Пончик отдыхает на пледе"/></div>}</div>;
+ if(n==='entry'||n==='cafeLate')return <div className="traveller-props"><div className="game-box">Два<br/>путешественника</div>{n==='cafeLate'&&<div className="cat-chair"><span/><img src={assetUrl(firstSeasonCat)} alt="Пончик на стуле с пледом"/></div>}</div>;
  return null;
 }

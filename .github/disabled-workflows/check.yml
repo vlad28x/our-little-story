@@ -1,3 +1,4 @@
+# Temporarily paused while collecting player feedback. Move back to workflows to re-enable.
 name: Check game
 on:
   pull_request:

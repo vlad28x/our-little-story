@@ -11,7 +11,7 @@ export function TravellersResult({card,trial,archive}:{card:CardRecord;trial:boo
  const {save,send,conflict,recovery,cloudBlocked}=useGame(),meta=cardMeta(card);
  const invitation=!archive&&!trial&&!save.trial&&save.campaign.completed.includes(10);
  const blocked=conflict||recovery||cloudBlocked;
- return <div className="result-screen travellers-result">
+ return <div className="result-screen travellers-result second-season-palette">
   <p className="eyebrow">{trial?'ДРУГОЙ ВАРИАНТ · ОСНОВНАЯ ИСТОРИЯ СОХРАНЕНА':'ДЕСЯТАЯ ВСТРЕЧА · ВЕЧЕР НА ПАМЯТЬ'}</p>
   {invitation&&<TravellersInvitation/>}
   <article className="postcard"><div className="postcard-art traveller-postcard" style={{backgroundImage:`url(${assetUrl('bg.travellers10.cafe')})`}}><TravellersBoard state={travellerResources({c10River:'ford',c10Quarry:'tunnel',c10Arrival:'marsh'})}/><div className="feet-by-board"><FeetPrint/></div></div><div className="postcard-copy"><h1>{meta.title}</h1><p>{meta.caption}</p><p className="vlad-quote">{meta.quote}</p></div></article>

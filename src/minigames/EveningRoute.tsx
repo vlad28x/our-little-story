@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import type { EveningRouteResult,RouteAction,RouteDraft,RouteStop } from '../engine/types';
 import { routeLabels,routeStops } from './eveningRouteModel';
 
 const positions:Record<RouteStop,[number,number]>={water:[58,146],lights:[146,61],window:[237,143]};
 export function RouteMapArt({stops=[]}:{stops?:readonly RouteStop[]}){
+  const id=useId().replace(/:/g,'');
   return <svg className="evening-map-art" viewBox="0 0 288 220" fill="none" aria-hidden="true">
-    <rect width="288" height="220" rx="24" fill="#32354e"/>
-    <path d="M0 190Q80 165 142 190T288 183V220H0Z" fill="#596981"/>
+    <defs>
+      <linearGradient id={`${id}-sky`} x2=".7" y2="1"><stop stopColor="#413c51"/><stop offset="1" stopColor="#6c6071"/></linearGradient>
+      <linearGradient id={`${id}-water`} x2=".3" y2="1"><stop stopColor="#79858d"/><stop offset="1" stopColor="#4f6978"/></linearGradient>
+    </defs>
+    <rect width="288" height="220" rx="24" fill={`url(#${id}-sky)`}/>
+    <path d="M0 190Q80 165 142 190T288 183V220H0Z" fill={`url(#${id}-water)`}/>
     <path d="M0 199Q76 174 145 200T288 194M25 212L55 209M181 211L214 214" stroke="#b1b7bf" opacity=".35"/>
     <path d="M12 145Q74 203 115 131T272 150" stroke="#c6b6a0" strokeWidth="22" opacity=".22"/>
     <path d="M12 145Q74 203 115 131T272 150" stroke="#efd8b6" strokeDasharray="2 6" opacity=".45"/>
+    <path d="M8 127l13 5m20 8 14 6m118-38 13 1m58 70 16 4M54 196l15-4m83 15 15 2m51-8 14-2" fill="none" stroke="#e6c7a5" strokeWidth="2" opacity=".28" strokeLinecap="round"/>
     <path d="M100 15Q150 43 198 18" stroke="#e9d3ac"/>
     {[105,122,140,159,178,195].map((x,i)=><circle key={x} cx={x} cy={[19,25,29,29,25,19][i]} r="3" fill="#ffe6a4"/>)}
     {[[18,28],[64,57],[253,27],[205,81],[270,91]].map(([x,y])=><path key={x} d={`M${x-2} ${y}h4m-2-2v4`} stroke="#e6d4b3" opacity=".6"/>)}

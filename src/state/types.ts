@@ -1,7 +1,7 @@
 import type { MemoryId, SecretId, CardId, ChapterId, EpisodeProgress, Run, StoryState, EpisodeChapter,QuestionId } from '../engine/types';
 import type { CONTENT_VERSION } from '../content/version';
 export type Settings = {sound:boolean;volume:number;textMode:'instant'|'type';motion:'system'|'reduced'|'full'};
-export type ChapterRecord = {scriptRevision?:3|4|5|6;endingId:CardId;cardId:CardId;story:StoryState;results:Run['results'];attemptId?:string;episode?:EpisodeProgress};
+export type ChapterRecord = {scriptRevision?:3|4|5|6|7;endingId:CardId;cardId:CardId;story:StoryState;results:Run['results'];attemptId?:string;episode?:EpisodeProgress};
 export type CardRecord = {c5Edition?:3;id:CardId;chapter:ChapterId;endingId:CardId;variant:'cafe'|'lateLeave'|'private'|'tidy'|'detour'|'skipped'|'patched'|'borrowed'|'feast'|'snack'|'chaos'|'cat'|'controllers'|'teapot'|'adventure'|'calm'|'evening'|'morning'|'walk'|'goodbye'|'upper'|'water'|'together'|'apart'|'fold'|'open'|'canopy'|'arch'|'leave';captionId:string;teamName?:NonNullable<StoryState['teamName']>;usedPreset?:boolean;venue?:'home'|'cafe'|'courtyard'|'terrace'};
 export type NoteChapter=EpisodeChapter;
 export type PrivateWord={chapter:8;labelId:'s2.word8';attemptId:string;status:'saved'|'deleted';text:string};

@@ -10,13 +10,13 @@ export function CameraArt({frames=12}:{frames?:number}){
  return <svg viewBox="0 0 190 120" aria-hidden="true">
   <defs>
    <linearGradient id={`${uid}-metal`} x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stopColor="#fbf5e6"/><stop offset=".35" stopColor="#e8dec6"/><stop offset=".75" stopColor="#cfc3a9"/><stop offset="1" stopColor="#b4a68b"/>
+    <stop offset="0" stopColor="#f2e4ce"/><stop offset=".35" stopColor="#e8dec6"/><stop offset=".75" stopColor="#cfc3a9"/><stop offset="1" stopColor="#b4a68b"/>
    </linearGradient>
    <linearGradient id={`${uid}-metal-h`} x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stopColor="#c9bea4"/><stop offset=".25" stopColor="#faf3e3"/><stop offset=".6" stopColor="#e5dac2"/><stop offset=".85" stopColor="#f7efe0"/><stop offset="1" stopColor="#beb298"/>
+    <stop offset="0" stopColor="#c9bea4"/><stop offset=".25" stopColor="#efe0cb"/><stop offset=".6" stopColor="#e5dac2"/><stop offset=".85" stopColor="#f7efe0"/><stop offset="1" stopColor="#beb298"/>
    </linearGradient>
    <linearGradient id={`${uid}-leather`} x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stopColor="#6c7f70"/><stop offset=".5" stopColor="#586a5c"/><stop offset="1" stopColor="#435247"/>
+    <stop offset="0" stopColor="#89947c"/><stop offset=".5" stopColor="#586a5c"/><stop offset="1" stopColor="#465146"/>
    </linearGradient>
    <pattern id={`${uid}-grain`} width="4" height="4" patternUnits="userSpaceOnUse">
     <circle cx="1.2" cy="1.2" r=".75" fill="#37453b" opacity=".42"/>
@@ -55,11 +55,13 @@ export function CameraArt({frames=12}:{frames?:number}){
    <path d="M129 12.8h11" stroke="#f5b7a3" strokeWidth="1.6" strokeLinecap="round" opacity=".75"/>
   </g>
   <rect x="18" y="20" width="142" height="82" rx="14" fill={`url(#${uid}-metal-h)`} stroke="#4d463c" strokeWidth="2.2"/>
-  <path d="M23 26q0-4 7-4h118q7 0 7 4v2H23Z" fill="#fffdf6" opacity=".75"/>
+  <path d="M23 26q0-4 7-4h118q7 0 7 4v2H23Z" fill="#f6e9d4" opacity=".75"/>
+  <path d="M73 25l23-1m-27 11 23 1m34 58q12 2 24-1" stroke="#9a7f76" strokeWidth=".85" opacity=".56" strokeLinecap="round"/>
   <circle cx="24" cy="27" r="1.4" fill="#998f7a" stroke="#5e564a" strokeWidth=".7"/>
   <circle cx="154" cy="27" r="1.4" fill="#998f7a" stroke="#5e564a" strokeWidth=".7"/>
   <rect x="19.2" y="42" width="139.6" height="48" fill={`url(#${uid}-leather)`}/>
   <rect x="19.2" y="42" width="139.6" height="48" fill={`url(#${uid}-grain)`}/>
+  <path d="M24 47q19-5 45-1m55 2q14-3 29 0m-129 37q21-1 36 0m69 0 24-4" stroke="#c2c8a5" strokeWidth="1.3" strokeLinecap="round" opacity=".58" fill="none"/>
   <rect x="19.2" y="38.5" width="139.6" height="3.6" fill="#d4a65e"/>
   <path d="M19.2 38.5h139.6" stroke="#f6d899" strokeWidth=".9"/>
   <path d="M19.2 42.1h139.6M19.2 90h139.6" stroke="#374239" strokeWidth="1.5"/>
@@ -107,7 +109,7 @@ export function CameraArt({frames=12}:{frames?:number}){
    <circle r="4.5" fill="#070d10"/>
    <path d="M-10.5-6.5a12 12 0 0 1 15-4.5" fill="none" stroke="#d5f2f5" strokeWidth="2.4" strokeLinecap="round" opacity=".82"/>
    <path d="M-8 9a11 11 0 0 0 14 1.5" fill="none" stroke="#b694d4" strokeWidth="1.8" strokeLinecap="round" opacity=".55"/>
-   <ellipse cx="-5.5" cy="-5.5" rx="3" ry="1.9" transform="rotate(-32 -5.5 -5.5)" fill="#ffffff" opacity=".92"/>
+   <ellipse cx="-5.5" cy="-5.5" rx="2.5" ry="1.55" transform="rotate(-32 -5.5 -5.5)" fill="#ffffff" opacity=".92"/>
    <circle cx="6.2" cy="5.8" r="2" fill="#8fd4cc" opacity=".6"/>
    <circle cx="9" cy="-3.5" r="1.1" fill="#fff6d9" opacity=".85"/>
    <circle cx="0" cy="-27.4" r="1.2" fill="#c95b43"/>

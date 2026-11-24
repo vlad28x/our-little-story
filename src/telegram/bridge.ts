@@ -38,7 +38,7 @@ export function prepareTelegram():Promise<TelegramApp|null>{
     const id=app.initDataUnsafe?.user?.id;
     if(!Number.isSafeInteger(id)||!id||id<0)throw new Error('Telegram не передал данные аккаунта. Открой игру заново у бота.');
     if(params.has('tgWebAppData'))history.replaceState(null,'','#/start');
-    app.ready();expandSafely(app);app.setHeaderColor?.('#fff7ed');app.setBackgroundColor?.('#fff7ed');
+    app.ready();expandSafely(app);app.setHeaderColor?.('#fff5e8');app.setBackgroundColor?.('#fbf0e3');
     document.documentElement.dataset.telegram='true';
     requestFullscreen(app);
     return app;

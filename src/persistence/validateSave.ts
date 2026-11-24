@@ -156,7 +156,8 @@ function discardPreviousSupper(save:Record<string,unknown>):boolean{
  const campaign=obj(save.campaign),records=obj(campaign.records);
  const active=campaign.active===null?null:obj(campaign.active);
  const supper=records[8]===undefined?null:obj(records[8]);
- if(supper?.scriptRevision!==5&&!(active?.chapter===8&&active.scriptRevision===5))return false;
+ const isOldSupper=(rev:unknown)=>rev===5||rev===6;
+ if(!isOldSupper(supper?.scriptRevision)&&!(active?.chapter===8&&isOldSupper(active.scriptRevision)))return false;
  const affected=[8,9,10];
  const fromSupper=(chapter:unknown)=>typeof chapter==='number'&&affected.includes(chapter);
  const completed=arr(campaign.completed,10);

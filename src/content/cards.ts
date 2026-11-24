@@ -1,9 +1,10 @@
 import type { CardId, ChapterId, StoryState } from '../engine/types';
 import type { CardRecord } from '../state/types';
 import { teamNames } from '../minigames/kitchenModel';
-import { constellationNames } from '../minigames/constellationModel';
+import { constellationNames, skyShapes } from '../minigames/constellationModel';
 import { effectiveVenue } from './season2';
 import type { Run } from '../engine/types';
+import { firstSeasonBackground, firstSeasonCat, firstSeasonVlad } from './firstSeasonArt';
 export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:string;background:string}> = {
   'c10.travellers':{chapter:10,title:'Два путешественника',caption:'Дошли оба. В следующий раз поменяемся фигурками.',quote:'',motif:'token',background:'bg.cafe.window'},
   'c6.photo.walk':{chapter:6,title:'Пока светло',caption:'Девять ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
@@ -13,9 +14,9 @@ export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string
   'c6.photo.friends':{chapter:6,title:'До встречи',caption:'Вы остались друзьями.',quote:'',motif:'leaf',background:'bg.photo6.sun'},
   'c6.photo.romance':{chapter:6,title:'Пока светло',caption:'Девять ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
   'c5.story':{chapter:5,title:'Пять встреч',caption:'Пять вечеров, знакомый столик и маленькая история в конверте.',quote:'мой любимый незапланированный перерыв.',motif:'envelope',background:'bg.cafe.sunset'},
-  'c1.tea': {chapter:1,title:'Маленькая пауза',caption:'Иногда хороший день начинается с того, что никуда не торопишься',quote:'спасибо, что задержалась.',motif:'tea',background:'bg.cafe.window'},
-  'c1.banter': {chapter:1,title:'Нелепо познакомились',caption:'План знакомиться красиво заменён на план смеяться вместе',quote:'хорошо посидели. неожиданно буквально.',motif:'scarf',background:'bg.cafe.window'},
-  'c1.coop': {chapter:1,title:'Второй игрок найден',caption:'Сначала собрали жетоны. Кажется, теперь собралась команда',quote:'сохраним место. у нас тут ещё мостик непостроенный.',motif:'token',background:'bg.cafe.window'},
+  'c1.tea': {chapter:1,title:'Маленькая пауза',caption:'Иногда хороший день начинается с того, что никуда не торопишься',quote:'спасибо, что задержалась.',motif:'tea',background:'bg.chapter1.gouache.window'},
+  'c1.banter': {chapter:1,title:'Нелепо познакомились',caption:'План знакомиться красиво заменён на план смеяться вместе',quote:'хорошо посидели. неожиданно буквально.',motif:'scarf',background:'bg.chapter1.gouache.window'},
+  'c1.coop': {chapter:1,title:'Второй игрок найден',caption:'Сначала собрали жетоны. Кажется, теперь собралась команда',quote:'сохраним место. у нас тут ещё мостик непостроенный.',motif:'token',background:'bg.chapter1.gouache.window'},
   'c2.shelter': {chapter:2,title:'Навес на двоих',caption:'Прогулка стала короче. Хороший вечер — нет',quote:'путешествие было коротким, но я многое понял.',motif:'tea',background:'bg.rain.awning'},
   'c2.arcade': {chapter:2,title:'Короткий путь с лужей',caption:'Маршрут немного промок, зато история получилась своя',quote:'ну, зато маршрут эксклюзивный.',motif:'umbrella',background:'bg.rain.arcade'},
   // Stable collection IDs; chapter metadata follows the current story order.
@@ -54,8 +55,22 @@ export const umbrellaCaptions={patched:'Облако-нашивка на пам�
 export const kitchenCaptions={feast:'Целый пир на экране',snack:'Один большой бутерброд',chaos:'Зато красиво сервировали',skipped:'Печенье без обучения'};
 export function archivedEpisodeCard(id:CardId){return ['c6.photo.friends','c6.photo.romance','c5.romantic','c5.comic','c5.gaming','c5.friendly','c8.kiss','c8.near','c8.tea','c9.kiss','c9.hug','c9.film'].includes(id);}
 export function cardDetail(card:CardRecord){return archivedEpisodeCard(card.id)?'Из прежнего сценария · встреча '+card.chapter:card.chapter>=8?`После титров · ${card.chapter-5} / 5`:card.chapter===7?'После титров · вторая встреча':card.chapter===6?'После титров · первая встреча':card.chapter===1?searchCaptions[card.variant as keyof typeof searchCaptions]:card.chapter===2?umbrellaCaptions[card.variant as keyof typeof umbrellaCaptions]:card.chapter===4?kitchenCaptions[card.variant as keyof typeof kitchenCaptions]:card.chapter===5?(card.variant==='adventure'?'Больше маленьких приключений':'Больше спокойных вечеров'):card.usedPreset?'Выбрали готовую картинку · Чайник':constellationNames[card.variant as keyof typeof constellationNames];}
-export function cardBackground(card:CardRecord){return card.id==='c10.travellers'?'bg.cafe.window':card.id==='c9.courtyard'?'bg.courtyard9.open':card.id==='c8.supper'?'bg.supper8.kitchen':(card.id==='c6.photo.romance'||card.id==='c6.photo.walk')?(card.variant==='upper'?'bg.photo6.upper':'bg.photo6.shade'):card.id==='c10.overnight'?'bg.s2.kitchen.morning':card.chapter>=8?(card.venue==='home'?(card.chapter===8?'bg.s2.kitchen.evening':'bg.home.living'):cards[card.id].background):cards[card.id].background;}
-export function cardCharacter(id:CardId,venue?:CardRecord['venue']){const chapter=cards[id].chapter;return chapter>=8&&venue==='home'?'vlad.casual.warm':chapter>=6?'vlad.city.smile':chapter===4?'vlad.casual.smile':chapter===5?(id==='c5.comic'?'cat.idle':id==='c5.romantic'?'vlad.elegant.awkward':id==='c5.gaming'?'vlad.elegant.laugh':'vlad.elegant.smile'):'cat.idle';}
+export function cardConstellation(card:CardRecord){
+  return card.chapter===3 ? skyShapes.find(shape=>shape===card.variant) : undefined;
+}
+export function cardBackground(card:CardRecord){
+  if(card.id==='c10.travellers')return 'bg.travellers10.cafe';
+  if(card.id==='c6.photo.romance'||card.id==='c6.photo.walk')return card.variant==='upper'?'bg.photo6.upper':'bg.photo6.shade';
+  const background=card.id==='c10.overnight'?'bg.s2.kitchen.morning':card.id!=='c8.supper'&&card.chapter>=8&&card.venue==='home'?(card.chapter===8?'bg.s2.kitchen.evening':'bg.home.living'):cards[card.id].background;
+  return firstSeasonBackground(background);
+}
+export function cardCharacter(id:CardId,venue?:CardRecord['venue']){
+  const chapter=cards[id].chapter;
+  if(chapter===4||chapter>=8&&venue==='home')return firstSeasonVlad('bg.home.living','smile');
+  if(chapter>=6)return firstSeasonVlad('bg.cafe.window','smile');
+  if(chapter===5&&id!=='c5.comic')return firstSeasonVlad('bg.cafe.sunset',id==='c5.romantic'?'awkward':id==='c5.gaming'?'laugh':'smile');
+  return firstSeasonCat;
+}
 export function cardTeam(card:CardRecord){return card.teamName?teamNames[card.teamName]:'';}
 export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run['results']):CardRecord {
   let id:CardId;let variant:CardRecord['variant'];

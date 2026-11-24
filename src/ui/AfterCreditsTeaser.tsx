@@ -12,7 +12,7 @@ export function AfterCreditsTeaser(){
     <button className="secret-peek" aria-label="Псс… Маленький секрет" aria-haspopup="dialog" onClick={()=>setOpen(true)}>
       <span className="secret-peek-cloud" aria-hidden="true">псс…</span>
       <span className="secret-peek-crop">
-        <img className="secret-peek-body" src={assetUrl('adviser.devil.peek')} alt=""/>
+        <img className="secret-peek-body" src={assetUrl('adviser.season1.gouache.peek')} alt=""/>
       </span>
     </button>
     {open&&<SecretConversation onClose={()=>setOpen(false)}/>}
@@ -39,7 +39,7 @@ function SecretConversation({onClose}:{onClose:()=>void}){
     if(!active)send({type:'start',chapter:6});
     onClose();go('/play/6');
   }
-  return <Modal title="Маленький секрет" className="devil-secret-modal" onClose={onClose} decoration={<div className="secret-portrait" aria-hidden="true"><img src={assetUrl('adviser.devil.lean')} alt=""/></div>}>
+  return <Modal title="Маленький секрет" className="devil-secret-modal" onClose={onClose} decoration={<div className="secret-portrait" aria-hidden="true"><img src={assetUrl('adviser.season1.gouache.lean')} alt=""/></div>}>
     {step==='intro'?<>
       <div className="secret-speech"><p>так, титры были. а кто сказал, что всё?</p><p>у меня тут ещё несколько идей для вашего вечера</p></div>
       <div className="stack"><button className="primary" onClick={()=>setStep('code')}>И какие же?</button><button onClick={onClose}>Пока оставим интригу</button></div>

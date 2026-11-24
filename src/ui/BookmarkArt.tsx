@@ -1,2 +1,23 @@
+import { useId } from 'react';
 import type { StoryState } from '../engine/types';
-export function BookmarkArt({memory}:{memory:StoryState['c10Memory']}){return <svg className="bookmark-art" viewBox="0 0 160 210" role="img" aria-label="Знак нашего вечера"><path d="M37 15H123V190L80 165L37 190Z" fill="#f4e3d4" stroke="#b998a4" strokeWidth="3"/><circle cx="80" cy="33" r="5" fill="#b998a4"/>{memory==='pause'&&<g stroke="#805065" strokeWidth="4" fill="none"><path d="M54 82H97V111Q76 131 54 111ZM98 87Q120 85 116 101Q113 110 99 108M67 68Q60 58 69 51M82 69Q75 59 84 50"/></g>}{memory==='laugh'&&<g stroke="#aa7b48" strokeWidth="3"><path d="M79 64L91 87L117 92L98 111L101 137L78 122L54 132L59 108L42 88L68 84Z" fill="#f1c773"/><path d="M68 108Q79 118 91 107" fill="none"/><circle cx="68" cy="96" r="2"/><circle cx="91" cy="96" r="2"/></g>}{memory==='initiative'&&<path d="M53 126Q37 92 70 91Q104 89 93 112Q84 129 74 110Q67 94 108 72L101 90M108 72L89 76" stroke="#975b78" fill="none" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>}</svg>;}
+
+export function BookmarkArt({memory}:{memory:StoryState['c10Memory']}){
+  const id=useId().replace(/:/g,'');
+  return <svg className="bookmark-art" viewBox="0 0 160 210" role="img" aria-label="Знак нашего вечера">
+    <defs><linearGradient id={`${id}-paper`} x2=".78" y2="1"><stop stopColor="#f8edd2"/><stop offset=".6" stopColor="#ebd7bf"/><stop offset="1" stopColor="#c9a3a6"/></linearGradient></defs>
+    <path d="M40 19h87v177l-47-24-40 23Z" fill="#6e5158" opacity=".23"/>
+    <path d="M37 15q35-3 86 0v175l-43-25-43 25Z" fill={`url(#${id}-paper)`} stroke="#a5828f" strokeWidth="2.1" strokeLinejoin="round"/>
+    <path d="M45 23h70v153l-35-20-35 20Z" fill="none" stroke="#b59190" strokeWidth="1.25" strokeDasharray="2.8 3.2"/>
+    <path d="M48 37l9-1m51 27 4-1m-61 81 10-2m41 20 8 4" fill="none" stroke="#fbedd2" strokeWidth="2.1" strokeLinecap="round"/>
+    <circle cx="80" cy="33" r="5" fill="#ac8a93"/>
+    {memory==='pause'&&<g stroke="#89596a" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M54 82h43v29q-21 20-43 0Zm44 5q22-2 18 14-3 9-17 7M67 68q-7-10 2-17m13 18q-7-10 2-19"/>
+      <path d="M58 85q15 5 34 0" stroke="#bb8d83" strokeWidth="1.8"/>
+    </g>}
+    {memory==='laugh'&&<g stroke="#ad7c52" strokeWidth="2.6" strokeLinejoin="round">
+      <path d="m79 64 12 23 26 5-19 19 3 26-23-15-24 10 5-24-17-20 26-4Z" fill="#ecca84"/>
+      <path d="M68 108q11 10 23-1m-14-35-4 12" fill="none" strokeLinecap="round"/><circle cx="68" cy="96" r="2"/><circle cx="91" cy="96" r="2"/>
+    </g>}
+    {memory==='initiative'&&<path d="M53 126q-16-34 17-35 34-2 23 21-9 17-19-2-7-16 34-38l-7 18m7-18-19 4" stroke="#9f6379" fill="none" strokeWidth="4.4" strokeLinecap="round" strokeLinejoin="round"/>}
+  </svg>;
+}

@@ -1,17 +1,18 @@
 import { useGame } from '../app/GameProvider';
 import { go } from '../app/router';
-import { cards,archivedEpisodeCard } from '../content/cards';
+import { cards,archivedEpisodeCard,cardConstellation } from '../content/cards';
 import { chapters } from '../content/chapters/manifest';
 import { achievements } from '../content/achievements';
 import { assetUrl } from '../content/assetManifest';
 import type { CardId } from '../engine/types';
 import { Illustration } from './Illustration';
+import { ConstellationArt } from './ConstellationArt';
 
 
 export function AlbumScreen(){
   const {save}=useGame();
   const seasonOpen=save.unlocked.some(chapter=>chapter>=6);
-  const found=new Set(save.collection.cards.map(card=>card.id));
+  const found=new Map(save.collection.cards.map(card=>[card.id,card]));
   const foundCards=(Object.keys(cards) as CardId[]).filter(id=>found.has(id));
   function chapterCards(secondSeason:boolean){
     return chapters.filter(chapter=>(chapter.id>=6)===secondSeason).map(chapter=>{
@@ -20,9 +21,9 @@ export function AlbumScreen(){
       return <div className={`album-chapter ${ids.length>1?'album-chapter-wide':''}`} key={chapter.id}>
         <div className="album-chapter-heading"><span>ВСТРЕЧА {chapter.id}</span><h3>{chapter.title}</h3></div>
         <div className="album-grid">{ids.map(id=>{
-          const card=cards[id];
+          const card=cards[id],shape=cardConstellation(found.get(id)!);
           return <button key={id} className="album-card" onClick={()=>go(`/result/${card.chapter}?card=${id}`)}>
-            <Illustration kind={card.motif}/><span>{card.title}</span><small>{archivedEpisodeCard(id)?'Прежний сценарий · открыть открытку':'Открыть открытку →'}</small>
+            {shape?<ConstellationArt shape={shape} ink className="illustration"/>:<Illustration kind={card.motif}/>}<span>{card.title}</span><small>{archivedEpisodeCard(id)?'Прежний сценарий · открыть открытку':'Открыть открытку →'}</small>
           </button>;
         })}</div>
       </div>;
@@ -39,7 +40,7 @@ export function AlbumScreen(){
     </section>}
     <h2>Маленькие секреты</h2>{achievements.map(achievement=>{
       const unlocked=save.collection.achievements.includes(achievement.id);
-      return <div className="secret" key={achievement.id}>{achievement.id==='cat-supervisor'?<img src={assetUrl('cat.idle')} alt="" className={unlocked?'':'silhouette'}/>:<Illustration kind={unlocked?achievement.id==='full-table'?'controller':achievement.id==='own-sky'?'star':achievement.id==='five-meetings'?'envelope':'umbrella':'envelope'}/>}<div><h3>{unlocked?achievement.title:achievement.id==='cat-supervisor'?'Кто-то наблюдает…':achievement.id==='dry-plan'?'Маленький прогноз…':'Ещё один секрет…'}</h3><p>{unlocked?achievement.description:'Секрет. Можно найти в истории.'}</p></div></div>;
+      return <div className="secret" key={achievement.id}>{achievement.id==='cat-supervisor'?<img src={assetUrl('cat.chapter1.gouache')} alt="" className={unlocked?'':'silhouette'}/>:<Illustration kind={unlocked?achievement.id==='full-table'?'controller':achievement.id==='own-sky'?'star':achievement.id==='five-meetings'?'envelope':'umbrella':'envelope'}/>}<div><h3>{unlocked?achievement.title:achievement.id==='cat-supervisor'?'Кто-то наблюдает…':achievement.id==='dry-plan'?'Маленький прогноз…':'Ещё один секрет…'}</h3><p>{unlocked?achievement.description:'Секрет. Можно найти в истории.'}</p></div></div>;
     })}<button onClick={()=>go('/chapters')}>К главам</button>
   </section>;
 }

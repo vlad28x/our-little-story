@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { SearchResult } from '../engine/types';
 import { Illustration } from '../ui/Illustration';
 import { assetUrl } from '../content/assetManifest';
-const places=[{id:'bag',label:'Сумка',token:true},{id:'mat',label:'Коврик',token:false},{id:'paper',label:'Листок',token:true},{id:'cat',label:'Кот',token:false},{id:'cup',label:'Стакан',token:true},{id:'umbrella',label:'Зонтик',token:false}];
+const places=[{id:'bag',label:'Сумка',token:true},{id:'mat',label:'Коврик',token:false},{id:'paper',label:'Листок',token:true},{id:'cat',label:'Кот',token:false},{id:'cup',label:'Стакан',token:true},{id:'umbrella',label:'Зонтик',token:false}] as const;
 export function TokenSearch({onComplete,onSound}:{onComplete:(result:SearchResult)=>void;onSound:()=>void}){
   const [opened,setOpened]=useState<string[]>([]);const [text,setText]=useState('Три жетона куда-то укатились. Осмотрись — спешить некуда.');const [hint,setHint]=useState(false);const busyUntil=useRef(0);const done=useRef(false);
   const found=places.filter(p=>p.token&&opened.includes(p.id)).length;
@@ -13,7 +13,7 @@ export function TokenSearch({onComplete,onSound}:{onComplete:(result:SearchResul
   return <section className="search-game" aria-labelledby="search-title"><div className="search-heading"><div><span className="eyebrow">МАЛЕНЬКОЕ РАССЛЕДОВАНИЕ</span><h2 id="search-title">Куда укатилось?</h2></div><span className="found-count" aria-live="polite">{found} / 3</span></div>
     <p className="small">Найди 3 жетона. Можно осмотреть все места.</p>
     <div className="search-grid">{places.map(p=><button key={p.id} className={`search-place ${opened.includes(p.id)?'opened':''}`} onClick={()=>open(p.id)} aria-pressed={opened.includes(p.id)} aria-label={`Осмотреть: ${p.label}`}>
-      {p.id==='cat'?<img src={assetUrl('cat.idle')} alt=""/>:<Illustration kind={p.id}/>}
+      {p.id==='cat'?<img src={assetUrl('cat.chapter1.gouache')} alt=""/>:<Illustration kind={p.id}/>}
       <span>{p.label}</span>{opened.includes(p.id)&&<span className="found-marker">{p.token?'●●':'✓'}</span>}
     </button>)}</div>
     <p className="search-response" role="status">{text}</p>

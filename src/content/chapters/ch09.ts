@@ -1,4 +1,4 @@
-// Authoritative text: outputs/SEASON_01_02_POLISH_SPEC_2026_11_19.md
+// Scenario reference: outputs/CHAPTER_09_SCRIPT.md
 import type { Chapter } from '../../engine/types';
 import { CONTENT_VERSION } from '../version';
 export const chapter9:Chapter = {

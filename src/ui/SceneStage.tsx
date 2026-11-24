@@ -5,17 +5,23 @@ import { useRef,useState } from 'react';
 import { assetUrl } from '../content/assetManifest';
 import type { Emotion } from '../engine/types';
 import { Illustration } from './Illustration';
-import { KitchenControls } from './KitchenControls';
+import { ConstellationArt } from './ConstellationArt';
+import { constellationDrawings } from '../minigames/constellationModel';
 import { SceneEasterEggs } from './SceneEasterEggs';
+import { CookiePlateArt } from './SceneEasterPropArt';
 import { sceneEggProps,type EasterEggId } from '../content/easterEggs';
 import { AdviserPortrait } from './AdviserPortrait';
 import { SilentFilmArt } from './SilentFilmArt';
 import { BookmarkArt } from './BookmarkArt';
 import { DessertArt } from './DessertArt';
 import { drinkNames } from '../minigames/movieSetupModel';
+import { DrinkArt } from './DrinkArt';
 import type { StoryState,DessertResult,MovieDrink } from '../engine/types';
 import { ShopBreakSign } from './ShopBreakSign';
-export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',reserveRemote=false,bench,souvenir,catAtCounter=false,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onEasterSound,advisers,galleryPlace,characterId,word,light,filmFrame,bookmark,fade=false,dessert,drink}:{travellers?:ReactNode;courtyard?:ReactNode;supper?:ReactNode;exhibit?:GalleryView;dessert?:DessertResult;drink?:MovieDrink;characterId?:string;word?:string;light?:'warm'|'dim'|'unchanged';filmFrame?:0|1|2;bookmark?:StoryState['c10Memory'];fade?:boolean;galleryPlace?:'arch'|'window';background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;reserveRemote?:boolean;bench?:'near'|'space';souvenir?:'patched'|'borrowed'|'skipped';catAtCounter?:boolean;easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onEasterSound?:()=>void;advisers?:'angel'|'devil'|'both'}){
+
+import { firstSeasonBackground, firstSeasonCat, firstSeasonNina, firstSeasonVlad } from '../content/firstSeasonArt';
+
+export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',constellation,reserveRemote=false,bench,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onEasterSound,advisers,galleryPlace,characterId,word,light,filmFrame,bookmark,fade=false,dessert,drink}:{travellers?:ReactNode;courtyard?:ReactNode;supper?:ReactNode;exhibit?:GalleryView;dessert?:DessertResult;drink?:MovieDrink;characterId?:string;word?:string;light?:'warm'|'dim'|'unchanged';filmFrame?:0|1|2;bookmark?:StoryState['c10Memory'];fade?:boolean;galleryPlace?:'arch'|'window';background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;constellation?:StoryState['constellation'];reserveRemote?:boolean;bench?:'near'|'space';easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onEasterSound?:()=>void;advisers?:'angel'|'devil'|'both'}){
   const stage=useRef<HTMLDivElement>(null);
   // Keep the plate while its optional hotspots unmount during the kitchen or pause.
   const [cookieTaken,setCookieTaken]=useState(false);
@@ -24,10 +30,22 @@ export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.c
   const [failedUrls,setFailedUrls]=useState<string[]>([]);
   const [attempts,setAttempts]=useState<Record<string,number>>({});
   const location=background==='bg.travellers10.morning'?'Дома у Влада · доброе утро':background==='bg.travellers10.home'?'Дома у Влада · ещё немного вечера':background==='bg.travellers10.cafe'?'В «Паузе» · два путешественника':background.startsWith('bg.courtyard9.')?({'open':'Кинодворик · её вечер','canopy':'Кинодворик · под навесом','arch':'Кинодворик · под аркой','books':'У булочной · книжный шкаф','lab':'Фотолаборатория · после дождя'}[background.split('.').at(-1)!.replace(/-(closed|red)$/,'')]??'Кинодворик'):background==='bg.supper8.kitchen'?'Дома у Влада · половина кухни':background==='bg.cafe.approach'?'У «Паузы» · перед встречей':background==='bg.gallery7.hall'?'Галерея · Линии и свет':background==='bg.gallery7.outside'?'У галереи · Линии и свет':background==='bg.photo6.upper'?'Верхняя дорожка · пока светло':background==='bg.photo6.shade'?'У воды · отражение лестницы':background==='bg.photo6.sun'?'Набережная · пока светло':background==='bg.s2.kitchen.morning'?'Дома у Влада · доброе утро':background==='bg.s2.kitchen.evening'?(sceneId.startsWith('c8.supper.')?'Дома у Влада · половина кухни':'Дома у Влада · на чай'):background==='bg.s2.cinema.courtyard'?'Кинодворик «Паузы» · фильм подождёт':background==='bg.s2.cafe.terrace'?'Терраса «Паузы» · последний вечер':background==='bg.home.living'&&sceneId.startsWith('c9.')?'Дома у Влада · киновечер':background==='bg.home.living'&&sceneId.startsWith('c10.')?'Дома у Влада · ещё немного вечера':background==='bg.s2.gallery.evening'?'Галерея · между строк':background==='bg.s2.window.evening'?'У витрины · вечерний перерыв':background==='bg.cafe.exterior'?'У «Паузы» · вечер':background==='bg.cafe.sunset'?'Снова в «Паузе» · закат':background==='bg.river.evening'?'Набережная · тихий вечер':background==='bg.home.living'?'Дома у Влада · игровой вечер':background==='bg.rain.awning'?'Под навесом · осенний дождь':background==='bg.rain.arcade'?'Под аркой · короткий путь':background.endsWith('entry')?'Кафе «Пауза»':'У окна · маленькая пауза';
+  const firstSeason = /^c[1-5]\./.test(sceneId);
+  const secondSeason = /^c(?:[6-9]|10)\./.test(sceneId);
+  const gameNight = sceneId.startsWith('c4.');
+  const returnCafe = sceneId.startsWith('c5.') && background === 'bg.cafe.sunset';
+  const painted = firstSeason || secondSeason;
+  const paintedSupper = secondSeason && background === 'bg.supper8.kitchen';
+  const backgroundAsset = painted ? firstSeasonBackground(background) : background;
+  const home = characterId?.startsWith('vlad.casual.') || background === 'bg.travellers10.home' || background === 'bg.travellers10.morning' || background.startsWith('bg.s2.kitchen.');
+  const outfitBackground = home ? 'bg.home.living' : characterId?.startsWith('vlad.city.') && background === 'bg.cafe.exterior' ? 'bg.cafe.window' : background;
+  const paintedCharacter = speaker === 'nina' ? firstSeasonNina : characterId?.startsWith('vlad.apron.') ? 'vlad.supper8.gouache.apron' : firstSeasonVlad(outfitBackground, emotion);
+  const fallbackOutfit = characterId?.startsWith('vlad.') ? characterId.split('.')[1] : home || background === 'bg.home.living' ? 'casual' : background === 'bg.cafe.sunset' || background === 'bg.cafe.exterior' ? 'elegant' : 'city';
+  const characterAsset = painted ? paintedCharacter : speaker === 'nina' ? 'nina.neutral' : `vlad.${fallbackOutfit}.${emotion}`;
   const layers=[
-    {id:'background',url:assetUrl(background),className:background.startsWith('bg.courtyard9.books')?'scene-background courtyard-books-background':background==='bg.cafe.approach'?'scene-background cafe-approach':'scene-background',alt:''},
-    {id:'character',url:assetUrl(speaker==='nina'?'nina.neutral':`vlad.${characterId?.startsWith('vlad.')?characterId.split('.')[1]:background==='bg.home.living'?'casual':(background==='bg.cafe.sunset'||background==='bg.cafe.exterior')?'elegant':'city'}.${emotion}`),className:`character emotion-${emotion} ${speaker==='nina'?'nina':''}`,alt:speaker==='nina'?'Нина':'Влад'},
-    ...(showCat?[{id:'cat',url:assetUrl('cat.idle'),className:`scene-cat ${catAtCounter?'cat-counter':''}`,alt:'Пончик'}]:[]),
+    {id:'background',url:assetUrl(backgroundAsset),className:background.startsWith('bg.courtyard9.books')?'scene-background courtyard-books-background':background==='bg.cafe.approach'?'scene-background cafe-approach':'scene-background',alt:''},
+    {id:'character',url:assetUrl(characterAsset),className:`character emotion-${emotion} ${speaker==='nina'?'nina':''}`,alt:speaker==='nina'?'Нина':'Влад'},
+    ...(showCat?[{id:'cat',url:assetUrl(painted?firstSeasonCat:'cat.idle'),className:'scene-cat',alt:'Пончик'}]:[]),
   ].filter(layer=>sceneId!=='c1.prologue'||layer.id==='background');
   // A failed URL belongs to that image, never to the entire scene. Old failures
   // stop being relevant as soon as the background or expression changes.
@@ -55,26 +73,28 @@ export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.c
     &&!['c1.prologue','c1.before','c9.courtyard.filmStart','c9.courtyard.resume'].includes(sceneId)
     &&(!exhibit||exhibit==='hall'||exhibit==='poster');
   const dance=({'c8.supper.follow':'close','c8.supper.lead':'lead','c8.supper.play':'playful'} as Record<string,string>)[sceneId]??/^c8\.r3\.dance\.(close|lead|playful)$/.exec(sceneId)?.[1];
-  return <div ref={stage} className={`scene-stage ${courtyard?'courtyard-stage':''} ${travellers?'travellers-stage':''} ${background==='bg.travellers10.cafe'?'traveller-cafe-stage':''} ${background==='bg.travellers10.home'?'traveller-home-stage':''} ${exhibit?`exhibit-${exhibit}`:''} ${advisers?'has-advisers adviser-aside':''} ${bench?`bench-${bench}`:''} ${galleryPlace?`gallery-${galleryPlace}`:''} ${fade?'scene-fade':''} ${dance?`dancing-${dance}`:''} ${reducedMotion?'dance-still':''}`} aria-label={location}>
+  return <div ref={stage} className={`scene-stage ${firstSeason?'first-season-gouache':''} ${gameNight?'game-night-stage':''} ${returnCafe?'cafe-return-stage':''} ${secondSeason?'second-season-gouache':''} ${paintedSupper?'supper-gouache':''} ${courtyard?'courtyard-stage':''} ${travellers?'travellers-stage':''} ${background==='bg.travellers10.cafe'?'traveller-cafe-stage':''} ${background==='bg.travellers10.home'?'traveller-home-stage':''} ${exhibit?`exhibit-${exhibit}`:''} ${advisers?'has-advisers adviser-aside':''} ${bench?`bench-${bench}`:''} ${galleryPlace?`gallery-${galleryPlace}`:''} ${fade?'scene-fade':''} ${dance?`dancing-${dance}`:''} ${reducedMotion?'dance-still':''}`} aria-label={location}>
     <div className="scene-art-clip">
-    {showEasterEggs&&<SceneEasterEggs stage={stage} background={background} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'&&!['c4.pad.dead','c4.pad.ready'].includes(sceneId)} controller={sceneId==='c4.pad.ready'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} discovered={discoveredEggs} onDiscover={id=>setDiscoveredEggs(previous=>new Set([...previous,id]))} reduced={reducedMotion} onSound={onEasterSound}/>}
+    {showEasterEggs&&<SceneEasterEggs stage={stage} paintedSeason={painted} background={background} context={interactionContext} hair={speaker!=='nina'} cat={showCat} cookie={background==='bg.home.living'} extras={sceneEggProps(background,sceneId)} cookieTaken={cookieTaken} onTakeCookie={()=>setCookieTaken(true)} discovered={discoveredEggs} onDiscover={id=>setDiscoveredEggs(previous=>new Set([...previous,id]))} reduced={reducedMotion} onSound={onEasterSound}/>}
+    {gameNight&&background==='bg.home.living'&&!showEasterEggs&&<div className="easter-cookie scene-cookie-plate" aria-hidden="true"><CookiePlateArt taken={cookieTaken}/></div>}
     {renderLayer('background')}
     {exhibit&&<GalleryArt view={exhibit}/>}
     {background==='bg.s2.window.evening'&&currentFailures.length===0&&<ShopBreakSign stage={stage}/>}
     <div className="scene-light"/>{light&&<div className={`scene-atmosphere light-${light}`}/>}
     {renderLayer('character')}
     {renderLayer('cat')}{supper}{courtyard}{travellers}
-    {souvenir&&<div className="scene-souvenir" aria-label={souvenir==='patched'?'Нашивка-облако':souvenir==='borrowed'?'Чехол для зонтика':'Игрушечный зонтик'}><Illustration kind={souvenir==='patched'?'cloud':souvenir==='borrowed'?'umbrella-case':'umbrella'}/></div>}
     {reserveRemote&&<div className="reserve-remote" aria-label="Пульт на блюдце для запасных"><span/></div>}
-    {['c4.pad.dead','c4.pad.ready'].includes(sceneId)&&<div className="controller-scene" aria-hidden="true"><KitchenControls ready={sceneId==='c4.pad.ready'}/></div>}
+    {constellation&&(sceneId.startsWith('c5.drink.sky.')||sceneId==='c5.letter')&&<div className="scene-constellation-note">
+      <ConstellationArt shape={constellation} ink label={constellationDrawings[constellation].description}/>
+    </div>}
     {sceneId==='c1.entry'&&<div className="fallen-tokens" aria-hidden="true"><Illustration kind="token"/><Illustration kind="token"/><Illustration kind="token"/></div>}
     {sceneId==='c1.end.banter'&&<div className="falling-scarf"><Illustration kind="scarf"/></div>}
-    {dessert&&<div className="scene-dessert"><DessertArt topping={dessert.topping} mark={dessert.mark}/></div>}{drink&&<div className="scene-drink" aria-label={`Напиток: ${drinkNames[drink]}`}><svg viewBox="0 0 70 65" aria-hidden="true"><path d="M10 20H44V46Q27 63 10 46ZM45 25Q65 20 61 39Q55 48 45 43" fill={drink==='water'?'#cde2e5':'#f1d7af'} stroke="#8a6278" strokeWidth="3"/>{drink!=='water'&&<path d="M20 14Q15 7 22 2M33 14Q28 7 35 2" stroke="#f7ede0" fill="none" strokeWidth="3"/>}</svg><span>{drinkNames[drink]}</span></div>}
+    {dessert&&<div className="scene-dessert"><DessertArt topping={dessert.topping} mark={dessert.mark}/></div>}{drink&&<div className="scene-drink" aria-label={`Напиток: ${drinkNames[drink]}`}><DrinkArt drink={drink}/><span>{drinkNames[drink]}</span></div>}
     {filmFrame!==undefined&&<div className="scene-film"><SilentFilmArt frame={filmFrame}/></div>}{bookmark!==undefined&&<div className="scene-bookmark"><BookmarkArt memory={bookmark}/></div>}{word&&<span className="scene-word-label shared-word-tag">{word}</span>}
     <div className="scene-vignette"/>
     {currentFailures.length>0&&<div className="art-error" role="status"><span>Часть иллюстрации не загрузилась. Историю можно читать дальше.</span><button onClick={retryFailed}>Повторить загрузку</button></div>}
     <div className="location-tag"><span/> {location}</div>
     </div>
-    {advisers&&<div className="adviser-council" aria-label="Советчики этой истории">{(advisers==='angel'||advisers==='both')&&<AdviserPortrait kind="angel" active aside/>}{(advisers==='devil'||advisers==='both')&&<AdviserPortrait kind="devil" active aside/>}</div>}
+    {advisers&&<div className="adviser-council" aria-label="Советчики этой истории">{(advisers==='angel'||advisers==='both')&&<AdviserPortrait kind="angel" active aside painted={secondSeason}/>}{(advisers==='devil'||advisers==='both')&&<AdviserPortrait kind="devil" active aside painted={secondSeason}/>}</div>}
   </div>;
 }
