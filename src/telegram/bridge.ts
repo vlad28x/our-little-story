@@ -11,15 +11,13 @@ export type TelegramApp={initData:string;initDataUnsafe?:{user?:{id:number}};Clo
   requestFullscreen?:()=>void;isFullscreen?:boolean;
   onEvent?:(event:string,handler:()=>void)=>void;offEvent?:(event:string,handler:()=>void)=>void;
   BackButton?:{show:()=>void;hide:()=>void;onClick:(handler:()=>void)=>void;offClick:(handler:()=>void)=>void};
-  HapticFeedback?:{impactOccurred?:(style:ImpactStyle)=>void;selectionChanged?:()=>void};
+  HapticFeedback?:{impactOccurred?:(style:ImpactStyle)=>void};
 };
 declare global {interface Window{Telegram?:{WebApp?:TelegramApp}}}
-export function triggerHaptic(app:TelegramApp|undefined,kind:'selection'|ImpactStyle,sound:boolean,reducedMotion:boolean){
+export function triggerHaptic(app:TelegramApp|undefined,sound:boolean,reducedMotion:boolean){
   if(!sound||reducedMotion)return;
   try {
-    const feedback=app?.HapticFeedback;
-    if(kind==='selection')feedback?.selectionChanged?.();
-    else feedback?.impactOccurred?.(kind);
+    app?.HapticFeedback?.impactOccurred?.('heavy');
   }catch{/* Haptic feedback is optional. */}
 }
 export const BOT_URL='https://t.me/our_little_story_game_bot/story';

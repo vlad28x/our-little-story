@@ -37,7 +37,7 @@ const heroineShutterNodes=new Set([
   'c6.photo.shot.vlad','c6.photo.shot.place','c7.gallery.shotVlad','c7.gallery.shotBoth','c8.supper.boardHer',
   'c9.courtyard.frameVlad','c9.courtyard.frameSeats','c9.courtyard.frameYard',
 ]);
-const softHapticNodes=new Set([
+const hugAndKissNodes=new Set([
   'c3.goodbye.hug','c5.hug.her','c5.hug.accept','c6.photo.touch.hug','c8.supper.kissYes','c8.supper.kissHer',
   'c9.courtyard.kissAgain','c9.courtyard.kissFirst','c9.courtyard.hug','c10.travellers.homeHug','c10.travellers.cafeHug',
   'c10.travellers.homeKissFirst','c10.travellers.homeKissFirstNeck','c10.travellers.homeKissFirstSoft',
@@ -81,7 +81,7 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
   useEffect(()=>{
     if(suspended||lastHapticNode.current===nodeId)return;
     lastHapticNode.current=nodeId;
-    if(node?.kind==='dialogue'&&softHapticNodes.has(node.id))triggerHaptic(telegramApp,'soft',save.settings.sound,reduced);
+    if(node?.kind==='dialogue'&&hugAndKissNodes.has(node.id))triggerHaptic(telegramApp,save.settings.sound,reduced);
   },[node,nodeId,reduced,save.settings.sound,suspended,telegramApp]);
   useEffect(()=>{if(!run&&save.lastResult?.chapter===chapterId)go(`/result/${chapterId}`);},[run,save.lastResult,chapterId]);
   if(!run||!chapter)return <div className="page-content"><h2>Эта встреча ждёт на карте глав</h2><p>Главы открываются по порядку. Уже пройденные встречи можно посмотреть снова.</p><button onClick={()=>go('/chapters')}>К главам</button></div>;
@@ -114,7 +114,7 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
     const secretId=sceneSecretId(id,run.chapter);
     if(!secretId||save.collection.secrets.includes(secretId))return false;
     send({type:'discover-scene-secret',id:secretId,target:mode,expectedTurn:run.turn});
-    triggerHaptic(telegramApp,'selection',save.settings.sound,reduced);
+    triggerHaptic(telegramApp,save.settings.sound,reduced);
     return run.chapter>=6;
   }
   function advance(){
@@ -123,7 +123,7 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
       if(lastExposure.current===run)return;
       lastExposure.current=run;
       play('shutter');
-      triggerHaptic(telegramApp,'medium',save.settings.sound,reduced);
+      triggerHaptic(telegramApp,save.settings.sound,reduced);
       if(flashRelease.current)clearTimeout(flashRelease.current);
       setCameraFlash(true);
       flashRelease.current=setTimeout(()=>setCameraFlash(false),reduced?180:360);

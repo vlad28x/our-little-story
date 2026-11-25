@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';
-import { initialState } from '../state/initialState';
+import { DEFAULT_VOLUME,initialState } from '../state/initialState';
 import { reduceSave, type Action } from '../state/reducer';
 import { load, persist, storageKey, type Loaded, type StorageLike } from '../persistence/storage';
 import type { SaveV1 } from '../state/types';
@@ -23,7 +23,7 @@ export function GameProvider({children,storageId=activeStorageKey,initialLoaded,
   const savedRevision=useRef(loaded.save.revision);
   const savedLocalNoteRevision=useRef(loaded.save.localNoteRevision);
   const dirty=useRef(false);
-  const soundDefault=useRef<'unread'|'saving'|'done'>('unread');
+  const soundDefaults=useRef<'unread'|'saving'|'done'>('unread');
   const send=useCallback((action:Action)=>{
     if(conflict || cloud.blocked || (recovery&&action.type!=='replace') || (action.type==='dev-jump'&&!DEV_SANDBOX))return;
     if(action.type==='replace'){setRecovery(false);setStorageError(null);}
@@ -36,20 +36,23 @@ export function GameProvider({children,storageId=activeStorageKey,initialLoaded,
     catch {setStorageError('В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.');}
   },[save,recovery,conflict,storageId]);
   useEffect(()=>{
-    if(recovery||conflict||cloud.blocked||storageError||dirty.current||soundDefault.current==='done')return;
-    const key=`${storageId}:sound-default-on-v1`;
+    if(recovery||conflict||cloud.blocked||storageError||dirty.current||soundDefaults.current==='done')return;
+    const soundKey=`${storageId}:sound-default-on-v1`;
+    const volumeKey=`${storageId}:volume-default-45-v1`;
     try {
-      if(storage.getItem(key)===null){
-        if(soundDefault.current==='unread'&&!save.settings.sound){
-          soundDefault.current='saving';
-          send({type:'settings',settings:{...save.settings,sound:true}});
-          return;
-        }
-        // Record the one-time change after the settings write has succeeded.
-        storage.setItem(key,'1');
+      const updateSound=storage.getItem(soundKey)===null;
+      const updateVolume=storage.getItem(volumeKey)===null;
+      const { sound,volume }=save.settings;
+      if(soundDefaults.current==='unread'&&(updateSound&&!sound||updateVolume&&volume!==DEFAULT_VOLUME)){
+        soundDefaults.current='saving';
+        send({type:'settings',settings:{...save.settings,sound:updateSound||sound,volume:updateVolume?DEFAULT_VOLUME:volume}});
+        return;
       }
-      soundDefault.current='done';
-    }catch{/* The marker can be retried when storage becomes available. */}
+      // Record the one-time changes after the settings write has succeeded.
+      if(updateSound)storage.setItem(soundKey,'1');
+      if(updateVolume)storage.setItem(volumeKey,'1');
+      soundDefaults.current='done';
+    }catch{/* The markers can be retried when storage becomes available. */}
   },[cloud.blocked,conflict,recovery,save,send,storageError,storageId]);
   useEffect(()=>{
     function check(){try{const raw=storage.getItem(storageId);if(raw){const v=parseSave(raw);if(v.revision>savedRevision.current||v.localNoteRevision>savedLocalNoteRevision.current)setConflict(true);}}catch{/* An unreadable save is handled by recovery, not a competing valid tab. */}}

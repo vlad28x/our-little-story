@@ -72,7 +72,7 @@ export function AlbumScreen(){
       {foundCards.some(id=>cards[id].chapter>=6)?<div className="album-chapters">{chapterCards(true)}</div>:<p className="small album-empty">Здесь появятся воспоминания из новых вечеров.</p>}
       {prints&&<section className="album-envelope" aria-labelledby="album-envelope-heading">
         <h3 id="album-envelope-heading">Конверт из фотолаборатории</h3>
-        <div className="album-prints">{printSources.map(source=><AlbumPrint key={source} story={prints} source={source} reduced={reduced} onFlip={()=>{play('paper');triggerHaptic(telegramApp,'selection',save.settings.sound,reduced);}}/>)}</div>
+        <div className="album-prints">{printSources.map(source=><AlbumPrint key={source} story={prints} source={source} reduced={reduced} onFlip={()=>{play('paper');triggerHaptic(telegramApp,save.settings.sound,reduced);}}/>)}</div>
       </section>}
     </section>}
     <h2>Маленькие секреты</h2>{achievements.map(achievement=>{
