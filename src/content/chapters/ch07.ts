@@ -30,11 +30,13 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
-          "text": "десять минут тут кручу головой. сначала был уверен, что ступени, а потом ты подошла — и я потерял нить расследования."
+          "emotion": "smile",
+          "text": "кручу головой перед плакатом уже третью минуту. мой внутренний инженер голосовал за ступени, но стоило тебе подойти — и все чертежи вылетели из головы."
         },
         {
           "speaker": "vlad",
-          "text": "пришёл чуть раньше. хотелось встретить тебя здесь, у двери."
+          "emotion": "smile",
+          "text": "рад тебя видеть. пойдём проверим, что они спрятали внутри?"
         },
         {
           "speaker": "narrator",
@@ -70,10 +72,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "laugh",
           "text": "Влад открывает дверь; на стекле мелькает маленький значок перечёркнутого фотоаппарата."
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "ага. значит, нашему аппарату внутри положен тихий час, а снимать будем уже на выходе."
         },
         {
@@ -88,7 +92,7 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.hall",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -110,7 +114,28 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "как пойдём смотреть?"
+        }
+      ],
+      "next": "c7.gallery.routeAside"
+    },
+    "c7.gallery.routeAside": {
+      "id": "c7.gallery.routeAside",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.gallery7.hall",
+        "character": "vlad.city.thinking"
+      },
+      "presentation": "adviser-aside",
+      "lines": [
+        {
+          "speaker": "angel",
+          "text": "Если пойти вдоль стен вдвоём, вы сможете сразу делиться каждой найденной деталью."
+        },
+        {
+          "speaker": "devil",
+          "text": "А давай разойдёмся на две минуты в разные концы зала! Спорим на что угодно: этот вдумчивый ценитель искусства через десять секунд будет смотреть через перегородку вовсе не на фотографии?"
         }
       ],
       "next": "c7.gallery.route"
@@ -197,7 +222,7 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.hall",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -210,10 +235,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "Тут ведь всего одна скамейка на весь зал."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "вот поэтому я и не хочу делить её ни с кем, кроме тебя."
         },
         {
@@ -226,10 +253,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "thinking",
           "text": "Когда ты подходишь к скамейке, он сразу подвигается, освобождая место рядом:"
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "меня больше всего зацепила ступенька со сколом. а куда поведёшь меня ты?"
         }
       ],
@@ -274,7 +303,15 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.hall",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.thinking",
+        "variants": [
+          {
+            "when": [],
+            "fromLine": 3,
+            "background": "bg.gallery7.hall",
+            "character": "vlad.closeup.intimate"
+          }
+        ]
       },
       "lines": [
         {
@@ -291,19 +328,21 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Ты поворачиваешь голову, чтобы показать на порог, — и он в ту же секунду наклоняется к тебе. В полутени за перегородкой ваши лица вдруг оказываются всего в паре сантиметров друг от друга."
+          "text": "Ты поворачиваешь голову, чтобы указать на порог, — и он в ту же секунду наклоняется ближе. В полутени за перегородкой между вами остаётся всего пара сантиметров."
         },
         {
           "speaker": "narrator",
-          "text": "В тишине слышно, как сбивается его вдох. Влад на секунду опускает взгляд на твои губы, потом снова смотрит в глаза и говорит почти шёпотом:"
+          "text": "Влад не отшатывается и не прячет глаз: его взгляд задерживается на твоих губах, снова поднимается к глазам, а голос звучит на полтона ниже обычного:"
         },
         {
           "speaker": "vlad",
-          "text": "знаешь… мне рядом с тобой очень трудно делать вид, что я смотрю на выставку."
+          "emotion": "warm",
+          "delivery": "вполголоса",
+          "text": "знаешь… с такого расстояния мне очень трудно делать вид, что я пришёл сюда ради фотографий."
         },
         {
           "speaker": "narrator",
-          "text": "Секунду никто из вас не двигается — воздух между вами буквально звенит от недосказанности. Затем в зал входят люди, и Влад, тихо выдохнув, делает полшага назад."
+          "text": "Секунду воздух между вами буквально звенит от притяжения. Лишь когда у входа раздаются голоса новых посетителей, Влад медленно выдыхает и оставляет за вами эту общую тайну."
         }
       ],
       "next": "c7.gallery.replay"
@@ -313,7 +352,15 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.hall",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.thinking",
+        "variants": [
+          {
+            "when": [],
+            "fromLine": 3,
+            "background": "bg.gallery7.hall",
+            "character": "vlad.closeup.intimate"
+          }
+        ]
       },
       "lines": [
         {
@@ -330,15 +377,17 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Ты поворачиваешь голову — и вы оказываетесь глаза в глаза, на расстоянии одного вдоха. Его взгляд на мгновение скользит к твоим губам, а голос падает почти до шёпота:"
+          "text": "Ты поворачиваешь голову — и вы оказываетесь глаза в глаза, на расстоянии одного вдоха. Влад не спешит отступать: его взгляд скользит к твоим губам, а голос падает до тихого, глубокого полушёпота:"
         },
         {
           "speaker": "vlad",
-          "text": "я сначала смотрел только на тень… а сейчас вообще ничего, кроме тебя, здесь не вижу."
+          "emotion": "warm",
+          "delivery": "тихо",
+          "text": "я сначала разбирал свет и линии… а сейчас стою и вообще ничего, кроме тебя, в этом зале не вижу."
         },
         {
           "speaker": "narrator",
-          "text": "Между вами остаётся буквально полшага — но у входа раздаются шаги смотрителя. Влад чуть хмыкает с досадой и кивает в сторону скамейки в глубине зала."
+          "text": "Пауза между вами длится на секунду дольше дозволенного — пока в соседнем проходе не скрипит половица под шагами смотрителя, и Влад с лёгкой досадой в полуулыбке кивает на скамейку в глубине зала."
         }
       ],
       "next": "c7.gallery.replay"
@@ -348,7 +397,7 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.hall",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.thinking"
       },
       "lines": [
         {
@@ -385,20 +434,140 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "вот здесь мы зашли… вот здесь задержались за перегородкой… а вот тут выходим вместе.",
           "delivery": "тихо"
         },
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "Кажется, на твоём маршруте была очень долгая остановка посередине."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "лучшая остановка. я бы её повторил."
         },
         {
+          "speaker": "vlad",
+          "emotion": "thinking",
+          "text": "слушай, глядя на эту синюю дверь с полоской света, вдруг подумал… а если бы у тебя завтра внезапно освободились три полных дня без единого дела — куда бы ты сорвалась?"
+        }
+      ],
+      "next": "c7.gallery.escapeChoice"
+    },
+    "c7.gallery.escapeChoice": {
+      "id": "c7.gallery.escapeChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.gallery7.hall",
+        "character": "vlad.city.smile"
+      },
+      "prompt": "Куда бы ты уехала на три свободных дня?",
+      "choices": [
+        {
+          "id": "sea",
+          "text": "К холодному морю или большой воде — дышать ветром",
+          "next": "c7.gallery.escapeSea",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "herEscape",
+              "value": "sea"
+            }
+          ]
+        },
+        {
+          "id": "oldtown",
+          "text": "В старый уютный город с узкими улочками и маленькими пекарнями",
+          "next": "c7.gallery.escapeTown",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "herEscape",
+              "value": "oldtown"
+            }
+          ]
+        },
+        {
+          "id": "cabin",
+          "text": "В тихий домик у леса с панорамным окном, где никто не звонит",
+          "next": "c7.gallery.escapeCabin",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "herEscape",
+              "value": "cabin"
+            }
+          ]
+        }
+      ]
+    },
+    "c7.gallery.escapeSea": {
+      "id": "c7.gallery.escapeSea",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.gallery7.hall",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "К морю. Даже в несезон, в тёплом пальто — просто идти вдоль пустого берега и слушать прибой."
+        },
+        {
+          "speaker": "vlad",
+          "text": "море в несезон — это вообще особая магия, без толпы и суеты. я себе этот твой маршрут мысленно записал."
+        },
+        {
           "speaker": "narrator",
-          "text": "Он коротко сжимает твои пальцы, и вы поднимаетесь к выходу."
+          "text": "Он тепло сжимает твои пальцы, помогая подняться со скамейки к выходу."
+        }
+      ],
+      "next": "c7.gallery.rack"
+    },
+    "c7.gallery.escapeTown": {
+      "id": "c7.gallery.escapeTown",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.gallery7.hall",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "В небольшой старый город с брусчаткой, книжными лавками и кофейнями, где можно заблудиться без карты."
+        },
+        {
+          "speaker": "vlad",
+          "text": "звучит как идеальное приключение на двоих. тем более с нашим талантом находить лучшие кофейни случайно."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он подаёт тебе руку, и вы поднимаетесь со скамейки к выходу."
+        }
+      ],
+      "next": "c7.gallery.rack"
+    },
+    "c7.gallery.escapeCabin": {
+      "id": "c7.gallery.escapeCabin",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.gallery7.hall",
+        "character": "vlad.city.smile"
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "В деревянный домик на краю леса, с тёплым светом, чаем и полной тишиной вокруг."
+        },
+        {
+          "speaker": "vlad",
+          "text": "прямо как тот домик с фонарём из нашей настолки. отличный ориентир — я запомнил."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он тепло сжимает твою ладонь, и вы поднимаетесь со скамейки к выходу."
         }
       ],
       "next": "c7.gallery.rack"
@@ -425,11 +594,11 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "devil",
-          "text": "Если крутануть барабан стойки посильнее, все выставки города смешаются в одну."
+          "text": "Подари ему открытку прямо сейчас — посмотрим, сумеет ли этот невозмутимый мыслитель сохранить хладнокровие, когда подарок выбираешь ты!"
         },
         {
           "speaker": "angel",
-          "text": "Лучше выбрать одну карточку, которая останется у него дома и будет напоминать о сегодняшнем вечере."
+          "text": "Карточка останется у него дома на видном месте и будет согревать его до следующей встречи."
         }
       ],
       "next": "c7.gallery.card",
@@ -499,10 +668,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "surprised",
           "text": "подожди… ты купила её для меня?"
         },
         {
           "speaker": "narrator",
+          "emotion": "surprised",
           "text": "Влад принимает карточку за белые поля и на секунду искренне теряет слова — видно, как его это тронуло.",
           "effects": [
             {
@@ -514,10 +685,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "спасибо. поставлю её дома на видное место — чтобы вспоминать, как мы стояли перед ней в этом зале."
         },
         {
           "speaker": "narrator",
+          "emotion": "smile",
           "text": "Он аккуратно прячет открытку внутрь сложенного буклета во внутренний карман пальто."
         }
       ],
@@ -541,10 +714,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "surprised",
           "text": "твоя любимая… значит, дома у неё будет особое место."
         },
         {
           "speaker": "heroine",
+          "emotion": "surprised",
           "text": "Только не прячь её далеко за монитор."
         },
         {
@@ -690,14 +865,17 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "neutral",
           "text": "вот так?"
         },
         {
           "speaker": "heroine",
+          "emotion": "neutral",
           "text": "Да. И не двигайся секунду."
         },
         {
           "speaker": "vlad",
+          "emotion": "neutral",
           "text": "замер. смотрю только на фотографа."
         },
         {
@@ -728,6 +906,7 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "thinking",
           "text": "Ты передаёшь камеру Владу и встаёшь на ступеньке у края приоткрытой двери.",
           "effects": [
             {
@@ -739,6 +918,7 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "стой ровно так… твой профиль в этой полосе света сейчас лучше всей выставки."
         },
         {
@@ -782,10 +962,12 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "surprised",
           "text": "В тёмном отражении стекла хорошо видно, как легко вы смотритесь рядом."
         },
         {
           "speaker": "vlad",
+          "emotion": "surprised",
           "text": "смотри, в отражении козырёк над нами похож на одну общую крышу.",
           "delivery": "тихо"
         },
@@ -852,6 +1034,7 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "вот эту экспозицию я понимаю вообще без буклетов."
         },
         {
@@ -864,18 +1047,22 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Он останавливается напротив тебя под уличным фонарём — в голосе появляется лёгкое волнение:"
+          "emotion": "smile",
+          "text": "Он останавливается напротив тебя под уличным фонарём — во взгляде появляется тёплая, открытая решимость:"
         },
         {
           "speaker": "vlad",
-          "text": "приходи ко мне домой в следующий раз? хочу приготовить настоящий ужин вместе с тобой. на настоящей кухне, а не на экране телевизора."
+          "emotion": "smile",
+          "text": "приходи ко мне домой в следующий раз? хочу приготовить настоящий ужин вместе с тобой. на живой кухне, а не на экране телевизора."
         },
         {
           "speaker": "heroine",
+          "emotion": "laugh",
           "text": "«Приготовить вместе» звучит очень заманчиво. Уступишь мне хотя бы половину кухни?"
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "всю лучшую половину. у меня, правда, дома всего один фартук, но я готов торжественно носить его сам."
         },
         {
@@ -946,6 +1133,7 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "surprised",
           "text": "Он сразу наклоняется навстречу. Ты приподнимаешься на носки, опираешься ладонью о его плечо и мягко целуешь его в щёку, совсем рядом с уголком губ.",
           "effects": [
             {
@@ -957,18 +1145,22 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "surprised",
           "text": "Когда ты отступаешь на полшага, Влад на секунду замирает совершенно обезоруженный, а его пальцы невольно сжимают твою ладонь крепче."
         },
         {
           "speaker": "vlad",
-          "text": "вот теперь стой секунду и никуда не беги. мне нужно успеть прийти в себя, пока ты не ушла через дорогу."
+          "emotion": "smile",
+          "text": "так. дай мне ровно две секунды — после такого манёвра переходить дорогу по правилам было бы преступлением с твоей стороны."
         },
         {
           "speaker": "narrator",
+          "emotion": "laugh",
           "text": "Он наконец выдыхает и широко, немного растерянно усмехается."
         },
         {
           "speaker": "heroine",
+          "emotion": "laugh",
           "text": "Успел. До встречи на нашей кухне, Влад."
         },
         {
@@ -977,7 +1169,7 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Ты переходишь улицу под мигающий зелёный, чувствуя, что он не сдвинулся с места, пока ты не дошла до другого тротуара."
+          "text": "Ты с улыбкой ступаешь на зебру, унося с собой ощущение его крепко сжатых на прощание пальцев и нетерпение до вашего ужина."
         }
       ],
       "next": "c7.gallery.end"
@@ -987,7 +1179,7 @@ export const chapter7:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.gallery7.outside",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -1000,15 +1192,17 @@ export const chapter7:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "До скорой встречи, Влад."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "пока. увидимся у меня на кухне."
         },
         {
           "speaker": "narrator",
-          "text": "Ты переходишь дорогу. Обернувшись с другого тротуара, видишь, что Влад ещё стоит на углу под фонарём и машет тебе на прощание."
+          "text": "Ты легко переходишь бульвар на зелёный свет — в сумке лежат уже шесть отснятых кадров вашей общей осени, а впереди ждёт вечер на его кухне."
         }
       ],
       "next": "c7.gallery.end"

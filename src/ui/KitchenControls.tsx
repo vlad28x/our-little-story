@@ -72,8 +72,8 @@ export function KitchenControls({ ready = false, constellation, check }: {
   </div>;
 }
 
-export function KitchenControllerScene({ready,constellation,interactive,context,reduced,onSound}:{
-  ready:boolean; constellation?:SkyShape; interactive:boolean; context:string; reduced:boolean; onSound:()=>void;
+export function KitchenControllerScene({ready,constellation,interactive,context,reduced,onDiscover}:{
+  ready:boolean; constellation?:SkyShape; interactive:boolean; context:string; reduced:boolean; onDiscover?:()=>void;
 }){
   const [discovered,setDiscovered]=useState(false);
   const [reaction,setReaction]=useState<string|null>(null);
@@ -85,7 +85,7 @@ export function KitchenControllerScene({ready,constellation,interactive,context,
     if(active)return;
     setDiscovered(true);
     setReaction(context);
-    onSound();
+    onDiscover?.();
   }
 
   return <div className="controller-scene" data-reduced={reduced}>

@@ -5,7 +5,7 @@ import {completedSupper} from './photoSix';
 import {sameValue} from './sameValue';
 
 export const travellerFields=['c10Edition','c10River','c10Quarry','c10Arrival','c10RiverHelp','c10QuarryHelp','c10ArrivalHelp','c10Continuation','c10CafeGoodbye','c10HomeTender','c10Finale','c10LipKiss'];
-export function completedCourtyard(s?:StoryState){return completedSupper(s)&&s?.c9Film==='submitted'&&!!s.c9Frame&&!!s.c9Rain&&!!s.c9Goodbye&&!!s.c7GalleryFrame&&!!s.c7GalleryGift&&(s.c9LipKiss==='yes'||s.c9LipKiss==='no');}
+export function completedCourtyard(s?:StoryState){return completedSupper(s)&&s?.c9Film==='submitted'&&!!s.c9Frame&&!!s.c9Rain&&!!s.c9HerMovie&&!!s.c9Goodbye&&!!s.c7GalleryFrame&&!!s.c7GalleryGift&&(s.c9LipKiss==='yes'||s.c9LipKiss==='no');}
 export function replayTravellers(story:StoryState,cursor?:Pick<Run,'nodeId'|'lineIndex'|'turn'>):Run|null{
  if(!completedCourtyard(story))return null;
  const prior=Object.fromEntries(Object.entries(story).filter(([key])=>!travellerFields.includes(key))) as StoryState;

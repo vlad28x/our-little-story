@@ -18,6 +18,7 @@ import { ResultScreen } from '../ui/ResultScreen';
 import { SettingsPanel } from '../ui/SettingsPanel';
 import { Modal } from '../ui/Modal';
 import { SaveExportButton } from '../ui/SaveExportButton';
+import { SoundContext,useSoundPlayer } from '../ui/useSound';
 import type { ChapterId } from '../engine/types';
 
 const chapterIllustrations:Record<ChapterId,string>={1:'token',2:'umbrella',3:'star',4:'controller',5:'cafe',6:'promenade',7:'gallery',8:'tea-for-two',9:'cinema',10:'evening-lamp'};
@@ -30,6 +31,7 @@ export function App(){
   const [discardTrial,setDiscardTrial]=useState(false);
   const [inviteAfterTrial,setInviteAfterTrial]=useState<5|10|null>(null);
   const {save,send,storageId,recovery,loaded,restore,reset,storageError,conflict,reload,cloudStatus,cloudError,cloudBlocked,telegramApp}=useGame();
+  const sound=useSoundPlayer(save.settings.sound,save.settings.volume);
   const route=useRoute();
   const [menu,setMenu]=useState(false),[rewrite,setRewrite]=useState<ChapterId|null>(null),[code,setCode]=useState(''),[codeMessage,setCodeMessage]=useState('');
   const codeInput=useRef<HTMLInputElement>(null);
@@ -100,7 +102,7 @@ export function App(){
     <p id="chapter-code-message" className="code-entry-status" role="status">{codeMessage}</p>
     {codeChapter&&(save.campaign.completed.includes(codeChapter)||save.campaign.active?.chapter===codeChapter||canStart(save,codeChapter)&&!save.campaign.active)&&<button className="code-open-chapter full" onClick={()=>openChapter(codeChapter)}>{save.campaign.completed.includes(codeChapter)?codeChapter===5||codeChapter===10?'Встретиться вживую':'Открыть мой финал':save.campaign.active?.chapter===codeChapter?'Продолжить встречу':`Начать встречу ${codeChapter}`} →</button>}
   </>;
-  return <main className="game-shell" data-motion={save.settings.motion}>
+  return <SoundContext.Provider value={sound}><main className="game-shell" data-motion={save.settings.motion}>
     <header className="topbar">
       <button className="brand" onClick={()=>go('/start')} aria-label="На главный экран">
         <Illustration kind="tea-for-two" className="brand-mark" viewBox="8 18 87 72"/>
@@ -161,5 +163,5 @@ export function App(){
     {rewrite&&<Modal title={recovery?'Начать новую историю?':`Изменить историю с главы ${rewrite}?`} onClose={()=>setRewrite(null)}><p>{recovery?'Текущая повреждённая копия будет заменена. При необходимости сначала скачай её.':`Результаты начиная с главы ${rewrite} в основной истории будут заменены. Альбом, достижения и открытые главы сохранятся.`}</p><div className="stack"><button className="primary" onClick={()=>{if(recovery){reset();go('/chapters');}else{send({type:'rewrite',chapter:rewrite});go(`/play/${rewrite}`);}setRewrite(null);}}>Начать заново</button><button onClick={()=>setRewrite(null)}>Отмена</button></div></Modal>}
     {conflict&&<Modal title="История открыта в другой вкладке" onClose={()=>{}}><p>В другой вкладке появился новый прогресс. Здесь изменения приостановлены, чтобы ничего не затереть.</p><div className="stack"><button className="primary" onClick={reload}>Загрузить обновлённый прогресс</button><SaveExportButton raw={JSON.stringify(save)} name="five-meetings-this-tab.json" app={telegramApp}>Скачать копию этой вкладки</SaveExportButton></div></Modal>}
     {cloudBlocked&&<Modal title="Нашлась другая копия истории" onClose={()=>{}}><p>Прогресс в Telegram изменился на другом устройстве. Сначала сохрани эту копию, затем выбери историю для продолжения.</p><div className="stack"><SaveExportButton raw={JSON.stringify(save)} name="five-meetings-this-device.json" app={telegramApp}>Скачать эту копию</SaveExportButton><button className="primary" onClick={reload}>Сравнить сохранения</button></div></Modal>}
-  </main>;
+  </main></SoundContext.Provider>;
 }

@@ -3,6 +3,7 @@ export type CloudAPI={
   getItems:(keys:string[],callback:(error:string|null,values:Record<string,string>)=>void)=>unknown;
   setItem:(key:string,value:string,callback:(error:string|null,stored:boolean)=>void)=>unknown;
 };
+type ImpactStyle='light'|'medium'|'heavy'|'rigid'|'soft';
 export type TelegramApp={initData:string;initDataUnsafe?:{user?:{id:number}};CloudStorage?:CloudAPI;version:string;
   ready:()=>void;expand:()=>void;setHeaderColor?:(color:string)=>void;setBackgroundColor?:(color:string)=>void;
   enableClosingConfirmation?:()=>void;disableClosingConfirmation?:()=>void;
@@ -10,8 +11,17 @@ export type TelegramApp={initData:string;initDataUnsafe?:{user?:{id:number}};Clo
   requestFullscreen?:()=>void;isFullscreen?:boolean;
   onEvent?:(event:string,handler:()=>void)=>void;offEvent?:(event:string,handler:()=>void)=>void;
   BackButton?:{show:()=>void;hide:()=>void;onClick:(handler:()=>void)=>void;offClick:(handler:()=>void)=>void};
+  HapticFeedback?:{impactOccurred?:(style:ImpactStyle)=>void;selectionChanged?:()=>void};
 };
 declare global {interface Window{Telegram?:{WebApp?:TelegramApp}}}
+export function triggerHaptic(app:TelegramApp|undefined,kind:'selection'|ImpactStyle,sound:boolean,reducedMotion:boolean){
+  if(!sound||reducedMotion)return;
+  try {
+    const feedback=app?.HapticFeedback;
+    if(kind==='selection')feedback?.selectionChanged?.();
+    else feedback?.impactOccurred?.(kind);
+  }catch{/* Haptic feedback is optional. */}
+}
 export const BOT_URL='https://t.me/our_little_story_game_bot/story';
 function expandSafely(app:TelegramApp){try{app.expand();}catch{/* Presentation must not prevent playing or restoring progress. */}}
 function requestFullscreen(app:TelegramApp){

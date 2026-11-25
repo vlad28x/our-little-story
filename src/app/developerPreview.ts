@@ -8,7 +8,7 @@ import type {NodeId,StoryState} from '../engine/types';
 export function previewPhotoSix(target:NodeId='c6.photo.entry'){
  let save=initialState();
  const apply=(action:Action)=>{const next=reduceSave(save,action);if(next===save)throw Error('Не удалось подготовить тестовую встречу');save=next;};
- const story:StoryState={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',wish:'calm',c5FirstTaste:'compare',c5Recommendation:'fresh'};
+ const story:StoryState={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',herRecharge:'cozy',herTrust:'careful',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',wish:'calm',c5FirstTaste:'compare',c5Recommendation:'fresh'};
  apply({type:'dev-jump',nodeId:'c5.close',story});
  for(let i=0;i<50&&save.campaign.active;i++){const r=save.campaign.active;apply({type:'command',target:'campaign',command:{kind:'advance',expectedTurn:r.turn}});}
  apply({type:'unlock',code:chapters.find(c=>c.id===6)!.code!});

@@ -284,11 +284,34 @@ function PortraitPrint({story,source}:{story:StoryState;source:6|7|9}){
  </div>;
 }
 
-export function SelectedPrint({story,source}:{story:StoryState;source:6|7|8|9|'feet'}){
+function SecretKitchenPrint(){
+ return <div className="printed-scene secret-kitchen-print">
+  <img src={assetUrl('supper8.secret-hands')} alt=""/>
+ </div>;
+}
+
+export type PrintSource=6|7|8|9|'secretKitchen'|'feet';
+
+export function selectedPrintLabel(story:StoryState,source:PrintSource){
+ switch(source){
+  case 6: {
+   const place=story.c6PhotoPlace==='upper'?'верхняя дорожка':'у воды';
+   const subject=story.c6PhotoSubject==='vlad'?'Влад':story.c6PhotoSubject==='her'?'силуэт героини':'место';
+   return `Прогулка: ${place}, ${subject}`;
+  }
+  case 'feet':return 'Случайный кадр прогулки';
+  case 7:return `Галерея: ${story.c7GalleryFrame==='vlad'?'Влад у афиши':story.c7GalleryFrame==='her'?'героиня у двери':'совместное отражение'}`;
+  case 8:return `Кухня: ${story.c8Frame?.startsWith('board')?'доска':'блюдо'}, ${story.c8Frame?.endsWith('Her')?'снимает героиня':'снимает Влад'}`;
+  case 'secretKitchen':return 'Секретный кадр Влада: твои ладони у чашки и пылинка муки';
+  case 9:return `Дворик: ${story.c9Frame==='vlad'?'Влад с пакетом':story.c9Frame==='seats'?'два стула':'дворик до показа'}`;
+ }
+}
+
+export function SelectedPrint({story,source}:{story:StoryState;source:PrintSource}){
  const board=story.c8Frame?.startsWith('board');
- const label=source==='feet'?'Случайный кадр прогулки':source===6?`Прогулка: ${story.c6PhotoPlace==='upper'?'верхняя дорожка':'у воды'}, ${story.c6PhotoSubject==='vlad'?'Влад':story.c6PhotoSubject==='her'?'силуэт героини':'место'}`:source===7?`Галерея: ${story.c7GalleryFrame==='vlad'?'Влад у афиши':story.c7GalleryFrame==='her'?'героиня у двери':'совместное отражение'}`:source===8?`Кухня: ${board?'доска':'блюдо'}, ${story.c8Frame?.endsWith('Her')?'снимает героиня':'снимает Влад'}`:`Дворик: ${story.c9Frame==='vlad'?'Влад с пакетом':story.c9Frame==='seats'?'два стула':'дворик до показа'}`;
+ const label=selectedPrintLabel(story,source);
  return <figure className={`selected-print ${source===8?`food-${story.c8Frame}`:''}`} aria-label={label}>
-  {source==='feet'?<FeetPrint/>:source===8?<div className="printed-food">{board?<SupperArt stage="board"/>:<SupperArt stage="half" shape={story.c8Shape} filling={story.c8Filling}/>}<svg className="print-board-hands" viewBox="0 0 320 190" aria-hidden="true" style={{display:board?'block':'none'}}>
+  {source==='feet'?<FeetPrint/>:source==='secretKitchen'?<SecretKitchenPrint/>:source===8?<div className="printed-food">{board?<SupperArt stage="board"/>:<SupperArt stage="half" shape={story.c8Shape} filling={story.c8Filling}/>}<svg className="print-board-hands" viewBox="0 0 320 190" aria-hidden="true" style={{display:board?'block':'none'}}>
    <g fill="#e0b89e" stroke="#99705b" strokeWidth="2" strokeLinejoin="round">
     <path d="M-2 118l36-16q13-6 20 1q3 4-4 10l-12 6l14-4q10-2 10 6q0 6-9 9l-24 10l-31 13Z"/>
     <path d="M322 100l-34-12q-15-4-21 4q-2 5 5 9l11 5l-13 2q-9 3-6 9q3 5 11 6l23 6l24 8Z"/>
@@ -315,7 +338,7 @@ export function TravellersScene({run}:{run:Run}){
  const playing=['open','river','riverChoice','riverHelp','ford','bridge','quarry','quarryChoice','tunnel','contour','cat','catChoice','arrivalHelp','marsh','upperDay','upperNight','arrived'].includes(n);
  const home=['home','homeChoice','homeKissFirst','homeKissFirstChoice','homeKissFirstNeck','homeKissFirstSoft','homeKissAgain','homeHug','homeNear','late','lateChoice','lateLeave','sleep','private'].includes(n);
  if(n==='prints'){
-  const i=run.lineIndex,source=i>=16?'feet':i>=10?9:i>=9?8:i>=8?7:6;
+  const i=run.lineIndex,source=i>=16?'feet':i>=12?'secretKitchen':i>=10?9:i>=9?8:i>=8?7:6;
   return <div className="traveller-props prints-scene"><div className="photo-envelope"/>{i>=4&&<SelectedPrint story={s} source={source}/>}</div>;
  }
  if(n==='sleep'&&run.lineIndex>=8)return null;

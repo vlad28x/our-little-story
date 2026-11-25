@@ -10,6 +10,7 @@ import type { ChapterId,Run,StoryState,EpisodeChapter } from '../engine/types';
 import type { SaveV1 } from '../state/types';
 import { normalizeWord,validWord } from './words';
 import { episodeStart } from '../content/season2';
+import { sceneSecretIds } from '../content/achievements';
 export const MAX_SAVE_BYTES=256*1024;
 function fail(message='Файл сохранения повреждён или не соответствует этой версии игры.'):never{throw new Error(message);}
 function obj(x:unknown):Record<string,unknown>{if(!x||typeof x!=='object'||Array.isArray(x))fail();return x as Record<string,unknown>;}
@@ -18,21 +19,23 @@ function arr(x:unknown,max:number):unknown[]{if(!Array.isArray(x)||x.length>max)
 function integer(x:unknown,max=1000000){if(typeof x!=='number'||!Number.isSafeInteger(x)||x<0||x>max)fail();}
 function one(x:unknown,values:readonly unknown[]){if(!values.includes(x))fail();}
 const firstFields=['approach','searchResult','catNoticed','pace','plan'];
-const secondFields=['rainRoute','catApproach','umbrella','eveningMood'];
-const thirdFields=['c4Edition','bench','constellation','wish','c4Goodbye'];
+const secondFields=['rainRoute','catApproach','umbrella','herRecharge','eveningMood'];
+const thirdFields=['c4Edition','bench','constellation','herTrust','wish','c4Goodbye'];
 const fourthFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
-const sixthFields=['c6Edition','c6PhotoPlace','c6PhotoSubject','c6Gesture','c6Film','c6CameraHolder'];
+const sixthFields=['c6Edition','c6PhotoPlace','c6PhotoSubject','c6HerEvening','c6Gesture','c6Film','c6CameraHolder'];
 const seventhFields=galleryFields;
 const eighthFields=supperFields;
 const ninthFields=courtyardFields;
 const tenthFields=travellerFields;
 const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['c5Edition','c5FirstTaste','c5Recommendation'],sixthFields,seventhFields,eighthFields,ninthFields,tenthFields].slice(0,id).flat();
-const storyEnums={"approach":["joke","help","space"],"searchResult":["tidy","detour","skipped"],"catNoticed":[true,false],"pace":["quiet","playful","flirt"],"plan":["tea","banter","coop"],"rainRoute":["shelter","arcade"],"catApproach":["wait","help"],"umbrella":["patched","borrowed","skipped"],"eveningMood":["quiet","playful"],"c4Edition":[2],"bench":["near","space"],"constellation":["cat","controllers","teapot"],"wish":["adventure","calm"],"c4Goodbye":["accept","her","none"],"controllerReaction":["tease","help","absurd"],"teamName":["dumpling","calm","accident"],"kitchenStyle":["planner","improv"],"kitchenResult":["feast","snack","chaos","skipped"],"gameAftercare":["team","rematch"],"c5Edition":[3],"c5FirstTaste":["vanilla","sweet","compare"],"c5Recommendation":["vanilla","fresh","both"],"c6Edition":[5],"c6PhotoPlace":["upper","water"],"c6PhotoSubject":["vlad","her","place"],"c6Gesture":["hand","hug","none"],"c6Film":["loaded","key","accidental","six"],"c6CameraHolder":["her","vlad"],"c7GalleryRoute":["together","apart"],"c7GalleryWork":["blue","chip"],"c7GalleryGift":["chip","blue","none"],"c7GalleryFrame":["vlad","her","both"],"c7GalleryFarewell":["cheek","words"],"c7Cheek":[true],"c7Film":["key","six"],"c7CameraHolder":["her","vlad"],"c8Place":["home","cafe"],"c8Filling":["pepper","mushroom","mix","simple"],"c8Shape":["fold","open"],"c8Frame":["foodHer","foodVlad","boardHer","boardVlad"],"c8Film":["key","nine"],"c8Step":["follow","lead","play","sit"],"c8LipKiss":["no","yes"],"c8Hoodie":["borrowed","evening","none"],"c9Place":["home","courtyard"],"c9Frame":["vlad","seats","yard"],"c9Film":["key","rain","empty","submitted"],"c9Rain":["canopy","arch","leave"],"c9Bet":["together","alone","skip"],"c9Goodbye":["kiss","hug","words"],"c9LipKiss":["no","yes"],"c9Hoodie":["returned"],"c10Edition":[5],"c10River":["ford","bridge"],"c10Quarry":["tunnel","contour"],"c10Arrival":["marsh","upper"],"c10RiverHelp":[true],"c10QuarryHelp":[true],"c10ArrivalHelp":[true],"c10Continuation":["cafe","home"],"c10CafeGoodbye":["kiss","hug","words"],"c10HomeTender":["kiss","hug","near"],"c10Finale":["cafe","lateLeave","morning","private"],"c10LipKiss":["no","yes"]};
+// The first-season prefix can come from content24, before these answers existed.
+const requiredStoryFields=(id:ChapterId)=>fields(id).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)&&k!=='herRecharge'&&k!=='herTrust');
+const storyEnums={"herRecharge":["walk","cozy","hands"],"herTrust":["careful","intuition","humor"],"c6HerEvening":["cozyFood","nightWalk","deepTalk"],"herEscape":["sea","oldtown","cabin"],"c9HerMovie":["drama","warm","mystery"],"approach":["joke","help","space"],"searchResult":["tidy","detour","skipped"],"catNoticed":[true,false],"pace":["quiet","playful","flirt"],"plan":["tea","banter","coop"],"rainRoute":["shelter","arcade"],"catApproach":["wait","help"],"umbrella":["patched","borrowed","skipped"],"eveningMood":["quiet","playful"],"c4Edition":[2],"bench":["near","space"],"constellation":["cat","controllers","teapot"],"wish":["adventure","calm"],"c4Goodbye":["accept","her","none"],"controllerReaction":["tease","help","absurd"],"teamName":["dumpling","calm","accident"],"kitchenStyle":["planner","improv"],"kitchenResult":["feast","snack","chaos","skipped"],"gameAftercare":["team","rematch"],"c5Edition":[3],"c5FirstTaste":["vanilla","sweet","compare"],"c5Recommendation":["vanilla","fresh","both"],"c6Edition":[5],"c6PhotoPlace":["upper","water"],"c6PhotoSubject":["vlad","her","place"],"c6Gesture":["hand","hug","none"],"c6Film":["loaded","key","accidental","six"],"c6CameraHolder":["her","vlad"],"c7GalleryRoute":["together","apart"],"c7GalleryWork":["blue","chip"],"c7GalleryGift":["chip","blue","none"],"c7GalleryFrame":["vlad","her","both"],"c7GalleryFarewell":["cheek","words"],"c7Cheek":[true],"c7Film":["key","six"],"c7CameraHolder":["her","vlad"],"c8Place":["home","cafe"],"c8Filling":["pepper","mushroom","mix","simple"],"c8Shape":["fold","open"],"c8Frame":["foodHer","foodVlad","boardHer","boardVlad"],"c8Film":["key","nine"],"c8Step":["follow","lead","play","sit"],"c8LipKiss":["no","yes"],"c8Hoodie":["borrowed","evening","none"],"c9Place":["home","courtyard"],"c9Frame":["vlad","seats","yard"],"c9Film":["key","rain","empty","submitted"],"c9Rain":["canopy","arch","leave"],"c9Bet":["together","alone","skip"],"c9Goodbye":["kiss","hug","words"],"c9LipKiss":["no","yes"],"c9Hoodie":["returned"],"c10Edition":[5],"c10River":["ford","bridge"],"c10Quarry":["tunnel","contour"],"c10Arrival":["marsh","upper"],"c10RiverHelp":[true],"c10QuarryHelp":[true],"c10ArrivalHelp":[true],"c10Continuation":["cafe","home"],"c10CafeGoodbye":["kiss","hug","words"],"c10HomeTender":["kiss","hug","near"],"c10Finale":["cafe","lateLeave","morning","private"],"c10LipKiss":["no","yes"]};
 function requireFields(s:StoryState,required:string[]){if(required.some(k=>s[k as keyof StoryState]===undefined))fail();}
 function story(x:unknown,id:ChapterId,complete=false):StoryState{
   const o=obj(x);keys(o,fields(id));
   for(const [k,v]of Object.entries(o))one(v,storyEnums[k as keyof typeof storyEnums]);
-  const s=o as StoryState;if(complete)requireFields(s,fields(id).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)));
+  const s=o as StoryState;if(complete)requireFields(s,requiredStoryFields(id));
   if((s.searchResult===undefined)!==(s.catNoticed===undefined)||(s.searchResult==='tidy'&&s.catNoticed))fail();
   return s;
 }
@@ -87,20 +90,23 @@ export function validateRun(x:unknown,maxChapter=10):Run{
     requireFields(s,firstFields);
     const beforeRain=['c2.arrival','c2.pace.quiet','c2.pace.flirt','c2.pace.playful','c2.plan.tea','c2.plan.coop','c2.plan.banter','c2.rain.intro','c2.rain'];
     if(!beforeRain.includes(stage)&&!s.rainRoute)fail();
-    if((['c2.cat.wait','c2.cat.help'].includes(stage)||stage.startsWith('c2.umbrella')||stage.startsWith('c2.pause')||stage.startsWith('c2.cat.echo')||stage.startsWith('c2.end'))&&!s.catApproach)fail();
-    if((['c2.umbrella.patched','c2.umbrella.borrowed','c2.umbrella.skipped'].includes(stage)||stage.startsWith('c2.pause')||stage.startsWith('c2.cat.echo')||stage.startsWith('c2.end'))&&!s.umbrella)fail();
+    if((['c2.cat.wait','c2.cat.help'].includes(stage)||stage.startsWith('c2.umbrella')||stage.startsWith('c2.recharge')||stage.startsWith('c2.pause')||stage.startsWith('c2.cat.echo')||stage.startsWith('c2.end'))&&!s.catApproach)fail();
+    if((['c2.umbrella.patched','c2.umbrella.borrowed','c2.umbrella.skipped'].includes(stage)||stage.startsWith('c2.recharge')||stage.startsWith('c2.pause')||stage.startsWith('c2.cat.echo')||stage.startsWith('c2.end'))&&!s.umbrella)fail();
+    const answeredRecharge=stage.startsWith('c2.recharge.')||stage.startsWith('c2.cat.echo')||stage==='c2.pause'||(stage.startsWith('c2.pause.')&&stage!=='c2.pause.intro')||stage==='c2.end';
+    if(answeredRecharge!==(s.herRecharge!==undefined))fail();
+    if(stage.startsWith('c2.recharge.')&&stage!==`c2.recharge.${s.herRecharge}`)fail();
     if((stage.startsWith('c2.pause.')&&stage!=='c2.pause.intro'||stage==='c2.end')&&!s.eveningMood)fail();
     if(['c2.rain.shelter','c2.rain.arcade'].includes(stage)&&stage!==`c2.rain.${s.rainRoute}`)fail();
   }
   if(id===3&&s.bond!==undefined)fail();
-  if(id===3||id===4){requireFields(s,fields((id-1) as ChapterId));if(!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
-  if(id===5)requireFields(s,fields(4));
+  if(id===3||id===4){requireFields(s,requiredStoryFields((id-1) as ChapterId));if(!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
+  if(id===5)requireFields(s,requiredStoryFields(4));
   if(id===5&&!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене. Исходная копия сохранена.');
-  if(id===6){requireFields(s,fields(5));one(r.scriptRevision,[s.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!replayPhotoSix(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
-  if(id===7){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedWalk(s)||!replayGallery(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения галереи противоречат сцене.');}
-  if(id===8){requireFields(s,fields(5));one(r.scriptRevision,[chapter.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedGallery(s)||!replaySupper(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения ужина противоречат сцене.');}
-  if(id===9){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedSupper(s)||!replayCourtyard(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения кинодворика противоречат сцене.');}
-  if(id===10){requireFields(s,fields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedCourtyard(s)||!replayTravellers(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения путешественников противоречат сцене.');}
+  if(id===6){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[s.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!replayPhotoSix(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
+  if(id===7){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedWalk(s)||!replayGallery(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения галереи противоречат сцене.');}
+  if(id===8){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[chapter.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedGallery(s)||!replaySupper(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения ужина противоречат сцене.');}
+  if(id===9){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedSupper(s)||!replayCourtyard(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения кинодворика противоречат сцене.');}
+  if(id===10){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedCourtyard(s)||!replayTravellers(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения путешественников противоречат сцене.');}
   const earned=arr(r.earned,1),achievement=['cat-supervisor','dry-plan','own-sky','full-table','five-meetings'][id-1];
   const gameResults=obj(r.results);
   const shouldEarn=id===1?!!s.catNoticed:id===2?s.umbrella==='patched':id===4?gameResults.kitchen!==undefined&&obj(gameResults.kitchen).served===9&&s.kitchenResult!=='skipped':id===3?gameResults.constellation!==undefined&&!obj(gameResults.constellation).usedPreset:false;
@@ -128,7 +134,7 @@ export function validateSave(raw:string):SaveV1{
       if(id>1)keepPrefix(st,story(obj(records[id-1]).story,(id-1) as ChapterId,true),(id-1) as ChapterId);
     }else if(records[id]!==undefined)fail();
   }
-  for(const id of chapterIds.filter(id=>id>1))if(starts[id]!==undefined){const prev=(id-1) as ChapterId;if(!done.includes(prev))fail();const prior=episodeStart(id,story(obj(records[prev]).story,prev,true),obj(records[prev]).results as Run['results']);const start=story(starts[id],id===7?7:prev);requireFields(start,fields(prev).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)));if(!sameStory(start,prior))fail();}
+  for(const id of chapterIds.filter(id=>id>1))if(starts[id]!==undefined){const prev=(id-1) as ChapterId;if(!done.includes(prev))fail();const prior=episodeStart(id,story(obj(records[prev]).story,prev,true),obj(records[prev]).results as Run['results']);const start=story(starts[id],id===7?7:prev);requireFields(start,requiredStoryFields(prev));if(!sameStory(start,prior))fail();}
   if(c.active!==null){const run=validateRun(c.active,maxChapter);if(run.chapter!==done.length+1||!starts[run.chapter]||!unlocked.includes(run.chapter))fail();if(run.chapter>1)keepPrefix(run.story,story(starts[run.chapter],run.chapter===7?7:(run.chapter-1) as ChapterId),(run.chapter-1) as ChapterId);}
   if(s.trial!==null){const t=obj(s.trial);keys(t,['chapter','run']);one(t.chapter,chapterIds);const run=validateRun(t.run,maxChapter);if(t.chapter!==run.chapter||!starts[run.chapter]||run.chapter>=6&&(!done.includes(run.chapter)||run.attemptId===obj(records[run.chapter]).attemptId))fail();if(run.chapter>1)keepPrefix(run.story,story(starts[run.chapter],run.chapter===7?7:(run.chapter-1) as ChapterId),(run.chapter-1) as ChapterId);}
   const collection=obj(s.collection);keys(collection,['cards','achievements',...(maxChapter>=6?['memories','secrets']:[])]);const cs=arr(collection.cards,35),ids:string[]=[];
@@ -144,37 +150,37 @@ export function validateSave(raw:string):SaveV1{
   if(earned.includes('five-meetings')&&!ids.some(id=>id.startsWith('c5.')))fail();
   if(done.includes(5)&&!earned.includes('five-meetings'))fail();
   one(s.continuation,maxChapter>=5?[null,'game','movie','cafe','walk','decline','public','chat','later']:[null]);if(s.continuation!==null&&!done.includes(5))fail();
-  if(arr(collection.memories,0).length||arr(collection.secrets,0).length||Object.keys(obj(s.privateNotes)).length||Object.keys(obj(s.privateWords)).length)fail();integer(s.localNoteRevision);
+  const foundSecrets=arr(collection.secrets,sceneSecretIds.length);
+  if(new Set(foundSecrets).size!==foundSecrets.length)fail();
+  foundSecrets.forEach(id=>one(id,sceneSecretIds));
+  if(arr(collection.memories,0).length||Object.keys(obj(s.privateNotes)).length||Object.keys(obj(s.privateWords)).length)fail();integer(s.localNoteRevision);
   if(maxChapter>=8){const words=obj(s.privateWords);keys(words,['campaign','trial']);for(const value of Object.values(words)){const w=obj(value);keys(w,['chapter','labelId','attemptId','status','text']);one(w.chapter,[8]);one(w.labelId,['s2.word8']);attemptId(w.attemptId);one(w.status,['saved','deleted']);if(typeof w.text!=='string'||normalizeWord(w.text)!==w.text||w.status==='deleted'&&w.text!==''||w.status==='saved'&&!validWord(w.text))fail();}}else s.privateWords={};
   one(s.continuation10,[null,'game','movie','cook','out','decline']);if(s.continuation10!==null&&!done.includes(10))fail();
   s.contentVersion=CONTENT_VERSION;
   return s as unknown as SaveV1;
 }
 
-// The new supper has different dialogue cursors. Keep the prefix and restart at eight.
-function discardPreviousSupper(save:Record<string,unknown>):boolean{
- const campaign=obj(save.campaign),records=obj(campaign.records);
- const active=campaign.active===null?null:obj(campaign.active);
- const supper=records[8]===undefined?null:obj(records[8]);
- const isOldSupper=(rev:unknown)=>rev===5||rev===6;
- if(!isOldSupper(supper?.scriptRevision)&&!(active?.chapter===8&&isOldSupper(active.scriptRevision)))return false;
- const affected=[8,9,10];
- const fromSupper=(chapter:unknown)=>typeof chapter==='number'&&affected.includes(chapter);
- const completed=arr(campaign.completed,10);
- if(!completed.includes(7))fail();
- campaign.completed=completed.filter(chapter=>!fromSupper(chapter));
- const starts=obj(campaign.startStates);
- for(const chapter of affected){delete records[chapter];delete starts[chapter];}
- if(fromSupper(active?.chapter))campaign.active=null;
- if(save.trial!==null&&fromSupper(obj(save.trial).chapter))save.trial=null;
- if(save.lastResult!==null&&fromSupper(obj(save.lastResult).chapter))save.lastResult=null;
+function resetSecondSeasonFrom24(save:Record<string,unknown>):SaveV1|null{
+ const campaign=obj(save.campaign);
+ if(!arr(campaign.completed,10).includes(5))return null;
+ const records=obj(campaign.records),starts=obj(campaign.startStates);
+ campaign.completed=[1,2,3,4,5];
+ for(let chapter=6;chapter<=10;chapter++){
+  delete records[chapter];
+  delete starts[chapter];
+ }
+ if(campaign.active!==null&&Number(obj(campaign.active).chapter)>=6)campaign.active=null;
+ if(save.lastResult!==null&&Number(obj(save.lastResult).chapter)>=6)save.lastResult=null;
  const collection=obj(save.collection);
- collection.cards=arr(collection.cards,35).filter(card=>!fromSupper(obj(card).chapter));
+ collection.cards=arr(collection.cards,35).filter(card=>Number(obj(card).chapter)<=5);
+ save.trial=null;
  save.continuation10=null;
- return true;
+ save.privateNotes={};
+ save.privateWords={};
+ save.contentVersion=CONTENT_VERSION;
+ return validateSave(JSON.stringify(save));
 }
 
-// Older content versions restart once; no legacy graph or cursor migration is loaded.
 export function parseSave(raw:string):SaveV1{
  if(new TextEncoder().encode(raw).length>MAX_SAVE_BYTES)fail('Копия слишком большая. Максимум 256 КБ.');
  const header=obj(JSON.parse(raw,(key,value:unknown)=>{if(['__proto__','prototype','constructor'].includes(key))fail();return value;}));
@@ -185,6 +191,8 @@ export function parseSave(raw:string):SaveV1{
  const settings=obj(header.settings);keys(settings,['sound','volume','textMode','motion']);one(settings.sound,[true,false]);one(settings.textMode,['instant','type']);one(settings.motion,['system','reduced','full']);if(typeof settings.volume!=='number'||!Number.isFinite(settings.volume)||settings.volume<0||settings.volume>1)fail();
  const unlocked=arr(header.unlocked,10);unlocked.forEach(id=>one(id,[1,2,3,4,5,6,7,8,9,10]));if(!unlocked.includes(1)||new Set(unlocked).size!==unlocked.length)fail();
  const fresh:SaveV1={...initialState(),settings:settings as SaveV1['settings'],unlocked:unlocked as ChapterId[],revision:header.revision as number,updatedAt:header.updatedAt};
- if(Number(header.contentVersion)<CONTENT_VERSION)return fresh;
- try{return validateSave(discardPreviousSupper(header)?JSON.stringify(header):raw);}catch{return fresh;}
+ if(Number(header.contentVersion)<24)return fresh;
+ try{
+  return header.contentVersion===24?resetSecondSeasonFrom24(header)??fresh:validateSave(raw);
+ }catch{return fresh;}
 }

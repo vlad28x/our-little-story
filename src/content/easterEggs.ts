@@ -1,12 +1,13 @@
-// Optional scene reactions. These never emit engine commands or achievements.
+// Optional scene reactions. The album records a selection of these finds.
 export const easterEggs={
   hair:{label:'Потрогать кудри Влада',text:'я их укладывал. у них другое мнение'},
+  nina:{label:'Спросить Нину о секрете «Паузы»',speaker:'Нина',text:'У нас есть секретная строчка в меню. «Ещё пять минут». Пончик заказывает её каждый день.'},
   cat:{label:'Погладить Пончика',text:'так. теперь он уверен, что ты пришла к нему'},
   cookie:{label:'Взять печеньку',text:'план был дожить до начала игры'},
   blanket:{label:'Приподнять край пледа',text:'это тебе. я даже плед положил'},
   controller:{label:'Проверить второй геймпад',text:'проверяешь? справедливо'},
-  tv:{label:'Посмотреть на телевизор',text:'он вообще без приглашения'},
-  mug:{label:'Коснуться кружки',text:'это чай. он сам'},
+  tv:{label:'Посмотреть на монитор и экран',text:'рабочий код закрыт, прототипы спрятаны — сегодня экран официально наш'},
+  mug:{label:'Рассмотреть кружку и подставку',text:'ту самую подставку из эпоксидной смолы заливал сам. кружка пока фабричная, но я над этим подумаю'},
   star:{label:'Коснуться звезды над набережной',text:'успела? говорить не обязательно'},
   sign:{label:'Посмотреть на вывеску кафе',text:'ну, вывеска явно что-то знает'},
   camera:{label:'Проверить общий фотоаппарат',text:'эй, кадр не трать! шучу, я проверял, взведено ли колёсико'},
@@ -23,8 +24,8 @@ export const easterEggs={
   window7:{label:'Выглянуть в арочное окно',text:'отсюда почти видно нашу набережную. мы везде оставляем следы'},
   kettle8:{label:'Проверить чайник на кухне',text:'чайник уже понял намёк и сам готов кипеть'},
   utensils8:{label:'Задеть кухонные приборы',text:'не волнуйся, в этот раз это настоящая кухня — без таймера и пожара'},
-  sugar8:{label:'Заглянуть в сахарницу',text:'проверяешь, не перепутал ли я сахар с солью? было один раз. давно'},
-  fridge8:{label:'Посмотреть на холодильник',text:'магнитик с планом ужина — мой главный талисман'},
+  sugar8:{label:'Посмотреть на сахарницу и сухоцветы',text:'сухоцветы у края стола собирал сам после мастер-класса. оказались куда сговорчивее лепёшки'},
+  fridge8:{label:'Посмотреть на холодильник',text:'там магнитик со списком продуктов. да, я даже поход за сыром планирую по пунктам'},
   lamp8:{label:'Коснуться кухонной лампы',text:'для танца на пяти квадратных метрах свет идеальный'},
   blankets9:{label:'Потрогать пледы в ящике',text:'плед дежурит на посту. я вообще за любую причину сесть поближе'},
   garland9:{label:'Посмотреть на гирлянды',text:'если погаснет проектор, будем смотреть на гирлянды'},
@@ -37,13 +38,13 @@ export const easterEggs={
   cafeShelf10:{label:'Посмотреть на полку у стены',text:'интересно, сколько ещё наших жетонов Нина прячет по всему залу'},
   cat10:{label:'Погладить Пончика',text:'он уверен, что всю партию выиграл именно он'},
   floorLamp10:{label:'Коснуться торшера у дивана',text:'верхний свет сегодня точно не понадобится'},
-  sofaBlanket10:{label:'Потрогать вязаный плед',text:'диван всё ещё помнит твою половину'},
+  sofaBlanket10:{label:'Потрогать вязаный плед',text:'плед, пазл на полке и твой стикер на геймпаде — здесь всё ждало твоего возвращения'},
   tv10:{label:'Посмотреть на телевизор',text:'даже телевизор сегодня решил нас не отвлекать'},
   glasses10:{label:'Коснуться стаканов на столе',text:'теперь на этом столе всегда хочется ставить две чашки'},
   morningWindow10:{label:'Посмотреть в утреннее окно',text:'вот такое утро я бы вообще не перематывал'},
 } as const;
 export type EasterEggId=keyof typeof easterEggs;
-export type ScenePropId=Exclude<EasterEggId,'hair'|'cat'|'cookie'|'controller'|'camera'>;
+export type ScenePropId=Exclude<EasterEggId,'hair'|'nina'|'cat'|'cookie'|'controller'|'camera'>;
 export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'mug'|'star'|'sign'|'cat10'>;
 type SceneryBox=readonly [cx:number,cy:number,width:number,height:number];
 type Scenery=Partial<Record<SeasonSceneryId,SceneryBox>>;
@@ -76,7 +77,7 @@ export function sceneEggProps(background:string,sceneId:string):ScenePropId[]{
   const props:ScenePropId[]=[];
   if(background==='bg.home.living'){
     props.push('blanket','mug');
-    if(['c4.sofa','c4.pad.setup','c4.pad.press','c4.pad.dead','c4.pad.ready','c4.pad.reaction','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
+    if(['c4.sofa','c4.craft','c4.pad.setup','c4.pad.press','c4.pad.dead','c4.pad.ready','c4.pad.reaction','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
   }
   if(background==='bg.river.evening')props.push('star');
   if(background==='bg.cafe.sunset'&&sceneId.startsWith('c5.'))props.push('sign');

@@ -6,6 +6,7 @@ import { getChapter } from '../content/chapters';
 import { CONTENT_VERSION } from '../content/version';
 import { checkCode,chapters } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
+import { sceneSecretId,type SceneSecretId } from '../content/achievements';
 import { startRun, step } from '../engine/step';
 import type { ChapterId,Command,NodeId,StoryState,EpisodeChapter } from '../engine/types';
 import type { ChapterRecord,SaveV1,Settings } from './types';
@@ -16,6 +17,7 @@ export type Action =
   | {type:'start'|'trial'|'rewrite';chapter?:ChapterId;attemptId?:string}|{type:'discard-trial'}
   | {type:'unlock';code:string}
   | {type:'command';target:'campaign'|'trial';command:Command;noteText?:string;wordText?:string}
+  | {type:'discover-scene-secret';target:'campaign'|'trial';id:SceneSecretId;expectedTurn:number}
   | {type:'note-edit';chapter?:EpisodeChapter;target:'campaign'|'trial';attemptId:string;text?:string;remove?:boolean}
   | {type:'word-edit';target:'campaign'|'trial';attemptId:string;text?:string;remove?:boolean}
   | {type:'settings';settings:Settings}
@@ -49,6 +51,13 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
       s.trial={chapter:id,run:startRun(chapter,start,action.attemptId)};s.lastResult=null;if(id>=6)delete s.privateNotes[id as EpisodeChapter]?.trial;if(id===8)delete s.privateWords.trial;break;
     }
     case 'discard-trial':if(!s.trial)return current;if(s.trial&&s.trial.chapter>=6)delete s.privateNotes[s.trial.chapter as EpisodeChapter]?.trial;if(s.trial?.chapter===8)delete s.privateWords.trial;s.trial=null;break;
+    case 'discover-scene-secret':{
+      const run=action.target==='trial'?s.trial?.run:s.campaign.active;
+      if(!run||run.turn!==action.expectedTurn||s.collection.secrets.includes(action.id))return current;
+      if(!sceneSecretId(action.id,run.chapter))return current;
+      s.collection.secrets.push(action.id);
+      break;
+    }
     case 'rewrite':{
       const id=action.chapter??1,chapter=getChapter(id),start=id===1?{}:s.campaign.startStates[id];
       if(!chapter||!start||!canStart(s,id))return current;
@@ -88,13 +97,16 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
         const card=cardFromStory(prior);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card.id),card];if(prior.catNoticed)s.collection.achievements=[...new Set([...s.collection.achievements,'cat-supervisor'])];
         s.campaign={completed:[1],startStates:{1:{},2:prior},records:{1:{endingId:card.id,cardId:card.id,story:prior,results:{'token-search':{kind:'token-search',outcome:prior.searchResult!,catNoticed:!!prior.catNoticed}}}},active:run};s.unlocked=[...new Set([...s.unlocked,2 as const])];
         if(id>=3){
-          const prior2:StoryState={...prior,rainRoute:action.story.rainRoute??'shelter',catApproach:action.story.catApproach??'wait',umbrella:action.story.umbrella??'patched',eveningMood:action.story.eveningMood??'quiet'};
+          const prior2:StoryState={...prior,rainRoute:action.story.rainRoute??'shelter',catApproach:action.story.catApproach??'wait',umbrella:action.story.umbrella??'patched',herRecharge:action.story.herRecharge??'cozy',eveningMood:action.story.eveningMood??'quiet'};
           const card2=cardFromStory(prior2,2);s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card2.id),card2];
           if(prior2.umbrella==='patched')s.collection.achievements=[...new Set([...s.collection.achievements,'dry-plan'])];
           s.campaign.completed.push(2);s.campaign.startStates[3]=prior2;s.campaign.records[2]={endingId:card2.id,cardId:card2.id,story:prior2,results:{'umbrella-patch':{kind:'umbrella-patch',outcome:prior2.umbrella!}}};s.unlocked=[...new Set([...s.unlocked,3 as const])];
-          if(id===3&&run.story.constellation){run.results.constellation={kind:'constellation',outcome:run.story.constellation,usedPreset:false};run.earned=['own-sky'];}
+          if(id===3){
+            run.story={...prior2,...run.story};
+            if(run.story.constellation){run.results.constellation={kind:'constellation',outcome:run.story.constellation,usedPreset:false};run.earned=['own-sky'];}
+          }
           if(id>=4){
-            const prior3:StoryState={...prior2,c4Edition:2,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',wish:action.story.wish??'calm',c4Goodbye:action.story.c4Goodbye??'none'};
+            const prior3:StoryState={...prior2,c4Edition:2,bench:action.story.bench??'space',constellation:action.story.constellation??'teapot',herTrust:action.story.herTrust??'careful',wish:action.story.wish??'calm',c4Goodbye:action.story.c4Goodbye??'none'};
             const results3={constellation:{kind:'constellation' as const,outcome:prior3.constellation!,usedPreset:false}},card3=cardFromStory(prior3,3,results3);
             s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card3.id),card3];s.collection.achievements=[...new Set([...s.collection.achievements,'own-sky'])];
             s.campaign.completed.push(3);s.campaign.startStates[4]=prior3;s.campaign.records[3]={endingId:card3.id,cardId:card3.id,story:prior3,results:results3};s.unlocked=[...new Set([...s.unlocked,4 as const])];
@@ -103,6 +115,7 @@ export function reduceSave(current:SaveV1,action:Action):SaveV1 {
               const prior4:StoryState={...prior3,controllerReaction:action.story.controllerReaction??'help',teamName:action.story.teamName??'calm',kitchenStyle:action.story.kitchenStyle??'planner',kitchenResult:action.story.kitchenResult??'skipped',gameAftercare:action.story.gameAftercare??'team'};
               const served=prior4.kitchenResult==='feast'?9:prior4.kitchenResult==='snack'?4:0,results4={kitchen:{kind:'kitchen' as const,outcome:prior4.kitchenResult!,served,mode:'calm' as const}},card4=cardFromStory(prior4,4,results4);
               s.collection.cards=[...s.collection.cards.filter(c=>c.id!==card4.id),card4];if(served===9)s.collection.achievements=[...new Set([...s.collection.achievements,'full-table'])];s.campaign.completed.push(4);s.campaign.startStates[5]=prior4;s.campaign.records[4]={endingId:card4.id,cardId:card4.id,story:prior4,results:results4};s.unlocked=[...new Set([...s.unlocked,5 as const])];
+              run.story={...prior4,...run.story};
               if(action.nodeId==='c5.close'||action.nodeId==='c5.letter'||action.nodeId.startsWith('c5.tone.')||action.nodeId.startsWith('c5.ending.')||action.nodeId.startsWith('c5.gaming.'))run.results.memories={kind:'memories',outcome:'viewed'};
             }
           }

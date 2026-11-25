@@ -4,7 +4,7 @@ import { CookiePlateArt, SceneEasterPropArt } from './SceneEasterPropArt';
 import { Illustration } from './Illustration';
 type Box={left:number;top:number;width:number;height:number};
 type Target=Box&{'--egg-x'?:string;'--egg-y'?:string;'--hair-hint-x'?:string};
-type Props={stage:RefObject<HTMLDivElement|null>;paintedSeason?:boolean;background:string;context:string;hair:boolean;cat:boolean;cookie:boolean;extras:ScenePropId[];cookieTaken:boolean;onTakeCookie:()=>void;discovered:ReadonlySet<EasterEggId>;onDiscover:(id:EasterEggId)=>void;reduced:boolean;onSound?:()=>void};
+type Props={stage:RefObject<HTMLDivElement|null>;paintedSeason?:boolean;hideHair?:boolean;background:string;context:string;character:'vlad'|'nina';cat:boolean;cookie:boolean;extras:ScenePropId[];cookieTaken:boolean;onTakeCookie:()=>void;discovered:ReadonlySet<EasterEggId>;onDiscover:(id:EasterEggId)=>boolean;reduced:boolean};
 
 function positionFraction(value:string|undefined,fallback:number){
   if(value?.endsWith('%'))return Number.parseFloat(value)/100;
@@ -13,9 +13,9 @@ function positionFraction(value:string|undefined,fallback:number){
   return value==='center'?.5:fallback;
 }
 
-export function SceneEasterEggs({stage,paintedSeason=false,background,context,hair,cat,cookie,extras,cookieTaken,onTakeCookie,discovered,onDiscover,reduced,onSound}:Props){
+export function SceneEasterEggs({stage,paintedSeason=false,hideHair=false,background,context,character,cat,cookie,extras,cookieTaken,onTakeCookie,discovered,onDiscover,reduced}:Props){
   const [boxes,setBoxes]=useState<Partial<Record<EasterEggId,Target>>>({});
-  const [reaction,setReaction]=useState<{id:EasterEggId;context:string}|null>(null);
+  const [reaction,setReaction]=useState<{id:EasterEggId;context:string;albumFound:boolean}|null>(null);
   const buttons=useRef(new Map<EasterEggId,HTMLButtonElement>());
   const active=reaction?.context===context?reaction.id:null;
   useEffect(()=>{
@@ -78,7 +78,7 @@ export function SceneEasterEggs({stage,paintedSeason=false,background,context,ha
         return [id as SeasonSceneryId,backgroundBox(cx,cy,w,h,48,true,rightInset)];
       });
       let curls:Target|undefined;
-      if(hair){
+      if(!hideHair&&character==='vlad'){
         if((paintedSeason||seasonScenery[background])&&portraitWidth&&portraitHeight&&getComputedStyle(portrait!).visibility!=='hidden'){
           const x=portraitLeft+portraitWidth*(paintedSeason ? .46 : .59);
           const y=portraitTop+portraitHeight*(paintedSeason ? .07 : .115);
@@ -87,7 +87,10 @@ export function SceneEasterEggs({stage,paintedSeason=false,background,context,ha
           curls={...hit,'--hair-hint-x':`${hintX-hit.left}px`};
         }else curls=box('.character:not(.nina)',true);
       }
-      setBoxes({hair:curls,cat:cat?box('.scene-cat'):undefined,
+      const nina=character==='nina'&&portrait?.classList.contains('nina')&&portraitWidth&&portraitHeight&&getComputedStyle(portrait).visibility!=='hidden'
+        ?anchoredBox(portraitLeft+portraitWidth*.47,portraitTop+portraitHeight*.23,Math.max(48,portraitWidth*.46),Math.max(48,portraitHeight*.42))
+        :undefined;
+      setBoxes({hair:curls,nina,cat:cat?box('.scene-cat'):undefined,
         blanket:gameNight?backgroundBox(.107,.487,.18,.13,68,true):backgroundBox(.12,.52,.26,.13,112),
         mug:gameNight?backgroundBox(.28,.505,.08,.055,48,true):backgroundBox(.28,.53,.08,.055),
         tv:gameNight?backgroundBox(.895,.3,.18,.15):backgroundBox(.89,.32,.21,.17),
@@ -97,12 +100,12 @@ export function SceneEasterEggs({stage,paintedSeason=false,background,context,ha
     observer.observe(root);root.querySelectorAll('img').forEach(img=>observer.observe(img));
     root.addEventListener('load',measure,true);root.addEventListener('animationend',measure);
     return()=>{cancelAnimationFrame(frame);observer.disconnect();root.removeEventListener('load',measure,true);root.removeEventListener('animationend',measure);};
-  },[stage,paintedSeason,background,context,hair,cat]);
+  },[stage,paintedSeason,hideHair,background,context,character,cat]);
   function trigger(id:EasterEggId){
     if(active===id||id==='cookie'&&cookieTaken)return;
-    onDiscover(id);
+    const albumFound=onDiscover(id);
     if(id==='cookie')onTakeCookie();
-    setReaction({id,context});onSound?.();
+    setReaction({id,context,albumFound});
   }
   function dismiss(){
     setReaction(null);const button=active?buttons.current.get(active):undefined;
@@ -112,22 +115,27 @@ export function SceneEasterEggs({stage,paintedSeason=false,background,context,ha
   function spark(id:EasterEggId){return !discovered.has(id)&&!(id==='cookie'&&cookieTaken)?<span className="easter-spark" aria-hidden="true">✧</span>:null;}
   return <div className="scene-easter" data-egg={active??''} data-reduced={reduced?'true':'false'}>
     {extras.filter(id=>id==='star'||id==='sign'||boxes[id]).map(id=><button key={id} ref={buttonRef(id)} className={`scene-easter-target easter-prop easter-${id} ${boxes[id]?.['--egg-x']?'easter-painted':''}`} style={boxes[id] as CSSProperties} aria-label={easterEggs[id].label} onClick={e=>{e.stopPropagation();trigger(id);}}>{spark(id)}<SceneEasterPropArt id={id} active={active===id} paintedSeason={paintedSeason}/></button>)}
-    {hair&&boxes.hair&&<button ref={buttonRef('hair')} className={`scene-easter-target easter-hair ${boxes.hair['--egg-x']?'easter-painted':''}`} style={boxes.hair as CSSProperties} aria-label={easterEggs.hair.label} onClick={e=>{e.stopPropagation();trigger('hair');}}>
+    {!hideHair&&character==='vlad'&&boxes.hair&&<button ref={buttonRef('hair')} className={`scene-easter-target easter-hair ${boxes.hair['--egg-x']?'easter-painted':''}`} style={boxes.hair as CSSProperties} aria-label={easterEggs.hair.label} onClick={e=>{e.stopPropagation();trigger('hair');}}>
       {spark('hair')}
       {active==='hair'&&<Illustration kind="hair" className="hair-spring"/>}
+    </button>}
+    {character==='nina'&&boxes.nina&&<button ref={buttonRef('nina')} className="scene-easter-target easter-nina" style={boxes.nina as CSSProperties} aria-label={easterEggs.nina.label} aria-expanded={active==='nina'} onClick={e=>{e.stopPropagation();trigger('nina');}}>
+      {spark('nina')}
+      {active==='nina'&&<Illustration kind="tea" className="nina-tea"/>}
     </button>}
     {boxes.cat&&<button ref={buttonRef('cat')} className="scene-easter-target easter-cat" style={boxes.cat} aria-label={easterEggs.cat.label} onClick={e=>{e.stopPropagation();trigger('cat');}}>{spark('cat')}</button>}
     {cookie&&<button ref={buttonRef('cookie')} className="scene-easter-target easter-cookie" aria-label={easterEggs.cookie.label} disabled={cookieTaken} onClick={e=>{e.stopPropagation();trigger('cookie');}}>
       {spark('cookie')}
       <CookiePlateArt taken={cookieTaken}/>{active==='cookie'&&<span className="cookie-crumbs" aria-hidden="true"><i/><i/><i/></span>}
     </button>}
-    {active&&<EasterReaction id={active} onDismiss={dismiss}/>}
+    {active&&<EasterReaction id={active} albumFound={reaction?.albumFound} onDismiss={dismiss}/>}
   </div>;
 }
 
-export function EasterReaction({id,onDismiss}:{id:EasterEggId;onDismiss:()=>void}){
+export function EasterReaction({id,onDismiss,albumFound=false}:{id:EasterEggId;onDismiss:()=>void;albumFound?:boolean}){
+  const reaction=easterEggs[id];
   return <aside className="scene-easter-note" data-egg={id} aria-label="Маленькая реакция">
-    <div role="status"><b>Влад</b><p>{easterEggs[id].text}</p></div>
+    <div role="status"><b>{'speaker' in reaction?reaction.speaker:'Влад'}</b><p>{reaction.text}</p>{albumFound&&<small className="album-secret-found">Секрет добавлен в альбом</small>}</div>
     <button className="scene-easter-dismiss" aria-label="Скрыть маленькую реакцию" onClick={onDismiss}>
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
     </button>

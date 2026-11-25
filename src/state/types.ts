@@ -1,5 +1,6 @@
 import type { MemoryId, SecretId, CardId, ChapterId, EpisodeProgress, Run, StoryState, EpisodeChapter,QuestionId } from '../engine/types';
 import type { CONTENT_VERSION } from '../content/version';
+import type { SceneSecretId } from '../content/achievements';
 export type Settings = {sound:boolean;volume:number;textMode:'instant'|'type';motion:'system'|'reduced'|'full'};
 export type ChapterRecord = {scriptRevision?:3|4|5|6|7;endingId:CardId;cardId:CardId;story:StoryState;results:Run['results'];attemptId?:string;episode?:EpisodeProgress};
 export type CardRecord = {c5Edition?:3;id:CardId;chapter:ChapterId;endingId:CardId;variant:'cafe'|'lateLeave'|'private'|'tidy'|'detour'|'skipped'|'patched'|'borrowed'|'feast'|'snack'|'chaos'|'cat'|'controllers'|'teapot'|'adventure'|'calm'|'evening'|'morning'|'walk'|'goodbye'|'upper'|'water'|'together'|'apart'|'fold'|'open'|'canopy'|'arch'|'leave';captionId:string;teamName?:NonNullable<StoryState['teamName']>;usedPreset?:boolean;venue?:'home'|'cafe'|'courtyard'|'terrace'};
@@ -13,7 +14,7 @@ export type SaveV1 = {
   campaign:{completed:ChapterId[];startStates:Partial<Record<ChapterId,StoryState>>;records:Partial<Record<ChapterId,ChapterRecord>>;active:Run|null};
   trial:{chapter:ChapterId;run:Run}|null;
   lastResult:{chapter:ChapterId;cardId:CardId;source:'campaign'|'trial';episodeRecord?:ChapterRecord}|null;
-  collection:{cards:CardRecord[];achievements:string[];memories:MemoryId[];secrets:SecretId[]};
+  collection:{cards:CardRecord[];achievements:string[];memories:MemoryId[];secrets:(SecretId|SceneSecretId)[]};
   privateWords:PrivateWords;privateNotes:Partial<Record<NoteChapter,{campaign?:LocalNote;trial?:LocalNote}>>;localNoteRevision:number;
   continuation10:null|'game'|'movie'|'cook'|'out'|'decline';
   continuation:'game'|'movie'|'cafe'|'walk'|'decline'|'public'|'chat'|'later'|null;

@@ -13,7 +13,7 @@ export function DeveloperPanel(){
     if(id.startsWith('c1.end'))story.plan=id.split('.').at(-1) as StoryState['plan'];
     if(id.startsWith('c2.'))story={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea'};
     if(id==='c2.umbrella'||id==='c2.end')story={...story,rainRoute:'shelter',catApproach:'wait'};
-    if(id==='c2.end')story={...story,umbrella:'patched',eveningMood:'quiet'};
+    if(id==='c2.end')story={...story,umbrella:'patched',herRecharge:'cozy',eveningMood:'quiet'};
     if(id.startsWith('c4.'))story={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',c4Edition:2,bench:'space',constellation:'teapot',wish:'calm',c4Goodbye:'none'};
     if(['c4.kitchen','c4.debrief.feast','c4.debrief.chaos','c4.end'].includes(id))story={...story,controllerReaction:'absurd',teamName:'dumpling',kitchenStyle:'planner'};
     if(id.startsWith('c4.debrief')||id==='c4.end')story.kitchenResult=id==='c4.debrief.chaos'?'chaos':'feast';
@@ -21,7 +21,7 @@ export function DeveloperPanel(){
     if(id.startsWith('c3.'))story={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet'};
     if(['c3.stars','c3.honest','c3.goodbye.end'].includes(id))story.bench='space';
     if(['c3.honest','c3.goodbye.end'].includes(id))story.constellation='teapot';
-    if(id==='c3.goodbye.end')story={...story,wish:'calm',c4Goodbye:'none'};
+    if(id==='c3.goodbye.end')story={...story,herTrust:'careful',wish:'calm',c4Goodbye:'none'};
     if(id.startsWith('c5.'))story={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',wish:'calm'};
     if(['c5.drink.recommend','c5.album','c5.letter','c5.close'].includes(id))story.c5FirstTaste='compare';
     if(['c5.album','c5.letter','c5.close'].includes(id))story.c5Recommendation='fresh';

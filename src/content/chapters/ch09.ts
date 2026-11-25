@@ -29,6 +29,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "привет. пришёл первым и проверил периметр: кот с афиши пока скрывается, зато пахнет здесь отлично."
         },
         {
@@ -92,6 +93,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "smile",
           "text": "Ты достаёшь из сумки аккуратно сложенное худи и протягиваешь Владу. Он принимает его и убирает в свою сумку с довольной усмешкой.",
           "effects": [
             {
@@ -103,6 +105,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "знаешь, после того как ты в нём ходила, оно мне нравится гораздо больше. спасибо."
         }
       ],
@@ -122,10 +125,12 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "thinking",
           "text": "Смотри, осталось последние три кадра. Давай сегодня их доснимем и после фильма отдадим плёнку в проявку!"
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "три кадра до того, как мы увидим всю нашу историю… давай первый снимем прямо сейчас."
         }
       ],
@@ -192,10 +197,12 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "narrator",
+          "emotion": "neutral",
           "text": "Влад останавливается на фоне кирпичной арки и светящихся лампочек."
         },
         {
           "speaker": "vlad",
+          "emotion": "neutral",
           "text": "смотрю только на тебя. снимай."
         },
         {
@@ -325,11 +332,12 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "heroine",
-          "text": "Ну что, смотрим? Только чур не подсказывать коту на экране."
+          "text": "Ну что, ценитель серьёзных драм, готов к чёрно-белой классике с котом в главной роли?"
         },
         {
           "speaker": "vlad",
-          "text": "договорились. хотя я планирую смотреть в основном на соседнее кресло."
+          "emotion": "smile",
+          "text": "если там будет хотя бы половина того напряжения, с которым я сижу рядом с тобой в последнем ряду — шедевр обеспечен."
         }
       ],
       "next": "c9.courtyard.filmStart"
@@ -339,7 +347,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.open",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -405,30 +413,37 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "narrator",
+          "emotion": "surprised",
           "text": "За секунды с ночного неба обрушивается шумный ливень. На экране замирает стоп-кадр с ключом, у стены включается дежурный фонарь, и зрители со смехом бегут под навес."
         },
         {
           "speaker": "attendant",
+          "emotion": "surprised",
           "text": "Друзья, пожалуйста, укройтесь пока под навесом или у арки! Мы прикроем проектор плёнкой — если туча пройдёт быстро, досмотрим финал!"
         },
         {
           "speaker": "narrator",
+          "emotion": "neutral",
           "text": "Влад первым делом прикрывает твою голову полой своего расстёгнутого пальто, пока ты подхватываешь сумку, а он забирает со стула свёрнутый пакет с последним печеньем."
         },
         {
           "speaker": "heroine",
+          "emotion": "neutral",
           "text": "Влад, я так хотела устроить нам идеальный вечер в этом дворике… а тут опять ливень."
         },
         {
           "speaker": "narrator",
+          "emotion": "neutral",
           "text": "Вы останавливаетесь у края кирпичной стены; он стряхивает воду с рукава и смотрит на тебя совершенно серьёзно:"
         },
         {
           "speaker": "vlad",
+          "emotion": "neutral",
           "text": "эй. это уже идеальный вечер, потому что ты позвала меня сюда."
         },
         {
           "speaker": "heroine",
+          "emotion": "laugh",
           "text": "В следующий раз буду выбирать места, где крыша входит в стоимость билета."
         },
         {
@@ -447,12 +462,12 @@ export const chapter9:Chapter = {
       },
       "lines": [
         {
-          "speaker": "devil",
-          "text": "Главное, что последнее печенье в пакете удалось спасти от потопа!"
+          "speaker": "angel",
+          "text": "Под широким навесом сухо, ждут тёплые пледы, и вы сможете досмотреть историю до самых титров."
         },
         {
-          "speaker": "angel",
-          "text": "А под шум такого дождя прятаться вдвоём под одной крышей ещё уютнее."
+          "speaker": "devil",
+          "text": "Вон та полутёмная арка у стены рассчитана ровно на двоих под одним пледом… Или вообще укради его с сеанса прямо под дождь — кот в чемодане подождёт!"
         }
       ],
       "next": "c9.courtyard.rainChoice",
@@ -523,6 +538,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "сиди здесь, я через секунду вернусь с пледом."
         },
         {
@@ -554,6 +570,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "surprised",
           "text": "Сотрудница кивнула — отсюда тоже можно смотреть, и мы здесь совсем одни."
         },
         {
@@ -585,6 +602,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "пойдём. с этой стороны вдоль домов сухой козырёк."
         },
         {
@@ -617,7 +635,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.canopy",
-        "character": "vlad.city.smile",
+        "character": "vlad.city.neutral",
         "variants": [
           {
             "when": [
@@ -669,6 +687,253 @@ export const chapter9:Chapter = {
         {
           "speaker": "narrator",
           "text": "Вы переглядываетесь под ровный шум дождя — прохлада улицы остаётся где-то совсем снаружи."
+        }
+      ],
+      "next": "c9.courtyard.movieTalk"
+    },
+    "c9.courtyard.movieTalk": {
+      "id": "c9.courtyard.movieTalk",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.open",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "vlad",
+          "emotion": "thinking",
+          "text": "я всё вспоминаю, как кот скинул рубашку на пол. с таким видом, будто чемодан вообще-то его."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Кто первый занял, того и место."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "и всё понятно без единого слова. люблю, когда в кино хватает одного такого жеста."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "thinking",
+          "text": "а у тебя какие фильмы потом ещё долго из головы не выходят?"
+        }
+      ],
+      "next": "c9.courtyard.movieChoice"
+    },
+    "c9.courtyard.movieChoice": {
+      "id": "c9.courtyard.movieChoice",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.open",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Какое кино оставляет у тебя самое сильное послевкусие?",
+      "choices": [
+        {
+          "id": "drama",
+          "text": "Глубокие драмы про людей и выбор — чтобы задело по-настоящему",
+          "next": "c9.courtyard.movieDrama",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9HerMovie",
+              "value": "drama"
+            }
+          ]
+        },
+        {
+          "id": "warm",
+          "text": "Тёплое камерное кино с красивым светом и светлым финалом",
+          "next": "c9.courtyard.movieWarm",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9HerMovie",
+              "value": "warm"
+            }
+          ]
+        },
+        {
+          "id": "mystery",
+          "text": "Умные закрученные истории, где до последней минуты ищешь разгадку",
+          "next": "c9.courtyard.movieMystery",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c9HerMovie",
+              "value": "mystery"
+            }
+          ]
+        }
+      ]
+    },
+    "c9.courtyard.movieDrama": {
+      "id": "c9.courtyard.movieDrama",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.open",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Сильные человеческие драмы — когда веришь каждому взгляду и после титров хочется немного помолчать."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "значит, наш будущий домашний киновечер уже обречён на успех — вкусы совпадают идеально."
+        }
+      ],
+      "next": "c9.courtyard.next"
+    },
+    "c9.courtyard.movieWarm": {
+      "id": "c9.courtyard.movieWarm",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.open",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Камерные, светлые фильмы с живыми деталями — после которых внутри остаётся тепло, а не тяжесть."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "отличный баланс моей любви к тяжёлой драматургии. будем чередовать по очереди — чур первый светлый фильм выбираешь ты."
+        }
+      ],
+      "next": "c9.courtyard.next"
+    },
+    "c9.courtyard.movieMystery": {
+      "id": "c9.courtyard.movieMystery",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.courtyard9.canopy",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "arch"
+              }
+            ],
+            "background": "bg.courtyard9.arch",
+            "character": "vlad.city.smile"
+          },
+          {
+            "when": [
+              {
+                "key": "c9Rain",
+                "equals": "leave"
+              }
+            ],
+            "background": "bg.courtyard9.open",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Закрученные истории с тайной и неожиданным вторым дном, где нужно ловить каждую деталь в кадре."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "laugh",
+          "text": "о, строить теории прямо по ходу фильма на паузе — моё любимое занятие. из нас выйдет опасный дуэт детективов."
         }
       ],
       "next": "c9.courtyard.next"
@@ -766,6 +1031,7 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "слушай… давай в следующий раз наконец откроем ту самую настолку с двумя путешественниками, которую я уронил у твоих ног в первый вечер?"
         },
         {
@@ -845,7 +1111,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.canopy",
-        "character": "vlad.city.smile",
+        "character": "vlad.city.thinking",
         "variants": [
           {
             "when": [
@@ -990,10 +1256,12 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "Я верю в счастливый финал: он поедет и обязательно заберёт кота с собой."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "мне нравится, как ты всегда выбираешь вариант «быть вместе». смотрим."
         }
       ],
@@ -1035,6 +1303,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "если промахнёмся оба — делим печенье пополам. хотя я в любом случае поделюсь."
         }
       ],
@@ -1082,7 +1351,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.open",
-        "character": "vlad.city.smile",
+        "character": "vlad.city.neutral",
         "variants": [
           {
             "when": [
@@ -1199,22 +1468,27 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "сдаюсь. твоя ставка на «ехать вместе» победила вчистую."
         },
         {
           "speaker": "narrator",
+          "emotion": "smile",
           "text": "Он достаёт из пакета последнее печенье и торжественно вручает приз победителю."
         },
         {
           "speaker": "heroine",
+          "emotion": "laugh",
           "text": "Откусывай половину. Победила ведь команда."
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "с тобой даже проигрывать спор — одно удовольствие."
         },
         {
           "speaker": "narrator",
+          "emotion": "laugh",
           "text": "Вы делите печенье пополам, пока вокруг понемногу расходятся зрители."
         }
       ],
@@ -1252,10 +1526,12 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "heroine",
+          "emotion": "surprised",
           "text": "Ты оставлял дома человека, я кота — а они взяли и уехали вдвоём."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "и правильно сделали. нечего расставаться, когда можно быть рядом."
         },
         {
@@ -1328,14 +1604,17 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "narrator",
+          "emotion": "thinking",
           "text": "У соседнего с булочной крыльца вы замечаете маленький деревянный шкафчик уличного книгообмена: дверца приоткрыта, и нижний край книг намокает от косых капель."
         },
         {
           "speaker": "heroine",
+          "emotion": "thinking",
           "text": "Подожди секунду, Влад — давай закроем им дверцу, а то книги промокнут."
         },
         {
           "speaker": "narrator",
+          "emotion": "thinking",
           "text": "Влад придерживает стеклянную створку, пока ты переставляешь две книги на сухую верхнюю полку и поворачиваешь деревянную щеколду."
         },
         {
@@ -1348,10 +1627,12 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "Фильм мы не досмотрели, зато получилась своя история под дождём."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "наша мне нравится гораздо больше любого кино."
         },
         {
@@ -1428,6 +1709,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "а теперь отдавай камеру. я честно предупреждал, что самый последний кадр — за мной."
         },
         {
@@ -1468,7 +1750,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.lab",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -1481,6 +1763,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "thinking",
           "text": "даже немного жалко с ним расставаться. он с нами четыре свидания прожил — от набережной до сегодняшнего ливня.",
           "delivery": "тихо"
         },
@@ -1501,10 +1784,12 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "heroine",
+          "emotion": "smile",
           "text": "Как только напечатают — я сразу заберу конверт и принесу в «Паузу». Не буду открывать без тебя."
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "договорились. откроем вместе за нашим столиком. очень хочу увидеть твоё лицо, когда ты посмотришь те кадры."
         }
       ],
@@ -1515,7 +1800,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.lab-red",
-        "character": "vlad.city.smile"
+        "character": "vlad.city.neutral"
       },
       "lines": [
         {
@@ -1576,7 +1861,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.lab-red",
-        "character": "vlad.city.smile"
+        "character": "vlad.closeup.intimate"
       },
       "lines": [
         {
@@ -1585,15 +1870,18 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "laugh",
           "text": "кажется, мы только что пропустили твой зелёный.",
           "delivery": "тихо"
         },
         {
           "speaker": "heroine",
+          "emotion": "neutral",
           "text": "Я специально."
         },
         {
           "speaker": "narrator",
+          "emotion": "neutral",
           "text": "Ты тянешь его за руку в полутень у стены. Влад обхватывает твоё лицо ладонями и целует тебя — спокойно, глубоко и уверенно, без прежней робости.",
           "effects": [
             {
@@ -1629,7 +1917,7 @@ export const chapter9:Chapter = {
       "kind": "dialogue",
       "scene": {
         "background": "bg.courtyard9.lab-red",
-        "character": "vlad.city.smile"
+        "character": "vlad.closeup.intimate"
       },
       "lines": [
         {
@@ -1663,6 +1951,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "vlad",
+          "emotion": "smile",
           "text": "как же хорошо, что ты меня остановила… я весь вечер под этим дождём думал только об этом.",
           "delivery": "тихо"
         }
@@ -1679,7 +1968,7 @@ export const chapter9:Chapter = {
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Когда снова загорается зелёный, ты медленно переходишь блестящую от дождя улицу, а Влад остаётся стоять на своём углу, провожая тебя взглядом."
+          "text": "Дождавшись следующего зелёного, вы наконец разжимаете руки — ночной воздух после грозы пахнет мокрой листвой, а в кошельке лежит квитанция за двенадцать кадров, которые вы скоро откроете вдвоём."
         }
       ],
       "next": "c9.courtyard.end"
@@ -1737,7 +2026,7 @@ export const chapter9:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Он коротко сжимает твои пальцы на прощание и провожает тебя взглядом через мокрый перекрёсток.",
+          "text": "Он тепло сжимает твои пальцы на прощание; светофор переключается на зелёный, и вы расходитесь под редкими последними каплями с квитанцией из фотолаборатории, которая уже связывает вас со следующим вечером.",
           "effects": [
             {
               "kind": "set",

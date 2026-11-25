@@ -51,8 +51,10 @@ export function CameraArt({frames=12}:{frames?:number}){
    <path d="M31 14v8M35 14v8M39 14v8M43 14v8M47 14v8M50 14v8" stroke="#7d8479" strokeWidth="1.1"/>
    <rect x="103" y="15" width="16" height="6" rx="2" fill={`url(#${uid}-metal)`} stroke="#595044" strokeWidth="1.4"/>
    <rect x="123" y="15" width="23" height="6" rx="2" fill={`url(#${uid}-metal)`} stroke="#595044" strokeWidth="1.4"/>
-   <rect x="126" y="10.5" width="17" height="7" rx="3" fill={`url(#${uid}-shutter)`} stroke="#62291d" strokeWidth="1.5"/>
-   <path d="M129 12.8h11" stroke="#f5b7a3" strokeWidth="1.6" strokeLinecap="round" opacity=".75"/>
+   <g className="camera-shutter">
+    <rect x="126" y="10.5" width="17" height="7" rx="3" fill={`url(#${uid}-shutter)`} stroke="#62291d" strokeWidth="1.5"/>
+    <path d="M129 12.8h11" stroke="#f5b7a3" strokeWidth="1.6" strokeLinecap="round" opacity=".75"/>
+   </g>
   </g>
   <rect x="18" y="20" width="142" height="82" rx="14" fill={`url(#${uid}-metal-h)`} stroke="#4d463c" strokeWidth="2.2"/>
   <path d="M23 26q0-4 7-4h118q7 0 7 4v2H23Z" fill="#f6e9d4" opacity=".75"/>
@@ -119,26 +121,31 @@ export function CameraArt({frames=12}:{frames?:number}){
  </svg>;
 }
 
-export function PhotoCamera({story,visible,interactive,context,reduced,onSound}:{story:StoryState;visible:boolean;interactive:boolean;context:string;reduced:boolean;onSound?:()=>void}){
+export function PhotoCamera({story,visible,interactive,context,reduced,onShutter,flash,onDiscover}:{story:StoryState;visible:boolean;interactive:boolean;context:string;reduced:boolean;onShutter?:()=>void;flash:boolean;onDiscover:()=>boolean}){
  const [discovered,setDiscovered]=useState(false);
- const [reaction,setReaction]=useState<string|null>(null);
+ const [reaction,setReaction]=useState<{context:string;albumFound:boolean}|null>(null);
  const trigger=useRef<HTMLButtonElement>(null);
- const active=interactive&&reaction===context;
+ const ready=interactive&&!!onShutter;
+ const active=interactive&&!ready&&reaction?.context===context;
  useEffect(()=>{setReaction(null);},[context,interactive]);
  const left=filmLeft(story);
  if(!visible||left===undefined)return null;
  return <div className="photo-camera-area" data-reduced={reduced}>
-  <div className="photo-camera">
-   {interactive?<button ref={trigger} className="photo-camera-trigger" aria-label={easterEggs.camera.label} aria-expanded={active} onClick={()=>{
+  <div className={`photo-camera${ready?' photo-camera-ready':''}`}>
+   {interactive?<button ref={trigger} className="photo-camera-trigger" aria-label={ready?'Нажать спуск':easterEggs.camera.label} aria-expanded={ready?undefined:active} onClick={()=>{
+    if(ready){onShutter?.();return;}
     if(active)return;
-    setDiscovered(true);setReaction(context);onSound?.();
+    setDiscovered(true);setReaction({context,albumFound:onDiscover()});
    }}>
-    <CameraArt frames={left}/>
-    {!discovered&&<span className="easter-spark" aria-hidden="true">✧</span>}
-    {active&&<span className="photo-camera-flash" aria-hidden="true"/>}
+    <span className="photo-camera-art"><CameraArt frames={left}/>
+     {!ready&&!discovered&&<span className="easter-spark" aria-hidden="true">✧</span>}
+     {flash&&<span className="photo-camera-flash photo-camera-exposure" aria-hidden="true"/>}
+     {active&&<span className="photo-camera-flash" aria-hidden="true"/>}
+    </span>
+    {ready&&<span className="photo-camera-prompt">Нажать спуск <span aria-hidden="true">📷</span></span>}
    </button>:<CameraArt frames={left}/>}
    <span>Кадров осталось: <strong>{left}</strong></span>
   </div>
-  {active&&<EasterReaction id="camera" onDismiss={()=>{setReaction(null);trigger.current?.focus({preventScroll:true});}}/>}
+  {active&&<EasterReaction id="camera" albumFound={reaction?.albumFound} onDismiss={()=>{setReaction(null);trigger.current?.focus({preventScroll:true});}}/>}
  </div>;
 }

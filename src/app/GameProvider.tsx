@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';
 import { initialState } from '../state/initialState';
 import { reduceSave, type Action } from '../state/reducer';
 import { load, persist, storageKey, type Loaded, type StorageLike } from '../persistence/storage';
@@ -23,17 +23,34 @@ export function GameProvider({children,storageId=activeStorageKey,initialLoaded,
   const savedRevision=useRef(loaded.save.revision);
   const savedLocalNoteRevision=useRef(loaded.save.localNoteRevision);
   const dirty=useRef(false);
-  function send(action:Action) {
+  const soundDefault=useRef<'unread'|'saving'|'done'>('unread');
+  const send=useCallback((action:Action)=>{
     if(conflict || cloud.blocked || (recovery&&action.type!=='replace') || (action.type==='dev-jump'&&!DEV_SANDBOX))return;
     if(action.type==='replace'){setRecovery(false);setStorageError(null);}
     if((action.type==='start'||action.type==='trial'||action.type==='rewrite')&&(action.chapter!==undefined&&action.chapter>=6)&&!action.attemptId)action={...action,attemptId:crypto.randomUUID?.()??Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('')};
     dirty.current=true;dispatch(action);
-  }
+  },[cloud.blocked,conflict,recovery]);
   useEffect(()=>{
     if(!dirty.current||recovery||conflict||save.revision===savedRevision.current&&save.localNoteRevision===savedLocalNoteRevision.current)return;
     try {const result=persist(storage,save,savedRevision.current,storageId,savedLocalNoteRevision.current);if(result==='conflict'){setConflict(true);return;}savedRevision.current=save.revision;savedLocalNoteRevision.current=save.localNoteRevision;dirty.current=false;setStorageError(null);try{clearFinishedDraft(storage,storageId,save);}catch{/* Keep a draft if its cleanup fails. */}}
     catch {setStorageError('В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.');}
   },[save,recovery,conflict,storageId]);
+  useEffect(()=>{
+    if(recovery||conflict||cloud.blocked||storageError||dirty.current||soundDefault.current==='done')return;
+    const key=`${storageId}:sound-default-on-v1`;
+    try {
+      if(storage.getItem(key)===null){
+        if(soundDefault.current==='unread'&&!save.settings.sound){
+          soundDefault.current='saving';
+          send({type:'settings',settings:{...save.settings,sound:true}});
+          return;
+        }
+        // Record the one-time change after the settings write has succeeded.
+        storage.setItem(key,'1');
+      }
+      soundDefault.current='done';
+    }catch{/* The marker can be retried when storage becomes available. */}
+  },[cloud.blocked,conflict,recovery,save,send,storageError,storageId]);
   useEffect(()=>{
     function check(){try{const raw=storage.getItem(storageId);if(raw){const v=parseSave(raw);if(v.revision>savedRevision.current||v.localNoteRevision>savedLocalNoteRevision.current)setConflict(true);}}catch{/* An unreadable save is handled by recovery, not a competing valid tab. */}}
     function onStorage(e:StorageEvent){if(e.key===storageId)check();}

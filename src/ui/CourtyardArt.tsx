@@ -189,7 +189,7 @@ export function CourtyardScene({run,background}:{run:Run;background?:string}){
  const screen=useId().replace(/:/g,'');
  const node=run.nodeId.replace('c9.courtyard.',''),i=run.lineIndex;
  const filmStart=node==='filmStart',resume=node==='resume';
- const inPause=['rain','rainAside','rainChoice','canopy','arch','warmth','nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip'].includes(node)&&run.story.c9Rain!=='leave';
+ const inPause=['rain','rainAside','rainChoice','canopy','arch','warmth','movieTalk','movieChoice','movieDrama','movieWarm','movieMystery','nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip'].includes(node)&&run.story.c9Rain!=='leave';
  const film=filmStart||resume||inPause;
  const phase:FilmPhase=filmStart?(i>=3?'key':'packing'):resume?(['key','key','photo','train','train'] as const)[i]??'train':'key';
  const position=resume?(run.story.c9Rain==='arch'?'arch':'open'):run.story.c9Rain==='arch'?'arch':run.story.c9Rain==='canopy'?'canopy':'open';

@@ -5,6 +5,11 @@ export type NodeId = `c${ChapterId}.${string}`;
 export type Emotion = 'neutral'|'smile'|'awkward'|'thinking'|'laugh'|'warm'|'surprised';
 export type Speaker = 'narrator'|'vlad'|'heroine'|'nina'|'attendant'|'angel'|'devil'|'heroine-thought'|'vlad-thought';
 export type StoryState = {
+  herRecharge?: 'walk' | 'cozy' | 'hands';
+  herTrust?: 'careful' | 'intuition' | 'humor';
+  c6HerEvening?: 'cozyFood' | 'nightWalk' | 'deepTalk';
+  herEscape?: 'sea' | 'oldtown' | 'cabin';
+  c9HerMovie?: 'drama' | 'warm' | 'mystery';
   c10Edition?:5;c10River?:'ford'|'bridge';c10Quarry?:'tunnel'|'contour';c10Arrival?:'marsh'|'upper';
   c10RiverHelp?:true;c10QuarryHelp?:true;c10ArrivalHelp?:true;
   c10Continuation?:'cafe'|'home';c10CafeGoodbye?:'kiss'|'hug'|'words';c10HomeTender?:'kiss'|'neck'|'hug'|'near';

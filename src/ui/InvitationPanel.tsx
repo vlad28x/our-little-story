@@ -5,11 +5,11 @@ import { Illustration } from './Illustration';
 const meetingMotifs:Record<MeetingChoice,string>={game:'controller',movie:'cinema',cafe:'tea-for-two',walk:'promenade',decline:'envelope'};
 export function InvitationPanel(){
   const {save,send}=useGame();
-  const [draft,setDraft]=useState(()=>continuationDraft(save.continuation)),[message,setMessage]=useState('');
+  const [draft,setDraft]=useState(()=>continuationDraft(save.continuation,save.campaign.records[5]?.story)),[message,setMessage]=useState('');
   const selected=save.continuation;
   const answer=continuationOptions.find(option=>option.value===selected)?.value;
   const reply=answer?invitationReplies[answer]:undefined;
-  function choose(value:MeetingChoice){send({type:'continuation',value});setDraft(continuationDraft(value));setMessage('Выбор встречи сохранён. Его можно изменить.');}
+  function choose(value:MeetingChoice){send({type:'continuation',value});setDraft(continuationDraft(value,save.campaign.records[5]?.story));setMessage('Выбор встречи сохранён. Его можно изменить.');}
   async function copy(){try{await navigator.clipboard.writeText(draft);setMessage('Текст скопирован. Если захочешь, вставь его в ваш чат.');}catch{setMessage('Здесь не получилось скопировать автоматически. Выдели текст в поле и скопируй вручную.');}}
   return <section id="real-meeting-invitation" tabIndex={-1} className="final-conversation" aria-label="Разговор о следующей встрече">
     <div className="story-panel invitation-panel">

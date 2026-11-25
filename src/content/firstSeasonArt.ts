@@ -15,6 +15,17 @@ const backgrounds: Readonly<Record<string, string>> = {
 export const firstSeasonCat = 'cat.chapter1.gouache';
 export const firstSeasonNina = 'nina.chapter1.gouache';
 
+const apronExpressions: Partial<Record<Emotion, string>> = {
+  awkward: 'vlad.apron.awkward',
+  thinking: 'vlad.apron.thinking',
+  surprised: 'vlad.apron.surprised',
+  laugh: 'vlad.apron.laugh',
+};
+
+export function apronVlad(emotion: Emotion) {
+  return apronExpressions[emotion] ?? 'vlad.supper8.gouache.apron';
+}
+
 export function firstSeasonBackground(background: string) {
   return backgrounds[background] ?? background;
 }
