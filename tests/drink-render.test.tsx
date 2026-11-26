@@ -17,8 +17,9 @@ it('renders every visible drink-edition scene and the neutral result with the ex
   const third=finishThree(completeTwo('quiet',undefined,{cat:index%2?'help':'wait'}),{...defaultThird,style:index%2?'improv':'planner',team:(['dumpling','calm','accident'] as const)[index%3]});
   const prior=finishFour(third,{...defaultFourth,result:{kind:'constellation',outcome:(['cat','controllers','teapot'] as const)[index%3],usedPreset:false},goodbye:(['accept','her','none'] as const)[index%3]});
   let s=startFive(prior);
-  while(s.campaign.active){const r=s.campaign.active;if(!visited.has(r.nodeId)){context.save=s;const html=renderToString(<App/>);expect(html).toContain(r.nodeId);expect(html).not.toContain('Unknown asset');visited.add(r.nodeId);}s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:'skipped',ending:'friendly',firstTaste,recommendation})});}
-  context.save=s;vi.stubGlobal('location',{hash:'#/result/5',search:''});const html=renderToString(<App/>);expect(html).toContain('чай с характером. компания тоже.');expect(html).toContain('Может, как-нибудь увидимся?');expect(html).not.toContain('мой любимый незапланированный перерыв.');index++;
+  const feeling=(['continue','curious','pace'] as const)[index%3];
+  while(s.campaign.active){const r=s.campaign.active;if(!visited.has(r.nodeId)){context.save=s;const html=renderToString(<App/>);expect(html).toContain(r.nodeId);expect(html).not.toContain('Unknown asset');visited.add(r.nodeId);}s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:'skipped',ending:'friendly',firstTaste,recommendation,feeling})});}
+  context.save=s;vi.stubGlobal('location',{hash:'#/result/5',search:''});const html=renderToString(<App/>);expect(html).toContain('чай с характером. компания тоже.');expect(html).toContain('Может, как-нибудь увидимся?');expect(html).not.toContain('Копировать сообщение');expect(html).not.toContain('мой любимый незапланированный перерыв.');index++;
  }
  expect([...visited].sort()).toEqual(Object.values(chapter5.nodes).filter(n=>n.kind!=='route'&&n.kind!=='end').map(n=>n.id).sort());
 });

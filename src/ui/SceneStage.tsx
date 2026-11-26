@@ -8,7 +8,7 @@ import { Illustration } from './Illustration';
 import { ConstellationArt } from './ConstellationArt';
 import { constellationDrawings } from '../minigames/constellationModel';
 import { SceneEasterEggs } from './SceneEasterEggs';
-import { CookiePlateArt } from './SceneEasterPropArt';
+import { CookiePlateArt, ReserveRemoteArt } from './SceneEasterPropArt';
 import { sceneEggProps,type EasterEggId } from '../content/easterEggs';
 import { AdviserPortrait } from './AdviserPortrait';
 import { SilentFilmArt } from './SilentFilmArt';
@@ -21,7 +21,7 @@ import { ShopBreakSign } from './ShopBreakSign';
 
 import { apronVlad, firstSeasonBackground, firstSeasonCat, firstSeasonNina, firstSeasonVlad } from '../content/firstSeasonArt';
 
-export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',constellation,reserveRemote=false,bench,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onDiscoverEgg,advisers,galleryPlace,characterId,word,light,filmFrame,bookmark,fade=false,dessert,drink}:{travellers?:ReactNode;courtyard?:ReactNode;supper?:ReactNode;exhibit?:GalleryView;dessert?:DessertResult;drink?:MovieDrink;characterId?:string;word?:string;light?:'warm'|'dim'|'unchanged';filmFrame?:0|1|2;bookmark?:StoryState['c10Memory'];fade?:boolean;galleryPlace?:'arch'|'window';background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;constellation?:StoryState['constellation'];reserveRemote?:boolean;bench?:'near'|'space';easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onDiscoverEgg?:(id:EasterEggId)=>boolean;advisers?:'angel'|'devil'|'both'}){
+export function SceneStage({travellers,courtyard,supper,exhibit,rain,background='bg.cafe.entry',emotion='smile',speaker,showCat=true,sceneId='intro',constellation,reserveRemote=false,bench,easterEggs=false,interactionContext=sceneId,reducedMotion=false,onDiscoverEgg,advisers,galleryPlace,characterId,word,light,filmFrame,bookmark,fade=false,dessert,drink}:{travellers?:ReactNode;courtyard?:ReactNode;supper?:ReactNode;exhibit?:GalleryView;rain?:'heavy'|'shelter'|'soft';dessert?:DessertResult;drink?:MovieDrink;characterId?:string;word?:string;light?:'warm'|'dim'|'unchanged';filmFrame?:0|1|2;bookmark?:StoryState['c10Memory'];fade?:boolean;galleryPlace?:'arch'|'window';background?:string;emotion?:Emotion;speaker?:string;showCat?:boolean;sceneId?:string;constellation?:StoryState['constellation'];reserveRemote?:boolean;bench?:'near'|'space';easterEggs?:boolean;interactionContext?:string;reducedMotion?:boolean;onDiscoverEgg?:(id:EasterEggId)=>boolean;advisers?:'angel'|'devil'|'both'}){
   const stage=useRef<HTMLDivElement>(null);
   // Keep the plate while its optional hotspots unmount during the kitchen or pause.
   const [cookieTaken,setCookieTaken]=useState(false);
@@ -70,7 +70,7 @@ export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.c
       onError={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous:[...previous,layer.url])}
       onLoad={()=>setFailedUrls(previous=>previous.includes(layer.url)?previous.filter(url=>url!==layer.url):previous)}/>;
   }
-  const showEasterEggs=easterEggs&&currentFailures.length===0&&!fade
+  const showEasterEggs=easterEggs&&currentFailures.length===0&&!fade&&!closeup
     &&!['c1.prologue','c1.before','c9.courtyard.filmStart','c9.courtyard.resume'].includes(sceneId)
     &&(!exhibit||exhibit==='hall'||exhibit==='poster');
   const dance=({'c8.supper.follow':'close','c8.supper.lead':'lead','c8.supper.play':'playful'} as Record<string,string>)[sceneId]??/^c8\.r3\.dance\.(close|lead|playful)$/.exec(sceneId)?.[1];
@@ -82,9 +82,10 @@ export function SceneStage({travellers,courtyard,supper,exhibit,background='bg.c
     {exhibit&&<GalleryArt view={exhibit}/>}
     {background==='bg.s2.window.evening'&&currentFailures.length===0&&<ShopBreakSign stage={stage}/>}
     <div className="scene-light"/>{light&&<div className={`scene-atmosphere light-${light}`}/>}
+    {rain&&<div className={`scene-rain scene-rain-${rain}`} aria-hidden="true"/>}
     {renderLayer('character')}
     {renderLayer('cat')}{supper}{courtyard}{travellers}
-    {reserveRemote&&<div className="reserve-remote" aria-label="Пульт на блюдце для запасных"><span/></div>}
+    {reserveRemote&&<div className="reserve-remote" aria-label="Пульт на блюдце для запасных"><ReserveRemoteArt/></div>}
     {constellation&&(sceneId.startsWith('c5.drink.sky.')||sceneId==='c5.letter')&&<div className="scene-constellation-note">
       <ConstellationArt shape={constellation} ink label={constellationDrawings[constellation].description}/>
     </div>}

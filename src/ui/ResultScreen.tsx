@@ -1,5 +1,5 @@
 import {TravellersResult} from './TravellersResult';
-import { useEffect,useRef,useState } from 'react';
+import { useEffect,useRef } from 'react';
 import { useGame } from '../app/GameProvider';
 import { go } from '../app/router';
 import { assetUrl } from '../content/assetManifest';
@@ -12,7 +12,6 @@ import { Illustration } from './Illustration';
 import {PhotoChapterResult} from './PhotoChapterResult';
 import { EpisodeResult } from './EpisodeResult';
 import { AfterCreditsTeaser } from './AfterCreditsTeaser';
-import { useSoundCue } from './useSound';
 export function ResultScreen({route}:{route:string}){
   const result=useRef<HTMLDivElement>(null);
   useEffect(()=>{const target=route.includes('view=invitation')?result.current?.querySelector<HTMLElement>('#real-meeting-invitation')??result.current:result.current;target?.scrollIntoView({block:'start'});target?.focus({preventScroll:true});},[route]);
@@ -23,19 +22,6 @@ export function ResultScreen({route}:{route:string}){
   const archived=wanted?save.collection.cards.find(c=>c.id===wanted&&c.chapter===chapter):undefined;
   const archiveCard=archived?.id==='c8.supper'&&canonical?cardFromStory(canonical.story,chapter,canonical.results):archived;
   const card=wanted?archiveCard:isTrial?(chapter>=6&&save.lastResult?.episodeRecord?cardFromStory(save.lastResult.episodeRecord.story,chapter,save.lastResult.episodeRecord.results):save.collection.cards.find(c=>c.id===save.lastResult?.cardId)):canonical?cardFromStory(canonical.story,chapter,canonical.results):undefined;
-  const cardKey=card?`${card.id}:${wanted?'album':isTrial?'trial':'campaign'}`:undefined;
-  const [visibleCard,setVisibleCard]=useState<string|undefined>(undefined);
-  useEffect(()=>{
-    const postcard=result.current?.querySelector('.postcard');
-    if(!cardKey||!postcard)return;
-    if(typeof IntersectionObserver==='undefined'){setVisibleCard(cardKey);return;}
-    const observer=new IntersectionObserver(([entry])=>{
-      setVisibleCard(entry.intersectionRatio>=0.15?cardKey:undefined);
-    },{threshold:0.15});
-    observer.observe(postcard);
-    return()=>observer.disconnect();
-  },[cardKey]);
-  useSoundCue(visibleCard===cardKey?'chord':undefined,cardKey);
   if(!card)return <div className="page-content"><h2>Этот финал ещё впереди</h2><button onClick={()=>go('/chapters')}>К главам</button></div>;
   if(card.id==='c10.travellers')return <div ref={result} tabIndex={-1}><TravellersResult card={card} trial={isTrial} archive={!!wanted}/></div>;
   if(chapter===6||chapter===7||card.id==='c8.supper'||card.id==='c9.courtyard')return <div ref={result} tabIndex={-1}><PhotoChapterResult card={card} trial={isTrial} archive={!!wanted}/></div>;

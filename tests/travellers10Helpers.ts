@@ -4,7 +4,7 @@ import {chapters} from '../src/content/chapters/manifest';
 import {reduceSave} from '../src/state/reducer';
 import type {Command,NodeId,Run} from '../src/engine/types';
 import type {SaveV1} from '../src/state/types';
-export type TravellersPath={river:'ford'|'bridge'|'help';quarry:'tunnel'|'contour'|'help';arrival:'marsh'|'upper'|'help';continuation:'cafe'|'home';goodbye:'kiss'|'hug'|'words';tender:'kiss'|'hug'|'near';afterFirstKiss:'closer'|'shoulder';finale:'leave'|'sleep'|'private'};
+export type TravellersPath={river:'ford'|'bridge'|'help';quarry:'tunnel'|'contour'|'help';arrival:'marsh'|'upper'|'help';continuation:'cafe'|'home';goodbye:'kiss'|'hug'|'words';tender:'kiss'|'hug'|'near';afterFirstKiss:'closer'|'shoulder';finale:'leave'|'sleep'};
 export const travellersPath:TravellersPath={river:'ford',quarry:'tunnel',arrival:'marsh',continuation:'cafe',goodbye:'words',tender:'near',afterFirstKiss:'shoulder',finale:'leave'};
 export function travellersCommand(run:Run,path:Partial<TravellersPath>={}):Command{
  const p={...travellersPath,...path},node=chapter10.nodes[run.nodeId];

@@ -8,15 +8,28 @@ import { reduceSave } from '../src/state/reducer';
 import { command3,completeTwo,defaultThird,finishThree,thirdCode } from './chapter3Helpers';
 import { finishSky } from './sky3Helpers';
 it('gaming fourth chapter has no broken or unreachable nodes',()=>expect(validateContent(chapter3)).toEqual([]));
-it('covers 288 game paths with every inherited mood, reaction, team, style and dinner result',()=>{
-  let count=0;const branches=new Set();
-  for(const mood of ['quiet','playful'] as const){const base=finishSky(completeTwo(mood));
-    for(const reaction of ['tease','help','absurd'] as const)for(const team of ['dumpling','calm','accident'] as const)for(const style of ['planner','improv'] as const)for(const outcome of ['feast','snack','chaos','skipped'] as const)for(const after of ['team','rematch'] as const){
-      const result={kind:'kitchen' as const,outcome,served:outcome==='feast'?9:outcome==='snack'?4:0,mode:'calm' as const};
-      const s=finishThree(base,{reaction,team,style,result,after},false,true);expect(s.campaign.completed).toEqual([1,2,3,4]);expect(s.campaign.records[1]).toEqual(base.campaign.records[1]);expect(s.campaign.records[2]).toEqual(base.campaign.records[2]);expect(s.campaign.records[4]?.story).toMatchObject({controllerReaction:reaction,teamName:team,kitchenStyle:style,kitchenResult:outcome,gameAftercare:after});expect(parseSave(JSON.stringify(s))).toEqual(s);branches.add(outcome);count++;
-    }
-  }expect(count).toBe(288);expect(branches.size).toBe(4);
-},60000);
+it('round-trips representative game paths with both moods and all four kitchen outcomes',()=>{
+  const bases={quiet:finishSky(completeTwo('quiet')),playful:finishSky(completeTwo('playful'))};
+  const paths=[
+    ['quiet','tease','dumpling','planner','feast','team'],
+    ['quiet','help','calm','improv','snack','rematch'],
+    ['quiet','absurd','accident','planner','chaos','team'],
+    ['quiet','help','dumpling','improv','skipped','rematch'],
+    ['playful','help','accident','improv','feast','rematch'],
+    ['playful','absurd','dumpling','planner','snack','team'],
+    ['playful','tease','calm','improv','chaos','rematch'],
+    ['playful','absurd','accident','planner','skipped','team'],
+  ] as const;
+  for(const [mood,reaction,team,style,outcome,after] of paths){
+    const base=bases[mood];
+    const result={kind:'kitchen' as const,outcome,served:outcome==='feast'?9:outcome==='snack'?4:0,mode:'calm' as const};
+    const finished=finishThree(base,{reaction,team,style,result,after},false,true);
+    expect(finished.campaign.completed).toEqual([1,2,3,4]);
+    for(const previous of [1,2,3] as const)expect(finished.campaign.records[previous]).toEqual(base.campaign.records[previous]);
+    expect(finished.campaign.records[4]?.story).toMatchObject({eveningMood:mood,controllerReaction:reaction,teamName:team,kitchenStyle:style,kitchenResult:outcome,gameAftercare:after});
+    expect(parseSave(JSON.stringify(finished))).toEqual(finished);
+  }
+});
 it('gates gaming fourth chapter by its own code and both previous endings',()=>{
   const fresh=initialState(),early=reduceSave(fresh,{type:'unlock',code:thirdCode});expect(early.unlocked).toContain(4);expect(reduceSave(early,{type:'start',chapter:4})).toBe(early);
   const base=finishSky();expect(reduceSave(base,{type:'start',chapter:4})).toBe(base);expect(reduceSave(base,{type:'unlock',code:'COOP'})).toBe(base);

@@ -336,12 +336,11 @@ export function TravellersStatus({run}:{run:Run}){
 export function TravellersScene({run}:{run:Run}){
  const n=run.nodeId.split('.').at(-1)!,s=run.story,r=travellerView(run);
  const playing=['open','river','riverChoice','riverHelp','ford','bridge','quarry','quarryChoice','tunnel','contour','cat','catChoice','arrivalHelp','marsh','upperDay','upperNight','arrived'].includes(n);
- const home=['home','homeChoice','homeKissFirst','homeKissFirstChoice','homeKissFirstNeck','homeKissFirstSoft','homeKissAgain','homeHug','homeNear','late','lateChoice','lateLeave','sleep','private'].includes(n);
+ const home=['home','homeChoice','homeKissFirst','homeKissFirstChoice','homeKissFirstNeck','homeKissFirstSoft','homeKissAgain','homeHug','homeNear','late','lateChoice','lateLeave','sleep'].includes(n);
  if(n==='prints'){
   const i=run.lineIndex,source=i>=16?'feet':i>=12?'secretKitchen':i>=10?9:i>=9?8:i>=8?7:6;
   return <div className="traveller-props prints-scene"><div className="photo-envelope"/>{i>=4&&<SelectedPrint story={s} source={source}/>}</div>;
  }
- if(n==='sleep'&&run.lineIndex>=8)return null;
  if(home)return <svg className="traveller-home-props" viewBox="0 0 1086 1448" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Фотографии на столе; подаренная открытка только рядом с монитором">
   <g transform="translate(245 792) rotate(6)">
    <rect x="4" y="6" width="210" height="86" rx="4" fill="#3a281c" opacity=".24"/>
@@ -352,7 +351,7 @@ export function TravellersScene({run}:{run:Run}){
    <path d="M99 47q4-5 9-3m-4 13q5 0 7-4M17 7l37 16m121-5 24-11" fill="none" stroke="#f4dbc4" strokeLinecap="round" strokeWidth="1.7" opacity=".66"/>
   </g>
   {s.c7GalleryGift&&s.c7GalleryGift!=='none'&&<g><rect x="946" y="531" width="92" height="118" fill="#f5ebd8"/><image x="950" y="535" width="84" height="110" preserveAspectRatio="xMidYMid meet" href={assetUrl(`gallery7.${s.c7GalleryGift}`)} aria-label="Подаренная открытка стоит рядом с монитором"/></g>}
-  {n==='sleep'&&run.lineIndex>=3&&run.lineIndex<8&&<g>
+  {n==='sleep'&&run.lineIndex>=3&&<g>
    <path d="M50 720Q80 656 210 688L252 850H50Z" fill="#b7b0c3" stroke="#7d738d" strokeWidth="3"/>
    <path d="M72 726q58-24 128-6M68 770q70-20 150-4" fill="none" stroke="#d9d2e3" strokeWidth="4" strokeLinecap="round"/>
    <path d="M280 700Q330 666 430 708L472 850H290Z" fill="#d5bc9e" stroke="#997f62" strokeWidth="3"/>

@@ -98,7 +98,7 @@ export function cardFromStory(story:StoryState,chapter:ChapterId=1,results?:Run[
 
 // The same postcard ID keeps the old wording when reconstructing an edition2 record.
 export function cardMeta(card:CardRecord){
-  if(card.id==='c10.travellers')return {...cards[card.id],quote:({cafe:'Свет в «Паузе» погас. Вы ещё немного стояли у двери.',lateLeave:'Фотографии у тебя в сумке. Коробка ждёт следующей партии.',morning:'Утром осталось поставить рядом два стакана.',private:'Утром на столе рядом с двумя чашками остался конверт с фотографиями.'} as Record<string,string>)[card.variant]};
+  if(card.id==='c10.travellers')return {...cards[card.id],quote:({cafe:'Свет в «Паузе» погас. Вы ещё немного стояли у двери.',lateLeave:'Фотографии у тебя в сумке. Коробка ждёт следующей партии.',morning:'Огни за окном стихли. Вы просто остались рядом — без спешки и лишних слов.'} as Record<string,string>)[card.variant]};
   if(card.id==='c9.courtyard')return {...cards[card.id],caption:card.variant==='canopy'?'Показ продолжился, а вы так и досмотрели фильм под навесом под одним пледом.':card.variant==='arch'?'Ты нашла другое место. Оттуда было видно весь экран.':'Фильм остался без развязки. Зато вы успели укрыть от дождя целую полку книг.'};
   if(card.id==='c8.supper')return {...cards[card.id],caption:card.variant==='fold'?'Вместо одного рулета получились маленькие конверты. Хрустящий край вы поделили на двоих.':'Четыре открытые порции под румяной сырной корочкой. Самый хрустящий край вы поделили на двоих.'};
   if(card.id==='c7.gallery')return {...cards[card.id],caption:card.variant==='together'?'Три работы, один ряд. Вы прошли его от первой ступеньки до синей двери.':'В одном зале уместились две экскурсии. Каждый привёл другого к своей находке.'};

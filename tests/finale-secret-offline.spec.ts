@@ -26,11 +26,11 @@ test('the devil is visible beside the postcard below the invitation; the optiona
     // protruding beyond it. There is no drawn line or CSS hand mask.
     expect(sprite.width).toBeGreaterThanOrEqual(110);if(width<=600)expect(sprite.width).toBeLessThanOrEqual(148);expect(Math.abs(sprite.x+sprite.width*.762-frame.x-frame.width)).toBeLessThan(3);const badge=(await page.locator('.postcard-number').boundingBox())!;expect(badge.x+badge.width).toBeLessThan(box.x);
     await expect(page.locator('.after-credits-teaser,.invitation-privacy')).toHaveCount(0);await expect(page.locator('.invitation-options button').nth(0)).toHaveText(/Встретиться в кафе/);await expect(page.locator('.invitation-options button').nth(1)).toHaveText(/Погулять вместе/);await expect(page.locator('.invitation-options')).not.toContainText('у тебя');
-    await page.screenshot({path:`outputs/FINALE_SECRET_${width}.png`,fullPage:false,animations:'disabled'});
+    await page.screenshot({path:`test-results/screenshots/FINALE_SECRET_${width}.png`,fullPage:false,animations:'disabled'});
     await peek.focus();await page.keyboard.press('Enter');const dialog=page.getByRole('dialog',{name:'Маленький секрет',exact:true});await expect(dialog).toBeVisible();await expect(dialog).toContainText('так, титры были. а кто сказал, что всё?');
     const portrait=(await dialog.locator('.secret-portrait').boundingBox())!,surface=(await dialog.locator('.modal-surface').boundingBox())!;expect(portrait.y).toBeGreaterThanOrEqual(0);expect(portrait.y).toBeLessThan(surface.y-40);await expect(dialog).toHaveCSS('overflow','visible');expect(await dialog.locator('.secret-portrait').evaluate(el=>el.parentElement?.tagName)).toBe('DIALOG');await expect.poll(()=>dialog.locator('.secret-portrait img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(640);
     for(const button of await dialog.getByRole('button').all()){const b=(await button.boundingBox())!;expect(b.height).toBeGreaterThanOrEqual(48);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.y+b.height).toBeLessThanOrEqual(height);}
-    await page.screenshot({path:`outputs/FINALE_SECRET_DIALOG_${width}.png`,fullPage:false,animations:'disabled'});await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(peek).toBeFocused();expect(await state(page)).toEqual(save);
+    await page.screenshot({path:`test-results/screenshots/FINALE_SECRET_DIALOG_${width}.png`,fullPage:false,animations:'disabled'});await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(peek).toBeFocused();expect(await state(page)).toEqual(save);
     await peek.click();await page.getByRole('button',{name:'Пока оставим интригу',exact:true}).click();expect(await state(page)).toEqual(save);await peek.click();await page.getByRole('button',{name:'Закрыть',exact:true}).click();await expect(peek).toBeFocused();expect(await state(page)).toEqual(save);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.close();
   }
 });
@@ -41,7 +41,7 @@ test('the invitation has its own inset surface with readable dialogue, choices a
     const panel=page.locator('.final-conversation .invitation-panel'),bounds=(await panel.boundingBox())!;await expect(panel).toHaveCSS('border-top-style','solid');
     for(const item of [panel.locator('h2'),panel.locator('.invitation-speech'),panel.locator('.invitation-options'),panel.locator('.invitation-response')]){const box=(await item.boundingBox())!;expect(box.x-bounds.x).toBeGreaterThanOrEqual(18);expect(bounds.x+bounds.width-box.x-box.width).toBeGreaterThanOrEqual(18);}
     for(const button of await panel.locator('.invitation-options button').all()){const b=(await button.boundingBox())!;expect(b.height).toBeGreaterThanOrEqual(48);expect(b.x).toBeGreaterThan(bounds.x+16);expect(b.x+b.width).toBeLessThan(bounds.x+bounds.width-16);}
-    await page.locator('.final-conversation').screenshot({path:`outputs/FINALE_INVITATION_${width}.png`,animations:'disabled'});expect(await state(page)).toEqual(save);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.close();
+    await page.locator('.final-conversation').screenshot({path:`test-results/screenshots/FINALE_INVITATION_${width}.png`,animations:'disabled'});expect(await state(page)).toEqual(save);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.close();
   }
 });
 

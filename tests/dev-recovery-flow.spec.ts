@@ -23,7 +23,7 @@ test('ninth preview and its rain checkpoints use only the sandbox, preserving or
 
 test('tenth preview checkpoints keep the real first-season copy byte for byte',async({page})=>{
  const normal=JSON.stringify(finishFive());await page.addInitScript(({ordinary,normal})=>localStorage.setItem(ordinary,normal),{ordinary,normal});
- for(const target of ['entry','prints','riverChoice','catChoice','upperNight','homeChoice','sleep','private','homeKissFirstChoice','homeKissFirstNeck','homeKissFirstSoft','privateMorning']){
+ for(const target of ['entry','prints','riverChoice','catChoice','upperNight','homeChoice','sleep','homeKissFirstChoice','homeKissFirstNeck','homeKissFirstSoft']){
   await page.goto('./?dev=1#/chapters');await page.getByText('Тестовые сцены',{exact:true}).click();
   await page.getByRole('button',{name:target==='entry'?'Тест: начать десятую встречу':`c10.travellers.${target}`,exact:true}).click();
   await expect(page.locator(`[data-node="c10.travellers.${target}"]`)).toBeVisible();

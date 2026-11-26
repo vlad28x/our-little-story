@@ -57,13 +57,13 @@ export function previewTravellers(target:NodeId='c10.travellers.entry'){
  const firstKiss=target.startsWith('c10.travellers.homeKissFirst');
  for(let i=0;i<260&&save.campaign.active;i++){
   const r=save.campaign.active,n=getChapter(9)!.nodes[r.nodeId];
-  save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:(firstKiss||target.includes('private'))&&n.id==='c9.courtyard.goodbyeChoice'?'words':n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});
+  save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:firstKiss&&n.id==='c9.courtyard.goodbyeChoice'?'words':n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});
  }
  save=reduceSave(save,{type:'unlock',code:chapters.find(c=>c.id===10)!.code!});save=reduceSave(save,{type:'start',chapter:10,attemptId:'developer-travellers-ten'});
- const home=/home|late|sleep|private/.test(target),night=target.endsWith('upperNight');
+ const home=/home|late|sleep/.test(target),night=target.endsWith('upperNight');
  for(let i=0;i<300&&save.campaign.active?.nodeId!==target;i++){
   const r=save.campaign.active;if(!r)throw Error('Тестовая сцена не найдена');const n=getChapter(10)!.nodes[r.nodeId];
-  const picks:Record<string,string>={riverChoice:'ford',quarryChoice:night?'contour':'tunnel',catChoice:night?'upper':'marsh',arrivedChoice:home?'home':'cafe',homeChoice:firstKiss?'kiss':'near',homeKissFirstChoice:target.endsWith('Soft')?'shoulder':'closer',lateChoice:target.includes('private')?'private':target.includes('sleep')?'sleep':'lateLeave',cafeGoodbyeChoice:'words'};
+  const picks:Record<string,string>={riverChoice:'ford',quarryChoice:night?'contour':'tunnel',catChoice:night?'upper':'marsh',arrivedChoice:home?'home':'cafe',homeChoice:firstKiss?'kiss':'near',homeKissFirstChoice:target.endsWith('Soft')?'shoulder':'closer',lateChoice:target.includes('sleep')?'sleep':'lateLeave',cafeGoodbyeChoice:'words'};
   save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:picks[n.id.split('.').at(-1)!]??n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});
  }
  if(save.campaign.active?.nodeId!==target)throw Error('Тестовая сцена не найдена');return validateSave(JSON.stringify(save));

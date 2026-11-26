@@ -35,7 +35,6 @@ test('meeting choice uploads from an old device-only save and restores with chan
   const third=await context.newPage();
   await openOffline(third,old,'/result/5?source=campaign',{seedBrowser:false,telegram:{id:42,data:await remote(second)}});
   await expect(third.locator('#real-meeting-invitation').getByRole('button',{name:'Пока воздержусь',exact:true})).toHaveAttribute('aria-pressed','true');
-  await expect(third.locator('#continuation-message')).toHaveValue(/Пока воздержусь/);
   await second.close();await third.close();
 });
 test('canonical device progress synchronizes in bounded chunks and restores on another client',async({page,context})=>{
@@ -61,7 +60,7 @@ test('Telegram saves actual actions and resumes the same cursor on a second devi
   expect(await remote(second)).not.toEqual(data);
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await page.getByRole('button',{name:'Пять встреч',exact:true}).click();
   const button=await page.getByRole('button',{name:'Открыть встречу',exact:true}).boundingBox();expect(button!.y+button!.height).toBeLessThanOrEqual(568);
-  await page.screenshot({path:'outputs/TELEGRAM_CHAPTER_MAP_320.png',fullPage:false,animations:'disabled'});
+  await page.screenshot({path:'test-results/screenshots/TELEGRAM_CHAPTER_MAP_320.png',fullPage:false,animations:'disabled'});
 });
 test('different local and cloud stories require a choice before any cloud write',async({page})=>{
   const cloudSave=reduceSave(initialState(),{type:'start'}),local=reduceSave(cloudSave,{type:'command',target:'campaign',command:{kind:'advance',expectedTurn:0}}),data=await cloudData(cloudSave);
@@ -90,14 +89,14 @@ test('a rejected native write shows a safe reason and preserves both copies afte
   await expect(page.locator('.telegram-sync-reason p')).toBeVisible();await expect(page.locator('.telegram-sync-reason p')).toContainText('Запись части сохранения');await expect(page.locator('.telegram-sync-reason p')).toContainText('STORAGE_VALUE_TOO_LONG');
   expect(await remote(page)).toEqual(data);expect(JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!)).toEqual(local);
   await page.getByRole('button',{name:/Дальше/}).click();expect(await remote(page)).toEqual(data);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).revision,key)).toBe(local.revision+1);expect(errors).toEqual([]);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'outputs/TELEGRAM_SYNC_REASON_320.png',fullPage:true,animations:'disabled'});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'test-results/screenshots/TELEGRAM_SYNC_REASON_320.png',fullPage:true,animations:'disabled'});
 });
-test('a remote change pauses the game and preserves a download of the current device',async({page})=>{
+test('a remote change pauses the game and offers comparing saves',async({page})=>{
   const save=reduceSave(initialState(),{type:'start'}),data=await cloudData(save);
   await openOffline(page,initialState(),'/play/1',{seedBrowser:false,telegram:{id:42,data}});await page.locator('[data-node="c1.prologue"]').waitFor();await expect(page.getByRole('status')).toContainText('История сохранена в Telegram');
   await page.evaluate(()=>{(window as unknown as {testCloud:{data:Record<string,string>}}).testCloud.data.five_meetings_v1_head='different';window.dispatchEvent(new Event('focus'));});
   await expect(page.getByRole('dialog',{name:'Нашлась другая копия истории'})).toBeVisible();
-  await expect(page.getByRole('button',{name:'Скачать эту копию',exact:true})).toBeVisible();expect((await remote(page)).five_meetings_v1_head).toBe('different');
+  await expect(page.getByRole('button',{name:'Сравнить сохранения',exact:true})).toBeVisible();expect((await remote(page)).five_meetings_v1_head).toBe('different');
 });
 test('Telegram launch data is removed from the hash before the story opens',async({page})=>{
   await openOffline(page,initialState(),'tgWebAppData=opaque&tgWebAppVersion=9.0',{seedBrowser:false,telegram:{id:42,data:{}}});

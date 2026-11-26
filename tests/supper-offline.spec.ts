@@ -116,8 +116,9 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
    await page.goto('about:blank');
    await openOffline(page,save,'/play/8');
   }
-  async function shot(name:string){
+  async function shot(name:string,drawing=art){
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+   await expect(drawing.locator('image')).toHaveAttribute('opacity','1');
    await page.screenshot({path:`work/nov23/supper-${name}-${width}.png`,animations:'disabled',scale:'css'});
   }
   await loadScene('c8.supper.filling');
@@ -135,6 +136,7 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
   for(const [caption,image] of fillings){
    const button=fillingButtons.filter({hasText:caption});
    await expect(button.getByRole('img',{name:image,exact:true})).toHaveAttribute('data-stage','ingredients');
+   await expect(button.locator('svg image')).toHaveAttribute('opacity','1');
    const [card,drawing,label]=await Promise.all([
     button.boundingBox(),
     button.getByRole('img',{name:image,exact:true}).boundingBox(),
@@ -172,8 +174,9 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
   await shot('board');
   await page.goto('about:blank');
   await openOffline(page,finishSupper(undefined,path),'/result/8?card=c8.supper');
-  await expect(page.locator('.supper-postcard .supper-art')).toHaveAttribute('aria-label',/mix/);
-  await shot('postcard');
+  const postcard=page.locator('.supper-postcard .supper-art');
+  await expect(postcard).toHaveAttribute('aria-label',/mix/);
+  await shot('postcard',postcard);
  }
  expect(errors).toEqual([]);
 });

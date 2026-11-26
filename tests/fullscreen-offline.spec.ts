@@ -12,7 +12,7 @@ test('startup requests fullscreen once; notch, Telegram controls and landscape i
   expect(await page.evaluate(()=>(window as unknown as {testCloud:{presentation:{fullscreenCalls:number;expandCalls:number}}}).testCloud.presentation)).toMatchObject({fullscreenCalls:1,expandCalls:1});
   expect((await page.locator('.topbar').boundingBox())!.y).toBeGreaterThanOrEqual(103);
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();const modal=page.getByRole('dialog',{name:'Маленькая пауза',exact:true});let box=(await modal.boundingBox())!;expect(box.y).toBeGreaterThanOrEqual(103);expect(box.y+box.height).toBeLessThanOrEqual(810);
-  await page.screenshot({path:'outputs/TELEGRAM_FULLSCREEN_SAFE_AREA.png',fullPage:false,animations:'disabled'});
+  await page.screenshot({path:'test-results/screenshots/TELEGRAM_FULLSCREEN_SAFE_AREA.png',fullPage:false,animations:'disabled'});
   await page.setViewportSize({width:844,height:390});await page.evaluate(()=>{const s=document.documentElement.style;s.setProperty('--tg-safe-area-inset-top','0px');s.setProperty('--tg-content-safe-area-inset-top','40px');s.setProperty('--tg-safe-area-inset-left','47px');s.setProperty('--tg-safe-area-inset-right','47px');s.setProperty('--tg-safe-area-inset-bottom','21px');});
   box=(await modal.boundingBox())!;expect(box.x).toBeGreaterThanOrEqual(47);expect(box.y).toBeGreaterThanOrEqual(40);expect(box.y+box.height).toBeLessThanOrEqual(369);expect(box.x+box.width).toBeLessThanOrEqual(797);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await modal.getByRole('button',{name:'Закрыть',exact:true}).click();expect(JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!)).toEqual(save);expect(errors).toEqual([]);

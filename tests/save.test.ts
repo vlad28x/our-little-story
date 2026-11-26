@@ -6,6 +6,8 @@ import { parseSave,validateSave } from '../src/persistence/validateSave';
 import { load,persist,type StorageLike } from '../src/persistence/storage';
 import { defaultPath,commandFor,completeSave } from './helpers';
 import { finishFive } from './chapter5Helpers';
+import { startPhotoSix } from './photo6Helpers';
+import { finishTravellers } from './travellers10Helpers';
 class MemoryStorage implements StorageLike {
  data=new Map<string,string>();
  getItem(key:string){return this.data.get(key)??null;}
@@ -14,13 +16,43 @@ class MemoryStorage implements StorageLike {
 }
 const key='test:save';
 describe('current content save and restore',()=>{
- it.each(Array.from({length:CONTENT_VERSION-1},(_,i)=>i+1))('restarts content%s once, keeping settings and code entitlements',contentVersion=>{
+ it.each(Array.from({length:23},(_,i)=>i+1))('restarts content%s once, keeping settings and code entitlements',contentVersion=>{
   const old=finishFive();old.settings={sound:true,volume:.6,textMode:'type',motion:'reduced'};old.unlocked=[1,2,3,4,5,6,7,8,9,10];old.continuation='cafe';
   const raw=JSON.stringify({...old,contentVersion}),next=parseSave(raw);
   expect(next).toEqual({...initialState(),settings:old.settings,unlocked:old.unlocked,revision:old.revision,updatedAt:old.updatedAt});
   expect(parseSave(JSON.stringify(next))).toEqual(next);
   expect(raw).toBe(JSON.stringify({...old,contentVersion}));
   const started=reduceSave(next,{type:'start'});expect(started.campaign.active?.nodeId).toBe('c1.prologue');expect(parseSave(JSON.stringify(started))).toEqual(started);
+ });
+ it('migrates content25 saves preserving chapters 1-7 and resetting at most chapters 8-10',()=>{
+  const old=finishTravellers();old.settings={sound:true,volume:.6,textMode:'type',motion:'reduced'};old.unlocked=[1,2,3,4,5,6,7,8,9,10];old.continuation='cafe';old.continuation10='movie';
+  for(const id of [5,6,7,8,9,10] as const){delete old.campaign.records[id]?.story.c5Feeling;delete old.campaign.startStates[id]?.c5Feeling;}
+  const legacy25=structuredClone(old) as unknown as Record<string,unknown>;
+  const legacyRecords=(legacy25.campaign as Record<string,unknown>).records as Record<string,{story:Record<string,unknown>}>;
+  legacyRecords[6].story.c6HerEvening='cozyFood';legacyRecords[7].story.c6HerEvening='cozyFood';legacyRecords[7].story.herEscape='sea';
+  const migrated=parseSave(JSON.stringify({...legacy25,contentVersion:25}));
+  expect(migrated.contentVersion).toBe(CONTENT_VERSION);
+  expect(migrated.campaign.completed).toEqual([1,2,3,4,5,6,7]);
+  expect(migrated.campaign.records[7]).toEqual(old.campaign.records[7]);
+  expect(migrated.campaign.records[8]).toBeUndefined();
+  expect(migrated.campaign.records[9]).toBeUndefined();
+  expect(migrated.campaign.records[10]).toBeUndefined();
+  expect(migrated.campaign.active).toBeNull();
+  expect(migrated.unlocked).toEqual(old.unlocked);
+  expect(migrated.settings).toEqual(old.settings);
+  expect(migrated.continuation).toBe('cafe');
+  expect(migrated.continuation10).toBeNull();
+  expect(migrated.collection.cards.every(card=>card.chapter<=7)).toBe(true);
+  const started8=reduceSave(migrated,{type:'start',chapter:8,attemptId:'migrated-supper'});
+  expect(started8.campaign.active?.nodeId).toBe('c8.supper.entry');
+  expect(parseSave(JSON.stringify(started8))).toEqual(started8);
+  const mid6=startPhotoSix(finishFive());
+  const mid6Raw=structuredClone(mid6) as unknown as Record<string,unknown>;
+  ((mid6Raw.campaign as Record<string,unknown>).active as Record<string,unknown>).nodeId='c6.photo.joyChoice';
+  const migratedMid6=parseSave(JSON.stringify({...mid6Raw,contentVersion:25}));
+  expect(migratedMid6.campaign.completed).toEqual([1,2,3,4,5]);
+  expect(migratedMid6.campaign.active).toBeNull();
+  expect(migratedMid6.unlocked).toEqual(mid6.unlocked);
  });
  it('round trips every visible first chapter cursor and canonical/trial results',()=>{
   let save=reduceSave(initialState(),{type:'start'});let count=0;

@@ -18,14 +18,14 @@ async function finish(page:Page){await until(page,'c4.support');await page.getBy
 test('chapter three preserves memories, repairs controllers, cooks nine dishes, shows result and replays independently',async({page})=>{
   const base=await seed(page),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.url());});
   await open(page);await page.clock.install();await until(page,'c4.pad.press');await expect(page.locator('.scene-cat')).toHaveCount(0);
-  await page.screenshot({path:'outputs/CHAPTER_04_HOME_PREVIEW.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'test-results/screenshots/CHAPTER_04_HOME_PREVIEW.png',fullPage:true,animations:'disabled'});
   await toKitchen(page);await expect(page.locator('.kitchen-team')).toHaveText('Пельмень и партнёры');await train(page);await page.getByRole('button',{name:'Готовить без таймера',exact:true}).click();
-  await page.screenshot({path:'outputs/CHAPTER_04_KITCHEN_PREVIEW.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'test-results/screenshots/CHAPTER_04_KITCHEN_PREVIEW.png',fullPage:true,animations:'disabled'});
   for(const list of [['toast','salad','sandwich'],['salad','sandwich','toast'],['sandwich','toast','salad']] as Recipe[][]){for(const recipe of list)await dish(page,recipe);if(await page.getByRole('button',{name:'Следующий раунд',exact:true}).count())await page.getByRole('button',{name:'Следующий раунд',exact:true}).click();}
   await expect(page.getByText('Подано 9 из 9.')).toBeVisible();await page.getByRole('button',{name:'Закончить игру',exact:false}).click();await finish(page);
   await expect(page.getByText('Стол на всех · девять подач вместе')).toBeVisible();await expect(page.locator('.card-team')).toHaveText('Пельмень и партнёры');
   const main=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(main.campaign.records[1]).toEqual(base.campaign.records[1]);expect(main.campaign.records[2]).toEqual(base.campaign.records[2]);expect(main.campaign.completed).toEqual([1,2,3,4]);expect(main.campaign.records[4].story.controllerReaction).toBe('absurd');
-  await page.screenshot({path:'outputs/CHAPTER_04_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});
+  await page.screenshot({path:'test-results/screenshots/CHAPTER_04_RESULT_PREVIEW.png',fullPage:true,animations:'disabled'});
   await expectSimpleResult(page);
   await page.getByRole('button',{name:'Посмотреть другой вариант',exact:false}).click();await toKitchen(page,'tease');await page.getByRole('button',{name:'Продолжить историю без кухни'}).click();await finish(page);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,key)).toEqual(main.campaign);expect(errors).toEqual([]);
 });

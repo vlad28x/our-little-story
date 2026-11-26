@@ -5,7 +5,7 @@ import { sameValue } from './sameValue';
 
 const skyFields=['c4Edition','bench','constellation','herTrust','wish','c4Goodbye'];
 const gameFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
-const own5=['c5Edition','c5FirstTaste','c5Recommendation'];
+const own5=['c5Edition','c5FirstTaste','c5Recommendation','c5Feeling'];
 // Replaying the canonical first-season graphs checks early/future fields
 // and the exact saved action count. Fifth-chapter imports retain their existing contract.
 export function replayFirstSeason(id:3|4|5,story:StoryState,results:Run['results'],cursor?:{nodeId:Run['nodeId'];lineIndex:number;turn?:number}):Run|null{
@@ -13,10 +13,11 @@ export function replayFirstSeason(id:3|4|5,story:StoryState,results:Run['results
   const own=id===3?skyFields:id===4?gameFields:own5;
   const prior=Object.fromEntries(Object.entries(story).filter(([key])=>!own.includes(key))) as StoryState;
   const migratedSky=id===3&&!cursor&&story.herTrust===undefined;
+  const migratedCh5=id===5&&!cursor&&story.c5Feeling===undefined;
   const stack=[startRun(chapter,prior)];
   while(stack.length){
     const run=stack.pop()!;
-    if(Object.entries(run.story).some(([k,v])=>!(migratedSky&&k==='herTrust')&&story[k as keyof StoryState]!==v))continue;
+    if(Object.entries(run.story).some(([k,v])=>!(migratedSky&&k==='herTrust')&&!(migratedCh5&&k==='c5Feeling')&&story[k as keyof StoryState]!==v))continue;
     if(cursor?.turn!==undefined&&run.turn>cursor.turn)continue;
     if(cursor&&run.nodeId===cursor.nodeId&&run.lineIndex===cursor.lineIndex&&
        (cursor.turn===undefined||cursor.turn===run.turn)&&sameValue(story,run.story)&&sameValue(results,run.results))return run;
@@ -30,6 +31,7 @@ export function replayFirstSeason(id:3|4|5,story:StoryState,results:Run['results
       else if(next.kind==='complete'&&!cursor){
         const candidate={...next.run.story};
         if(migratedSky)delete candidate.herTrust;
+        if(migratedCh5)delete candidate.c5Feeling;
         if(sameValue(story,candidate)&&sameValue(results,next.run.results))return {...next.run,story:candidate};
       }
     }

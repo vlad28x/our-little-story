@@ -8,12 +8,12 @@ import type { Command,KitchenResult,Run,StoryState } from '../src/engine/types';
 import type { SaveV1 } from '../src/state/types';
 import { completeSave } from './helpers';
 export const thirdCode=chapters.find(c=>c.id===4)!.code!;
-export function completeTwo(mood:'quiet'|'playful'='quiet',base=completeSave(),details:{rain?:'shelter'|'arcade';cat?:'wait'|'help';umbrella?:'patched'|'borrowed'|'skipped'}={}):SaveV1{
+export function completeTwo(mood:'quiet'|'playful'='quiet',base=completeSave(),details:{rain?:'shelter'|'arcade';cat?:'wait'|'help';umbrella?:'patched'|'borrowed'|'skipped';recharge?:'walk'|'cozy'|'hands'}={}):SaveV1{
   let s=reduceSave(base,{type:'unlock',code:chapters.find(c=>c.id===2)!.code!});s=reduceSave(s,{type:'start',chapter:2});
   for(let i=0;i<180;i++){const r=s.campaign.active;if(!r)return s;const n=chapter2.nodes[r.nodeId];let command:Command;
     if(n.kind==='dialogue')command={kind:'advance',expectedTurn:r.turn};
     else if(n.kind==='minigame')command={kind:'game-result',expectedTurn:r.turn,result:{kind:'umbrella-patch',outcome:details.umbrella??'patched'}};
-    else if(n.kind==='choice')command={kind:'choose',expectedTurn:r.turn,choiceId:n.id==='c2.rain'?(details.rain??'shelter'):n.id==='c2.cat'?(details.cat??'wait'):mood};
+    else if(n.kind==='choice')command={kind:'choose',expectedTurn:r.turn,choiceId:n.id==='c2.rain'?(details.rain??'shelter'):n.id==='c2.cat'?(details.cat??'wait'):n.id==='c2.recharge'?(details.recharge??'cozy'):mood};
     else throw Error('Hidden node');s=reduceSave(s,{type:'command',target:'campaign',command});
   }throw Error('Loop');
 }

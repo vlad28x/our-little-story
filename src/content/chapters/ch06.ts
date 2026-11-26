@@ -30,7 +30,7 @@ export const chapter6:Chapter = {
         },
         {
           "speaker": "narrator",
-          "text": "Он останавливается в шаге от тебя, переводя дух, и его взгляд с неподдельным теплом задерживается на твоём лице."
+          "text": "Он останавливается в шаге от тебя, переводя дух, и улыбается чуть виновато."
         },
         {
           "speaker": "heroine",
@@ -82,7 +82,7 @@ export const chapter6:Chapter = {
         {
           "speaker": "vlad",
           "emotion": "laugh",
-          "text": "сначала тихонько постучать. вдруг там кто-то пьёт вечерний чай."
+          "text": "сначала тихонько постучать. вдруг там кто-то уже ужинает."
         },
         {
           "speaker": "narrator",
@@ -212,7 +212,7 @@ export const chapter6:Chapter = {
         },
         {
           "speaker": "devil",
-          "text": "А наверху закатный свет ложится прямо на лицо! Веди этого серьёзного аналитика к солнцу — устроим ему внеплановую фотосессию!"
+          "text": "А наверху закатный свет ложится прямо на лицо! Тащи его к солнцу — устроим внеплановую фотосессию, пока он не начал высчитывать углы!"
         }
       ],
       "next": "c6.photo.place",
@@ -999,190 +999,8 @@ export const chapter6:Chapter = {
           ]
         },
         {
-          "speaker": "vlad",
-          "emotion": "thinking",
-          "text": "слушай, мы сегодня так вовремя вырвались из рабочих будней… мне любопытно: а какая мелочь быстрее всего возвращает тебе самой хорошее настроение вечером после длинного дня?"
-        },
-        {
           "speaker": "narrator",
-          "text": "Влад чуть замедляет шаг рядом с тобой, глядя с тем внимательным интересом, когда человеку важен каждый твой ответ."
-        }
-      ],
-      "next": "c6.photo.joyChoice"
-    },
-    "c6.photo.joyChoice": {
-      "id": "c6.photo.joyChoice",
-      "kind": "choice",
-      "scene": {
-        "background": "bg.photo6.shade",
-        "character": "vlad.city.smile",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c6PhotoPlace",
-                "equals": "upper"
-              }
-            ],
-            "background": "bg.photo6.upper",
-            "character": "vlad.city.smile"
-          }
-        ]
-      },
-      "prompt": "Что лучше всего поднимает тебе настроение вечером?",
-      "choices": [
-        {
-          "id": "cozyFood",
-          "text": "Вкусный горячий ужин и мягкий домашний свет",
-          "next": "c6.photo.joyFood",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6HerEvening",
-              "value": "cozyFood"
-            }
-          ]
-        },
-        {
-          "id": "nightWalk",
-          "text": "Спонтанно выбраться куда-нибудь под вечерние огни",
-          "next": "c6.photo.joyWalk",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6HerEvening",
-              "value": "nightWalk"
-            }
-          ]
-        },
-        {
-          "id": "deepTalk",
-          "text": "Долгий разговор по душам, когда телефоны убраны подальше",
-          "next": "c6.photo.joyTalk",
-          "effects": [
-            {
-              "kind": "set",
-              "key": "c6HerEvening",
-              "value": "deepTalk"
-            }
-          ]
-        }
-      ]
-    },
-    "c6.photo.joyFood": {
-      "id": "c6.photo.joyFood",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.photo6.shade",
-        "character": "vlad.city.smile",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c6PhotoPlace",
-                "equals": "upper"
-              }
-            ],
-            "background": "bg.photo6.upper",
-            "character": "vlad.city.smile"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Горячий вкусный ужин под тёплой лампой — сразу чувствуешь, что день прожит не зря."
-        },
-        {
-          "speaker": "vlad",
-          "emotion": "smile",
-          "text": "стопроцентное попадание. беру себе на заметку: путь к твоему вечернему настроению лежит через правильную кухню и тёплый свет."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе с открытой улыбкой и протягивает раскрытую ладонь:"
-        },
-        {
-          "speaker": "vlad",
-          "emotion": "smile",
-          "text": "пойдём дальше за руку?"
-        }
-      ],
-      "next": "c6.photo.touch"
-    },
-    "c6.photo.joyWalk": {
-      "id": "c6.photo.joyWalk",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.photo6.shade",
-        "character": "vlad.city.smile",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c6PhotoPlace",
-                "equals": "upper"
-              }
-            ],
-            "background": "bg.photo6.upper",
-            "character": "vlad.city.smile"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Спонтанная вылазка в город — просто сменить картинку, пройтись под фонарями и поймать воздух."
-        },
-        {
-          "speaker": "vlad",
-          "emotion": "smile",
-          "text": "как мы с тобой прямо сейчас. мне нравится, что тебя так легко вытащить навстречу новому вечеру."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе с открытой улыбкой и протягивает раскрытую ладонь:"
-        },
-        {
-          "speaker": "vlad",
-          "emotion": "smile",
-          "text": "пойдём дальше за руку?"
-        }
-      ],
-      "next": "c6.photo.touch"
-    },
-    "c6.photo.joyTalk": {
-      "id": "c6.photo.joyTalk",
-      "kind": "dialogue",
-      "scene": {
-        "background": "bg.photo6.shade",
-        "character": "vlad.city.smile",
-        "variants": [
-          {
-            "when": [
-              {
-                "key": "c6PhotoPlace",
-                "equals": "upper"
-              }
-            ],
-            "background": "bg.photo6.upper",
-            "character": "vlad.city.smile"
-          }
-        ]
-      },
-      "lines": [
-        {
-          "speaker": "heroine",
-          "text": "Живой разговор со своим человеком, когда не нужно смотреть на часы и отвлекаться на экран."
-        },
-        {
-          "speaker": "vlad",
-          "emotion": "smile",
-          "text": "подпишусь под каждым словом. телефон у меня уже глубоко в кармане и доставать его я сегодня точно не планирую."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе с открытой улыбкой и протягивает раскрытую ладонь:"
+          "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе и протягивает раскрытую ладонь:"
         },
         {
           "speaker": "vlad",

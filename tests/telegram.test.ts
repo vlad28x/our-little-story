@@ -22,7 +22,7 @@ const HEAD='five_meetings_v1_head';
 describe('Telegram cloud snapshots',()=>{
   it('resets old cloud progress once while preserving settings and code rights',async()=>{
     const old=finishArc(10);old.settings.sound=true;old.unlocked=[1,2,3,4,5,6,7,8,9,10];
-    const api=new FakeCloud();for(const [key,value]of Object.entries(legacyCloudData({...old,contentVersion:CONTENT_VERSION-1} as unknown as SaveV1)))api.data.set(key,value);
+    const api=new FakeCloud();for(const [key,value]of Object.entries(legacyCloudData({...old,contentVersion:23} as unknown as SaveV1)))api.data.set(key,value);
     const cloud=new TelegramCloud(api),snapshot=await cloud.read(),save=snapshot.save!;
     expect(save.contentVersion).toBe(CONTENT_VERSION);expect(save.campaign.completed).toEqual([]);expect(save.campaign.active).toBeNull();expect(save.settings).toEqual(old.settings);expect(save.unlocked).toEqual(old.unlocked);expect(snapshot.needsRewrite).toBe(true);
     await cloud.write(save,snapshot.head);const next=await new TelegramCloud(api).read();expect(next.save).toEqual(save);expect(next.needsRewrite).toBe(false);

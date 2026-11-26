@@ -12,9 +12,9 @@ import { command5,finishFive,startFive } from './chapter5Helpers';
 import { finishPhotoSix } from './photo6Helpers';
 
 const initial=finishFour();
-it('contains exactly two scene menus and one common ending, with no status or real invitation inside the graph',()=>{
+it('contains three scene menus and one common ending, with no status or real invitation inside the graph',()=>{
  expect(validateContent(chapter5)).toEqual([]);
- expect(Object.values(chapter5.nodes).filter(n=>n.kind==='choice').map(n=>n.id)).toEqual(['c5.drink.first','c5.drink.recommend']);
+ expect(Object.values(chapter5.nodes).filter(n=>n.kind==='choice').map(n=>n.id)).toEqual(['c5.drink.first','c5.drink.recommend','c5.feeling']);
  expect(Object.values(chapter5.nodes).filter(n=>n.kind==='end').map(n=>n.cardId)).toEqual(['c5.story']);
  const text=Object.values(chapter5.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]).join(' ');
  expect(text).not.toMatch(/не зря тренировались пять встреч|Хорошо тогда задержались у двери|мой любимый незапланированный перерыв|по-настоящему|свидание|победитель/);
@@ -32,13 +32,14 @@ it('all nine taste/recommendation combinations retain every cursor, comparison a
  const endings=new Set();let count=0;
  for(const firstTaste of ['vanilla','sweet','compare'] as const)for(const recommendation of ['vanilla','fresh','both'] as const){
   let s=startFive(initial);const seen=new Set();
+  const feeling=(['continue','curious','pace'] as const)[count%3];
   while(s.campaign.active){
    const r=s.campaign.active;seen.add(r.nodeId);expect(parseSave(cloudRaw(s))).toEqual(s);
-   s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:count%2?'skipped':'viewed',ending:'friendly',firstTaste,recommendation})});
+   s=reduceSave(s,{type:'command',target:'campaign',command:command5(r,{memory:count%2?'skipped':'viewed',ending:'friendly',firstTaste,recommendation,feeling})});
   }
   expect(seen.has(`c5.drink.first.${firstTaste}`)).toBe(true);expect(seen.has(`c5.drink.reason.${firstTaste}.${recommendation}`)).toBe(true);
-  expect(seen.has(`c5.drink.result.${recommendation}`)).toBe(true);expect(seen.has(`c5.drink.echo.${recommendation}`)).toBe(true);expect(seen.has('c5.exit')).toBe(true);
-  expect(s.campaign.records[5]?.story).toMatchObject({c5Edition:3,c5FirstTaste:firstTaste,c5Recommendation:recommendation});
+  expect(seen.has(`c5.drink.result.${recommendation}`)).toBe(true);expect(seen.has(`c5.drink.echo.${recommendation}`)).toBe(true);expect(seen.has(`c5.feeling.${feeling}`)).toBe(true);expect(seen.has('c5.exit')).toBe(true);
+  expect(s.campaign.records[5]?.story).toMatchObject({c5Edition:3,c5FirstTaste:firstTaste,c5Recommendation:recommendation,c5Feeling:feeling});
   expect(s.campaign.records[5]?.story.ending).toBeUndefined();expect(s.campaign.records[5]?.story.bond).toBeUndefined();
   for(const id of [1,2,3,4] as const)expect(s.campaign.records[id]).toEqual(initial.campaign.records[id]);
   expect(parseSave(JSON.stringify(s))).toEqual(s);endings.add(s.lastResult?.cardId);count++;

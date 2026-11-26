@@ -15,7 +15,7 @@ export function load(storage:StorageLike, key=storageKey):Loaded {
     return {save:initialState(),recovery:false,backup:null,raw:null,error:null};
   }catch(error){
     let backup:SaveV1|null=null;try {const b=storage.getItem(key.replace(/:save$/,':backup'));if(b)backup=parseSave(b);}catch{/* Keep damaged bytes intact. */}
-    return {save:initialState(),recovery:raw!==null||backup!==null,backup,raw,error:raw!==null?String(error instanceof Error?error.message:error):'В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.'};
+    return {save:initialState(),recovery:raw!==null||backup!==null,backup,raw,error:raw!==null?String(error instanceof Error?error.message:error):'В этом браузере прогресс сейчас не сохраняется.'};
   }
 }
 export function persist(storage:StorageLike,save:SaveV1,expectedRevision:number,key=storageKey,expectedLocalNoteRevision?:number):'saved'|'conflict' {

@@ -90,10 +90,11 @@ export function SceneEasterEggs({stage,paintedSeason=false,hideHair=false,backgr
       const nina=character==='nina'&&portrait?.classList.contains('nina')&&portraitWidth&&portraitHeight&&getComputedStyle(portrait).visibility!=='hidden'
         ?anchoredBox(portraitLeft+portraitWidth*.47,portraitTop+portraitHeight*.23,Math.max(48,portraitWidth*.46),Math.max(48,portraitHeight*.42))
         :undefined;
+      const tvBox=gameNight?backgroundBox(.895,.3,.18,.15):backgroundBox(.89,.32,.21,.17);
       setBoxes({hair:curls,nina,cat:cat?box('.scene-cat'):undefined,
         blanket:gameNight?backgroundBox(.107,.487,.18,.13,68,true):backgroundBox(.12,.52,.26,.13,112),
         mug:gameNight?backgroundBox(.28,.505,.08,.055,48,true):backgroundBox(.28,.53,.08,.055),
-        tv:gameNight?backgroundBox(.895,.3,.18,.15):backgroundBox(.89,.32,.21,.17),
+        tv:tvBox,tvSleep:tvBox,
         cat10:background==='bg.travellers10.cafe'?box('.cat-in-box img, .cat-chair img'):undefined,...Object.fromEntries(painted)});
     }
     const frame=requestAnimationFrame(measure),observer=new ResizeObserver(measure);

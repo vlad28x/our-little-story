@@ -1,7 +1,7 @@
 import { createContext,useCallback,useContext,useEffect,useRef,useState } from 'react';
 
 type RhythmicEffect='purr'|'projector';
-export type SoundEffect='token'|'shutter'|'bell'|'wood'|'paper'|'star'|'switch'|'chord'|'oven-timer'|'kettle'|RhythmicEffect;
+export type SoundEffect='token'|'shutter'|'bell'|'wood'|'paper'|'star'|'switch'|'oven-timer'|'kettle'|RhythmicEffect;
 export type Ambience='rain-open'|'rain-shelter'|'river'|'kitchen'|'steam'|'morning';
 
 const ambienceFade=0.6;
@@ -31,14 +31,6 @@ const notes:Partial<Record<SoundEffect,readonly Note[]>>={
   switch:[{from:170,to:95,length:0.026,level:0.14,wave:'triangle'}],
   'oven-timer':[{from:870,length:0.085,level:0.055}],
   kettle:[{from:215,to:142,length:0.063,level:0.095,wave:'triangle'}],
-  chord:[
-    {from:196,length:1.1,level:0.035,attack:0.018},
-    {from:246.94,length:1.02,level:0.035,attack:0.022},
-    {from:293.66,length:0.98,level:0.03,attack:0.025},
-    {from:590,length:0.31,level:0.013,attack:0.006},
-    {from:744,length:0.27,level:0.012,attack:0.007},
-    {from:884,length:0.23,level:0.01,attack:0.008},
-  ],
 };
 
 function soundNote(context:AudioContext,time:number,volume:number,note:Note){

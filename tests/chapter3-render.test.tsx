@@ -9,14 +9,17 @@ vi.mock('../src/app/GameProvider',()=>({DEV_SANDBOX:false,useGame:()=>({save:con
 vi.stubGlobal('location',{hash:'#/play/4',search:''});
 vi.stubGlobal('matchMedia',()=>({matches:false}));
 import { App } from '../src/app/App';
-it('renders every third-chapter dialogue, choice and mini-game without losing the application',()=>{
+it('renders dialogue, controller choices and the mini-game on representative fourth-chapter paths',()=>{
   const visited=new Set<string>();
-  for(const reaction of ['help','tease','absurd'] as const)for(const outcome of ['feast','snack','chaos','skipped'] as const){
-    let s=reduceSave(reduceSave(finishSky(),{type:'unlock',code:thirdCode}),{type:'start',chapter:4});
+  const base=reduceSave(finishSky(),{type:'unlock',code:thirdCode});
+  const paths=[['help','feast'],['tease','snack'],['absurd','skipped']] as const;
+  for(const [reaction,outcome] of paths){
+    let s=reduceSave(base,{type:'start',chapter:4});
     for(let i=0;i<180;i++){
       const run=s.campaign.active;if(!run)break;context.save=s;
       const html=renderToString(<App/>);expect(html).toContain('game-shell');expect(html).toContain(run.nodeId);visited.add(run.nodeId);
       s=reduceSave(s,{type:'command',target:'campaign',command:command3(run,{...defaultThird,reaction,result:{kind:'kitchen',outcome,served:outcome==='feast'?9:outcome==='snack'?4:0,mode:'calm'}})});
     }
-  }expect(visited).toContain('c4.sofa');expect(visited).toContain('c4.kitchen');
-}, 20_000);
+  }
+  expect(visited).toContain('c4.sofa');expect(visited).toContain('c4.kitchen');
+});

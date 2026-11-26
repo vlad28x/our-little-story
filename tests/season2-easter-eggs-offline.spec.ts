@@ -30,7 +30,7 @@ async function tapProp(page:Page,button:Locator){
   return hit?{x:hit[0],y:hit[1]}:null;
  });
  expect(point,await button.getAttribute('aria-label')??undefined).not.toBeNull();
- await page.mouse.click(point!.x,point!.y);
+ await page.touchscreen.tap(point!.x,point!.y);
 }
 async function reactTo(page:Page,id:EasterEggId,keyboard=false){
  const button=page.getByRole('button',{name:easterEggs[id].label,exact:true});
@@ -39,7 +39,13 @@ async function reactTo(page:Page,id:EasterEggId,keyboard=false){
  const raw=await stored(page);
  if(keyboard){await button.focus();await page.keyboard.press('Enter');}
  else await tapProp(page,button);
- await expect(page.locator(`.scene-easter-note[data-egg="${id}"] [role="status"] p`)).toHaveText(easterEggs[id].text);
+ const note=page.locator(`.scene-easter-note[data-egg="${id}"]`);
+ await expect(note.locator('[role="status"] p')).toHaveText(easterEggs[id].text);
+ if(id==='bench7'||id==='sugar8'||id==='archChairs9'){
+  const comment=(await note.boundingBox())!;
+  const art=(await button.locator('.season-egg-art > g').boundingBox())!;
+  expect(comment.y+comment.height).toBeLessThanOrEqual(art.y);
+ }
  await expect(hint).toHaveCount(0);
  expect(await stored(page)).toBe(raw);
  await page.getByRole('button',{name:'Скрыть маленькую реакцию',exact:true}).click();
@@ -69,6 +75,7 @@ for(const width of [320,390,785]){
    await expect(page.locator('.easter-waterWindow6')).toBeVisible();
    await capture(page,width,'6-water');
    await checkLayout(page);
+   await reactTo(page,'leaves6');
    await reactTo(page,'waterWindow6');
    await reactTo(page,'kiosk6');
    await reactTo(page,'hair',true);
@@ -84,7 +91,7 @@ for(const width of [320,390,785]){
    expect(errors).toEqual([]);
   });
 
-  test('seven: the door and the exhibit close-up',async({page})=>{
+  test('seven: the door, the bench and the exhibit close-up',async({page})=>{
    const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
    await load(page,galleryAt('c7.gallery.entry'));
    await expect(page.locator('.easter-handle7')).toBeVisible();
@@ -93,6 +100,9 @@ for(const width of [320,390,785]){
    await reactTo(page,'noPhoto7');
    await reactTo(page,'handle7');
    if(await page.locator('.easter-poster7').count())await reactTo(page,'poster7');
+   await load(page,galleryAt('c7.gallery.first'));
+   await next(page).click();
+   await reactTo(page,'bench7');
    await load(page,galleryAt('c7.gallery.chip',{route:'apart',work:'chip'}));
    await expect(page.locator('.gallery-art-chip')).toBeVisible();
    await expect(page.locator('.scene-easter')).toHaveCount(0);
@@ -107,6 +117,7 @@ for(const width of [320,390,785]){
    await checkLayout(page);
    await reactTo(page,'kettle8');
    await reactTo(page,'sugar8');
+   await reactTo(page,'fridge8');
    await reactTo(page,'utensils8',true);
    await page.locator('.easter-kettle8').press('Enter');
    await next(page).click();
@@ -133,6 +144,8 @@ for(const width of [320,390,785]){
    await expect(page.locator('.scene-easter')).toHaveCount(0);
    await page.getByRole('button',{name:'Вернуться к истории'}).click();
    await expect(page.locator('.easter-garland9 .easter-spark')).toHaveCount(0);
+   await load(page,courtyardAt('c9.courtyard.arch',{rain:'arch'}));
+   await reactTo(page,'archChairs9');
    for(const closed of [false,true]){
     let atBooks=courtyardAt('c9.courtyard.earlyWalk',{rain:'leave'});
     for(let i=0;closed&&i<3;i++)atBooks=reduceSave(atBooks,{type:'command',target:'campaign',command:courtyardCommand(atBooks.campaign.active!)});
@@ -167,9 +180,9 @@ for(const width of [320,390,785]){
    for(let i=0;i<5;i++)await next(page).click();
    await expect(page.locator('.character.nina')).toBeVisible();
    await expect(page.locator('.easter-hair')).toHaveCount(0);
-   let ending=travellersAt('c10.travellers.private',{continuation:'home',finale:'private'});
-   const scene=chapter10.nodes['c10.travellers.private'];
-   if(scene.kind!=='dialogue')throw Error('Missing private dialogue');
+   let ending=travellersAt('c10.travellers.sleep',{continuation:'home',finale:'sleep'});
+   const scene=chapter10.nodes['c10.travellers.sleep'];
+   if(scene.kind!=='dialogue')throw Error('Missing sleep dialogue');
    while(ending.campaign.active!.lineIndex<scene.lines.length-1){
     ending=reduceSave(ending,{type:'command',target:'campaign',command:travellersCommand(ending.campaign.active!)});
    }

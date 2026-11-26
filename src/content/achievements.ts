@@ -17,6 +17,6 @@ export const sceneSecretIds=[...firstSeasonEggs,...afterCreditsSecrets.map(secre
 export type SceneSecretId=typeof sceneSecretIds[number];
 
 export function sceneSecretId(id:EasterEggId,chapter:ChapterId):SceneSecretId|undefined{
-  if(chapter<=5)return firstSeasonEggs.find(egg=>egg===id);
+  if(chapter<=5)return id==='tvSleep'?'tv':firstSeasonEggs.find(egg=>egg===id);
   return afterCreditsSecrets.find(secret=>secret.id===id&&secret.chapter===chapter)?.id;
 }

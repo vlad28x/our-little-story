@@ -1,4 +1,8 @@
 import { test,expect,type Locator,type Page } from '@playwright/test';
+import { assetManifest } from '../src/content/assetManifest';
+
+const awkwardImage = `**/assets/${assetManifest['vlad.chapter1.gouache.awkward'].file}*`;
+const coverImage = `**/assets/${assetManifest['bg.chapter1.gouache.entry'].file}*`;
 
 async function expectLoaded(image:Locator) {
   await expect(image).toBeVisible();
@@ -23,7 +27,7 @@ async function reachAwkwardExpression(page:Page) {
 test('a failed expression keeps the background and cat, then retries only the failed asset',async({page})=>{
   let unavailable=true;
   const attempts:string[]=[];
-  await page.route('**/assets/characters/vlad/city-awkward.webp*',route=>{
+  await page.route(awkwardImage,route=>{
     attempts.push(route.request().url());
     return unavailable?route.abort('failed'):route.continue();
   });
@@ -44,7 +48,7 @@ test('a failed expression keeps the background and cat, then retries only the fa
 });
 
 test('an expression failure does not stick when the scene moves to another image',async({page})=>{
-  await page.route('**/assets/characters/vlad/city-awkward.webp*',route=>route.abort('failed'));
+  await page.route(awkwardImage,route=>route.abort('failed'));
   await startScene(page);
   await reachAwkwardExpression(page);
   await expect(page.getByRole('button',{name:'Повторить загрузку'})).toBeVisible();
@@ -59,7 +63,7 @@ test('an expression failure does not stick when the scene moves to another image
 
 test('a failed background preserves the character and cat and can recover',async({page})=>{
   let unavailable=true;
-  await page.route('**/assets/backgrounds/cafe-entry.webp*',route=>unavailable?route.abort('failed'):route.continue());
+  await page.route(coverImage,route=>unavailable?route.abort('failed'):route.continue());
   await page.goto('./');
   await expect(page.getByRole('button',{name:'Повторить загрузку'})).toBeVisible();
   await expectLoaded(page.locator('.character'));

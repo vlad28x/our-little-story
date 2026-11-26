@@ -6,8 +6,9 @@ export const easterEggs={
   cookie:{label:'Взять печеньку',text:'план был дожить до начала игры'},
   blanket:{label:'Приподнять край пледа',text:'это тебе. я даже плед положил'},
   controller:{label:'Проверить второй геймпад',text:'проверяешь? справедливо'},
-  tv:{label:'Посмотреть на монитор и экран',text:'рабочий код закрыт, прототипы спрятаны — сегодня экран официально наш'},
-  mug:{label:'Рассмотреть кружку и подставку',text:'ту самую подставку из эпоксидной смолы заливал сам. кружка пока фабричная, но я над этим подумаю'},
+  tv:{label:'Посмотреть на монитор и экран',text:'кажется, Пончик добрался и до приставки. ладно, третьего игрока не выгоняем'},
+  tvSleep:{label:'Посмотреть на спящий экран телевизора',text:'если он сейчас попадёт ровно в угол экрана — можно загадывать желание. работает не хуже падающей звезды'},
+  mug:{label:'Рассмотреть кружку и подставку',text:'да, край у подставки кривоват. зато авторская работа'},
   star:{label:'Коснуться звезды над набережной',text:'успела? говорить не обязательно'},
   sign:{label:'Посмотреть на вывеску кафе',text:'ну, вывеска явно что-то знает'},
   camera:{label:'Проверить общий фотоаппарат',text:'эй, кадр не трать! шучу, я проверял, взведено ли колёсико'},
@@ -24,7 +25,7 @@ export const easterEggs={
   window7:{label:'Выглянуть в арочное окно',text:'отсюда почти видно нашу набережную. мы везде оставляем следы'},
   kettle8:{label:'Проверить чайник на кухне',text:'чайник уже понял намёк и сам готов кипеть'},
   utensils8:{label:'Задеть кухонные приборы',text:'не волнуйся, в этот раз это настоящая кухня — без таймера и пожара'},
-  sugar8:{label:'Посмотреть на сахарницу и сухоцветы',text:'сухоцветы у края стола собирал сам после мастер-класса. оказались куда сговорчивее лепёшки'},
+  sugar8:{label:'Посмотреть на сахарницу',text:'главное в разгар готовки не перепутать её с солью. один раз уже было'},
   fridge8:{label:'Посмотреть на холодильник',text:'там магнитик со списком продуктов. да, я даже поход за сыром планирую по пунктам'},
   lamp8:{label:'Коснуться кухонной лампы',text:'для танца на пяти квадратных метрах свет идеальный'},
   blankets9:{label:'Потрогать пледы в ящике',text:'плед дежурит на посту. я вообще за любую причину сесть поближе'},
@@ -45,7 +46,7 @@ export const easterEggs={
 } as const;
 export type EasterEggId=keyof typeof easterEggs;
 export type ScenePropId=Exclude<EasterEggId,'hair'|'nina'|'cat'|'cookie'|'controller'|'camera'>;
-export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'mug'|'star'|'sign'|'cat10'>;
+export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'tvSleep'|'mug'|'star'|'sign'|'cat10'>;
 type SceneryBox=readonly [cx:number,cy:number,width:number,height:number];
 type Scenery=Partial<Record<SeasonSceneryId,SceneryBox>>;
 
@@ -77,7 +78,8 @@ export function sceneEggProps(background:string,sceneId:string):ScenePropId[]{
   const props:ScenePropId[]=[];
   if(background==='bg.home.living'){
     props.push('blanket','mug');
-    if(['c4.sofa','c4.craft','c4.pad.setup','c4.pad.press','c4.pad.dead','c4.pad.ready','c4.pad.reaction','c4.team','c4.role','c4.tutorial'].includes(sceneId)||['c4.mood.','c4.team.','c4.pad.echo.'].some(prefix=>sceneId.startsWith(prefix)))props.push('tv');
+    if(sceneId==='c4.end')props.push('tvSleep');
+    else if(sceneId.startsWith('c4.'))props.push('tv');
   }
   if(background==='bg.river.evening')props.push('star');
   if(background==='bg.cafe.sunset'&&sceneId.startsWith('c5.'))props.push('sign');

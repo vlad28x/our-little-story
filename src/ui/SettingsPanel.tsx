@@ -1,25 +1,15 @@
 import { useState } from 'react';
 import { useGame, DEV_SANDBOX } from '../app/GameProvider';
-import { parseSave, MAX_SAVE_BYTES } from '../persistence/validateSave';
-import { SaveExportButton } from './SaveExportButton';
-import type { SaveV1 } from '../state/types';
 import { Modal } from './Modal';
-import { BOT_URL } from '../telegram/bridge';
 export function SettingsPanel(){
-  const {save,send,recovery,cloudStatus,telegramApp}=useGame();const [pending,setPending]=useState<SaveV1|null>(null);const [message,setMessage]=useState('');const [reset,setReset]=useState(false),[paste,setPaste]=useState('');
-  const exportRaw=JSON.stringify(save,null,2);
-  function chooseText(raw:string){try{const next=parseSave(raw);setPending(next);setMessage('');}catch(e){setMessage(e instanceof Error?e.message:'Не удалось прочитать копию');}}
-  async function chooseFile(file:File|undefined){if(!file)return;try{if(file.size>MAX_SAVE_BYTES)throw new Error('Максимальный размер копии — 256 КБ.');chooseText(await file.text());}catch(e){setMessage(e instanceof Error?e.message:'Не удалось прочитать файл');}}
+  const {save,send,recovery}=useGame();
+  const [reset,setReset]=useState(false);
   return <section className="settings-panel"><h2>В твоём темпе</h2>
     <label className="setting-row"><span>Звуки действий<small>Можно играть в тишине</small></span><input type="checkbox" checked={save.settings.sound} onChange={e=>send({type:'settings',settings:{...save.settings,sound:e.target.checked}})}/></label>
     {save.settings.sound&&<label className="setting-row">Громкость<input aria-label="Громкость" type="range" min="0" max="1" step=".05" value={save.settings.volume} onChange={e=>send({type:'settings',settings:{...save.settings,volume:Number(e.target.value)}})}/></label>}
     <label className="setting-row"><span>Появление текста</span><select value={save.settings.textMode} onChange={e=>send({type:'settings',settings:{...save.settings,textMode:e.target.value as 'instant'|'type'}})}><option value="instant">Сразу целиком</option><option value="type">Постепенно</option></select></label>
     <label className="setting-row"><span>Движение</span><select value={save.settings.motion} onChange={e=>send({type:'settings',settings:{...save.settings,motion:e.target.value as 'system'|'reduced'|'full'}})}><option value="system">Как в системе</option><option value="reduced">Меньше анимации</option><option value="full">Все анимации</option></select></label>
-    <h3>Сохранить воспоминания</h3><p className="small">{cloudStatus==='none'||cloudStatus==='local'?'Прогресс сохраняется на этом устройстве. Для переноса скачай копию.':'История, сохранённые ответы, своё название вечера, выбор реальной встречи, альбом и настройки сохраняются в облаке Telegram, когда есть связь. Открывай игру у того же бота с тем же аккаунтом.'} Личные фото и переписки в копию не входят. Сохранённые ответы и своё название вечера входят в JSON-копию прогресса. Неподтверждённые черновики остаются на устройстве.</p>
-    {cloudStatus==='none'&&!DEV_SANDBOX&&<p className="small">Для продолжения между устройствами есть <a href={BOT_URL} target="_blank" rel="noreferrer">игра в Telegram</a>. Уже пройденную историю перенеси файлом через «Скачать копию» и «Загрузить копию».</p>}
-    {!DEV_SANDBOX?<div className="stack">{!recovery&&<SaveExportButton raw={exportRaw} name="five-meetings-save.json" app={telegramApp}>Скачать копию прогресса</SaveExportButton>}<label className="file-button">Загрузить копию<input aria-label="Загрузить копию" type="file" accept=".json,application/json" onChange={e=>{void chooseFile(e.target.files?.[0]);e.target.value='';}}/></label><details><summary>Вставить текст копии</summary><label className="manual-copy">Текст сохранения<textarea aria-label="Текст сохранения" value={paste} maxLength={MAX_SAVE_BYTES} spellCheck={false} onChange={e=>setPaste(e.target.value)}/></label><button disabled={!paste.trim()} onClick={()=>chooseText(paste)}>Проверить текст копии</button></details>{!recovery&&<button className="text-button" onClick={()=>setReset(true)}>Начать историю заново</button>}</div>:<p className="small">Тестовый прогресс изолирован. Экспорт и импорт здесь отключены.</p>}
-    {message&&<p role="alert">{message}</p>}
-    {pending&&<Modal title="Заменить текущий прогресс?" onClose={()=>setPending(null)}><p>В копии пройдено глав: {pending.campaign.completed.length}. {pending.campaign.active?'Есть незавершённая глава.':''}</p><p className="small">Дата копии: {new Date(pending.updatedAt).toLocaleString('ru-RU')}. Текущая история будет заменена, альбомы не объединяются.</p><div className="stack"><SaveExportButton raw={exportRaw} name="five-meetings-save.json" app={telegramApp}>Сначала скачать текущую копию</SaveExportButton><button className="primary" onClick={()=>{send({type:'replace',save:pending});setPending(null);setPaste('');setMessage('Копия загружена. Можно продолжать историю.');}}>Заменить прогресс</button><button onClick={()=>setPending(null)}>Отмена</button></div></Modal>}
+    {!DEV_SANDBOX&&!recovery&&<div className="stack"><button className="text-button" onClick={()=>setReset(true)}>Начать историю заново</button></div>}
     {reset&&<Modal title="Изменить историю с начала?" onClose={()=>setReset(false)}><p>Основная история будет начата заново, результаты следующих глав и личные заметки будут удалены. Альбом, найденные бонусы и достижения останутся.</p><div className="stack"><button className="primary" onClick={()=>{send({type:'rewrite'});setReset(false);location.hash='/play/1';}}>Начать заново</button><button onClick={()=>setReset(false)}>Оставить как есть</button></div></Modal>}
   </section>;
 }

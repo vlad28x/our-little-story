@@ -15,8 +15,8 @@ import { finishFive } from './chapter5Helpers';
 import { galleryAt,galleryCommand,startGallery,type GalleryPath } from './gallery7Helpers';
 import { finishPhotoSix,photoAt,photoCommand,startPhotoSix } from './photo6Helpers';
 const base=finishFive();
-it('ships exact authored lines, 20/25 nodes, three/five menus and one ending each',()=>{
- for(const [chapter,path,count,menus] of [[chapter6,'outputs/CHAPTER_06_WALK_SCRIPT_2026_11_04.md',20,3],[chapter7,'outputs/CHAPTER_07_GALLERY_RUNTIME_2026_11_16.md',25,5]] as const){
+it('ships exact authored lines, 20/26 nodes, three/five menus and one ending each',()=>{
+ for(const [chapter,path,count,menus] of [[chapter6,'outputs/CHAPTER_06_SCRIPT.md',20,3],[chapter7,'outputs/CHAPTER_07_SCRIPT.md',26,5]] as const){
   expect(validateContent(chapter)).toEqual([]);expect(Object.keys(chapter.nodes)).toHaveLength(count);
   const script=fs.readFileSync(path,'utf8');const shown=new Set<string>();
   for(const n of Object.values(chapter.nodes))if(n.kind==='dialogue')for(const l of n.lines){shown.add(l.text);expect(script).toContain(l.text);for(const v of l.variants??[]){shown.add(v.text);expect(script).toContain(v.text);}}
@@ -73,17 +73,16 @@ it('real invitation values do not select a relationship or change the new walk e
  for(const value of [null,'game','movie','cafe','walk','decline','public','chat','later'] as const){const s=startPhotoSix(reduceSave(base,{type:'continuation',value}));expect(s.campaign.active?.nodeId).toBe('c6.photo.entry');expect(s.campaign.active?.story).toEqual({...base.campaign.records[5]!.story,c6Edition:5});expect(s.continuation).toBe(value);}
 });
 
-it('keeps a pre-update content24 save through chapter seven and starts supper with six frames',()=>{
+it('migrates a pre-update content24 save preserving chapters 1-5 and resetting season two',()=>{
  const raw=fs.readFileSync('tests/fixtures/content24-through7.json','utf8');
  const before=JSON.parse(raw);
  expect(before).toMatchObject({contentVersion:24,campaign:{active:null,completed:[1,2,3,4,5,6,7],records:{6:{story:{c6Film:'six'}},7:{story:{c7Film:'six'}}}}});
  const restored=loadSave(raw);
- expect(restored).toEqual(before);
- expect(parseSave(raw)).toEqual(before);
- const started=reduceSave(restored,{type:'start',chapter:8,attemptId:'content24-supper'});
- expect(started.campaign.active?.nodeId).toBe('c8.supper.entry');
- expect(filmLeft(started.campaign.active!.story)).toBe(6);
- expect(started.campaign.records).toEqual(before.campaign.records);
- expect(started.collection.cards).toEqual(before.collection.cards);
+ expect(restored.campaign.completed).toEqual([1,2,3,4,5]);
+ expect(restored.campaign.records[5]).toEqual(before.campaign.records[5]);
+ expect(restored.unlocked).toEqual(before.unlocked);
+ expect(restored.collection.cards).toEqual(before.collection.cards.filter((c:{chapter:number})=>c.chapter<=5));
+ const started=reduceSave(restored,{type:'start',chapter:6,attemptId:'content24-walk'});
+ expect(started.campaign.active?.nodeId).toBe('c6.photo.entry');
  expect(parseSave(JSON.stringify(started))).toEqual(started);
 });

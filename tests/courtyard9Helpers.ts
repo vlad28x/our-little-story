@@ -4,12 +4,12 @@ import {chapters} from '../src/content/chapters/manifest';
 import {reduceSave} from '../src/state/reducer';
 import type {Command,NodeId,Run} from '../src/engine/types';
 import type {SaveV1} from '../src/state/types';
-export type CourtyardPath={frame:'vlad'|'seats'|'yard';rain:'canopy'|'arch'|'leave';hoodie:'keep'|'return';bet:'together'|'alone'|'skip';goodbye:'kiss'|'hug'|'words'};
-export const courtyardPath:CourtyardPath={frame:'yard',rain:'canopy',hoodie:'return',bet:'skip',goodbye:'words'};
+export type CourtyardPath={frame:'vlad'|'seats'|'yard';rain:'canopy'|'arch'|'leave';movie?:'drama'|'warm'|'mystery';hoodie:'keep'|'return';bet:'together'|'alone'|'skip';goodbye:'kiss'|'hug'|'words'};
+export const courtyardPath:CourtyardPath={frame:'yard',rain:'canopy',movie:'warm',hoodie:'return',bet:'skip',goodbye:'words'};
 export function courtyardCommand(run:Run,path:Partial<CourtyardPath>={}):Command{
  const p={...courtyardPath,...path},n=chapter9.nodes[run.nodeId];
  if(n.kind==='dialogue')return {kind:'advance',expectedTurn:run.turn};
- const choices:Record<string,string>={'c9.courtyard.frameChoice':p.frame,'c9.courtyard.rainChoice':p.rain,'c9.courtyard.hoodieChoice':p.hoodie,'c9.courtyard.hoodieChoiceLeave':p.hoodie,'c9.courtyard.betChoice':p.bet,'c9.courtyard.goodbyeChoice':p.goodbye};
+ const choices:Record<string,string>={'c9.courtyard.frameChoice':p.frame,'c9.courtyard.rainChoice':p.rain,'c9.courtyard.movieChoice':p.movie??'warm','c9.courtyard.hoodieChoice':p.hoodie,'c9.courtyard.hoodieChoiceLeave':p.hoodie,'c9.courtyard.betChoice':p.bet,'c9.courtyard.goodbyeChoice':p.goodbye};
  if(n.kind!=='choice'||!choices[n.id])throw Error('Unsupported courtyard scene '+n.id);
  return {kind:'choose',expectedTurn:run.turn,choiceId:choices[n.id]};
 }

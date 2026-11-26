@@ -23,20 +23,20 @@ const routes=[['bridge','tunnel','upper',1,'river','empty'],['bridge','contour',
 
 it('validates the complete graph and preserves authored dialogue with only approved replacements',()=>{
  expect(validateContent(chapter10)).toEqual([]);
- const source=fs.readFileSync('outputs/CHAPTER_10_TWO_TRAVELLERS_SCRIPT_2026_11_18.md','utf8');
+ const source=fs.readFileSync('outputs/CHAPTER_10_SCRIPT.md','utf8');
  for(const n of Object.values(chapter10.nodes))if(n.kind==='dialogue')for(const l of n.lines)
   for(const text of [l.text,...(l.variants??[]).map(v=>v.text)])expect(source.includes(text),text).toBe(true);
 });
 
-it('finishes six roads, all cafe gestures and all three home gestures times three endings',()=>{
+it('finishes six roads, all cafe gestures and all three home gestures times two endings',()=>{
  const base=finishCourtyard();
  for(const [river,quarry,arrival,suns,bridge,lantern] of routes)for(const continuation of ['cafe','home'] as const){
-  const variants:Partial<TravellersPath>[]=continuation==='cafe'?(['kiss','hug','words'] as const).map(goodbye=>({goodbye})):['kiss','hug','near'].flatMap(tender=>['leave','sleep','private'].map(finale=>({tender,finale}))) as Partial<TravellersPath>[];
+  const variants:Partial<TravellersPath>[]=continuation==='cafe'?(['kiss','hug','words'] as const).map(goodbye=>({goodbye})):['kiss','hug','near'].flatMap(tender=>['leave','sleep'].map(finale=>({tender,finale}))) as Partial<TravellersPath>[];
   for(const variant of variants){
    const done=finishTravellers({river,quarry,arrival,continuation,...variant},base),story=done.campaign.records[10]!.story;
    expect(travellerResources(story)).toMatchObject({suns,bridge,lantern,position:'house'});
-   expect(story.c10Finale).toBe(continuation==='cafe'?'cafe':variant.finale==='leave'?'lateLeave':variant.finale==='sleep'?'morning':'private');
-   expect(story.c10LipKiss).toBe(continuation==='cafe'?variant.goodbye==='kiss'?'yes':undefined:variant.tender==='kiss'||variant.finale==='private'?'yes':undefined);
+   expect(story.c10Finale).toBe(continuation==='cafe'?'cafe':variant.finale==='leave'?'lateLeave':'morning');
+   expect(story.c10LipKiss).toBe(continuation==='cafe'?variant.goodbye==='kiss'?'yes':undefined:variant.tender==='kiss'?'yes':undefined);
    expect(done.collection.cards.filter(c=>c.chapter===10)).toHaveLength(1);
    expect(cardMeta(cardFromStory(story,10)).quote).toBeTruthy();
    expect(replayTravellers(story)).toBeTruthy();
@@ -45,7 +45,7 @@ it('finishes six roads, all cafe gestures and all three home gestures times thre
 }, 20_000);
 
 it('round-trips every cursor, rejects stale taps, forged resources, wrong phases and an impossible marsh',()=>{
- for(const path of [{river:'ford',quarry:'contour',arrival:'upper',continuation:'home',tender:'hug',finale:'sleep'},{river:'help',quarry:'help',arrival:'help'},{river:'bridge',arrival:'upper',goodbye:'kiss'},{continuation:'home',tender:'kiss',afterFirstKiss:'closer',finale:'private'},{continuation:'home',tender:'kiss',afterFirstKiss:'shoulder',finale:'leave'}] as Partial<TravellersPath>[]){
+ for(const path of [{river:'ford',quarry:'contour',arrival:'upper',continuation:'home',tender:'hug',finale:'sleep'},{river:'help',quarry:'help',arrival:'help'},{river:'bridge',arrival:'upper',goodbye:'kiss'},{continuation:'home',tender:'kiss',afterFirstKiss:'closer',finale:'sleep'},{continuation:'home',tender:'kiss',afterFirstKiss:'shoulder',finale:'leave'}] as Partial<TravellersPath>[]){
   let s=startTravellers();
   while(s.campaign.active){
    expect(parseSave(JSON.stringify(s))).toEqual(s);
@@ -57,35 +57,27 @@ it('round-trips every cursor, rejects stale taps, forged resources, wrong phases
  }
  const at=travellersAt('c10.travellers.catChoice',{river:'bridge',arrival:'upper'}),r=at.campaign.active!;
  expect(step(chapter10,r,{kind:'choose',choiceId:'marsh',expectedTurn:r.turn}).kind).toBe('rejected');
- for(const extra of [{c10Arrival:'marsh'},{c10River:'ford'},{c10Finale:'private'},{c10LipKiss:'yes'}]){const bad=structuredClone(at);Object.assign(bad.campaign.active!.story,extra);expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
+ for(const extra of [{c10Arrival:'marsh'},{c10River:'ford'},{c10Finale:'morning'},{c10LipKiss:'yes'}]){const bad=structuredClone(at);Object.assign(bad.campaign.active!.story,extra);expect(()=>parseSave(JSON.stringify(bad))).toThrow();}
  const bad=structuredClone(at);bad.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(bad))).toThrow();
 },120000);
 
-it('shows the first private kiss when appropriate and records the ending after morning tea',()=>{
- const path={continuation:'home',tender:'near',finale:'private'} as const;
- for(const previousKiss of [false,true]){
-  const base=finishCourtyard(finishSupper(undefined,{kiss:previousKiss}));
-  let save=travellersAt('c10.travellers.private',path,base);
-  const heard:string[]=[];
-  while(save.campaign.active){
-   const run=save.campaign.active,node=chapter10.nodes[run.nodeId];
-   if(node.kind!=='dialogue')throw Error('Missing private finale dialogue');
-   expect(run.story.c10Finale).toBeUndefined();
-   expect(save.collection.cards.some(card=>card.chapter===10)).toBe(false);
-   expect(parseSave(JSON.stringify(save))).toEqual(save);
-   heard.push(resolveLine(node.lines[run.lineIndex],run.story).text);
-   if(node.id==='c10.travellers.privateMorning'){
-    expect(resolveScene(node.scene,run.story,run).background).toBe('bg.travellers10.morning');
-    expect(run.story.c10LipKiss).toBe(previousKiss?undefined:'yes');
-   }
-   save=reduceSave(save,{type:'command',target:'campaign',command:travellersCommand(run,path)});
-  }
-  expect(heard.some(line=>line.includes('губы впервые встречаются'))).toBe(!previousKiss);
-  expect(heard.some(line=>line.includes('губы снова находят'))).toBe(previousKiss);
-  expect(heard.join(' ')).not.toContain('открытка из галереи');
-  expect(save.campaign.records[10]?.story.c10Finale).toBe('private');
-  expect(cardMeta(cardFromStory(save.campaign.records[10]!.story,10)).quote).toBe('Утром на столе рядом с двумя чашками остался конверт с фотографиями.');
+it('keeps the evening stay finale calm without explicit branch or morning shirt scene',()=>{
+ const path={continuation:'home',tender:'near',finale:'sleep'} as const;
+ let save=travellersAt('c10.travellers.sleep',path);
+ const heard:string[]=[];
+ while(save.campaign.active){
+  const run=save.campaign.active,node=chapter10.nodes[run.nodeId];
+  if(node.kind!=='dialogue')throw Error('Missing sleep finale dialogue');
+  expect(run.story.c10Finale).toBeUndefined();
+  expect(save.collection.cards.some(card=>card.chapter===10)).toBe(false);
+  expect(parseSave(JSON.stringify(save))).toEqual(save);
+  expect(resolveScene(node.scene,run.story,run).background).toBe('bg.travellers10.home');
+  heard.push(resolveLine(node.lines[run.lineIndex],run.story).text);
+  save=reduceSave(save,{type:'command',target:'campaign',command:travellersCommand(run,path)});
  }
+ expect(heard.join(' ')).not.toMatch(/футболк|до середины бедра|открытка из галереи|под общим одеялом Влад обнимает/);
+ expect(save.campaign.records[10]?.story.c10Finale).toBe('morning');
+ expect(chapter10.nodes['c10.travellers.private' as keyof typeof chapter10.nodes]).toBeUndefined();
 });
 
 it('keeps all photograph facts, hoodie and four previous kiss combinations on all rain paths',()=>{
@@ -109,13 +101,13 @@ it('renders distinct print combinations and actual dish gift details',()=>{
  const base=finishCourtyard().campaign.records[9]!.story,prints=new Set<string>();
  for(const c6PhotoPlace of ['upper','water'] as const)for(const c6PhotoSubject of ['vlad','her','place'] as const)prints.add(renderToStaticMarkup(<SelectedPrint source={6} story={{...base,c6PhotoPlace,c6PhotoSubject}}/>));expect(prints.size).toBe(6);
  for(const [source,key,values] of [[7,'c7GalleryFrame',['vlad','her','both']],[8,'c8Frame',['foodHer','foodVlad','boardHer','boardVlad']],[9,'c9Frame',['vlad','seats','yard']]] as const){const variants=values.map(v=>renderToStaticMarkup(<SelectedPrint source={source} story={{...base,[key]:v}}/>));expect(new Set(variants).size).toBe(values.length);}
- for(const c7GalleryGift of ['none','chip','blue'] as const){const html=renderToStaticMarkup(<SelectedPrint source={8} story={{...base,c8Frame:'foodHer',c7GalleryGift}}/>);if(c7GalleryGift==='none')expect(html).not.toContain('gallery7/');if(c7GalleryGift==='chip')expect(html).toContain('chip-light-notch.webp');}
+ for(const c7GalleryGift of ['none','chip','blue'] as const){const html=renderToStaticMarkup(<SelectedPrint source={8} story={{...base,c8Frame:'foodHer',c7GalleryGift}}/>);if(c7GalleryGift==='none')expect(html).not.toContain('gallery7/');if(c7GalleryGift==='chip')expect(html).toContain('gallery7/season2-gouache/chip.webp');}
  expect(renderToStaticMarkup(<TravellersBoard state={travellerResources({c10River:'ford',c10Quarry:'contour',c10Arrival:'upper'})}/>)).toContain('Солнц: 0');
  const at=travellersAt('c10.travellers.sleep',{continuation:'home',finale:'sleep'}).campaign.active!;
- const morning={...at,lineIndex:9,story:{...at.story,c7GalleryGift:'chip' as const}};
- expect(renderToStaticMarkup(<TravellersScene run={morning}/>)).toBe('');
- const home={...at,nodeId:'c10.travellers.home' as const,story:morning.story};
- const homeArt=renderToStaticMarkup(<TravellersScene run={home}/>);expect(homeArt).toContain('preserveAspectRatio="xMidYMid slice"');expect(homeArt).toContain('chip-light-notch.webp');
+ const evening={...at,lineIndex:8,story:{...at.story,c7GalleryGift:'chip' as const}};
+ expect(renderToStaticMarkup(<TravellersScene run={evening}/>)).toContain('gallery7/season2-gouache/chip.webp');
+ const home={...at,nodeId:'c10.travellers.home' as const,story:evening.story};
+ const homeArt=renderToStaticMarkup(<TravellersScene run={home}/>);expect(homeArt).toContain('preserveAspectRatio="xMidYMid slice"');expect(homeArt).toContain('gallery7/season2-gouache/chip.webp');
  for(const nodeId of ['c10.travellers.homeKissFirstChoice','c10.travellers.homeKissFirstNeck','c10.travellers.homeKissFirstSoft'] as const)
   expect(renderToStaticMarkup(<TravellersScene run={{...home,nodeId}}/>)).toBe(homeArt);
 
@@ -124,9 +116,9 @@ it('renders distinct print combinations and actual dish gift details',()=>{
 it('keeps invitations independent, trial isolated, rewrites scoped and all five choices visible',()=>{
  let s=finishTravellers();s.continuation='movie';
  for(const o of meeting10Options){s=reduceSave(s,{type:'continuation10',value:o.value});expect(s.continuation).toBe('movie');expect(parseSave(JSON.stringify(s))).toEqual(s);}
- context={save:s,send:vi.fn()};const html=renderToStaticMarkup(<TravellersInvitation/>);for(const o of meeting10Options)expect(html).toContain(o.label);
+ context={save:s,send:vi.fn()};const html=renderToStaticMarkup(<TravellersInvitation/>);for(const o of meeting10Options)expect(html).toContain(o.label);expect(html).not.toContain('Копировать сообщение');expect(html).not.toContain('<textarea');
  const canonical=structuredClone(s.campaign),trial=startTravellers(s,true);expect(reduceSave(trial,{type:'continuation10',value:'cook'})).toBe(trial);
- const result=finishTravellers({continuation:'home',tender:'near',finale:'private'},s,true);expect(result.campaign).toEqual(canonical);expect(result.continuation10).toBe('decline');expect(result.lastResult?.episodeRecord?.story.c10Finale).toBe('private');expect(result.collection.cards.filter(c=>c.chapter===10)).toHaveLength(1);
+ const result=finishTravellers({continuation:'home',tender:'near',finale:'sleep'},s,true);expect(result.campaign).toEqual(canonical);expect(result.continuation10).toBe('decline');expect(result.lastResult?.episodeRecord?.story.c10Finale).toBe('morning');expect(result.collection.cards.filter(c=>c.chapter===10)).toHaveLength(1);
  const rewrite=reduceSave(s,{type:'rewrite',chapter:10,attemptId:'new-canon'});expect(rewrite.continuation10).toBeNull();expect(rewrite.continuation).toBe('movie');
  expect(reduceSave(initialState(),{type:'continuation10',value:'cook'})).toEqual(initialState());
  const missing=finishCourtyard();missing.unlocked.push(10);delete missing.campaign.records[9]!.story.c9Frame;expect(canStart(missing,10)).toBe(false);

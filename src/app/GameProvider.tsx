@@ -33,7 +33,7 @@ export function GameProvider({children,storageId=activeStorageKey,initialLoaded,
   useEffect(()=>{
     if(!dirty.current||recovery||conflict||save.revision===savedRevision.current&&save.localNoteRevision===savedLocalNoteRevision.current)return;
     try {const result=persist(storage,save,savedRevision.current,storageId,savedLocalNoteRevision.current);if(result==='conflict'){setConflict(true);return;}savedRevision.current=save.revision;savedLocalNoteRevision.current=save.localNoteRevision;dirty.current=false;setStorageError(null);try{clearFinishedDraft(storage,storageId,save);}catch{/* Keep a draft if its cleanup fails. */}}
-    catch {setStorageError('В этом браузере прогресс сейчас не сохраняется. Скачайте копию в настройках.');}
+    catch {setStorageError('В этом браузере прогресс сейчас не сохраняется.');}
   },[save,recovery,conflict,storageId]);
   useEffect(()=>{
     if(recovery||conflict||cloud.blocked||storageError||dirty.current||soundDefaults.current==='done')return;

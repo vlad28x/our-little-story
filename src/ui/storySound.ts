@@ -19,8 +19,7 @@ const cues:Record<string,Partial<Record<number,SoundEffect>>>={
   'c10.travellers.marsh':{0:'wood'},
   'c10.travellers.upperDay':{0:'wood'},
   'c10.travellers.upperNight':{2:'wood'},
-  'c10.travellers.sleep':{8:'kettle'},
-  'c10.travellers.privateMorning':{0:'kettle'},
+  'c10.travellers.sleep':{5:'switch'},
 };
 
 const courtyardShelter=new Set([
@@ -29,15 +28,14 @@ const courtyardShelter=new Set([
 ]);
 const riverBackgrounds=new Set(['bg.river.evening','bg.photo6.sun','bg.photo6.shade']);
 
-export function storyCue({nodeId,lineIndex}:Run,fade:boolean):SoundEffect|undefined{
-  if(fade&&nodeId==='c10.travellers.private')return 'switch';
+export function storyCue({nodeId,lineIndex}:Run):SoundEffect|undefined{
   return cues[nodeId]?.[lineIndex];
 }
 
 export function storyAmbience({chapter,nodeId,lineIndex}:Run,background:string,lastLine:boolean):Ambience|null{
   if(chapter===2){
     if(nodeId==='c2.rain.intro'||nodeId==='c2.rain')return 'rain-open';
-    if(nodeId==='c2.rain.shelter'||nodeId==='c2.rain.arcade'||nodeId.startsWith('c2.pause'))return 'rain-shelter';
+    if(nodeId==='c2.rain.shelter'||nodeId==='c2.rain.arcade'||nodeId.startsWith('c2.pause')||nodeId.startsWith('c2.recharge')||nodeId.startsWith('c2.cat.echo'))return 'rain-shelter';
   }
   if(chapter===9){
     const scene=nodeId.slice('c9.courtyard.'.length);
@@ -45,7 +43,7 @@ export function storyAmbience({chapter,nodeId,lineIndex}:Run,background:string,l
     if(scene==='leave')return lineIndex<2?'rain-open':'rain-shelter';
     if(courtyardShelter.has(scene)||scene==='earlyWalk'&&!lastLine)return 'rain-shelter';
   }
-  if((chapter===3||chapter===6)&&riverBackgrounds.has(background))return 'river';
+  if((chapter===3&&nodeId!=='c3.stars'||chapter===6)&&riverBackgrounds.has(background))return 'river';
   if(nodeId==='c8.supper.fold'&&lineIndex>=2&&lineIndex<10)return 'kitchen';
   if(nodeId==='c8.supper.open'&&lineIndex>=9&&lineIndex<12)return 'kitchen';
   if(nodeId==='c8.supper.meal'&&lineIndex===11)return 'steam';

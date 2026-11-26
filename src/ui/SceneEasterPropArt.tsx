@@ -12,6 +12,19 @@ export function SceneEasterPropArt({id,active,paintedSeason=false}:{id:SceneProp
       <rect x="22" y="78" width="84" height="13" rx="2.5" fill="#554652" fillOpacity=".93"/>
       <text x="64" y="87.2" textAnchor="middle" fill="#fff7ed" fontSize="8.3">Игрок 3 подключился</text>
     </svg>:null;
+    case 'tvSleep':return active?<svg viewBox="0 0 128 100" aria-hidden="true">
+      <rect x="4" y="6" width="120" height="88" rx="6" fill="#231c2e" fillOpacity=".88" stroke="#6f5a79" strokeWidth="1.4"/>
+      <g className="tv-dvd-ponchik">
+        <g transform="translate(26 16) scale(.62)">
+          <TvPonchik sleeping/>
+        </g>
+        <text x="86" y="34" fill="#ffe7a8" fontSize="9" fontWeight="700" opacity=".9">z</text>
+        <text x="93" y="27" fill="#ffe7a8" fontSize="11" fontWeight="700" opacity=".78">z</text>
+        <text x="101" y="19" fill="#ffe7a8" fontSize="13" fontWeight="700" opacity=".62">Z</text>
+        <rect x="29" y="63" width="70" height="13" rx="3" fill="#473a58" stroke="#c8ab82" strokeWidth=".9"/>
+        <text x="64" y="72" textAnchor="middle" fill="#fff7ed" fontSize="7.6" fontWeight="600">Режим сна · zZz</text>
+      </g>
+    </svg>:null;
     case 'mug':return active?<svg viewBox="0 0 80 100" aria-hidden="true">
       <path className="tea-heart" d="M39 42C8 27 14 6 28 10q9 0 11 9 4-9 12-9c15 0 18 18-12 32Z" fill={paintedSeason?"#f6d9bd44":"#fff6e533"} stroke={paintedSeason?"#ffebce":"#fff7e8"} strokeWidth="3.1" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>:null;
@@ -76,7 +89,7 @@ function SeasonReactionArt({id}:{id:SeasonReactionId}){
   </svg>;
 }
 
-function TvPonchik(){
+function TvPonchik({sleeping=false}:{sleeping?:boolean}={}){
   const coat=useId().replace(/:/g,'')+'-tv-coat';
   return <>
     <defs>
@@ -90,7 +103,7 @@ function TvPonchik(){
     <path d="M33 43q6 0 10 5l-10-2Zm62 0q-6 0-10 5l10-2Z" fill="#c78f66" opacity=".72"/>
     <path d="M37 58q6 10 26 10 17 0 25-9" fill="none" stroke="#fff3de" strokeWidth="2.2" strokeLinecap="round"/>
     <path d="M49 55q2-5 9-5 4 0 6 2 2-2 6-2 7 0 9 5-1 8-15 8t-15-8Z" fill="#fff1db"/>
-    <path d="M45 46q4-5 9 0m19 0q4-5 9 0" fill="none" stroke="#4c393a" strokeWidth="2.5" strokeLinecap="round"/>
+    <path d={sleeping?'M45 45q4 4.5 9 0m19 0q4 4.5 9 0':'M45 46q4-5 9 0m19 0q4-5 9 0'} fill="none" stroke="#4c393a" strokeWidth="2.5" strokeLinecap="round"/>
     <ellipse cx="44" cy="53" rx="4.2" ry="2.2" fill="#d19aa0" opacity=".7"/><ellipse cx="84" cy="53" rx="4.2" ry="2.2" fill="#d19aa0" opacity=".7"/>
     <path d="M61 51q3-1 6 0l-3 3.6Z" fill="#9f686f"/>
     <path d="M64 55q-2 3.7-5 2m5-2q2 3.7 5 2m-33-2-5-1m60 1 5-1" fill="none" stroke="#6a5050" strokeWidth="1.6" strokeLinecap="round"/>
@@ -127,6 +140,63 @@ export function CookiePlateArt({taken}:{taken:boolean}){
       <path d="M-9-5l2-2M2 1l2-2M-5 8l2-1m2-5 1-.5m6 9 1-.5m-15-1 1-.5" stroke="#f3c287" strokeWidth="1" strokeLinecap="round" opacity=".72"/>
     </g>)}</g>
     <path d="m18 65 2-.5 1 1.3-2 1zm38-2 2-.8 1 1.6-2 1zm30 2 2-.7 1 1.4-2 1z" fill="#ab7651" opacity=".8"/>
+  </svg>;
+}
+
+export function ReserveRemoteArt(){
+  const id=useId().replace(/:/g,'');
+  return <svg viewBox="0 0 116 74" aria-hidden="true">
+    <defs>
+      <linearGradient id={`${id}-saucer`} x2=".8" y2="1">
+        <stop stopColor="#fff0d3"/><stop offset=".66" stopColor="#e9d5b9"/><stop offset="1" stopColor="#b9958e"/>
+      </linearGradient>
+      <linearGradient id={`${id}-body`} x1="0" y1="0" x2="1" y2="1">
+        <stop stopColor="#65596a"/><stop offset=".55" stopColor="#4c4150"/><stop offset="1" stopColor="#352c39"/>
+      </linearGradient>
+      <linearGradient id={`${id}-side`} x1="0" y1="0" x2="1" y2="0">
+        <stop stopColor="#3a313e"/><stop offset="1" stopColor="#261f29"/>
+      </linearGradient>
+    </defs>
+    {/* Contact shadow on wooden tabletop */}
+    <ellipse cx="58" cy="56" rx="48" ry="11.5" fill="#5c3829" opacity=".28"/>
+    {/* Ceramic saucer matching CookiePlateArt */}
+    <ellipse cx="58" cy="50" rx="49" ry="14" fill={`url(#${id}-saucer)`} stroke="#9b796c" strokeWidth="1.2"/>
+    <ellipse cx="58" cy="49" rx="43.5" ry="10.8" fill="none" stroke="#9a7180" strokeWidth="1.5" opacity=".78"/>
+    <ellipse cx="58" cy="49.5" rx="28" ry="6.2" fill="#dcc4ab" opacity=".32"/>
+    <path d="M13 46q12-7.5 31-7.5m22 19.5q20-1 31-7.5" fill="none" stroke="#fff2db" strokeWidth="1.6" strokeLinecap="round"/>
+    {/* Remote cast shadow on saucer */}
+    <g transform="translate(58 43) rotate(-13)">
+      <rect x="-38" y="-3" width="76" height="22" rx="8" fill="#4f3738" opacity=".3"/>
+    </g>
+    {/* Detailed TV remote resting across the saucer */}
+    <g transform="translate(58 39) rotate(-13)">
+      {/* 3D lower body thickness */}
+      <rect x="-39" y="-9" width="78" height="24" rx="8.5" fill={`url(#${id}-side)`}/>
+      {/* Main top face */}
+      <rect x="-39" y="-12" width="78" height="22" rx="8" fill={`url(#${id}-body)`} stroke="#7d6e82" strokeWidth="1.15"/>
+      {/* Subtle gouache top highlight */}
+      <path d="M-31-10.2h62" stroke="#9c8da2" strokeWidth="1.1" strokeLinecap="round" opacity=".55"/>
+      {/* IR sensor tip on left */}
+      <circle cx="-36.5" cy="-1" r="1.4" fill="#231c26" stroke="#6d5d73" strokeWidth=".6"/>
+      {/* Red power button + tiny mute/source */}
+      <circle cx="-28.5" cy="-5.2" r="2.7" fill="#d9645e" stroke="#8f3838" strokeWidth=".8"/>
+      <circle cx="-28.8" cy="-5.7" r=".8" fill="#ffb8ae" opacity=".7"/>
+      <rect x="-30.8" y="1.4" width="4.6" height="3.2" rx="1.2" fill="#8b7d91"/>
+      {/* 3x3 numeric keypad */}
+      {[-19.5,-13.5,-7.5].map(x=>[-6.8,-2.2,2.4].map(y=>(
+        <rect key={`${x}-${y}`} x={x} y={y} width="4.2" height="2.7" rx="1" fill="#8f8196" stroke="#3c3340" strokeWidth=".45"/>
+      )))}
+      {/* Navigation D-pad ring + OK center */}
+      <circle cx="8" cy="-1" r="7.4" fill="#6f6275" stroke="#3a303d" strokeWidth=".9"/>
+      <circle cx="8" cy="-1" r="6.2" fill="none" stroke="#9d8ea3" strokeWidth=".7" opacity=".55"/>
+      <circle cx="8" cy="-1" r="3" fill="#b4a4b8" stroke="#473c4a" strokeWidth=".7"/>
+      <circle cx="7.4" cy="-1.6" r=".85" fill="#eee3ee" opacity=".7"/>
+      {/* Volume & channel rockers on right */}
+      <rect x="19.5" y="-7.2" width="5.2" height="12.4" rx="2.4" fill="#827488" stroke="#3b313f" strokeWidth=".7"/>
+      <path d="M21.1-4h2m-1-1v2m-1 5.2h2" stroke="#f0e4ec" strokeWidth=".8" strokeLinecap="round"/>
+      <rect x="27.2" y="-7.2" width="5.2" height="12.4" rx="2.4" fill="#827488" stroke="#3b313f" strokeWidth=".7"/>
+      <path d="M28.6-3.2l1.2-1.5 1.2 1.5m-2.4 4.8l1.2 1.5 1.2-1.5" fill="none" stroke="#f0e4ec" strokeWidth=".8" strokeLinecap="round" strokeLinejoin="round"/>
+    </g>
   </svg>;
 }
 

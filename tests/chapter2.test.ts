@@ -1,7 +1,7 @@
 import { describe,expect,it } from 'vitest';
 import { chapter2 } from '../src/content/chapters/ch02';
 import { chapters as chapterManifest } from '../src/content/chapters/manifest';
-import { step } from '../src/engine/step';
+import { resolveLine,step } from '../src/engine/step';
 import type { Command,Run,StoryState,UmbrellaResult } from '../src/engine/types';
 import { validateContent } from '../src/engine/validateContent';
 import { validateSave as parseSave } from '../src/persistence/validateSave';
@@ -11,13 +11,13 @@ import type { SaveV1 } from '../src/state/types';
 import { completeSave,defaultPath } from './helpers';
 import { legacyContent } from './legacySave';
 const chapterTwoCode=chapterManifest.find(c=>c.id===2)!.code!;
-type Route2={rain:NonNullable<StoryState['rainRoute']>;cat:NonNullable<StoryState['catApproach']>;umbrella:UmbrellaResult['outcome'];mood:NonNullable<StoryState['eveningMood']>};
-const default2:Route2={rain:'shelter',cat:'wait',umbrella:'patched',mood:'quiet'};
+type Route2={rain:NonNullable<StoryState['rainRoute']>;cat:NonNullable<StoryState['catApproach']>;umbrella:UmbrellaResult['outcome'];recharge?:NonNullable<StoryState['herRecharge']>;mood:NonNullable<StoryState['eveningMood']>};
+const default2:Route2={rain:'shelter',cat:'wait',umbrella:'patched',recharge:'cozy',mood:'quiet'};
 function command2(run:Run,path:Route2):Command{
   const n=chapter2.nodes[run.nodeId];
   if(n.kind==='dialogue')return {kind:'advance',expectedTurn:run.turn};
   if(n.kind==='minigame')return {kind:'game-result',expectedTurn:run.turn,result:{kind:'umbrella-patch',outcome:path.umbrella}};
-  if(n.kind==='choice')return {kind:'choose',expectedTurn:run.turn,choiceId:n.id==='c2.rain'?path.rain:n.id==='c2.cat'?path.cat:path.mood};
+  if(n.kind==='choice')return {kind:'choose',expectedTurn:run.turn,choiceId:n.id==='c2.rain'?path.rain:n.id==='c2.cat'?path.cat:n.id==='c2.recharge'?(path.recharge??'cozy'):path.mood};
   throw new Error('Non-interactive cursor');
 }
 function finish2(base:SaveV1,path:Route2=default2,trial=false,validateEveryStep=false){
@@ -46,7 +46,7 @@ describe('chapter two',()=>{
       const first=completeSave({...defaultPath,plan,pace,search:{kind:'token-search',outcome:noticed?'detour':'skipped',catNoticed:noticed}});
       for(const rain of ['shelter','arcade'] as const)for(const cat of ['wait','help'] as const)for(const umbrella of ['patched','borrowed','skipped'] as const)for(const mood of ['quiet','playful'] as const){
         const s=finish2(first,{rain,cat,umbrella,mood});expect(s.campaign.completed).toEqual([1,2]);expect(s.campaign.records[1]).toEqual(first.campaign.records[1]);
-        expect(s.campaign.records[2]?.story).toEqual({...first.campaign.records[1]!.story,rainRoute:rain,catApproach:cat,umbrella,eveningMood:mood});
+        expect(s.campaign.records[2]?.story).toEqual({...first.campaign.records[1]!.story,rainRoute:rain,catApproach:cat,umbrella,herRecharge:'cozy',eveningMood:mood});
         expect(parseSave(JSON.stringify(s))).toEqual(s);endings.add(s.lastResult!.cardId);count++;
       }
     }
@@ -68,4 +68,16 @@ describe('chapter two',()=>{
     const fakeLegacy=legacyContent(main,1);expect(()=>parseSave(JSON.stringify(fakeLegacy))).toThrow();
   });
   it('rejects a result from the wrong game without changing the run',()=>{let s=reduceSave(reduceSave(completeSave(),{type:'unlock',code:chapterTwoCode}),{type:'start',chapter:2});for(let i=0;i<150&&s.campaign.active?.nodeId!=='c2.umbrella';i++){const r=s.campaign.active!;s=reduceSave(s,{type:'command',target:'campaign',command:command2(r,default2)});}const r=s.campaign.active!;expect(step(chapter2,r,{kind:'game-result',expectedTurn:r.turn,result:{kind:'token-search',outcome:'skipped',catNoticed:false}}).kind).toBe('rejected');});
+  it('hides the pocket board game when the downpour hits on the coop branch',()=>{
+    const intro=chapter2.nodes['c2.rain.intro'];
+    if(intro.kind!=='dialogue')throw new Error('Missing rain intro');
+    expect(resolveLine(intro.lines[2],{plan:'coop'}).text).toContain('прячет коробку с игрой');
+    expect(resolveLine(intro.lines[5],{plan:'coop'}).text).toContain('отложим до сухого вечера');
+    expect(resolveLine(intro.lines[2],{plan:'tea'}).text).not.toContain('коробку');
+    expect(resolveLine(intro.lines[5],{plan:'tea'}).text).not.toContain('партию');
+    const playful=chapter2.nodes['c2.pause.playful'];
+    if(playful.kind!=='dialogue')throw new Error('Missing pause playful');
+    expect(resolveLine(playful.lines[0],{plan:'coop'}).text).toContain('раз с настолкой сегодня не вышло');
+    expect(resolveLine(playful.lines[0],{plan:'tea'}).text).toContain('у меня дома есть любимая игра на двоих');
+  });
 });

@@ -213,6 +213,5 @@ export function CourtyardScene({run,background}:{run:Run;background?:string}){
    </g>}
    {atLab&&<g fill="#59412e" textAnchor="middle" fontSize="15" fontFamily="Georgia, serif"><text x="694" y="302">Плёнка и одноразовые камеры</text><text x="694" y="328">Приём</text></g>}
   </svg>}
-  {['rain','rainAside','rainChoice'].includes(node)&&<div className="courtyard-rain" aria-hidden="true"/>}
  </div>;
 }

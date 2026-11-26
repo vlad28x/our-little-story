@@ -7,13 +7,11 @@ export type Speaker = 'narrator'|'vlad'|'heroine'|'nina'|'attendant'|'angel'|'de
 export type StoryState = {
   herRecharge?: 'walk' | 'cozy' | 'hands';
   herTrust?: 'careful' | 'intuition' | 'humor';
-  c6HerEvening?: 'cozyFood' | 'nightWalk' | 'deepTalk';
-  herEscape?: 'sea' | 'oldtown' | 'cabin';
   c9HerMovie?: 'drama' | 'warm' | 'mystery';
   c10Edition?:5;c10River?:'ford'|'bridge';c10Quarry?:'tunnel'|'contour';c10Arrival?:'marsh'|'upper';
   c10RiverHelp?:true;c10QuarryHelp?:true;c10ArrivalHelp?:true;
   c10Continuation?:'cafe'|'home';c10CafeGoodbye?:'kiss'|'hug'|'words';c10HomeTender?:'kiss'|'neck'|'hug'|'near';
-  c10Finale?:'cafe'|'lateLeave'|'morning'|'private';
+  c10Finale?:'cafe'|'lateLeave'|'morning';
 
   c9Frame?:'vlad'|'seats'|'yard';c9Film?:'key'|'rain'|'empty'|'submitted';
   c9Rain?:'canopy'|'arch'|'leave';c9Bet?:'together'|'alone'|'skip';c9Goodbye?:'kiss'|'hug'|'words';
@@ -28,7 +26,7 @@ export type StoryState = {
   c6Film?:'loaded'|'key'|'accidental'|'six';c6CameraHolder?:'her'|'vlad';
   // Persisted event keys stay stable after moving the sky meeting from four to three.
   c4Edition?:2;c5Edition?:2|3;
-  c5FirstTaste?:'vanilla'|'sweet'|'compare';c5Recommendation?:'vanilla'|'fresh'|'both';
+  c5FirstTaste?:'vanilla'|'sweet'|'compare';c5Recommendation?:'vanilla'|'fresh'|'both';c5Feeling?:'continue'|'curious'|'pace';
   approach?: 'joke'|'help'|'space'; searchResult?: 'tidy'|'detour'|'skipped'; catNoticed?: boolean;
   pace?: 'quiet'|'playful'|'flirt'; plan?: 'tea'|'banter'|'coop';
   rainRoute?: 'shelter'|'arcade'; catApproach?: 'wait'|'help'; umbrella?: 'patched'|'borrowed'|'skipped'; eveningMood?: 'quiet'|'playful';

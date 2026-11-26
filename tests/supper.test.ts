@@ -19,7 +19,7 @@ const seven=finishGallery();
 
 it('ships the exact revised text and a complete eighth graph, without later content',()=>{
  for(const chapter of [chapter7,chapter8]){
-  const source=fs.readFileSync(chapter.id===7?'outputs/CHAPTER_07_GALLERY_RUNTIME_2026_11_16.md':'outputs/CHAPTERS_07_08_RUNTIME_2026_11_13.md','utf8');
+  const source=fs.readFileSync(chapter.id===7?'outputs/CHAPTER_07_SCRIPT.md':'outputs/CHAPTER_08_SCRIPT.md','utf8');
   expect(validateContent(chapter)).toEqual([]);
   for(const node of Object.values(chapter.nodes)){
    expect(source).toContain('`'+node.id+'`');
@@ -117,7 +117,7 @@ it('restarts old supper progress through the completed gallery and preserves a n
   expect(loaded.continuation).toBe('walk');
   expect(loaded.continuation10).toBeNull();
   const restarted=reduceSave(loaded,{type:'start',chapter:8,attemptId:'supper-restart'});
-  expect(restarted.campaign.active).toMatchObject({nodeId:'c8.supper.entry',scriptRevision:6});
+  expect(restarted.campaign.active).toMatchObject({nodeId:'c8.supper.entry',scriptRevision:7});
   expect(filmLeft(restarted.campaign.active!.story)).toBe(6);
  }
  expect(loadSave(JSON.stringify(beforeMeal))).toEqual(beforeMeal);

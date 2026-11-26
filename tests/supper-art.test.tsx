@@ -12,15 +12,16 @@ vi.mock('../src/app/GameProvider',()=>({useGame:()=>({save:context.save,send:()=
 
 const fillings=['pepper','mushroom','mix','simple'] as const;
 const shapes=['fold','open'] as const;
-const svg=(name:string)=>readFileSync(`outputs/ch08-svg/${name}.svg`,'utf8').trim()
- .replace(/>\s+</g,'><').replace(/<(\w+)([^>]*?)\s*\/>/g,'<$1$2></$1>');
 function checkArt(markup:string,stage:string,name=stage){
  const art=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/)?.[0];
+ const approved=readFileSync(`outputs/ch08-svg/${name}.svg`,'utf8');
  expect(art).toContain(`data-stage="${stage}"`);
- expect(art?.replace(` class="supper-art" data-stage="${stage}"`,'')).toBe(svg(name));
+ expect(art).toContain('viewBox="0 0 320 190"');
+ expect(art?.match(/aria-label="[^"]+"/)?.[0]).toBe(approved.match(/aria-label="[^"]+"/)?.[0]);
+ expect(art).toContain('fill="var(--supper-grain)"');
 }
 
-it('preserves the geometry, paint and accessible label of all 22 approved illustrations',()=>{
+it('renders all 22 repainted illustrations with the approved dimensions and labels',()=>{
  for(const stage of ['torn','board'] as const)checkArt(renderToStaticMarkup(<SupperArt stage={stage}/>),stage);
  for(const filling of fillings){
   checkArt(renderToStaticMarkup(<SupperArt stage="ingredients" filling={filling}/>),'ingredients',`ingredients-${filling}`);

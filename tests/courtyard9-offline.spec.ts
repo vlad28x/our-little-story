@@ -44,10 +44,10 @@ test('three rain routes and skipped bet finish independently with one card and n
 test('existing code opens nine only after eight, map returns to season two, and trial does not replace canon',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await openOffline(page,finishGallery(),'/chapters');
- await page.getByLabel('Код',{exact:true}).fill(chapters.find(c=>c.id===9)!.code!);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();
+ await page.getByText('Есть код от Влада?',{exact:true}).click();await page.getByLabel('Код',{exact:true}).fill(chapters.find(c=>c.id===9)!.code!);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();
  expect((await read(page)).unlocked).toContain(9);await expect(page.getByText('Код сохранён. Сначала заверши предыдущие встречи или текущую главу.',{exact:false})).toBeVisible();
  await page.goto('about:blank');await openOffline(page,finishSupper(),'/chapters');
- await page.getByLabel('Код',{exact:true}).fill(chapters.find(c=>c.id===9)!.code!);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();
+ await page.getByText('Есть код от Влада?',{exact:true}).click();await page.getByLabel('Код',{exact:true}).fill(chapters.find(c=>c.id===9)!.code!);await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();
  expect((await read(page)).campaign.active).toBeNull();
  await page.getByRole('button',{name:/Начать встречу 9/}).click();await expect(page.locator('[data-node="c9.courtyard.entry"]')).toBeVisible();
  const done=finishCourtyard(undefined,{rain:'arch',goodbye:'words'});await page.goto('about:blank');await openOffline(page,done,'/result/9');
@@ -60,7 +60,7 @@ test('existing code opens nine only after eight, map returns to season two, and 
 test('short phone, landscape, desktop, keyboard and reduced motion keep the new scenes usable',async({page})=>{
  for(const [width,height]of [[320,568],[844,390],[1280,900]]){
   await page.setViewportSize({width,height});const save=courtyardAt('c9.courtyard.rainChoice');save.settings.motion='reduced';await openOffline(page,save,'/play/9');
-  await expect(page.locator('.courtyard-rain')).toHaveCSS('animation-name','none');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await expect(page.locator('.scene-rain.scene-rain-heavy')).toBeVisible();expect(await page.locator('.scene-rain.scene-rain-heavy').evaluate(el=>getComputedStyle(el,'::before').animationName)).toBe('none');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   for(const button of await page.locator('.choices button').all())expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(48);
   const leave=page.getByRole('button',{name:/Убежим отсюда вдвоём под дождь/});await leave.focus();await page.keyboard.press('Enter');await expect(page.locator('[data-node="c9.courtyard.leave"]')).toBeVisible();
   await page.screenshot({path:`work/nov15/leave-${width}.png`,animations:'disabled'});

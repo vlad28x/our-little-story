@@ -23,7 +23,7 @@ import { Kitchen } from '../minigames/Kitchen';
 import { KitchenControllerScene, KitchenControls } from './KitchenControls';
 import { UmbrellaPatch } from '../minigames/UmbrellaPatch';
 import { SceneStage } from './SceneStage';
-import { useSound,useSoundCue } from './useSound';
+import { useSound,useSoundCue,type SoundEffect } from './useSound';
 import { storyAmbience,storyCue } from './storySound';
 import { BetweenLines } from '../minigames/BetweenLines';
 import { reaction } from '../minigames/betweenLinesModel';
@@ -43,6 +43,15 @@ const hugAndKissNodes=new Set([
   'c10.travellers.homeKissFirst','c10.travellers.homeKissFirstNeck','c10.travellers.homeKissFirstSoft',
   'c10.travellers.homeKissAgain','c10.travellers.cafeKissAgain','c10.travellers.cafeKissFirst',
 ]);
+
+const eggSounds:Partial<Record<EasterEggId,SoundEffect>>={
+  star:'star',garland9:'star',
+  cat:'purr',cat10:'purr',archChairs9:'purr',tvSleep:'purr',
+  lamp8:'switch',floorLamp10:'switch',cafeLamp10:'switch',spots7:'switch',controller:'switch',tv:'switch',tv10:'switch',
+  kettle8:'kettle',
+  leaves6:'paper',poster7:'paper',bookcase9:'paper',blanket:'paper',blankets9:'paper',sofaBlanket10:'paper',
+  waterWindow6:'wood',bench7:'wood',dropbox9:'wood',
+};
 
 const names={narrator:'Маленькая случайность',vlad:'Влад',heroine:'Ты',nina:'Нина',attendant:'Сотрудница кинодворика',angel:'Ангел',devil:'Дьяволёнок','heroine-thought':'Твоя мысль','vlad-thought':'Тем временем у Влада…'};
 function Dialogue({line,run,onNext,typed,disabled=false,nextLabel='Дальше'}:{line:Line;run:Run;onNext:()=>void;typed:boolean;disabled?:boolean;nextLabel?:string}){
@@ -69,7 +78,7 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
     setAmbience(ambience);
     return()=>setAmbience(null);
   },[ambience,setAmbience]);
-  useSoundCue(run?storyCue(run,fade):undefined,run?`${mode}:${run.attemptId??''}:${run.nodeId}:${run.turn}`:undefined,suspended);
+  useSoundCue(run?storyCue(run):undefined,run?`${mode}:${run.attemptId??''}:${run.nodeId}:${run.turn}`:undefined,suspended);
   const [answerTransition,setAnswerTransition]=useState(false);
   const answerRelease=useRef<ReturnType<typeof setTimeout>|null>(null);
   const [cameraFlash,setCameraFlash]=useState(false);
@@ -85,7 +94,7 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
   },[node,nodeId,reduced,save.settings.sound,suspended,telegramApp]);
   useEffect(()=>{if(!run&&save.lastResult?.chapter===chapterId)go(`/result/${chapterId}`);},[run,save.lastResult,chapterId]);
   if(!run||!chapter)return <div className="page-content"><h2>Эта встреча ждёт на карте глав</h2><p>Главы открываются по порядку. Уже пройденные встречи можно посмотреть снова.</p><button onClick={()=>go('/chapters')}>К главам</button></div>;
-  if(!scene||!node||node.kind==='route'||node.kind==='end')return <div className="page-content"><h2>Не удалось продолжить сцену</h2><p>Скопируй прогресс в настройках, затем можно начать главу заново.</p><button onClick={()=>go('/settings')}>Настройки и резервная копия</button></div>;
+  if(!scene||!node||node.kind==='route'||node.kind==='end')return <div className="page-content"><h2>Не удалось продолжить сцену</h2><p>Можно вернуться к главам или начать встречу заново в настройках.</p><button onClick={()=>go('/settings')}>Настройки</button></div>;
   const light=run.activity?.kind==='evening-light'?run.activity.level??undefined:run.activity?.kind==='movie-setup'?run.activity.light??undefined:run.results['evening-light']?.level??run.results['movie-setup']?.light??undefined;
   const line=node.kind==='dialogue'?resolveLine(node.lines[run.lineIndex],run.story):null;
   const councilLine=run.activity?.kind==='between-lines'&&run.activity.phase!=='choose'?reaction(run.activity)[run.activity.phase==='complete'?reaction(run.activity).length-1:run.activity.lineIndex]:undefined;
@@ -109,8 +118,8 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
   const cameraStory=previewCount?{...run.story,[filmEffect.key]:filmEffect.value}:run.story;
   function discoverEgg(id:EasterEggId){
     if(!run||!showEasterEggs)return false;
-    if(id==='star')play('star');
-    if(id==='cat'||id==='cat10')play('purr');
+    const sound=eggSounds[id];
+    if(sound)play(sound);
     const secretId=sceneSecretId(id,run.chapter);
     if(!secretId||save.collection.secrets.includes(secretId))return false;
     send({type:'discover-scene-secret',id:secretId,target:mode,expectedTurn:run.turn});
@@ -131,10 +140,17 @@ export function StoryScreen({mode,chapterId=1,suspended=false}:{mode:'campaign'|
     send({type:'command',target:mode,command:{kind:'advance',expectedTurn:run.turn}});
   }
   const outsideCafe=scene.background==='bg.cafe.exterior';
-  const showCat=chapterId===10?false:chapterId===5?!outsideCafe&&run.nodeId!=='c5.return'&&!run.nodeId.startsWith('c5.rain.')&&!run.nodeId.startsWith('c5.souvenir.'):chapterId===1||node.scene.background==='bg.cafe.window'||(run.story.catApproach==='wait'&&['c2.cat.echo.wait','c2.pause','c2.pause.quiet','c2.pause.playful','c2.end'].includes(run.nodeId));
+  const courtyardScene=chapterId===9?run.nodeId.slice('c9.courtyard.'.length):'';
+  const courtyardShelterRain=new Set(['canopy','arch','warmth','movieTalk','movieChoice','movieDrama','movieWarm','movieMystery','nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip']);
+  const rain=chapterId===2
+    ?(run.nodeId==='c2.rain.intro'||run.nodeId==='c2.rain'?'heavy':run.nodeId==='c2.rain.shelter'||run.nodeId==='c2.rain.arcade'?'shelter':run.nodeId.startsWith('c2.pause')||run.nodeId.startsWith('c2.recharge')||run.nodeId.startsWith('c2.cat.echo')?'soft':undefined)
+    :chapterId===9
+      ?(['rain','rainAside','rainChoice'].includes(courtyardScene)||courtyardScene==='leave'&&run.lineIndex<2?'heavy':courtyardShelterRain.has(courtyardScene)||courtyardScene==='leave'||courtyardScene==='earlyWalk'&&!lastLine?'shelter':undefined)
+      :undefined;
+  const showCat=chapterId===10?false:chapterId===5?!outsideCafe&&run.nodeId!=='c5.return'&&!run.nodeId.startsWith('c5.rain.')&&!run.nodeId.startsWith('c5.souvenir.'):chapterId===1||node.scene.background==='bg.cafe.window'||['c2.cat.echo.wait','c2.cat.echo.help','c2.pause','c2.pause.quiet','c2.pause.playful','c2.end'].includes(run.nodeId);
   const advisers=node.kind==='dialogue'&&node.presentation==='adviser-aside'&&(line?.speaker==='angel'||line?.speaker==='devil')?line.speaker:undefined;
   return <div className={`story-screen ${chapterId<=5?'first-season-palette':''} ${chapterId>=6?'season-two second-season-palette':''} ${node.kind==='minigame'?'is-search':''} ${node.kind==='minigame'&&node.game==='kitchen'?'is-kitchen':''} ${node.kind==='minigame'&&node.game==='constellation'?'is-constellation':''} ${node.kind==='minigame'&&node.game==='evening-route'?'is-evening-route':''} ${node.kind==='minigame'&&node.game==='between-lines'?'is-between-lines':''} ${node.kind==='note'||node.kind==='label'?'is-personal-note':''} ${node.kind==='minigame'&&['dessert','movie-setup','evening-light'].includes(node.game)?'is-cozy-game':''}`} data-node={run.nodeId}>
-    <SceneStage travellers={chapterId===10?<TravellersScene run={run}/>:undefined} courtyard={chapterId===9?<CourtyardScene run={run} background={scene.background}/>:undefined} supper={chapterId===8?<SupperScene story={run.story} node={run.nodeId} lineIndex={run.lineIndex}/>:undefined} exhibit={chapterId===7?galleryView(run.nodeId,run.lineIndex):undefined} key={`${mode}:${chapterId}`} background={scene.background} characterId={chapterId>=7?scene.character:undefined} word={chapterId===9||chapterId===10&&!run.story.c10Place?undefined:activeWordLabel(save,run,mode)} dessert={chapterId===8?run.results.dessert:undefined} drink={chapterId===9&&run.scriptRevision!==5&&run.story.c9Place?(run.activity?.kind==='movie-setup'?run.activity.drink??'tea':run.results['movie-setup']?.drink??'tea'):undefined} light={light} filmFrame={chapterId===9&&run.scriptRevision!==5&&run.story.c9Place?(run.nodeId.startsWith('c9.r3.film.end')||run.story.c9Close?2:run.story.c9SecondMoment?1:0):undefined} bookmark={chapterId===10?run.story.c10Memory:undefined} fade={fade} emotion={emotion} speaker={councilLine?.speaker??line?.speaker} galleryPlace={chapterId===7&&run.scriptRevision===3?(['lead','invite'].includes((run.activity?.kind==='between-lines'?run.activity.answers[1]:run.results['between-lines']?.answers[1])??'')?'arch':'window'):undefined} sceneId={run.nodeId} constellation={run.story.constellation} showCat={showCat} reserveRemote={chapterId===4&&run.story.controllerReaction==='absurd'&&!!run.story.kitchenStyle} advisers={advisers} bench={chapterId===7?(run.story.c7Reply==='hand'||run.story.c7Moment==='near'?'near':undefined):chapterId===6?(run.story.c6Moment==='hand'||run.story.c6Moment==='hug'?'near':undefined):chapterId===9?(run.story.c9SecondMoment==='hug'||!run.story.c9Break&&run.story.c9Closeness==='shoulder'?'near':run.results['movie-setup']?.seat??undefined):undefined} easterEggs={showEasterEggs} interactionContext={context} reducedMotion={reduced} onDiscoverEgg={discoverEgg}/>
+    <SceneStage travellers={chapterId===10?<TravellersScene run={run}/>:undefined} courtyard={chapterId===9?<CourtyardScene run={run} background={scene.background}/>:undefined} supper={chapterId===8?<SupperScene story={run.story} node={run.nodeId} lineIndex={run.lineIndex}/>:undefined} exhibit={chapterId===7?galleryView(run.nodeId,run.lineIndex):undefined} rain={rain} key={`${mode}:${chapterId}`} background={scene.background} characterId={chapterId>=7?scene.character:undefined} word={chapterId===9||chapterId===10&&!run.story.c10Place?undefined:activeWordLabel(save,run,mode)} dessert={chapterId===8?run.results.dessert:undefined} drink={chapterId===9&&run.scriptRevision!==5&&run.story.c9Place?(run.activity?.kind==='movie-setup'?run.activity.drink??'tea':run.results['movie-setup']?.drink??'tea'):undefined} light={light} filmFrame={chapterId===9&&run.scriptRevision!==5&&run.story.c9Place?(run.nodeId.startsWith('c9.r3.film.end')||run.story.c9Close?2:run.story.c9SecondMoment?1:0):undefined} bookmark={chapterId===10?run.story.c10Memory:undefined} fade={fade} emotion={emotion} speaker={councilLine?.speaker??line?.speaker} galleryPlace={chapterId===7&&run.scriptRevision===3?(['lead','invite'].includes((run.activity?.kind==='between-lines'?run.activity.answers[1]:run.results['between-lines']?.answers[1])??'')?'arch':'window'):undefined} sceneId={run.nodeId} constellation={run.story.constellation} showCat={showCat} reserveRemote={chapterId===4&&run.story.controllerReaction==='absurd'&&!!run.story.kitchenStyle} advisers={advisers} bench={chapterId===7?(run.story.c7Reply==='hand'||run.story.c7Moment==='near'?'near':undefined):chapterId===6?(run.story.c6Moment==='hand'||run.story.c6Moment==='hug'?'near':undefined):chapterId===9?(run.story.c9SecondMoment==='hug'||!run.story.c9Break&&run.story.c9Closeness==='shoulder'?'near':run.results['movie-setup']?.seat??undefined):undefined} easterEggs={showEasterEggs} interactionContext={context} reducedMotion={reduced} onDiscoverEgg={discoverEgg}/>
     <div className="story-panel">
       {chapterId===10&&<TravellersStatus run={run}/>}
       {chapterId>=6&&chapterId<=9&&<PhotoCamera key={mode+chapterId} story={cameraStory} visible={showCamera} interactive={showEasterEggs} context={context} reduced={reduced} onShutter={shutterReady?advance:undefined} flash={cameraFlash} onDiscover={()=>discoverEgg('camera')}/>}
