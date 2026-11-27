@@ -38,15 +38,17 @@ export const easterEggs={
   cafeLamp10:{label:'Коснуться абажура над столиком',text:'та самая лампа. кажется, она нас запомнила ещё с рассыпанных жетонов'},
   cafeShelf10:{label:'Посмотреть на полку у стены',text:'интересно, сколько ещё наших жетонов Нина прячет по всему залу'},
   cat10:{label:'Погладить Пончика',text:'он уверен, что всю партию выиграл именно он'},
+  envelope10:{label:'Потрогать конверт из фотолаборатории',text:'так, на просвет не подглядывать! хотя ладно, один кадр я и сам помню наизусть'},
   floorLamp10:{label:'Коснуться торшера у дивана',text:'верхний свет сегодня точно не понадобится'},
   sofaBlanket10:{label:'Потрогать вязаный плед',text:'плед, пазл на полке и твой стикер на геймпаде — здесь всё ждало твоего возвращения'},
+  secondBlanket10:{label:'Потрогать второй плед',text:'второй — твой, самый тёплый. если что, могу поделиться ещё и подушкой'},
   tv10:{label:'Посмотреть на телевизор',text:'даже телевизор сегодня решил нас не отвлекать'},
   glasses10:{label:'Коснуться стаканов на столе',text:'теперь на этом столе всегда хочется ставить две чашки'},
   morningWindow10:{label:'Посмотреть в утреннее окно',text:'вот такое утро я бы вообще не перематывал'},
 } as const;
 export type EasterEggId=keyof typeof easterEggs;
 export type ScenePropId=Exclude<EasterEggId,'hair'|'nina'|'cat'|'cookie'|'controller'|'camera'>;
-export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'tvSleep'|'mug'|'star'|'sign'|'cat10'>;
+export type SeasonSceneryId=Exclude<ScenePropId,'blanket'|'tv'|'tvSleep'|'mug'|'star'|'sign'|'cat10'|'envelope10'|'secondBlanket10'>;
 type SceneryBox=readonly [cx:number,cy:number,width:number,height:number];
 type Scenery=Partial<Record<SeasonSceneryId,SceneryBox>>;
 
@@ -60,7 +62,7 @@ export const seasonScenery:Partial<Record<string,Scenery>>={
   'bg.photo6.upper':{leaves6:[.22,.12,.14,.1],lantern6:[.09,.22,.08,.11],cafeSign6:[.92,.33,.08,.08]},
   'bg.gallery7.outside':{poster7:[.17,.27,.17,.17],noPhoto7:[.28,.44,.055,.05],handle7:[.32,.49,.07,.06]},
   'bg.gallery7.hall':{spots7:[.49,.055,.15,.08],bench7:[.89,.56,.12,.12],window7:[.35,.18,.13,.10]},
-  'bg.supper8.kitchen':{utensils8:[.19,.25,.08,.08],kettle8:[.24,.33,.07,.08],sugar8:[.374,.59,.06,.07],fridge8:[.848,.42,.07,.1],lamp8:[.92,.27,.08,.10]},
+  'bg.supper8.kitchen':{utensils8:[.19,.25,.08,.08],kettle8:[.24,.33,.07,.08],sugar8:[.374,.59,.06,.07],fridge8:[.848,.46,.07,.1],lamp8:[.907,.255,.08,.10]},
   'bg.courtyard9.open':{blankets9:[.135,.60,.10,.12],garland9:[.48,.27,.15,.07],archChairs9:[.916,.54,.09,.11]},
   'bg.courtyard9.canopy':{blankets9:[.087,.72,.12,.15],garland9:[.61,.12,.18,.08]},
   'bg.courtyard9.arch':{blankets9:[.11,.78,.12,.14],archChairs9:[.86,.73,.13,.17]},
@@ -85,5 +87,7 @@ export function sceneEggProps(background:string,sceneId:string):ScenePropId[]{
   if(background==='bg.cafe.sunset'&&sceneId.startsWith('c5.'))props.push('sign');
   props.push(...Object.keys(seasonScenery[background]??{}) as SeasonSceneryId[]);
   if(background==='bg.travellers10.cafe')props.push('cat10');
+  if(background==='bg.travellers10.cafe'&&sceneId==='c10.travellers.prints')props.push('envelope10');
+  if(background==='bg.travellers10.home'&&sceneId==='c10.travellers.sleep')props.push('secondBlanket10');
   return props;
 }

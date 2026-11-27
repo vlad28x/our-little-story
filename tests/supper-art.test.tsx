@@ -18,7 +18,8 @@ function checkArt(markup:string,stage:string,name=stage){
  expect(art).toContain(`data-stage="${stage}"`);
  expect(art).toContain('viewBox="0 0 320 190"');
  expect(art?.match(/aria-label="[^"]+"/)?.[0]).toBe(approved.match(/aria-label="[^"]+"/)?.[0]);
- expect(art).toContain('fill="var(--supper-grain)"');
+ expect(art).toContain(stage==='cooked'||stage==='half'?'supper8/serving.webp':'supper8/preparation.webp');
+ expect(art).not.toContain('var(--supper-grain)');
 }
 
 it('renders all 22 repainted illustrations with the approved dimensions and labels',()=>{

@@ -4,12 +4,12 @@ import {chapters} from '../src/content/chapters/manifest';
 import {reduceSave} from '../src/state/reducer';
 import type {Command,NodeId,Run} from '../src/engine/types';
 import type {SaveV1} from '../src/state/types';
-export type SupperPath={filling:'pepper'|'mushroom'|'mix'|'simple';shape:'fold'|'open';frame:'foodHer'|'foodVlad'|'boardHer'|'boardVlad';step:'follow'|'lead'|'play'|'sit';kiss:boolean;hoodie:'wear'|'borrow'|'pass'};
+export type SupperPath={filling:'pepper'|'mushroom'|'mix'|'simple';shape:'fold'|'open';frame:'foodHer'|'foodVlad'|'boardHer'|'boardVlad';step:'follow'|'lead'|'play'|'sit';kiss:boolean;gentle?:'sitCheek'|'sitQuiet'|'sitHand';hoodie:'wear'|'borrow'|'pass'};
 export const supperPath:SupperPath={filling:'pepper',shape:'fold',frame:'foodHer',step:'follow',kiss:false,hoodie:'pass'};
 export function supperCommand(run:Run,path:Partial<SupperPath>={}):Command{
  const p={...supperPath,...path},node=getChapter(8)!.nodes[run.nodeId];
  if(node.kind==='dialogue')return {kind:'advance',expectedTurn:run.turn};
- const choices:Record<string,string>={'c8.supper.fillChoice':p.filling,'c8.supper.shapeChoice':p.shape,'c8.supper.frameChoice':p.frame,'c8.supper.danceChoice':p.step,'c8.supper.reply':p.kiss?'kissYes':'danceOn','c8.supper.initiative':p.kiss?'kiss':p.step+'Quiet','c8.supper.hoodieChoice':p.hoodie};
+ const choices:Record<string,string>={'c8.supper.fillChoice':p.filling,'c8.supper.shapeChoice':p.shape,'c8.supper.frameChoice':p.frame,'c8.supper.danceChoice':p.step,'c8.supper.reply':p.kiss?'kissYes':'danceOn','c8.supper.initiative':p.kiss?'kiss':p.step+'Quiet','c8.supper.sitGentle':p.gentle??'sitQuiet','c8.supper.hoodieChoice':p.hoodie};
  if(node.kind!=='choice'||!choices[node.id])throw Error('Unsupported supper node '+node.id);
  return {kind:'choose',choiceId:choices[node.id],expectedTurn:run.turn};
 }

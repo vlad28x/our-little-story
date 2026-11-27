@@ -4,7 +4,7 @@ import { CONTENT_VERSION } from '../version';
 export const chapter6:Chapter = {
   "id": 6,
   "contentVersion": CONTENT_VERSION,
-  "scriptRevision": 5,
+  "scriptRevision": 6,
   "title": "Пока светло",
   "entry": "c6.photo.entry",
   "nodes": {
@@ -861,7 +861,7 @@ export const chapter6:Chapter = {
         {
           "speaker": "heroine",
           "emotion": "laugh",
-          "text": "Прямо на наши ботинки и край сумки."
+          "text": "Прямо на наши ботинки."
         },
         {
           "speaker": "vlad",
@@ -999,8 +999,190 @@ export const chapter6:Chapter = {
           ]
         },
         {
+          "speaker": "vlad",
+          "emotion": "thinking",
+          "text": "слушай, мы сегодня так вовремя сбежали от всей этой суеты… а если бы у тебя завтра вдруг освободились три дня без единого дела — куда бы ты сорвалась?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Он чуть замедляет шаг рядом с тобой — видно, что ему правда интересно, как ты представляешь свой идеальный отдых."
+        }
+      ],
+      "next": "c6.photo.escape"
+    },
+    "c6.photo.escape": {
+      "id": "c6.photo.escape",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "Куда бы ты сорвалась на три свободных дня?",
+      "choices": [
+        {
+          "id": "sea",
+          "text": "К холодному морю — дышать ветром и слушать воду",
+          "next": "c6.photo.escape.sea",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6HerEscape",
+              "value": "sea"
+            }
+          ]
+        },
+        {
+          "id": "oldtown",
+          "text": "В старый тихий город — бродить по улочкам без карты",
+          "next": "c6.photo.escape.oldtown",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6HerEscape",
+              "value": "oldtown"
+            }
+          ]
+        },
+        {
+          "id": "cabin",
+          "text": "В тихий домик у леса — к природе и полному спокойствию",
+          "next": "c6.photo.escape.cabin",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6HerEscape",
+              "value": "cabin"
+            }
+          ]
+        }
+      ]
+    },
+    "c6.photo.escape.sea": {
+      "id": "c6.photo.escape.sea",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "К морю. Даже не в сезон — в тёплом пальто, идти вдоль пустого берега и слушать воду."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "красиво. я сам путешественник так себе — меня скорее тянет в тихий домик у леса, где природа и никакой суеты. но пустой берег без толпы я точно понимаю."
+        },
+        {
           "speaker": "narrator",
           "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе и протягивает раскрытую ладонь:"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "пойдём дальше за руку?"
+        }
+      ],
+      "next": "c6.photo.touch"
+    },
+    "c6.photo.escape.oldtown": {
+      "id": "c6.photo.escape.oldtown",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "В небольшой старый город с узкими улочками и маленькими пекарнями — чтобы бродить без плана и карты."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "laugh",
+          "text": "смело. я в поездках человек редкий, мне ближе тихий домик у леса и природа, но с тобой бы рискнул потеряться в незнакомых переулках. хотя без карты мне сначала было бы непривычно."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Впереди аллея уходит под кроны старых клёнов. Влад поворачивается к тебе и протягивает раскрытую ладонь:"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "пойдём дальше за руку?"
+        }
+      ],
+      "next": "c6.photo.touch"
+    },
+    "c6.photo.escape.cabin": {
+      "id": "c6.photo.escape.cabin",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "В тихий домик где-нибудь у леса: природа, тёплый свет вечером, никуда не спешить и никакой суеты."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "surprised",
+          "text": "подожди… серьёзно? ты буквально описала мой идеальный вариант. я сам не фанат дальних поездок, а вот сбежать в домик у леса, где тихо и вокруг природа — это сто процентов моё."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Впереди аллея уходит под кроны старых клёнов. Влад смотрит на тебя с открытой, тёплой улыбкой и протягивает раскрытую ладонь:"
         },
         {
           "speaker": "vlad",
@@ -1108,7 +1290,7 @@ export const chapter6:Chapter = {
           "text": "На повороте аллеи вы идёте в одном темпе, уже не разжимая рук."
         }
       ],
-      "next": "c6.photo.gallery"
+      "next": "c6.photo.askLead"
     },
     "c6.photo.touch.hug": {
       "id": "c6.photo.touch.hug",
@@ -1155,7 +1337,7 @@ export const chapter6:Chapter = {
           "text": "Когда вы отстраняетесь, Влад мягко перехватывает твою ладонь, и дальше по аллее вы идёте уже за руку."
         }
       ],
-      "next": "c6.photo.gallery"
+      "next": "c6.photo.askLead"
     },
     "c6.photo.touch.none": {
       "id": "c6.photo.touch.none",
@@ -1189,6 +1371,225 @@ export const chapter6:Chapter = {
         {
           "speaker": "narrator",
           "text": "Он спокойно убирает руку в карман без тени неловкости, и когда на повороте попадается лужа, просто придерживает край прохода, пропуская тебя по сухому месту."
+        }
+      ],
+      "next": "c6.photo.askLead"
+    },
+    "c6.photo.askLead": {
+      "id": "c6.photo.askLead",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Аллея под фонарями пустеет, шаги звучат тише. Хочется узнать про Влада ещё что-нибудь настоящее — вне обычных разговоров."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Влад, можно внезапный вопрос — просто чтобы узнать тебя получше?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "конечно. спрашивай что угодно, скрывать мне от тебя нечего."
+        }
+      ],
+      "next": "c6.photo.askVlad"
+    },
+    "c6.photo.askVlad": {
+      "id": "c6.photo.askVlad",
+      "kind": "choice",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "prompt": "О чём спросишь Влада?",
+      "choices": [
+        {
+          "id": "game",
+          "text": "Чем занимаешься вечером, когда закрываешь рабочие задачи?",
+          "next": "c6.photo.ask.game",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6AskVlad",
+              "value": "game"
+            }
+          ]
+        },
+        {
+          "id": "routine",
+          "text": "Как устроены твои обычные будни вне работы?",
+          "next": "c6.photo.ask.routine",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6AskVlad",
+              "value": "routine"
+            }
+          ]
+        },
+        {
+          "id": "quirk",
+          "text": "Признавайся: есть за тобой смешная бытовая привычка?",
+          "next": "c6.photo.ask.quirk",
+          "effects": [
+            {
+              "kind": "set",
+              "key": "c6AskVlad",
+              "value": "quirk"
+            }
+          ]
+        }
+      ]
+    },
+    "c6.photo.ask.game": {
+      "id": "c6.photo.ask.game",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.smile",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.smile"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Ты говорил, что легко залипаешь в код. А когда рабочие задачи закрыты — чем занимаешься для души?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "иногда пишу свою небольшую игру или ковыряю пет-проекты. нравится сам момент, когда из пустого файла потихоньку собирается что-то живое, своё."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Свою игру с нуля? Вот это неожиданно. Покажешь когда-нибудь?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "laugh",
+          "text": "обязательно. только предупреждаю: потом я ещё долго буду расспрашивать, где именно ты улыбнулась, а где захотелось переделать."
+        }
+      ],
+      "next": "c6.photo.gallery"
+    },
+    "c6.photo.ask.routine": {
+      "id": "c6.photo.ask.routine",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.thinking",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.thinking"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Как ты держишь баланс вне работы? Кроме прогулок — на что у тебя ещё хватает сил?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "thinking",
+          "text": "занимаюсь дома тренировками, чтобы спина не забыла, как двигаться, и потихоньку учу английский. ничего пафосного — просто люблю понятный ритм без лишней суеты."
+        },
+        {
+          "speaker": "heroine",
+          "text": "Звучит на удивление собрано. И ты правда никогда не отлыниваешь?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "laugh",
+          "text": "отлыниваю, конечно. но мне проще чуть напрячься вечером и лечь со спокойной головой, чем потом суетиться и всё наверстывать в последний момент."
+        }
+      ],
+      "next": "c6.photo.gallery"
+    },
+    "c6.photo.ask.quirk": {
+      "id": "c6.photo.ask.quirk",
+      "kind": "dialogue",
+      "scene": {
+        "background": "bg.photo6.shade",
+        "character": "vlad.city.laugh",
+        "variants": [
+          {
+            "when": [
+              {
+                "key": "c6PhotoPlace",
+                "equals": "upper"
+              }
+            ],
+            "background": "bg.photo6.upper",
+            "character": "vlad.city.laugh"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "speaker": "heroine",
+          "text": "Ты всё время такой собранный. Признавайся честно: какая у тебя есть смешная бытовая слабость?"
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "laugh",
+          "text": "самая честная — я могу сорок минут выбирать фильм на вечер. перебираю описания, трейлеры, отзывы… а потом в итоге уже пора спать."
+        },
+        {
+          "speaker": "heroine",
+          "emotion": "laugh",
+          "text": "Значит, пульт в киновечера я забираю себе."
+        },
+        {
+          "speaker": "vlad",
+          "emotion": "smile",
+          "text": "с радостью уступлю. зато в одном я точно надёжен: терпеть не могу опаздывать и суетиться, так что ждать меня на холоде тебе никогда не придётся."
         }
       ],
       "next": "c6.photo.gallery"

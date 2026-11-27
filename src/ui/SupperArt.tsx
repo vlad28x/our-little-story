@@ -1,23 +1,34 @@
-import { cloneElement, useId, useState, type CSSProperties, type ReactElement, type SVGProps } from 'react';
+import { useId } from 'react';
 import type { StoryState } from '../engine/types';
 import { assetUrl } from '../content/assetManifest';
-import { supperIllustrations } from './SupperIllustrations';
 
 type Filling=NonNullable<StoryState['c8Filling']>;
 type Shape=NonNullable<StoryState['c8Shape']>;
 type SupperStage='ingredients'|'torn'|'cooked'|'half'|'board';
 
-const materialColors = {
-  board: ['#e3be91', '#bb8c65', '#8d5f4d'],
-  rim: ['#e9d2c5', '#ba99ab', '#85697e'],
-  glaze: ['#fff7e8', '#ebd7bf', '#caa79e'],
-  crust: ['#f2cd8f', '#d39a5d', '#a76b48'],
-  fold: ['#fae0a1', '#dda46a', '#b47952'],
-  dough: ['#fae8c5', '#ebcda4', '#cea17a'],
-  cheese: ['#fff0b6', '#eeca77', '#c68d4d'],
-  pepper: ['#eb9775', '#bb5d4b', '#8a4139'],
-  mushroom: ['#d2a983', '#9b7259', '#684b43'],
-  herb: ['#a8b179', '#778654', '#536244'],
+const supperLabels={
+  board:'Доска после готовки: мучная запятая, ложка и крошки',
+  torn:'Лист лепёшки разошёлся по сгибу на две половины',
+  'ingredients-mix':'Доска с тёртым сыром, перцем и грибами',
+  'ingredients-mushroom':'Доска с тёртым сыром и обжаренными грибами',
+  'ingredients-pepper':'Доска с тёртым сыром и нарезанным сладким перцем',
+  'ingredients-simple':'Доска с тёртым сыром и свежей зеленью',
+  'cooked-fold-mix':'Четыре румяных конвертика: mix',
+  'cooked-fold-mushroom':'Четыре румяных конвертика: mushroom',
+  'cooked-fold-pepper':'Четыре румяных конвертика: pepper',
+  'cooked-fold-simple':'Четыре румяных конвертика: simple',
+  'cooked-open-mix':'Четыре открытые запечённые порции: mix',
+  'cooked-open-mushroom':'Четыре открытые запечённые порции: mushroom',
+  'cooked-open-pepper':'Четыре открытые запечённые порции: pepper',
+  'cooked-open-simple':'Четыре открытые запечённые порции: simple',
+  'half-fold-mix':'Половину съели: целая и разломленная порция (fold, mix)',
+  'half-fold-mushroom':'Половину съели: целая и разломленная порция (fold, mushroom)',
+  'half-fold-pepper':'Половину съели: целая и разломленная порция (fold, pepper)',
+  'half-fold-simple':'Половину съели: целая и разломленная порция (fold, simple)',
+  'half-open-mix':'Половину съели: целая и разломленная порция (open, mix)',
+  'half-open-mushroom':'Половину съели: целая и разломленная порция (open, mushroom)',
+  'half-open-pepper':'Половину съели: целая и разломленная порция (open, pepper)',
+  'half-open-simple':'Половину съели: целая и разломленная порция (open, simple)',
 } as const;
 
 const boardTiles={pepper:[0,0],mushroom:[1,0],mix:[0,1],simple:[1,1],torn:[0,2],board:[1,2]} as const;
@@ -35,29 +46,12 @@ function supperTile(stage:SupperStage,filling:Filling,shape:Shape){
 
 export function SupperArt({stage,filling='simple',shape='open'}:{stage:SupperStage;filling?:Filling;shape?:Shape}){
   const id=useId().replace(/:/g,'');
-  const [loadedAtlas,setLoadedAtlas]=useState<string>();
   const {url,column,row,columns,rows}=supperTile(stage,filling,shape);
-  const painted=loadedAtlas===url;
   const key=stage==='torn'||stage==='board'?stage:stage==='ingredients'?`ingredients-${filling}` as const:`${stage}-${shape}-${filling}` as const;
-  const drawing:ReactElement<SVGProps<SVGSVGElement>>=supperIllustrations[key];
-  const materials=Object.entries(materialColors);
-  const style={
-    ...Object.fromEntries(materials.map(([name])=>[`--supper-${name}`,`url(#${id}-${name})`])),
-    '--supper-grain':`url(#${id}-grain)`,
-  } as CSSProperties;
-  const paint=<defs>
-    <clipPath id={`${id}-tile`}><rect width={tileWidth} height={tileHeight}/></clipPath>
-    {materials.map(([name,[light,middle,shade]])=><linearGradient key={name} id={`${id}-${name}`} x2=".72" y2="1">
-      <stop stopColor={light}/><stop offset=".58" stopColor={middle}/><stop offset="1" stopColor={shade}/>
-    </linearGradient>)}
-    <pattern id={`${id}-grain`} width="23" height="17" patternUnits="userSpaceOnUse">
-      <path d="M1 3l2-.4m5 9 1-.3m7-7 2 .4m2 8 1-.4M6 16l1.5-.2" stroke="#f8e1be" strokeWidth="1.2" strokeLinecap="round" opacity=".32"/>
-      <path d="M5 6l1 .4m6-5 1.6 .2m1 8 2-.4m-3 6 1.1 .4M1 13h1" stroke="#6e483d" strokeWidth=".9" strokeLinecap="round" opacity=".26"/>
-    </pattern>
-  </defs>;
-  return cloneElement(drawing,{style},paint,painted?null:drawing.props.children,
-    <image href={url} x={-column*tileWidth} y={-row*tileHeight} width={columns*tileWidth} height={rows*tileHeight}
-      clipPath={`url(#${id}-tile)`} opacity={painted?1:0} onLoad={()=>setLoadedAtlas(url)}/>);
+  return <svg className="supper-art" data-stage={stage} viewBox="0 0 320 190" role="img" aria-label={supperLabels[key]}>
+    <defs><clipPath id={`${id}-tile`}><rect width={tileWidth} height={tileHeight}/></clipPath></defs>
+    <image href={url} x={-column*tileWidth} y={-row*tileHeight} width={columns*tileWidth} height={rows*tileHeight} clipPath={`url(#${id}-tile)`}/>
+  </svg>;
 }
 
 const serveAt={fold:10,open:12};

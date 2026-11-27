@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {supperAt,supperCommand} from './supperHelpers';
+import {finishGallery} from './gallery7Helpers';
 import {parseSave} from '../src/persistence/validateSave';
 import {reduceSave} from '../src/state/reducer';
 import {photoAt,photoCommand} from './photo6Helpers';
@@ -27,7 +28,7 @@ for(const gesture of ['hand','hug','none'] as const)test(`served sixth goodbye r
 });
 
 for(const kiss of [false,true])test(`served eighth goodbye preserves actual kiss=${kiss} after reload`,async({page})=>{
- let save=supperAt('c8.supper.courtyard',{kiss,step:'sit'});
+ let save=supperAt('c8.supper.courtyard',{kiss,step:'sit'},kiss?finishGallery(undefined,{farewell:'cheek'}):undefined);
  const node=chapter8.nodes['c8.supper.courtyard'];if(node.kind!=='dialogue')throw Error('Missing goodbye');
  while(save.campaign.active!.lineIndex!==node.lines.length-1)save=reduceSave(save,{type:'command',target:'campaign',command:supperCommand(save.campaign.active!,{kiss,step:'sit'})});
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});

@@ -16,6 +16,7 @@ import { finishSupper,startSupper,supperAt,supperCommand,type SupperPath } from 
 import { finishCourtyard } from './courtyard9Helpers';
 import { finishTravellers } from './travellers10Helpers';
 const seven=finishGallery();
+const openSeven=finishGallery(finishPhotoSix(undefined,{gesture:'hand'}),{farewell:'cheek'});
 
 it('ships the exact revised text and a complete eighth graph, without later content',()=>{
  for(const chapter of [chapter7,chapter8]){
@@ -37,7 +38,7 @@ it('ships the exact revised text and a complete eighth graph, without later cont
 });
 
 it('all 768 paths retain food, camera, separate kiss and hoodie decisions',()=>{
- const prior=seven.campaign.records[7]!.story;let count=0;
+ const prior=openSeven.campaign.records[7]!.story;let count=0;
  for(const filling of ['pepper','mushroom','mix','simple'] as const)for(const shape of ['fold','open'] as const)for(const frame of ['foodHer','foodVlad','boardHer','boardVlad'] as const)for(const dance of ['follow','lead','play','sit'] as const)for(const kiss of [false,true])for(const hoodie of ['wear','borrow','pass'] as const){
   const path:SupperPath={filling,shape,frame,step:dance,kiss,hoodie};let run=startRun(chapter8,prior,'exhaustive-supper');const text:string[]=[];const counts=new Set<number>();
   for(let guard=0;guard<200;guard++){
@@ -73,13 +74,35 @@ it('reloads every cursor on eight representative routes, including all gifts and
  }
 },90000);
 
+it('keeps the cautious seated branch gentle without a lip kiss and lets an open dance kiss stay softer',()=>{
+ for(const gentle of ['sitCheek','sitQuiet','sitHand'] as const){
+  const atMenu=supperAt('c8.supper.sitGentle',{step:'sit',kiss:false,gentle},seven);
+  const menu=chapter8.nodes[atMenu.campaign.active!.nodeId];
+  if(menu.kind!=='choice')throw Error('Missing sitGentle');
+  expect(menu.choices.map(c=>c.id)).toEqual(['sitCheek','sitQuiet','sitHand']);
+  expect(menu.choices.some(c=>c.text.includes('Притянуть его ближе и поцеловать'))).toBe(false);
+  let s=atMenu;
+  while(s.campaign.active){
+   expect(parseSave(JSON.stringify(s))).toEqual(s);
+   s=reduceSave(s,{type:'command',target:'campaign',command:supperCommand(s.campaign.active,{step:'sit',kiss:false,gentle})});
+  }
+  expect(s.campaign.records[8]!.story).toMatchObject({c6Gesture:'none',c7GalleryFarewell:'words',c8Step:'sit',c8LipKiss:'no'});
+  expect(parseSave(cloudRaw(s))).toEqual(s);
+ }
+ const danceKiss=supperAt('c8.supper.kissHer',{step:'lead',kiss:true},seven);
+ const kissNode=chapter8.nodes['c8.supper.kissHer'];if(kissNode.kind!=='dialogue')throw Error('Missing kissHer');
+ expect(resolveLine(kissNode.lines[6],danceKiss.campaign.active!.story).text).toContain('давая тебе самой задавать ритм');
+ expect(finishSupper(seven,{step:'lead',kiss:true}).campaign.records[8]!.story.c8LipKiss).toBe('yes');
+});
+
 it('commits the shutter, kiss and hoodie only on actual actions; rejects invented facts and turn counts',()=>{
- for(const [id,path,needle,key,value]of [
-  ['c8.supper.foodClick',{frame:'foodHer'},'кнопку спуска','c8Film','key'],
-  ['c8.supper.kissHer',{step:'sit',kiss:true},'его губы встречают твои','c8LipKiss','yes'],
-  ['c8.supper.borrow',{hoodie:'borrow'},'Ты надеваешь','c8Hoodie','borrowed']
+ for(const [id,path,base,needle,key,value]of [
+  ['c8.supper.foodClick',{frame:'foodHer'},seven,'кнопку спуска','c8Film','key'],
+  ['c8.supper.kissHer',{step:'sit',kiss:true},openSeven,'его губы встречают твои','c8LipKiss','yes'],
+  ['c8.supper.sitCheek',{step:'sit',kiss:false,gentle:'sitCheek'},seven,'поблагодарить тебя за этот вечер','c8LipKiss','no'],
+  ['c8.supper.borrow',{hoodie:'borrow'},seven,'Ты надеваешь','c8Hoodie','borrowed']
  ] as const){
-  let s=supperAt(id,path);while(true){const r=s.campaign.active!,node=chapter8.nodes[r.nodeId];if(node.kind==='dialogue'&&node.lines[r.lineIndex].text.includes(needle))break;s=reduceSave(s,{type:'command',target:'campaign',command:supperCommand(r,path)});}
+  let s=supperAt(id,path,base);while(true){const r=s.campaign.active!,node=chapter8.nodes[r.nodeId];if(node.kind==='dialogue'&&node.lines[r.lineIndex].text.includes(needle))break;s=reduceSave(s,{type:'command',target:'campaign',command:supperCommand(r,path)});}
   expect(s.campaign.active!.story[key]).toBeUndefined();s=reduceSave(s,{type:'command',target:'campaign',command:supperCommand(s.campaign.active!,path)});expect(s.campaign.active!.story[key]).toBe(value);expect(parseSave(JSON.stringify(s))).toEqual(s);
  }
  const s=supperAt('c8.supper.danceChoice');
@@ -117,7 +140,7 @@ it('restarts old supper progress through the completed gallery and preserves a n
   expect(loaded.continuation).toBe('walk');
   expect(loaded.continuation10).toBeNull();
   const restarted=reduceSave(loaded,{type:'start',chapter:8,attemptId:'supper-restart'});
-  expect(restarted.campaign.active).toMatchObject({nodeId:'c8.supper.entry',scriptRevision:7});
+  expect(restarted.campaign.active).toMatchObject({nodeId:'c8.supper.entry',scriptRevision:8});
   expect(filmLeft(restarted.campaign.active!.story)).toBe(6);
  }
  expect(loadSave(JSON.stringify(beforeMeal))).toEqual(beforeMeal);

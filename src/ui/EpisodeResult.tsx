@@ -6,9 +6,6 @@ import { routeLabels } from '../minigames/eveningRouteModel';
 import { SavedPersonalNote } from './PersonalNote';
 import { Modal } from './Modal';
 import { SavedSharedWord } from './SharedWord';
-import { DessertArt } from './DessertArt';
-import { BookmarkArt } from './BookmarkArt';
-import { SilentFilmArt } from './SilentFilmArt';
 
 export function MemoryCollection({ids}:{ids:MemoryId[]}){
  if(!ids.length)return null;
@@ -24,5 +21,5 @@ export function SecretCollection({ids}:{ids:SecretId[]}){
 }
 export function EpisodeResult({record,mode,chapter=6}:{record:ChapterRecord;chapter?:EpisodeChapter;mode:'campaign'|'trial'}){
  const route=record.results['evening-route'],memory=record.episode?.memory;
- return <div className="episode-result">{memory&&<p className="episode-memory"><span aria-hidden="true">✧ </span>{memoryRegistry[memory].title}</p>}{route&&route.mode!=='skipped'&&<p className="small episode-route-summary">{route.stops.map(s=>routeLabels[s].title).join(' → ')}</p>}{record.episode?.secret&&<SecretCollection ids={[record.episode.secret]}/>}{chapter===8&&record.results.dessert&&<div className="episode-decor"><DessertArt topping={record.results.dessert.topping} mark={record.results.dessert.mark}/></div>}{chapter===8&&<SavedSharedWord record={record} mode={mode}/>} {chapter===9&&<div className="episode-decor"><SilentFilmArt frame={2}/></div>}{chapter===10&&<div className="episode-decor"><BookmarkArt memory={record.story.c10Memory}/></div>}<SavedPersonalNote key={record.attemptId} record={record} mode={mode} chapter={chapter}/></div>;
+ return <div className="episode-result">{memory&&<p className="episode-memory"><span aria-hidden="true">✧ </span>{memoryRegistry[memory].title}</p>}{route&&route.mode!=='skipped'&&<p className="small episode-route-summary">{route.stops.map(s=>routeLabels[s].title).join(' → ')}</p>}{record.episode?.secret&&<SecretCollection ids={[record.episode.secret]}/>}{chapter===8&&<SavedSharedWord record={record} mode={mode}/>}<SavedPersonalNote key={record.attemptId} record={record} mode={mode} chapter={chapter}/></div>;
 }

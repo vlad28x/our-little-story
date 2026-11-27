@@ -45,7 +45,7 @@ function settle(chapter:Chapter, run:Run):StepResult {
 }
 export function startRun(chapter:Chapter, story:StoryState = {},attemptId?:string):Run {
   if((chapter.id>=6)&&!attemptId)throw new Error('Для новой встречи нужен ID попытки');
-  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story,...(chapter.id===10?{c10Edition:5 as const}:{}),...(chapter.id===6&&chapter.scriptRevision===5?{c6Edition:5 as const}:{}),...(chapter.firstSeasonEdition?{[chapter.id===5?'c5Edition':'c4Edition']:chapter.firstSeasonEdition}:{})},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,...((chapter.scriptRevision??3)>=4?{}:{episode:{}})}:{})});
+  const result = settle(chapter,{chapter:chapter.id,nodeId:chapter.entry,lineIndex:0,turn:0,story:{...story,...(chapter.id===10?{c10Edition:5 as const}:{}),...(chapter.id===6&&(chapter.scriptRevision??0)>=5?{c6Edition:5 as const}:{}),...(chapter.firstSeasonEdition?{[chapter.id===5?'c5Edition':'c4Edition']:chapter.firstSeasonEdition}:{})},results:{},earned:[],...((chapter.id>=6)?{attemptId,scriptRevision:chapter.scriptRevision??3,...((chapter.scriptRevision??3)>=4?{}:{episode:{}})}:{})});
   if (result.kind !== 'ready') throw new Error('Глава должна начинаться с доступной сцены');
   return result.run;
 }

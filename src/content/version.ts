@@ -1,1 +1,1 @@
-export const CONTENT_VERSION = 26;
+export const CONTENT_VERSION = 27;

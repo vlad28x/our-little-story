@@ -1,6 +1,6 @@
 import {initialState} from '../state/initialState';
 import {travellerFields,replayTravellers,completedCourtyard} from './travellers';
-import {replayPhotoSix,replayGallery,replaySupper,replayCourtyard,completedWalk,completedGallery,completedSupper,galleryFields,supperFields,courtyardFields} from './photoSix';
+import {replayPhotoSix,replayGallery,replaySupper,replayCourtyard,completedWalk,completedGallery,completedSupper,photoFields,galleryFields,supperFields,courtyardFields} from './photoSix';
 import { replayFirstSeason } from './replayFirstSeason';
 import { getChapter } from '../content/chapters';
 import { CONTENT_VERSION } from '../content/version';
@@ -22,7 +22,7 @@ const firstFields=['approach','searchResult','catNoticed','pace','plan'];
 const secondFields=['rainRoute','catApproach','umbrella','herRecharge','eveningMood'];
 const thirdFields=['c4Edition','bench','constellation','herTrust','wish','c4Goodbye'];
 const fourthFields=['controllerReaction','teamName','kitchenStyle','kitchenResult','gameAftercare'];
-const sixthFields=['c6Edition','c6PhotoPlace','c6PhotoSubject','c6Gesture','c6Film','c6CameraHolder'];
+const sixthFields=photoFields;
 const seventhFields=galleryFields;
 const eighthFields=supperFields;
 const ninthFields=courtyardFields;
@@ -30,7 +30,7 @@ const tenthFields=travellerFields;
 const fields=(id:ChapterId)=>[firstFields,secondFields,thirdFields,fourthFields,['c5Edition','c5FirstTaste','c5Recommendation','c5Feeling'],sixthFields,seventhFields,eighthFields,ninthFields,tenthFields].slice(0,id).flat();
 // The first-season prefix can come from content24/content25, before these answers existed.
 const requiredStoryFields=(id:ChapterId)=>fields(id).filter(k=>!/^c(?:6|7|8|9|10)/.test(k)&&k!=='herRecharge'&&k!=='herTrust'&&k!=='c5Feeling');
-const storyEnums={"herRecharge":["walk","cozy","hands"],"herTrust":["careful","intuition","humor"],"c9HerMovie":["drama","warm","mystery"],"approach":["joke","help","space"],"searchResult":["tidy","detour","skipped"],"catNoticed":[true,false],"pace":["quiet","playful","flirt"],"plan":["tea","banter","coop"],"rainRoute":["shelter","arcade"],"catApproach":["wait","help"],"umbrella":["patched","borrowed","skipped"],"eveningMood":["quiet","playful"],"c4Edition":[2],"bench":["near","space"],"constellation":["cat","controllers","teapot"],"wish":["adventure","calm"],"c4Goodbye":["accept","her","none"],"controllerReaction":["tease","help","absurd"],"teamName":["dumpling","calm","accident"],"kitchenStyle":["planner","improv"],"kitchenResult":["feast","snack","chaos","skipped"],"gameAftercare":["team","rematch"],"c5Edition":[3],"c5FirstTaste":["vanilla","sweet","compare"],"c5Recommendation":["vanilla","fresh","both"],"c5Feeling":["continue","curious","pace"],"c6Edition":[5],"c6PhotoPlace":["upper","water"],"c6PhotoSubject":["vlad","her","place"],"c6Gesture":["hand","hug","none"],"c6Film":["loaded","key","accidental","six"],"c6CameraHolder":["her","vlad"],"c7GalleryRoute":["together","apart"],"c7GalleryWork":["blue","chip"],"c7GalleryGift":["chip","blue","none"],"c7GalleryFrame":["vlad","her","both"],"c7GalleryFarewell":["cheek","words"],"c7Cheek":[true],"c7Film":["key","six"],"c7CameraHolder":["her","vlad"],"c8Place":["home","cafe"],"c8Filling":["pepper","mushroom","mix","simple"],"c8Shape":["fold","open"],"c8Frame":["foodHer","foodVlad","boardHer","boardVlad"],"c8Film":["key","nine"],"c8Step":["follow","lead","play","sit"],"c8LipKiss":["no","yes"],"c8Hoodie":["borrowed","evening","none"],"c9Place":["home","courtyard"],"c9Frame":["vlad","seats","yard"],"c9Film":["key","rain","empty","submitted"],"c9Rain":["canopy","arch","leave"],"c9Bet":["together","alone","skip"],"c9Goodbye":["kiss","hug","words"],"c9LipKiss":["no","yes"],"c9Hoodie":["returned"],"c10Edition":[5],"c10River":["ford","bridge"],"c10Quarry":["tunnel","contour"],"c10Arrival":["marsh","upper"],"c10RiverHelp":[true],"c10QuarryHelp":[true],"c10ArrivalHelp":[true],"c10Continuation":["cafe","home"],"c10CafeGoodbye":["kiss","hug","words"],"c10HomeTender":["kiss","hug","near"],"c10Finale":["cafe","lateLeave","morning"],"c10LipKiss":["no","yes"]};
+const storyEnums={"herRecharge":["walk","cozy","hands"],"herTrust":["careful","intuition","humor"],"c9HerMovie":["drama","warm","mystery"],"approach":["joke","help","space"],"searchResult":["tidy","detour","skipped"],"catNoticed":[true,false],"pace":["quiet","playful","flirt"],"plan":["tea","banter","coop"],"rainRoute":["shelter","arcade"],"catApproach":["wait","help"],"umbrella":["patched","borrowed","skipped"],"eveningMood":["quiet","playful"],"c4Edition":[2],"bench":["near","space"],"constellation":["cat","controllers","teapot"],"wish":["adventure","calm"],"c4Goodbye":["accept","her","none"],"controllerReaction":["tease","help","absurd"],"teamName":["dumpling","calm","accident"],"kitchenStyle":["planner","improv"],"kitchenResult":["feast","snack","chaos","skipped"],"gameAftercare":["team","rematch"],"c5Edition":[3],"c5FirstTaste":["vanilla","sweet","compare"],"c5Recommendation":["vanilla","fresh","both"],"c5Feeling":["continue","curious","pace"],"c6Edition":[5],"c6PhotoPlace":["upper","water"],"c6PhotoSubject":["vlad","her","place"],"c6HerEscape":["sea","oldtown","cabin"],"c6Gesture":["hand","hug","none"],"c6AskVlad":["game","routine","quirk"],"c6Film":["loaded","key","accidental","six"],"c6CameraHolder":["her","vlad"],"c7GalleryRoute":["together","apart"],"c7GalleryWork":["blue","chip"],"c7GalleryGift":["chip","blue","none"],"c7GalleryFrame":["vlad","her","both"],"c7GalleryFarewell":["cheek","words"],"c7Cheek":[true],"c7Film":["key","six"],"c7CameraHolder":["her","vlad"],"c8Place":["home","cafe"],"c8Filling":["pepper","mushroom","mix","simple"],"c8Shape":["fold","open"],"c8Frame":["foodHer","foodVlad","boardHer","boardVlad"],"c8Film":["key","nine"],"c8Step":["follow","lead","play","sit"],"c8LipKiss":["no","yes"],"c8Hoodie":["borrowed","evening","none"],"c9Place":["home","courtyard"],"c9Frame":["vlad","seats","yard"],"c9Film":["key","rain","empty","submitted"],"c9Rain":["canopy","arch","leave"],"c9Bet":["together","alone","skip"],"c9Goodbye":["kiss","hug","words"],"c9LipKiss":["no","yes"],"c9Hoodie":["returned"],"c10Edition":[5],"c10River":["ford","bridge"],"c10Quarry":["tunnel","contour"],"c10Arrival":["marsh","upper"],"c10RiverHelp":[true],"c10QuarryHelp":[true],"c10ArrivalHelp":[true],"c10Continuation":["cafe","home"],"c10CafeGoodbye":["kiss","hug","words"],"c10HomeTender":["kiss","hug","near"],"c10Finale":["cafe","lateLeave","morning"],"c10LipKiss":["no","yes"]};
 function requireFields(s:StoryState,required:string[]){if(required.some(k=>s[k as keyof StoryState]===undefined))fail();}
 function story(x:unknown,id:ChapterId,complete=false):StoryState{
   const o=obj(x);keys(o,fields(id));
@@ -67,11 +67,11 @@ function record(x:unknown,id:ChapterId){
   if((id===4||id===5)&&!replayFirstSeason(id,st,r.results as Run['results']))fail();
   const card=cardFromStory(st,id,r.results as Run['results']);if(r.cardId!==card.id||r.endingId!==card.id)fail();
   if(id===5&&obj(r.results).memories===undefined)fail();
-  if(id===6){one(r.scriptRevision,[st.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||!replayPhotoSix(st))fail();}
+  if(id===6){one(r.scriptRevision,st.c6Edition===5?[5,6]:[4]);if(r.scriptRevision===6&&(!st.c6HerEscape||!st.c6AskVlad))fail();if(r.scriptRevision===5&&(st.c6HerEscape!==undefined||st.c6AskVlad!==undefined))fail();attemptId(r.attemptId);if(r.episode!==undefined||!replayPhotoSix(st))fail();}
   if(id===7){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedWalk(st)||!replayGallery(st))fail();}
   if(id===8){one(r.scriptRevision,[getChapter(8)?.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||!completedGallery(st)||!replaySupper(st))fail();}
   if(id===9){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedSupper(st)||!replayCourtyard(st))fail();}
-  if(id===10){one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||!completedCourtyard(st)||!replayTravellers(st))fail();}
+  if(id===10){one(r.scriptRevision,[getChapter(10)?.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||!completedCourtyard(st)||!replayTravellers(st))fail();}
   return r;
 }
 export function validateRun(x:unknown,maxChapter=10):Run{
@@ -102,11 +102,11 @@ export function validateRun(x:unknown,maxChapter=10):Run{
   if(id===3||id===4){requireFields(s,requiredStoryFields((id-1) as ChapterId));if(!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
   if(id===5)requireFields(s,requiredStoryFields(4));
   if(id===5&&!replayFirstSeason(id,s,r.results as Run['results'],{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене. Исходная копия сохранена.');
-  if(id===6){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[s.c6Edition===5?5:4]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!replayPhotoSix(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
+  if(id===6){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[chapter.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!replayPhotoSix(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения этой встречи противоречат сцене.');}
   if(id===7){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedWalk(s)||!replayGallery(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения галереи противоречат сцене.');}
   if(id===8){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[chapter.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedGallery(s)||!replaySupper(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения ужина противоречат сцене.');}
   if(id===9){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedSupper(s)||!replayCourtyard(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения кинодворика противоречат сцене.');}
-  if(id===10){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[5]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedCourtyard(s)||!replayTravellers(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения путешественников противоречат сцене.');}
+  if(id===10){requireFields(s,requiredStoryFields(5));one(r.scriptRevision,[chapter.scriptRevision]);attemptId(r.attemptId);if(r.episode!==undefined||r.activity!==undefined||!completedCourtyard(s)||!replayTravellers(s,{nodeId:r.nodeId as Run['nodeId'],lineIndex:r.lineIndex as number,turn:r.turn as number}))fail('Решения путешественников противоречат сцене.');}
   const earned=arr(r.earned,1),achievement=['cat-supervisor','dry-plan','own-sky','full-table','five-meetings'][id-1];
   const gameResults=obj(r.results);
   const shouldEarn=id===1?!!s.catNoticed:id===2?s.umbrella==='patched':id===4?gameResults.kitchen!==undefined&&obj(gameResults.kitchen).served===9&&s.kitchenResult!=='skipped':id===3?gameResults.constellation!==undefined&&!obj(gameResults.constellation).usedPreset:false;
@@ -242,7 +242,7 @@ export function parseSave(raw:string):SaveV1{
  if(Number(header.contentVersion)<24)return fresh;
  try{
   if(header.contentVersion===24)return resetSecondSeasonFrom24(header)??fresh;
-  if(header.contentVersion===25)return resetFromEight(header)??fresh;
+  if(header.contentVersion===25||header.contentVersion===26)return resetFromEight(header)??fresh;
   try{return validateSave(raw);}catch{return resetFromEight(header)??fresh;}
  }catch{return fresh;}
 }

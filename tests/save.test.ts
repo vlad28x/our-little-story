@@ -24,30 +24,37 @@ describe('current content save and restore',()=>{
   expect(raw).toBe(JSON.stringify({...old,contentVersion}));
   const started=reduceSave(next,{type:'start'});expect(started.campaign.active?.nodeId).toBe('c1.prologue');expect(parseSave(JSON.stringify(started))).toEqual(started);
  });
- it('migrates content25 saves preserving chapters 1-7 and resetting at most chapters 8-10',()=>{
+ it('migrates content25 and content26 saves preserving chapters 1-7 and resetting at most chapters 8-10',()=>{
   const old=finishTravellers();old.settings={sound:true,volume:.6,textMode:'type',motion:'reduced'};old.unlocked=[1,2,3,4,5,6,7,8,9,10];old.continuation='cafe';old.continuation10='movie';
   for(const id of [5,6,7,8,9,10] as const){delete old.campaign.records[id]?.story.c5Feeling;delete old.campaign.startStates[id]?.c5Feeling;}
-  const legacy25=structuredClone(old) as unknown as Record<string,unknown>;
-  const legacyRecords=(legacy25.campaign as Record<string,unknown>).records as Record<string,{story:Record<string,unknown>}>;
-  legacyRecords[6].story.c6HerEvening='cozyFood';legacyRecords[7].story.c6HerEvening='cozyFood';legacyRecords[7].story.herEscape='sea';
-  const migrated=parseSave(JSON.stringify({...legacy25,contentVersion:25}));
-  expect(migrated.contentVersion).toBe(CONTENT_VERSION);
-  expect(migrated.campaign.completed).toEqual([1,2,3,4,5,6,7]);
-  expect(migrated.campaign.records[7]).toEqual(old.campaign.records[7]);
-  expect(migrated.campaign.records[8]).toBeUndefined();
-  expect(migrated.campaign.records[9]).toBeUndefined();
-  expect(migrated.campaign.records[10]).toBeUndefined();
-  expect(migrated.campaign.active).toBeNull();
-  expect(migrated.unlocked).toEqual(old.unlocked);
-  expect(migrated.settings).toEqual(old.settings);
-  expect(migrated.continuation).toBe('cafe');
-  expect(migrated.continuation10).toBeNull();
-  expect(migrated.collection.cards.every(card=>card.chapter<=7)).toBe(true);
-  const started8=reduceSave(migrated,{type:'start',chapter:8,attemptId:'migrated-supper'});
-  expect(started8.campaign.active?.nodeId).toBe('c8.supper.entry');
-  expect(parseSave(JSON.stringify(started8))).toEqual(started8);
+  for(const id of [6,7,8,9,10] as const){delete old.campaign.records[id]?.story.c6HerEscape;delete old.campaign.records[id]?.story.c6AskVlad;delete old.campaign.startStates[id]?.c6HerEscape;delete old.campaign.startStates[id]?.c6AskVlad;}
+  old.campaign.records[6]!.scriptRevision=5;
+  old.campaign.records[8]!.scriptRevision=7;
+  old.campaign.records[10]!.scriptRevision=5;
+  for(const legacyVersion of [25,26] as const){
+   const legacy=structuredClone(old) as unknown as Record<string,unknown>;
+   const legacyRecords=(legacy.campaign as Record<string,unknown>).records as Record<string,{story:Record<string,unknown>}>;
+   if(legacyVersion===25){legacyRecords[6].story.c6HerEvening='cozyFood';legacyRecords[7].story.c6HerEvening='cozyFood';legacyRecords[7].story.herEscape='sea';}
+   const migrated=parseSave(JSON.stringify({...legacy,contentVersion:legacyVersion}));
+   expect(migrated.contentVersion).toBe(CONTENT_VERSION);
+   expect(migrated.campaign.completed).toEqual([1,2,3,4,5,6,7]);
+   expect(migrated.campaign.records[7]).toEqual(old.campaign.records[7]);
+   expect(migrated.campaign.records[8]).toBeUndefined();
+   expect(migrated.campaign.records[9]).toBeUndefined();
+   expect(migrated.campaign.records[10]).toBeUndefined();
+   expect(migrated.campaign.active).toBeNull();
+   expect(migrated.unlocked).toEqual(old.unlocked);
+   expect(migrated.settings).toEqual(old.settings);
+   expect(migrated.continuation).toBe('cafe');
+   expect(migrated.continuation10).toBeNull();
+   expect(migrated.collection.cards.every(card=>card.chapter<=7)).toBe(true);
+   const started8=reduceSave(migrated,{type:'start',chapter:8,attemptId:'migrated-supper'});
+   expect(started8.campaign.active?.nodeId).toBe('c8.supper.entry');
+   expect(parseSave(JSON.stringify(started8))).toEqual(started8);
+  }
   const mid6=startPhotoSix(finishFive());
   const mid6Raw=structuredClone(mid6) as unknown as Record<string,unknown>;
+  ((mid6Raw.campaign as Record<string,unknown>).active as Record<string,unknown>).scriptRevision=5;
   ((mid6Raw.campaign as Record<string,unknown>).active as Record<string,unknown>).nodeId='c6.photo.joyChoice';
   const migratedMid6=parseSave(JSON.stringify({...mid6Raw,contentVersion:25}));
   expect(migratedMid6.campaign.completed).toEqual([1,2,3,4,5]);

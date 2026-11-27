@@ -22,7 +22,7 @@ export type StoryState = {
   c7GalleryFrame?:'vlad'|'her'|'both';c7GalleryFarewell?:'cheek'|'words';c7Cheek?:true;
   c7Film?:'key'|'six';c7CameraHolder?:'her'|'vlad';
   s2Direction?:'friends'|'romance';c6FriendExit?:'walk'|'goodbye';
-  c6PhotoPlace?:'upper'|'water';c6PhotoSubject?:'vlad'|'her'|'place';c6Gesture?:'hand'|'hug'|'none';
+  c6PhotoPlace?:'upper'|'water';c6PhotoSubject?:'vlad'|'her'|'place';c6HerEscape?:'sea'|'oldtown'|'cabin';c6Gesture?:'hand'|'hug'|'none';c6AskVlad?:'game'|'routine'|'quirk';
   c6Film?:'loaded'|'key'|'accidental'|'six';c6CameraHolder?:'her'|'vlad';
   // Persisted event keys stay stable after moving the sky meeting from four to three.
   c4Edition?:2;c5Edition?:2|3;
@@ -91,7 +91,7 @@ export type MemoryId = 'c6.memory.hug'|'c6.memory.hand'|'c6.memory.talk'|'c6.mem
 export type SecretId = "c6.r3.secret"|"c7.r3.secret"|"c8.r3.secret"|"c9.r3.secret"|"c10.r3.secret"|'c6.secret.evening'|'c7.secret.evening'|'c8.secret.evening'|'c9.secret.evening'|'c10.secret.evening';
 export type EpisodeProgress={memory?:MemoryId;secret?:SecretId};
 export type Effect=SetEffect;
-export type Line = {speaker:Speaker;text:string;emotion?:Emotion;delivery?:string;variants?:{when:Condition[];text:string;effects?:Effect[]}[];effects?:Effect[];when?:Condition[]};
+export type Line = {speaker:Speaker;text:string;emotion?:Emotion;delivery?:string;sceneFade?:boolean;variants?:{when:Condition[];text:string;effects?:Effect[]}[];effects?:Effect[];when?:Condition[]};
 export type Scene = {background:string;character?:string;variants?:{when:Condition[];fromLine?:number;background:string;character:string}[]};
 export type Choice = {id:string;text:string;description?:string;next:NodeId;effects?:Effect[];when?:Condition[]};
 export type StoryNode =
@@ -102,7 +102,7 @@ export type StoryNode =
   | {id:NodeId;kind:'note';scene:Scene;questionId:QuestionId;prompt:string;context:string;answerOptions:{id:string;kind:'preset'|'custom';text:string}[];placeholder:string;submitLabel:string;skipLabel:string;maxCodePoints:280;next:NodeId}
   | {id:NodeId;kind:'label';scene:Scene;labelId:'s2.word8';maxCodePoints:24;next:NodeId}
   | {id:NodeId;kind:'end';endingId:CardId;cardId:CardId};
-export type Chapter = {id:ChapterId;contentVersion:number;scriptRevision?:3|4|5|6|7;firstSeasonEdition?:2|3;title:string;entry:NodeId;nodes:Record<NodeId,StoryNode>};
+export type Chapter = {id:ChapterId;contentVersion:number;scriptRevision?:3|4|5|6|7|8;firstSeasonEdition?:2|3;title:string;entry:NodeId;nodes:Record<NodeId,StoryNode>};
 export type CardId = 'c10.travellers'|'c9.courtyard'|'c8.supper'|'c6.photo.walk'|'c7.gallery'|'c6.photo.friends'|'c6.photo.romance'|'c5.story'|"c8.r3.dance"|"c8.r3.tea"|"c8.r3.next"|"c9.r3.talk"|"c9.r3.quiet"|"c9.r3.credits"|'c1.tea'|'c1.banter'|'c1.coop'|'c2.shelter'|'c2.arcade'|'c3.dinner'|'c4.adventure'|'c4.calm'|'c5.romantic'|'c5.comic'|'c5.gaming'|'c5.friendly'|'c6.hand'|'c6.lap'|'c6.home'|'c7.open'|'c7.promise'|'c7.calm'|'c8.kiss'|'c8.near'|'c8.tea'|'c9.kiss'|'c9.hug'|'c9.film'|'c10.goodnight'|'c10.stay'|'c10.private'|'c10.overnight';
 export type SearchResult = {kind:'token-search';outcome:'tidy'|'detour'|'skipped';catNoticed:boolean};
 export type UmbrellaResult = {kind:'umbrella-patch';outcome:'patched'|'borrowed'|'skipped'};
@@ -110,6 +110,6 @@ export type KitchenResult = {kind:'kitchen';outcome:'feast'|'snack'|'chaos'|'ski
 export type ConstellationResult = {kind:'constellation';outcome:'cat'|'controllers'|'teapot';usedPreset:boolean};
 export type MemoriesResult = {kind:'memories';outcome:'viewed'|'skipped'};
 export type GameResult = SearchResult|UmbrellaResult|KitchenResult|ConstellationResult|MemoriesResult|EveningRouteResult|CouncilResult|DessertResult|MovieSetupResult|EveningLightResult;
-export type Run = {chapter:ChapterId;scriptRevision?:3|4|5|6|7;nodeId:NodeId;lineIndex:number;turn:number;story:StoryState;results:{'token-search'?:SearchResult;'umbrella-patch'?:UmbrellaResult;'kitchen'?:KitchenResult;'constellation'?:ConstellationResult;'memories'?:MemoriesResult;'evening-route'?:EveningRouteResult;'between-lines'?:CouncilResult;'dessert'?:DessertResult;'movie-setup'?:MovieSetupResult;'evening-light'?:EveningLightResult};earned:string[];attemptId?:string;episode?:EpisodeProgress;activity?:RouteDraft|CouncilDraft|DessertDraft|MovieSetupDraft|EveningLightDraft};
+export type Run = {chapter:ChapterId;scriptRevision?:3|4|5|6|7|8;nodeId:NodeId;lineIndex:number;turn:number;story:StoryState;results:{'token-search'?:SearchResult;'umbrella-patch'?:UmbrellaResult;'kitchen'?:KitchenResult;'constellation'?:ConstellationResult;'memories'?:MemoriesResult;'evening-route'?:EveningRouteResult;'between-lines'?:CouncilResult;'dessert'?:DessertResult;'movie-setup'?:MovieSetupResult;'evening-light'?:EveningLightResult};earned:string[];attemptId?:string;episode?:EpisodeProgress;activity?:RouteDraft|CouncilDraft|DessertDraft|MovieSetupDraft|EveningLightDraft};
 export type Command = {kind:'advance';expectedTurn:number}|{kind:'choose';choiceId:string;expectedTurn:number}|{kind:'game-result';result:GameResult;expectedTurn:number}|{kind:'game-action';game:'evening-route';action:RouteAction;expectedTurn:number}|{kind:'game-action';game:'between-lines';action:CouncilAction;expectedTurn:number}|{kind:'game-action';game:'dessert';action:DessertAction;expectedTurn:number}|{kind:'game-action';game:'movie-setup';action:MovieSetupAction;expectedTurn:number}|{kind:'game-action';game:'evening-light';action:EveningLightAction;expectedTurn:number}|{kind:'label-result';status:'saved'|'skipped';expectedTurn:number}|{kind:'note-result';status:'saved'|'skipped';expectedTurn:number};
 export type StepResult = {kind:'ready';run:Run}|{kind:'complete';run:Run;endingId:CardId;cardId:CardId}|{kind:'rejected';reason:string};

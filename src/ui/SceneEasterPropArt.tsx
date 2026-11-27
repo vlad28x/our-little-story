@@ -1,7 +1,7 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
 import type { ScenePropId, SeasonSceneryId } from '../content/easterEggs';
 
-type SeasonReactionId=SeasonSceneryId|'cat10';
+type SeasonReactionId=SeasonSceneryId|'cat10'|'envelope10'|'secondBlanket10';
 
 // The scene props follow the materials and light of the background.
 export function SceneEasterPropArt({id,active,paintedSeason=false}:{id:ScenePropId;active:boolean;paintedSeason?:boolean}){
@@ -25,8 +25,20 @@ export function SceneEasterPropArt({id,active,paintedSeason=false}:{id:SceneProp
         <text x="64" y="72" textAnchor="middle" fill="#fff7ed" fontSize="7.6" fontWeight="600">Режим сна · zZz</text>
       </g>
     </svg>:null;
-    case 'mug':return active?<svg viewBox="0 0 80 100" aria-hidden="true">
-      <path className="tea-heart" d="M39 42C8 27 14 6 28 10q9 0 11 9 4-9 12-9c15 0 18 18-12 32Z" fill={paintedSeason?"#f6d9bd44":"#fff6e533"} stroke={paintedSeason?"#ffebce":"#fff7e8"} strokeWidth="3.1" strokeLinecap="round" strokeLinejoin="round"/>
+    case 'mug':return active?<svg viewBox="0 0 80 100" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <g className="tea-heart">
+        {/* Soft rising aromatic tea steam */}
+        <path d="M40 92c-9-11 8-19-2-31" fill="none" stroke={paintedSeason?"#ffebce":"#fff7e8"} strokeWidth="3.4" opacity=".45"/>
+        <path d="M40 90c-7-10 6-18-1-29" fill="none" stroke="#fff8ea" strokeWidth="1.6" opacity=".82"/>
+        <path d="M29 85c-5-8 4-15-2-23m24 22c5-8-4-14 2-22" fill="none" stroke={paintedSeason?"#f5d7b0":"#fff3de"} strokeWidth="1.8" opacity=".48"/>
+        {/* Warm glow aura behind steam heart */}
+        <circle cx="40" cy="36" r="24" fill="#ffe7b6" opacity=".2"/>
+        {/* Soft vapor heart curled from steam wisps */}
+        <path d="M40 58C13 43 16 18 30 20c6 1 9 5 10 10 1-5 4-9 10-10 14-2 17 23-10 38Z" fill={paintedSeason?"#f7d9bd4d":"#fff6e53d"} stroke={paintedSeason?"#ffebce":"#fff7e8"} strokeWidth="3" />
+        <path d="M26 30q3-7 9-5m8 22q9-7 11-16" fill="none" stroke="#fffaf0" strokeWidth="1.6" opacity=".82"/>
+        <path d="M20 20l1.4 3.6 3.6 1.4-3.6 1.4-1.4 3.6-1.4-3.6-3.6-1.4 3.6-1.4Z" fill="#fff4d8" opacity=".85"/>
+        <path d="M62 17l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1Z" fill="#ffe6ae" opacity=".8"/>
+      </g>
     </svg>:null;
     case 'star':return <svg viewBox="0 0 80 80" aria-hidden="true"><g className={active?'wish-star is-falling':'wish-star'}>
       <circle cx="40" cy="40" r="28" fill="#ffe7a8" opacity=".24"/>
@@ -277,9 +289,14 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
     case 'lantern6':
     case 'lamp8':
     case 'floorLamp10':return <g className="egg-glow">
-      <circle cx="40" cy="40" r="38" fill="var(--egg-light)"/>
-      <Spark x={40} y={40} size={17}/>
-      <Spark x={20} y={24} size={7}/><Spark x={61} y={54} size={7}/>
+      <circle cx="40" cy="40" r="37" fill="var(--egg-light)"/>
+      <circle cx="40" cy="40" r="24" fill="none" stroke={gold} strokeWidth="1.2" strokeDasharray="3 4" opacity=".62"/>
+      {/* Warm vintage filament bulb silhouette */}
+      <path d="M35 20h10v6H35Z" fill="var(--egg-copper)" stroke={brown} strokeWidth="1.3"/>
+      <path d="M31 38c0-6 4-11 9-11s9 5 9 11c0 4-2.5 7-4.5 10h-9c-2-3-4.5-6-4.5-10Z" fill="#fff3d1" stroke={amber} strokeWidth="1.5"/>
+      <path d="M37 46v-8q3-3 6 0v8" fill="none" stroke="#d98b43" strokeWidth="1.3" strokeLinecap="round"/>
+      <Spark x={40} y={37} size={13}/>
+      <Spark x={19} y={24} size={7}/><Spark x={61} y={53} size={7.5}/><Spark x={22} y={58} size={5.5}/>
     </g>;
     case 'cafeSign6':return <g className="egg-swing">
       <path d="M40 6v12" stroke={gold} strokeWidth="2.6" strokeLinecap="round"/>
@@ -298,29 +315,62 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <circle cx="62" cy="19" r="6" fill="var(--egg-rose)" stroke={cream} strokeWidth="1.6"/>
     </g>;
     case 'poster7':return <g className="egg-sweep">
-      <path d="m6 62 49-46 13 2-52 48Z" fill="var(--egg-paper)" opacity=".78"/>
-      <path d="m22 68 51-48 6 2-51 48Z" fill={gold} opacity=".48"/>
-      <Spark x={54} y={28} size={13}/><Spark x={28} y={54} size={9}/>
+      {/* Mini gallery poster card catching a golden light sweep */}
+      <rect x="16" y="10" width="48" height="60" rx="4" fill="var(--egg-paper)" stroke="#8b6b5d" strokeWidth="1.7"/>
+      <rect x="21" y="15" width="38" height="38" rx="1.5" fill="var(--egg-glass)" stroke="#62717a" strokeWidth="1"/>
+      <path d="M27 53V34q13-12 26 0v19Z" fill="var(--egg-ochre)" opacity=".65"/>
+      <path d="M24 60h32M30 64h20" stroke="#85655c" strokeWidth="1.5" strokeLinecap="round" opacity=".7"/>
+      <path d="m14 58 43-44 10 2-44 45Z" fill={cream} opacity=".58"/>
+      <path d="m26 65 40-41 5 2-41 42Z" fill={gold} opacity=".45"/>
+      <Spark x={57} y={21} size={11}/><Spark x={24} y={54} size={8}/>
     </g>;
     case 'handle7':return <g className="egg-glow">
-      <circle cx="40" cy="40" r="30" fill="var(--egg-light)" opacity=".8"/>
-      <Spark x={40} y={40} size={22}/>
-      <path d="M16 24q-12 16 0 32m48-32q12 16 0 32" fill="none" stroke={gold} strokeWidth="2.8" strokeLinecap="round"/>
+      <circle cx="40" cy="40" r="32" fill="var(--egg-light)" opacity=".75"/>
+      {/* Sleek curved brass gallery door pull */}
+      <rect x="33" y="14" width="14" height="52" rx="7" fill="var(--egg-wood)" stroke="#5c4138" strokeWidth="1.5" opacity=".88"/>
+      <path d="M40 21v38" stroke="var(--egg-copper)" strokeWidth="7.5" strokeLinecap="round"/>
+      <path d="M40 21v38" stroke="#f8e3b3" strokeWidth="2.2" strokeLinecap="round" opacity=".85"/>
+      <circle cx="40" cy="21" r="4" fill="var(--egg-ochre)" stroke={brown} strokeWidth="1.2"/>
+      <circle cx="40" cy="59" r="4" fill="var(--egg-ochre)" stroke={brown} strokeWidth="1.2"/>
+      <path d="M20 26q-9 14 0 28m40-28q9 14 0 28" fill="none" stroke={gold} strokeWidth="2.2" strokeLinecap="round" opacity=".85"/>
+      <Spark x={40} y={40} size={15}/>
     </g>;
     case 'spots7':return <g className="egg-glow">
-      <path d="M34 22h12l32 52H2Z" fill={gold} opacity=".42"/>
-      <path d="M37 22h6l18 52H19Z" fill={cream} opacity=".34"/>
-      <ellipse cx="40" cy="21" rx="13" ry="6" fill="var(--egg-copper)" stroke={brown} strokeWidth="1.6"/>
-      <Spark x={40} y={46} size={11}/>
+      {/* Gallery track bar & angled brass spotlight casting layered light */}
+      <path d="M10 12h60" stroke={brown} strokeWidth="3.5" strokeLinecap="round"/>
+      <path d="M36 12v8l4 4" fill="none" stroke={brown} strokeWidth="2.4" strokeLinecap="round"/>
+      <path d="M31 28h18l28 46H3Z" fill="var(--egg-light)" opacity=".55"/>
+      <path d="M35 28h10l16 46H19Z" fill={cream} opacity=".34"/>
+      <rect x="30" y="17" width="20" height="14" rx="5" fill="var(--egg-copper)" stroke={brown} strokeWidth="1.6"/>
+      <path d="M34 21h12" stroke="#f7e2b8" strokeWidth="1.3" strokeLinecap="round" opacity=".75"/>
+      <ellipse cx="40" cy="30" rx="9" ry="3.2" fill="#fff3ca" stroke={amber} strokeWidth="1.2"/>
+      <circle cx="29" cy="54" r="1.5" fill={cream} opacity=".7"/><circle cx="51" cy="60" r="1.3" fill={cream} opacity=".65"/>
+      <Spark x={40} y={48} size={11}/><Spark x={26} y={64} size={6}/>
     </g>;
     case 'bench7':return <g className="egg-rise">
-      <Tag text="Для двоих" y={28} fontSize={10.5}/>
-      <Heart x={66} y={20} scale={.55}/><Spark x={14} y={20} size={8}/>
+      {/* Gallery oak bench silhouette underneath the plaque */}
+      <ellipse cx="40" cy="69" rx="33" ry="4.5" fill={dark} opacity=".22"/>
+      <path d="M17 57l-3 11m49-11l3 11M18 63h44" stroke="#6a4944" strokeWidth="3.2" strokeLinecap="round"/>
+      <rect x="9" y="49" width="62" height="9" rx="3" fill="var(--egg-wood)" stroke="#6a4944" strokeWidth="1.6"/>
+      <path d="M14 52.5h52" stroke="#f0cca1" strokeWidth="1.4" strokeLinecap="round" opacity=".72"/>
+      <Tag text="Для двоих" y={20} fontSize={10.5}/>
+      <Heart x={66} y={14} scale={.54}/><Spark x={14} y={14} size={8}/>
     </g>;
     case 'window7':return <g className="egg-sweep">
-      <path d="M10 46q18-16 29-5q12-16 31-9q-20 6-26 19q-11-11-34-5Z" fill="var(--egg-paper)" stroke="#97746b" strokeWidth="1.5" strokeLinejoin="round"/>
-      <path d="M16 43q11-7 23-1m4 1q7-9 17-11" fill="none" stroke="#fff4dc" strokeLinecap="round" opacity=".9"/>
-      <Spark x={62} y={22} size={10}/><Spark x={22} y={28} size={7}/>
+      {/* Arched gallery window looking onto the dusk embankment */}
+      <path d="M14 66V36a26 26 0 0 1 52 0v30Z" fill="var(--egg-glass)" stroke="#6d5552" strokeWidth="2.1"/>
+      <path d="M18 62V36a22 22 0 0 1 44 0v26Z" fill="#5e7f8c" opacity=".55"/>
+      {/* Dusk embankment glow & water reflections */}
+      <path d="M18 48q22-4 44 0v14H18Z" fill="#41586a" opacity=".78"/>
+      <circle cx="30" cy="42" r="5" fill="var(--egg-light)"/><circle cx="30" cy="42" r="1.8" fill={cream}/>
+      <circle cx="51" cy="41" r="4.5" fill="var(--egg-light)"/><circle cx="51" cy="41" r="1.6" fill={cream}/>
+      <path d="M26 53h9m11 1h10m-25 4h14" stroke={gold} strokeWidth="1.5" strokeLinecap="round" opacity=".82"/>
+      {/* Window mullions & wooden sill */}
+      <path d="M40 14v50M16 40h48" stroke="#ebd4ba" strokeWidth="1.7" opacity=".85"/>
+      <rect x="10" y="63" width="60" height="6" rx="2.5" fill="var(--egg-wood)" stroke="#624640" strokeWidth="1.5"/>
+      {/* Breeze wisp */}
+      <path d="M12 28q13-7 25-1t24-3" fill="none" stroke={cream} strokeWidth="2.1" strokeLinecap="round" opacity=".82"/>
+      <Spark x={62} y={20} size={9}/><Spark x={20} y={22} size={6.5}/>
     </g>;
     case 'kettle8':return <g className="egg-rise">
       <path d="M18 68c26-10 9-23 26-29" fill="none" stroke={cream} strokeWidth="4.2" strokeLinecap="round"/>
@@ -328,13 +378,28 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <Heart x={54} y={25} scale={1.08}/>
       <Spark x={24} y={32} size={8}/>
     </g>;
-    case 'utensils8':return <g className="egg-swing">
-      <g fill="var(--egg-wood)" stroke="#7d5441" strokeWidth="1.75" strokeLinejoin="round">
-        <path d="M23 12h7v34h-7Z"/><ellipse cx="26.5" cy="54" rx="11" ry="15"/>
-        <path d="M47 14h7v30h-7Z"/><path d="M42 44h17v13q0 8-8.5 8T42 57Z"/>
+    case 'utensils8':return <g className="egg-swing" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="40" cy="69" rx="24" ry="4.5" fill={dark} opacity=".2"/>
+      {/* Crossed carved wooden spatula */}
+      <g transform="rotate(26 40 42)">
+        <path d="M37 11h6l1 33h-8Z" fill="var(--egg-wood)" stroke="#6e4a3b" strokeWidth="1.5"/>
+        <circle cx="40" cy="15" r="1.4" fill={cream}/>
+        <path d="M31 43h18l2 17q0 6-11 6t-11-6Z" fill="var(--egg-copper)" stroke="#6e4a3b" strokeWidth="1.55"/>
+        <path d="M35.5 48v11M40 48v12M44.5 48v11" stroke="#6e4a3b" strokeWidth="1.7"/>
+        <path d="M38.5 19v19" stroke="#f5d7ac" strokeWidth="1.1" opacity=".72"/>
       </g>
-      <path d="M25 16v24m24-22v23M20 48q-4 7 1 12m26-11v10m7-10v10" fill="none" stroke="#f5d6ac" strokeWidth="1.35" strokeLinecap="round" opacity=".8"/>
-      <Spark x={65} y={26} size={10}/>
+      {/* Crossed carved wooden spoon */}
+      <g transform="rotate(-26 40 42)">
+        <path d="M37 11h6l1 31h-8Z" fill="var(--egg-wood)" stroke="#6e4a3b" strokeWidth="1.5"/>
+        <circle cx="40" cy="15" r="1.4" fill={cream}/>
+        <ellipse cx="40" cy="54" rx="10.5" ry="14" fill="var(--egg-copper)" stroke="#6e4a3b" strokeWidth="1.6"/>
+        <ellipse cx="40" cy="54.5" rx="6.5" ry="9.5" fill="#9c6c52" opacity=".42"/>
+        <path d="M34 49q-2 7 3 11m1.5-41v18" fill="none" stroke="#f7dfb8" strokeWidth="1.35" opacity=".82"/>
+      </g>
+      {/* Cozy linen kitchen ribbon bow at intersection */}
+      <path d="M34 38q6 3 12 0" fill="none" stroke="var(--egg-rose)" strokeWidth="3.4"/>
+      <circle cx="40" cy="39" r="3" fill="var(--egg-rose)" stroke="#86586a" strokeWidth="1.1"/>
+      <Spark x={65} y={20} size={9.5}/>
     </g>;
     case 'sugar8':return <g>
       <path d="M18 46h44l-5 20H23Z" fill="var(--egg-ceramic)" stroke="#8a6b62" strokeWidth="1.7" strokeLinejoin="round"/>
@@ -358,6 +423,13 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <path d="M12 44q22-16 57-8M14 53q22-15 53-9" fill="none" stroke={cream} strokeWidth="2.8" strokeLinecap="round"/>
       <path d="M26 32l-4 22M48 31l-4 21M11 57q27-13 49-2" fill="none" stroke="#937083" strokeWidth="1.6" strokeDasharray="3 3"/>
     </g>;
+    case 'secondBlanket10':return <g className="egg-fold">
+      <path d="M5 42q24-25 70-10l-7 28q-34-16-61 3Z" fill="var(--egg-paper)" stroke="#8c7258" strokeWidth="1.8" strokeLinejoin="round"/>
+      <path d="M6 42q24-24 68-10l-7 27q-34-15-59 3Z" fill="var(--egg-knit)"/>
+      <path d="M12 44q22-16 57-8M14 53q22-15 53-9" fill="none" stroke={cream} strokeWidth="2.8" strokeLinecap="round"/>
+      <path d="M26 32l-4 22M48 31l-4 21M11 57q27-13 49-2" fill="none" stroke="#a6896b" strokeWidth="1.6" strokeDasharray="3 3"/>
+      <Spark x={60} y={18} size={9}/>
+    </g>;
     case 'garland9':return <g>
       <path d="M4 28q36 28 72-8" fill="none" stroke={gold} strokeWidth="2.6" strokeLinecap="round"/>
       {[10,25,40,55,70].map((x,i)=>{
@@ -373,10 +445,20 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <rect x="6" y="59" width="68" height="10" rx="4" fill="var(--egg-wood)" stroke="#795346" strokeWidth="1.6"/>
       <path d="M12 63q16-2 31 0m5 0 19-1" fill="none" stroke="#ebbd8e" strokeLinecap="round" opacity=".75"/>
     </g>;
-    case 'bakery9':return <g className="egg-rise" fill="none" strokeLinecap="round">
-      <path d="M24 64c-15-15 15-18 0-38m29 31c-15-15 15-18 0-38" stroke="var(--egg-copper)" strokeWidth="4.6"/>
-      <path d="M24 64c-15-15 15-18 0-38m29 31c-15-15 15-18 0-38" stroke={cream} strokeWidth="2"/>
-      <Spark x={42} y={18} size={9}/>
+    case 'bakery9':return <g className="egg-rise" strokeLinecap="round" strokeLinejoin="round">
+      {/* Warm freshly baked cinnamon roll with rising aromatic steam */}
+      <ellipse cx="40" cy="65" rx="28" ry="6.5" fill={dark} opacity=".22"/>
+      <ellipse cx="40" cy="62" rx="27" ry="7" fill="var(--egg-paper)" stroke="#b89882" strokeWidth="1.2"/>
+      {/* Golden pastry bun body */}
+      <path d="M16 55c-1-12 9-22 24-22s25 10 24 22c-1 8-11 11-24 11S17 63 16 55Z" fill="var(--egg-ochre)" stroke="#7f513b" strokeWidth="1.75"/>
+      {/* Cinnamon swirl ridges */}
+      <path d="M24 52c0-8 7-13 16-13 8 0 14 5 14 11 0 5-5 9-12 9-6 0-10-3-10-7 0-3 3-5 7-5 3 0 5 2 4 4" fill="none" stroke="#854b35" strokeWidth="2.3"/>
+      {/* Warm cream glaze drizzle */}
+      <path d="M24 44q6 5 12 1t12 2q5 3 9-1" fill="none" stroke={cream} strokeWidth="2.6" opacity=".88"/>
+      <path d="M29 53q8 4 19 1" fill="none" stroke="#fff4de" strokeWidth="1.4" opacity=".7"/>
+      {/* Rising cinnamon aroma steam */}
+      <path d="M29 30c-6-6 6-10 0-17m20 15c-5-6 5-10 0-17" fill="none" stroke={cream} strokeWidth="2.2" opacity=".82"/>
+      <Spark x={59} y={18} size={8.5}/>
     </g>;
     case 'bookcase9':return <g className="egg-drift">
       <g transform="rotate(14 40 40)">
@@ -394,10 +476,21 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <Heart x={40} y={44} scale={.62}/>
       <Spark x={65} y={14} size={8}/>
     </g>;
-    case 'traffic9':return <g className="egg-glow">
-      <circle cx="40" cy="40" r="28" fill="var(--egg-light)"/>
-      <circle cx="40" cy="40" r="11" fill="var(--egg-sage)" stroke="#667054" strokeWidth="1.5"/>
-      <Spark x={40} y={40} size={10}/>
+    case 'traffic9':return <g className="egg-glow" strokeLinecap="round" strokeLinejoin="round">
+      {/* Wet-evening green traffic light housing & glowing lens */}
+      <circle cx="40" cy="46" r="32" fill="var(--egg-light)" opacity=".8"/>
+      <path d="M40 6v8" stroke="#534250" strokeWidth="3.5"/>
+      <rect x="20" y="13" width="40" height="54" rx="10" fill="var(--egg-plum)" stroke="#3e303c" strokeWidth="2"/>
+      <path d="M22 25q18-11 36 0" fill="#3e303c" opacity=".65"/>
+      {/* Dim upper waiting lens */}
+      <circle cx="40" cy="26" r="7" fill="#463a47" stroke="#6f5a6d" strokeWidth="1.2"/>
+      {/* Glowing emerald-sage green lens with rain visor */}
+      <circle cx="40" cy="48" r="14" fill="#a7dba0" opacity=".32"/>
+      <circle cx="40" cy="48" r="11" fill="var(--egg-sage)" stroke="#4c6449" strokeWidth="1.6"/>
+      <circle cx="40" cy="48" r="8" fill="#a7dca0" opacity=".78"/>
+      <path d="M35 44q3-4 8-2" fill="none" stroke="#f4ffef" strokeWidth="2" opacity=".9"/>
+      <path d="M25 39q15-7 30 0" fill="none" stroke="#3b2d39" strokeWidth="3.2"/>
+      <Spark x={40} y={48} size={9}/><Spark x={63} y={24} size={7}/>
     </g>;
     case 'cafeLamp10':return <g className="egg-swing">
       <path d="M40 6v14" stroke={dark} strokeWidth="2.8" strokeLinecap="round"/>
@@ -414,20 +507,78 @@ function sceneDetail(id:SeasonReactionId):ReactNode{
       <Spark x={58} y={20} size={11}/>
     </g>;
     case 'cat10':return <g className="egg-rise">
-      <Heart x={42} y={32} scale={1.15}/>
-      <Spark x={18} y={44} size={9}/><Spark x={64} y={40} size={10}/>
+      {/* Warm purr waves, tiny paw prints & floating double hearts */}
+      <path d="M16 54q-5-6 0-12m48 12q5-6 0-12" fill="none" stroke={gold} strokeWidth="2" strokeLinecap="round" opacity=".75"/>
+      <g fill="var(--egg-copper)" opacity=".72">
+        <ellipse cx="23" cy="61" rx="4.2" ry="3.2"/><circle cx="19" cy="56" r="1.4"/><circle cx="23" cy="54.5" r="1.4"/><circle cx="27" cy="56" r="1.4"/>
+        <ellipse cx="57" cy="61" rx="4.2" ry="3.2"/><circle cx="53" cy="56" r="1.4"/><circle cx="57" cy="54.5" r="1.4"/><circle cx="61" cy="56" r="1.4"/>
+      </g>
+      <Heart x={40} y={32} scale={1.12}/>
+      <Heart x={57} y={20} scale={.48}/>
+      <Spark x={19} y={28} size={8}/><Spark x={63} y={38} size={8.5}/>
+    </g>;
+    case 'envelope10':return <g className="egg-rise" strokeLinecap="round" strokeLinejoin="round">
+      {/* Warm darkroom glow behind an unrolling 35mm film strip */}
+      <circle cx="40" cy="36" r="30" fill="var(--egg-light)" opacity=".88"/>
+      <g transform="rotate(-8 40 38)">
+        <rect x="7" y="21" width="66" height="32" rx="3.5" fill="#4f352f" stroke="#2f1e1b" strokeWidth="1.7"/>
+        {/* Top & bottom 35mm sprocket holes */}
+        {[12,20,28,36,44,52,60,68].map(x=><g key={x} fill="#f7e2be" opacity=".88">
+          <rect x={x-2} y="23.5" width="4" height="2.4" rx=".6"/>
+          <rect x={x-2} y="48" width="4" height="2.4" rx=".6"/>
+        </g>)}
+        {/* Three sunlit amber negative frames: water reflection, warm heart, evening roof */}
+        <rect x="11" y="28" width="17" height="17.5" rx="1.5" fill="var(--egg-ochre)" stroke="#7c523c" strokeWidth="1"/>
+        <path d="M12.5 39q4.5-4 8.5-1t5.5-2v8h-14Z" fill="#7c5560" opacity=".7"/>
+        <circle cx="16.5" cy="33" r="2.2" fill="#fff5d6"/>
+        <rect x="31.5" y="28" width="17" height="17.5" rx="1.5" fill="var(--egg-rose)" stroke="#7c523c" strokeWidth="1"/>
+        <Heart x={40} y={37.5} scale={.45}/>
+        <rect x="52" y="28" width="17" height="17.5" rx="1.5" fill="var(--egg-copper)" stroke="#7c523c" strokeWidth="1"/>
+        <path d="M54 43l5-7 4 4 4-5v8Z" fill="#5e4147" opacity=".75"/>
+        <circle cx="63.5" cy="32.5" r="2" fill="#fff5d6"/>
+      </g>
+      <Tag text="12 / 12 проявлено" fill="#6b4450" y={57} fontSize={6.2}/>
+      <Spark x={15} y={16} size={9}/><Spark x={66} y={14} size={10}/><Spark x={69} y={50} size={7}/>
     </g>;
     case 'tv10':return <g className="egg-glow">
-      <ReactionPonchik x={6} y={0} width={68} height={50}/>
-      <Tag text="Кооператив пройден" y={50} fontSize={7.4}/>
+      {/* Cozy retro TV screen frame so Ponchik & badge read cleanly without overflow */}
+      <rect x="7" y="4" width="66" height="44" rx="7" fill="#3a2f44" stroke={gold} strokeWidth="1.6"/>
+      <rect x="11" y="8" width="58" height="36" rx="4" fill="#524360" opacity=".68"/>
+      <ReactionPonchik x={14} y={5} width={52} height={39}/>
+      <Spark x={67} y={10} size={7}/>
+      <Tag text="Кооператив пройден" y={52} fontSize={5.8}/>
     </g>;
-    case 'glasses10':return <g className="egg-glow">
-      <Spark x={26} y={44} size={14}/><Spark x={54} y={34} size={14}/>
-      <path d="M11 33q-9 10-2 22m58-34q9 10 5 22" fill="none" stroke={gold} strokeWidth="2.8" strokeLinecap="round"/>
+    case 'glasses10':return <g className="egg-glow" strokeLinecap="round" strokeLinejoin="round">
+      {/* Two sunlit morning water tumblers clinking softly */}
+      <ellipse cx="40" cy="68" rx="30" ry="5" fill={dark} opacity=".2"/>
+      {/* Left glass tumbler */}
+      <g transform="rotate(-7 26 46)">
+        <path d="M14 25h23l-3 38q-8.5 3.5-17 0Z" fill="var(--egg-glass)" fillOpacity=".58" stroke="#dbece8" strokeWidth="1.6"/>
+        <path d="M16 40q9.5 3 19 0l-2 21q-7.5 3-15 0Z" fill="#a8c9c4" opacity=".62"/>
+        <ellipse cx="25.5" cy="25" rx="11.5" ry="3.2" fill="#e6f3f0" fillOpacity=".5" stroke="#fff7e4" strokeWidth="1.2"/>
+        <path d="M18 30l1.5 26" stroke="#ffffff" strokeWidth="1.8" opacity=".78"/>
+      </g>
+      {/* Right glass tumbler */}
+      <g transform="rotate(8 54 44)">
+        <path d="M43 22h23l-3 38q-8.5 3.5-17 0Z" fill="var(--egg-glass)" fillOpacity=".64" stroke="#dbece8" strokeWidth="1.6"/>
+        <path d="M45 36q9.5 3 19 0l-2 22q-7.5 3-15 0Z" fill="var(--egg-ochre)" opacity=".6"/>
+        <ellipse cx="54.5" cy="22" rx="11.5" ry="3.2" fill="#fff1d8" fillOpacity=".55" stroke="#fff7e4" strokeWidth="1.2"/>
+        <path d="M48 27l1.5 26" stroke="#ffffff" strokeWidth="1.8" opacity=".82"/>
+      </g>
+      <Spark x={40} y={17} size={10}/><Spark x={24} y={46} size={7.5}/><Spark x={58} y={42} size={8}/>
     </g>;
-    case 'morningWindow10':return <g className="egg-sweep">
-      <path d="m8 10 12 3 34 56-16-6Zm18 3 10 3 41 50-17-4Zm19 3 10 2 22 30-14-8Z" fill="var(--egg-paper)" opacity=".72"/>
-      <Spark x={22} y={22} size={10}/><Spark x={54} y={48} size={9}/>
+    case 'morningWindow10':return <g className="egg-sweep" strokeLinecap="round" strokeLinejoin="round">
+      {/* Sunlit morning window frame with fluttering sheer curtain & warm shafts */}
+      <path d="M12 10h42v40H12Z" fill="#fce9bf" fillOpacity=".32" stroke="#d9bc9c" strokeWidth="1.8"/>
+      <path d="M33 10v40M12 30h42" stroke="#ebd4ba" strokeWidth="1.6"/>
+      {/* Diagonal warm morning sunbeams */}
+      <path d="M14 12l16 3 34 55-22-4Z" fill="var(--egg-paper)" opacity=".55"/>
+      <path d="M34 12l18 2 22 48-18-3Z" fill={gold} opacity=".4"/>
+      {/* Fluttering sheer morning curtain on left */}
+      <path d="M10 8h13c-2 15-4 32 2 48-7 2-12 0-16-4 3-14 2-28 1-44Z" fill={cream} fillOpacity=".82" stroke="#c8ab96" strokeWidth="1.3"/>
+      <path d="M15 12c-1 13-1 26 2 39" fill="none" stroke="#e2c8b0" strokeWidth="1.1"/>
+      <circle cx="48" cy="48" r="1.6" fill={cream} opacity=".85"/><circle cx="38" cy="59" r="1.4" fill={cream} opacity=".78"/>
+      <Spark x={27} y={21} size={9.5}/><Spark x={56} y={42} size={9}/><Spark x={44} y={62} size={6.5}/>
     </g>;
   }
 }

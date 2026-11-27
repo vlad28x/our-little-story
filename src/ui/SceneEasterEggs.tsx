@@ -72,8 +72,8 @@ export function SceneEasterEggs({stage,paintedSeason=false,hideHair=false,backgr
       }
       const gameNight=root!.classList.contains('game-night-stage');
       const painted=Object.entries(seasonScenery[background]??{}).map(([id,[cx,cy,w,h]])=>{
-        // The fridge and the chairs under the arch can sit at the edge of a narrow crop.
-        const edgeProp=id==='fridge8'||(id==='archChairs9'&&background==='bg.courtyard9.arch');
+        // The fridge, kitchen lamp and the chairs under the arch can sit at the edge of a narrow crop.
+        const edgeProp=id==='fridge8'||id==='lamp8'||(id==='archChairs9'&&background==='bg.courtyard9.arch');
         const rightInset=edgeProp?18:undefined;
         return [id as SeasonSceneryId,backgroundBox(cx,cy,w,h,48,true,rightInset)];
       });
@@ -95,7 +95,9 @@ export function SceneEasterEggs({stage,paintedSeason=false,hideHair=false,backgr
         blanket:gameNight?backgroundBox(.107,.487,.18,.13,68,true):backgroundBox(.12,.52,.26,.13,112),
         mug:gameNight?backgroundBox(.28,.505,.08,.055,48,true):backgroundBox(.28,.53,.08,.055),
         tv:tvBox,tvSleep:tvBox,
-        cat10:background==='bg.travellers10.cafe'?box('.cat-in-box img, .cat-chair img'):undefined,...Object.fromEntries(painted)});
+        cat10:background==='bg.travellers10.cafe'?box('.cat-in-box img, .cat-chair img, .cat-on-table img'):undefined,
+        envelope10:background==='bg.travellers10.cafe'?box('.prints-closed .photo-envelope'):undefined,
+        secondBlanket10:background==='bg.travellers10.home'?box('.sleep-blanket-second'):undefined,...Object.fromEntries(painted)});
     }
     const frame=requestAnimationFrame(measure),observer=new ResizeObserver(measure);
     observer.observe(root);root.querySelectorAll('img').forEach(img=>observer.observe(img));
@@ -124,7 +126,7 @@ export function SceneEasterEggs({stage,paintedSeason=false,hideHair=false,backgr
       {spark('nina')}
       {active==='nina'&&<Illustration kind="tea" className="nina-tea"/>}
     </button>}
-    {boxes.cat&&<button ref={buttonRef('cat')} className="scene-easter-target easter-cat" style={boxes.cat} aria-label={easterEggs.cat.label} onClick={e=>{e.stopPropagation();trigger('cat');}}>{spark('cat')}</button>}
+    {boxes.cat&&<button ref={buttonRef('cat')} className="scene-easter-target easter-cat" style={boxes.cat} aria-label={easterEggs.cat.label} onClick={e=>{e.stopPropagation();trigger('cat');}}>{spark('cat')}<SceneEasterPropArt id="cat10" active={active==='cat'} paintedSeason={paintedSeason}/></button>}
     {cookie&&<button ref={buttonRef('cookie')} className="scene-easter-target easter-cookie" aria-label={easterEggs.cookie.label} disabled={cookieTaken} onClick={e=>{e.stopPropagation();trigger('cookie');}}>
       {spark('cookie')}
       <CookiePlateArt taken={cookieTaken}/>{active==='cookie'&&<span className="cookie-crumbs" aria-hidden="true"><i/><i/><i/></span>}

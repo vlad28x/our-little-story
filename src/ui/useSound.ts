@@ -2,7 +2,7 @@ import { createContext,useCallback,useContext,useEffect,useRef,useState } from '
 
 type RhythmicEffect='purr'|'projector';
 export type SoundEffect='token'|'shutter'|'bell'|'wood'|'paper'|'star'|'switch'|'oven-timer'|'kettle'|RhythmicEffect;
-export type Ambience='rain-open'|'rain-shelter'|'river'|'kitchen'|'steam'|'morning';
+export type Ambience='rain-open'|'rain-shelter'|'kitchen'|'steam';
 
 const ambienceFade=0.6;
 const silence=0.00001;
@@ -104,28 +104,7 @@ function soundRhythm(context:AudioContext,time:number,volume:number,kind:Rhythmi
   return source;
 }
 
-function birdsBuffer(context:AudioContext){
-  const buffer=context.createBuffer(1,Math.ceil(context.sampleRate*14),context.sampleRate);
-  const samples=buffer.getChannelData(0);
-  const calls=[
-    [1.15,0.15,1740,2390],[1.37,0.11,2310,1940],[1.52,0.12,2060,2480],
-    [5.48,0.20,2120,1530],[5.83,0.13,1680,2080],
-    [10.05,0.12,2340,2680],[10.22,0.16,2600,2030],[10.46,0.11,2000,2430],
-  ];
-  for(const [time,length,from,to] of calls){
-    const start=Math.floor(time*context.sampleRate);
-    const count=Math.floor(length*context.sampleRate);
-    for(let i=0;i<count;i++){
-      const t=i/context.sampleRate;
-      const phase=cycle*(from*t+(to-from)*t*t/(2*length));
-      const envelope=Math.sin(Math.PI*t/length)**2;
-      samples[start+i]=0.24*(Math.sin(phase)+0.08*Math.sin(2*phase))*envelope;
-    }
-  }
-  return buffer;
-}
-
-const filterFrequencies:Record<Ambience,number>={'rain-open':900,'rain-shelter':520,river:420,kitchen:2200,steam:2100,morning:3500};
+const filterFrequencies:Record<Ambience,number>={'rain-open':900,'rain-shelter':520,kitchen:2200,steam:2100};
 
 function startAmbience(context:AudioContext,volume:number,kind:Ambience){
   const time=context.currentTime;
@@ -133,10 +112,7 @@ function startAmbience(context:AudioContext,volume:number,kind:Ambience){
   const source=context.createBufferSource(),filter=context.createBiquadFilter(),gain=context.createGain();
   const texture=context.createGain();
   const highShelf=kind==='kitchen'?context.createBiquadFilter():undefined;
-  const movement=kind==='river'?context.createOscillator():undefined;
-  const depth=movement?context.createGain():undefined;
-  const ripple=movement?context.createGain():undefined;
-  source.buffer=kind==='morning'?birdsBuffer(context):noiseBuffer(context,6,kind!=='kitchen'&&kind!=='steam');
+  source.buffer=noiseBuffer(context,6,kind!=='kitchen'&&kind!=='steam');
   source.loop=true;
   filter.type=kind==='steam'?'bandpass':'lowpass';
   filter.frequency.value=filterFrequencies[kind];
@@ -154,19 +130,9 @@ function startAmbience(context:AudioContext,volume:number,kind:Ambience){
     filter.connect(highShelf).connect(texture);
     texture.gain.value=0.32;
   }else filter.connect(texture);
-  if(movement&&depth&&ripple){
-    movement.frequency.value=0.27;
-    texture.gain.value=0.74;
-    depth.gain.value=0.22;
-    ripple.gain.value=62;
-    movement.connect(depth).connect(texture.gain);
-    movement.connect(ripple).connect(filter.frequency);
-    movement.start(time);
-  }
   texture.connect(gain).connect(context.destination);
   source.onended=()=>{
     source.disconnect();filter.disconnect();texture.disconnect();gain.disconnect();highShelf?.disconnect();
-    movement?.stop();movement?.disconnect();depth?.disconnect();ripple?.disconnect();
   };
   source.start(time);
   return ()=>{

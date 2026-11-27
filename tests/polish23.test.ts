@@ -119,8 +119,8 @@ it('synchronizes gallery, film, photographs and home props with the authored lin
  expect(art('c10.travellers.arrived',7)).toContain('game-box');
  const sleep=ten.nodes['c10.travellers.sleep'];
  if(sleep.kind!=='dialogue')throw Error('Missing sleep dialogue');
- expect(resolveScene(sleep.scene,prints.story,{...prints,lineIndex:7}).background).toBe('bg.travellers10.home');
  expect(resolveScene(sleep.scene,prints.story,{...prints,lineIndex:8}).background).toBe('bg.travellers10.home');
- expect(art(sleep.id,7)).toContain('#b7b0c3');
+ expect(resolveScene(sleep.scene,prints.story,{...prints,lineIndex:9}).background).toBe('bg.travellers10.morning');
  expect(art(sleep.id,8)).toContain('#b7b0c3');
+ expect(art(sleep.id,9)).toBe('');
 });

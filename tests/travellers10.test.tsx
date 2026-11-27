@@ -61,21 +61,26 @@ it('round-trips every cursor, rejects stale taps, forged resources, wrong phases
  const bad=structuredClone(at);bad.campaign.active!.turn++;expect(()=>parseSave(JSON.stringify(bad))).toThrow();
 },120000);
 
-it('keeps the evening stay finale calm without explicit branch or morning shirt scene',()=>{
+it('keeps the evening stay finale calm with a warm morning scene and no explicit or shirt lines',()=>{
  const path={continuation:'home',tender:'near',finale:'sleep'} as const;
  let save=travellersAt('c10.travellers.sleep',path);
  const heard:string[]=[];
+ const backgrounds:string[]=[];
  while(save.campaign.active){
   const run=save.campaign.active,node=chapter10.nodes[run.nodeId];
   if(node.kind!=='dialogue')throw Error('Missing sleep finale dialogue');
   expect(run.story.c10Finale).toBeUndefined();
   expect(save.collection.cards.some(card=>card.chapter===10)).toBe(false);
   expect(parseSave(JSON.stringify(save))).toEqual(save);
-  expect(resolveScene(node.scene,run.story,run).background).toBe('bg.travellers10.home');
+  const bg=resolveScene(node.scene,run.story,run).background;
+  backgrounds.push(bg);
+  expect(bg).toBe(run.lineIndex>=9?'bg.travellers10.morning':'bg.travellers10.home');
   heard.push(resolveLine(node.lines[run.lineIndex],run.story).text);
   save=reduceSave(save,{type:'command',target:'campaign',command:travellersCommand(run,path)});
  }
- expect(heard.join(' ')).not.toMatch(/футболк|до середины бедра|открытка из галереи|под общим одеялом Влад обнимает/);
+ expect(backgrounds).toContain('bg.travellers10.morning');
+ expect(heard.join(' ')).toContain('доброе утро');
+ expect(heard.join(' ')).not.toMatch(/футболк|до середины бедра|открытка из галереи|под общим одеялом Влад обнимает|сжимает твою ладонь/);
  expect(save.campaign.records[10]?.story.c10Finale).toBe('morning');
  expect(chapter10.nodes['c10.travellers.private' as keyof typeof chapter10.nodes]).toBeUndefined();
 });
@@ -101,11 +106,12 @@ it('renders distinct print combinations and actual dish gift details',()=>{
  const base=finishCourtyard().campaign.records[9]!.story,prints=new Set<string>();
  for(const c6PhotoPlace of ['upper','water'] as const)for(const c6PhotoSubject of ['vlad','her','place'] as const)prints.add(renderToStaticMarkup(<SelectedPrint source={6} story={{...base,c6PhotoPlace,c6PhotoSubject}}/>));expect(prints.size).toBe(6);
  for(const [source,key,values] of [[7,'c7GalleryFrame',['vlad','her','both']],[8,'c8Frame',['foodHer','foodVlad','boardHer','boardVlad']],[9,'c9Frame',['vlad','seats','yard']]] as const){const variants=values.map(v=>renderToStaticMarkup(<SelectedPrint source={source} story={{...base,[key]:v}}/>));expect(new Set(variants).size).toBe(values.length);}
- for(const c7GalleryGift of ['none','chip','blue'] as const){const html=renderToStaticMarkup(<SelectedPrint source={8} story={{...base,c8Frame:'foodHer',c7GalleryGift}}/>);if(c7GalleryGift==='none')expect(html).not.toContain('gallery7/');if(c7GalleryGift==='chip')expect(html).toContain('gallery7/season2-gouache/chip.webp');}
+ for(const c7GalleryGift of ['none','chip','blue'] as const){const html=renderToStaticMarkup(<SelectedPrint source={8} story={{...base,c8Frame:'foodHer',c7GalleryGift}}/>);expect(html).not.toContain('gallery7/');}
  expect(renderToStaticMarkup(<TravellersBoard state={travellerResources({c10River:'ford',c10Quarry:'contour',c10Arrival:'upper'})}/>)).toContain('Солнц: 0');
  const at=travellersAt('c10.travellers.sleep',{continuation:'home',finale:'sleep'}).campaign.active!;
  const evening={...at,lineIndex:8,story:{...at.story,c7GalleryGift:'chip' as const}};
  expect(renderToStaticMarkup(<TravellersScene run={evening}/>)).toContain('gallery7/season2-gouache/chip.webp');
+ expect(renderToStaticMarkup(<TravellersScene run={{...evening,lineIndex:9}}/>)).toBe('');
  const home={...at,nodeId:'c10.travellers.home' as const,story:evening.story};
  const homeArt=renderToStaticMarkup(<TravellersScene run={home}/>);expect(homeArt).toContain('preserveAspectRatio="xMidYMid slice"');expect(homeArt).toContain('gallery7/season2-gouache/chip.webp');
  for(const nodeId of ['c10.travellers.homeKissFirstChoice','c10.travellers.homeKissFirstNeck','c10.travellers.homeKissFirstSoft'] as const)
@@ -116,7 +122,8 @@ it('renders distinct print combinations and actual dish gift details',()=>{
 it('keeps invitations independent, trial isolated, rewrites scoped and all five choices visible',()=>{
  let s=finishTravellers();s.continuation='movie';
  for(const o of meeting10Options){s=reduceSave(s,{type:'continuation10',value:o.value});expect(s.continuation).toBe('movie');expect(parseSave(JSON.stringify(s))).toEqual(s);}
- context={save:s,send:vi.fn()};const html=renderToStaticMarkup(<TravellersInvitation/>);for(const o of meeting10Options)expect(html).toContain(o.label);expect(html).not.toContain('Копировать сообщение');expect(html).not.toContain('<textarea');
+ context={save:s,send:vi.fn()};const html=renderToStaticMarkup(<TravellersInvitation/>);for(const o of meeting10Options){expect(html).toContain(o.label);if(o.image)expect(html).toContain(`travellers10/future-${o.value}.webp`);}expect(html).not.toContain('future-print-photo');expect(html).not.toContain('Копировать сообщение');expect(html).not.toContain('<textarea');
+ context={save:{...s,continuation10:'movie'},send:vi.fn()};const chosenHtml=renderToStaticMarkup(<TravellersInvitation/>);expect(chosenHtml).toContain('future-print-photo');expect(chosenHtml).toContain('travellers10/future-movie.webp');
  const canonical=structuredClone(s.campaign),trial=startTravellers(s,true);expect(reduceSave(trial,{type:'continuation10',value:'cook'})).toBe(trial);
  const result=finishTravellers({continuation:'home',tender:'near',finale:'sleep'},s,true);expect(result.campaign).toEqual(canonical);expect(result.continuation10).toBe('decline');expect(result.lastResult?.episodeRecord?.story.c10Finale).toBe('morning');expect(result.collection.cards.filter(c=>c.chapter===10)).toHaveLength(1);
  const rewrite=reduceSave(s,{type:'rewrite',chapter:10,attemptId:'new-canon'});expect(rewrite.continuation10).toBeNull();expect(rewrite.continuation).toBe('movie');

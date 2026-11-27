@@ -6,6 +6,7 @@ import {finishSupper} from './supperHelpers';
 import {finishGallery} from './gallery7Helpers';
 import {chapter10} from '../src/content/chapters/ch10';
 import {parseSave} from '../src/persistence/validateSave';
+import {reduceSave} from '../src/state/reducer';
 import type {SaveV1} from '../src/state/types';
 const read=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('five-meetings:/:save')!) as SaveV1);
 test('plays the shared help road and nocturnal home road with every action saved',async({page})=>{
@@ -93,4 +94,67 @@ test('completed ten has one meeting button that opens its canonical invitation a
  await page.getByRole('button',{name:/Встретиться вживую/}).click();await page.getByRole('button',{name:'Закрыть вариант',exact:true}).click();
  await expect(page.locator('#real-meeting-invitation')).toBeFocused();
  const after=await read(page);expect(after.trial).toBeNull();expect(after.campaign).toEqual(main.campaign);expect(after.continuation).toBe('movie');expect(after.continuation10).toBe('decline');
+});
+
+test('Nina stays on the right and exterior Vlad stays centered in chapter ten',async({page})=>{
+ for(const width of [390,960]){
+  await page.setViewportSize({width,height:844});
+  await openOffline(page,travellersAt('c10.travellers.entry'),'/play/10');
+  for(let i=0;i<5;i++)await page.getByRole('button',{name:/^Дальше/}).click();
+  const nina=page.locator('.character.nina');
+  await expect(nina).toBeVisible();
+  const during=await nina.evaluate(el=>({offset:getComputedStyle(el).getPropertyValue('--character-offset-x').trim(),x:el.getBoundingClientRect().x}));
+  await page.waitForTimeout(320);
+  const settled=await nina.evaluate(el=>el.getBoundingClientRect().x);
+  expect(during.offset).toBe('0%');
+  expect(Math.abs(during.x-settled)).toBeLessThan(1);
+  await page.goto('about:blank');
+  await openOffline(page,travellersAt('c10.travellers.cafeGoodbye',{continuation:'cafe'}),'/play/10');
+  const vlad=page.locator('.character');
+  await expect(vlad).toBeVisible();
+  await page.waitForTimeout(320);
+  const [stageBox,vladBox]=await Promise.all([page.locator('.scene-stage').boundingBox(),vlad.boundingBox()]);
+  const stageCenter=stageBox!.x+stageBox!.width/2,vladCenter=vladBox!.x+vladBox!.width/2;
+  expect(Math.abs(vladCenter-stageCenter)).toBeLessThan(2);
+  await page.goto('about:blank');
+  let sleep=travellersAt('c10.travellers.sleep',{continuation:'home',finale:'sleep'});
+  while(sleep.campaign.active!.lineIndex<3)sleep=reduceSave(sleep,{type:'command',target:'campaign',command:travellersCommand(sleep.campaign.active!)});
+  await openOffline(page,sleep,'/play/10');
+  await expect(page.locator('.easter-sofaBlanket10')).toBeVisible();
+  const second=page.locator('.easter-secondBlanket10');
+  await expect(second).toBeVisible();
+  await second.click();
+  await expect(page.locator('.scene-easter-note[data-egg="secondBlanket10"]')).toContainText('второй — твой, самый тёплый');
+  for(let i=0;i<6;i++)await page.getByRole('button',{name:/^Дальше/}).click();
+  await expect(page.locator('.scene-stage')).toHaveClass(/traveller-morning-stage/);
+  const glasses=page.locator('.easter-glasses10');
+  await expect(glasses).toBeVisible();
+  await glasses.click();
+  const glassesNote=page.locator('.scene-easter-note[data-egg="glasses10"]');
+  await expect(glassesNote).toBeVisible();
+  const [noteBox,glassesBox]=await Promise.all([glassesNote.boundingBox(),glasses.boundingBox()]);
+  expect(noteBox!.y).toBeLessThan(glassesBox!.y);
+  if(width===390){
+   await page.goto('about:blank');
+   await openOffline(page,travellersAt('c10.travellers.prints'),'/play/10');
+   await expect(page.locator('.photo-envelope:not(.is-opened)')).toBeVisible();
+   const envEgg=page.locator('.easter-envelope10');
+   await expect(envEgg).toBeVisible();
+   await envEgg.click();
+   await expect(page.locator('.scene-easter-note[data-egg="envelope10"]')).toContainText('на просвет не подглядывать');
+   for(let i=0;i<4;i++)await page.getByRole('button',{name:/^Дальше/}).click();
+   await expect(page.locator('.photo-envelope.is-opened')).toBeVisible();
+   await expect(page.locator('.easter-envelope10')).toHaveCount(0);
+   await page.goto('about:blank');
+   await openOffline(page,travellersAt('c10.travellers.riverChoice'),'/play/10');
+   const [titleBox,bridgeBox]=await Promise.all([page.locator('.board-title').boundingBox(),page.locator('.board-carried-bridge').boundingBox()]);
+   expect(titleBox!.x+titleBox!.width).toBeLessThan(bridgeBox!.x);
+   await page.goto('about:blank');
+   let late=travellersAt('c10.travellers.cafeLate',{continuation:'cafe'});
+   late=reduceSave(late,{type:'command',target:'campaign',command:travellersCommand(late.campaign.active!,{continuation:'cafe'})});
+   await openOffline(page,late,'/play/10');
+   await expect(page.locator('.cat-on-table')).toBeVisible();
+   await expect(page.locator('.easter-cat10')).toBeVisible();
+  }
+ }
 });

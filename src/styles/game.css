@@ -117,7 +117,7 @@ dialog{width:calc(100% - 32px);max-width:560px;max-height:85svh;border:1px solid
 .modal-top .modal-close{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;padding:0;line-height:0}.modal-close svg{display:block;width:20px;height:20px;pointer-events:none}
 
 /* Small optional scene interactions, separate from dialogue and minigames. */
-.scene-easter{position:absolute;inset:0;z-index:3;pointer-events:none}.scene-easter-target{position:absolute;pointer-events:auto;min-width:48px;min-height:48px;padding:0;border:0;border-radius:45%;background:transparent;line-height:0;color:var(--action);touch-action:manipulation}.scene-easter-target:hover,.scene-easter-target:active{background:transparent;transform:none}.scene-easter-target:focus-visible{outline-offset:-2px;background:#fff7ed22}.easter-spark{position:absolute;z-index:1;pointer-events:none;right:2px;top:2px;display:grid;place-items:center;width:22px;height:22px;background:#fff7edd6;border-radius:50%;font-size:18px;line-height:1;opacity:.62;transition:opacity .15s}.scene-easter-target:hover .easter-spark,.scene-easter-target:focus-visible .easter-spark{opacity:1}.hair-spring{position:absolute;left:calc(50% - 17px);bottom:15%;width:34px;height:38px;transform-origin:50% 100%;animation:curl-spring .7s ease both;pointer-events:none}.easter-cookie{left:6%;bottom:34px;width:clamp(72px,20%,105px);height:76px;filter:drop-shadow(0 4px 3px #50384725)}.easter-cookie>svg{display:block;width:100%;height:100%}.easter-cookie:disabled{opacity:1;cursor:default}.cookie-crumbs{position:absolute;left:48%;top:24%;pointer-events:none}.cookie-crumbs i{position:absolute;width:4px;height:4px;border-radius:2px;background:#94613d;animation:cookie-crumb .55s ease-out both}.cookie-crumbs i:nth-child(2){margin-left:9px;animation-delay:.04s}.cookie-crumbs i:nth-child(3){margin-left:-10px;animation-delay:.08s}.scene-easter-note{position:absolute;bottom:32px;left:14px;right:14px;display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px;align-items:start;max-width:480px;margin:auto;padding:12px 8px 12px 16px;pointer-events:auto;background:#fff7edf5;border:1px solid #d5b9c6;border-radius:18px;box-shadow:0 6px 22px #50384720;color:var(--ink)}.scene-easter-note b{font-size:12px;color:var(--action);font-weight:650}.scene-easter-note p{font-size:15px;line-height:1.45;margin-top:3px}.scene-easter-dismiss{display:grid;place-items:center;width:48px;height:48px;min-width:48px;padding:0;border:0;border-radius:50%;background:transparent}.scene-easter-dismiss svg{display:block}.location-tag{pointer-events:none}.scene-easter[data-egg=cat]~.scene-cat{transform-origin:50% 100%;animation:cat-pet .65s ease both}.scene-easter[data-reduced=true] .hair-spring,.scene-easter[data-reduced=true] .cookie-crumbs i,.scene-easter[data-reduced=true]~.scene-cat{animation:none}.scene-easter[data-reduced=true] .cookie-crumbs{display:none}
+.scene-easter{position:absolute;inset:0;z-index:4;pointer-events:none}.scene-easter-target{position:absolute;pointer-events:auto;min-width:48px;min-height:48px;padding:0;border:0;border-radius:45%;background:transparent;line-height:0;color:var(--action);touch-action:manipulation}.scene-easter-target:hover,.scene-easter-target:active{background:transparent;transform:none}.scene-easter-target:focus-visible{outline-offset:-2px;background:#fff7ed22}.easter-spark{position:absolute;z-index:1;pointer-events:none;right:2px;top:2px;display:grid;place-items:center;width:22px;height:22px;background:#fff7edd6;border-radius:50%;font-size:18px;line-height:1;opacity:.62;transition:opacity .15s}.scene-easter-target:hover .easter-spark,.scene-easter-target:focus-visible .easter-spark{opacity:1}.hair-spring{position:absolute;left:calc(50% - 17px);bottom:15%;width:34px;height:38px;transform-origin:50% 100%;animation:curl-spring .7s ease both;pointer-events:none}.easter-cookie{left:6%;bottom:34px;width:clamp(72px,20%,105px);height:76px;filter:drop-shadow(0 4px 3px #50384725)}.easter-cookie>svg{display:block;width:100%;height:100%}.easter-cookie:disabled{opacity:1;cursor:default}.cookie-crumbs{position:absolute;left:48%;top:24%;pointer-events:none}.cookie-crumbs i{position:absolute;width:4px;height:4px;border-radius:2px;background:#94613d;animation:cookie-crumb .55s ease-out both}.cookie-crumbs i:nth-child(2){margin-left:9px;animation-delay:.04s}.cookie-crumbs i:nth-child(3){margin-left:-10px;animation-delay:.08s}.scene-easter-note{position:absolute;bottom:32px;left:14px;right:14px;display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px;align-items:start;max-width:480px;margin:auto;padding:12px 8px 12px 16px;pointer-events:auto;background:#fff7edf5;border:1px solid #d5b9c6;border-radius:18px;box-shadow:0 6px 22px #50384720;color:var(--ink)}.scene-easter-note b{font-size:12px;color:var(--action);font-weight:650}.scene-easter-note p{font-size:15px;line-height:1.45;margin-top:3px}.scene-easter-dismiss{display:grid;place-items:center;width:48px;height:48px;min-width:48px;padding:0;border:0;border-radius:50%;background:transparent}.scene-easter-dismiss svg{display:block}.location-tag{pointer-events:none}.scene-easter[data-egg=cat]~.scene-cat{transform-origin:50% 100%;animation:cat-pet .65s ease both}.scene-easter[data-reduced=true] .hair-spring,.scene-easter[data-reduced=true] .cookie-crumbs i,.scene-easter[data-reduced=true]~.scene-cat{animation:none}.scene-easter[data-reduced=true] .cookie-crumbs{display:none}
 .scene-easter-note[data-egg=cat],.scene-easter-note[data-egg=cookie]{top:58px;bottom:auto}
 .fallen-tokens,.falling-scarf{pointer-events:none}
 @media(max-width:600px){.scene-easter-note[data-egg=cat],.scene-easter-note[data-egg=cookie]{top:6px}.scene-stage:has(.scene-easter-note) .location-tag{opacity:0}.easter-cookie{height:64px;bottom:28px}}
@@ -429,15 +429,25 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .travellers-stage .character{left:auto;right:-7%;width:55%;height:110%;bottom:-8%;object-position:bottom;z-index:2}
 .traveller-props{position:absolute;left:3%;bottom:13%;width:65%;z-index:3;filter:drop-shadow(0 12px 8px #3e272943)}
 .travellers-board{display:block;width:100%;height:auto;overflow:visible}
+.traveller-props .traveller-piece,.traveller-props .traveller-night-glow{transition:transform .85s cubic-bezier(.28,.9,.32,1)}
+.traveller-props .traveller-piece-second{transition-delay:.14s}
+.traveller-props .traveller-hop{transform-box:fill-box;transform-origin:50% 100%;animation:traveller-hop .85s cubic-bezier(.34,.1,.3,1) both}
+.traveller-props .traveller-shadow-hop{transform-box:fill-box;transform-origin:center;animation:traveller-shadow-hop .85s ease-in-out both}
+.traveller-props .traveller-hop-second{animation-delay:.14s}
+.traveller-props .traveller-bridge-placed{animation:traveller-bridge-in .45s ease-out both}
+@keyframes traveller-hop{0%{transform:translateY(0) scale(1)}38%{transform:translateY(-17px) scale(1.06) rotate(-4deg)}72%{transform:translateY(-7px) scale(1.02) rotate(2deg)}100%{transform:translateY(0) scale(1) rotate(0)}}
+@keyframes traveller-shadow-hop{0%,100%{opacity:.3;transform:scale(1)}40%{opacity:.14;transform:scale(.76)}}
+@keyframes traveller-bridge-in{from{opacity:0}to{opacity:1}}
 .traveller-status{font-size:.78rem;line-height:1.5;margin:0 0 12px;color:#705344;font-weight:600}
 .feet-by-board{width:25%;position:absolute;bottom:-5%;left:45%;padding:3px 3px 12px;background:#f9f0dc;transform:rotate(-9deg);box-shadow:0 2px 6px #48362c45}
-.feet-by-board svg{width:100%;display:block}
-.cat-chair{position:absolute;left:-2%;bottom:-6%;width:27%;aspect-ratio:1;z-index:4}
+.feet-print{display:block;width:100%;height:auto}
+.cat-chair{position:absolute;left:auto;right:-2%;bottom:-6%;width:27%;aspect-ratio:1;z-index:4}
 .cat-chair>span{position:absolute;inset:28% 0 5%;border:5px solid #765845;border-radius:18px;background:repeating-linear-gradient(25deg,#bba59e 0 7px,#cbb8a6 7px 14px);transform:skewY(4deg)}
 .cat-chair img{position:absolute;width:100%;bottom:10%;filter:drop-shadow(0 4px 2px #0002)}
+.cat-on-table{--cafe-width:max(100cqw,75cqh);--cafe-height:calc(var(--cafe-width)*4/3);position:absolute;z-index:3;left:calc(50% - .235*var(--cafe-width));top:calc(38% + .215*var(--cafe-height));width:clamp(84px,calc(.24*var(--cafe-width)),152px);transform:translate(-50%,-82%);pointer-events:none}
+.cat-on-table img{display:block;width:100%;height:auto;filter:drop-shadow(0 5px 4px #3b231644);animation:cat-breathe 7s ease-in-out infinite}
 .game-box{width:60%;padding:10% 4%;text-align:center;font-family:Georgia,serif;letter-spacing:2px;color:#f6e6bd;background:linear-gradient(140deg,#667b76,#3f5554);border:6px double #c3a77a;transform:rotate(-6deg);box-shadow:3px 7px 0 #46534c}
-.photo-envelope{width:53%;height:80px;background:#cdb697;border:1px solid #927a63;transform:rotate(9deg);box-shadow:0 4px 8px #392b2440}
-.photo-envelope:before{content:'';display:block;height:50%;clip-path:polygon(0 0,100% 0,50% 100%);background:#e4ceb0}
+.photo-envelope{display:block;width:68%;height:auto;background:none;border:0;transform:rotate(-5deg);filter:drop-shadow(0 6px 10px #39231c3d)}
 .prints-scene{bottom:12%;width:65%}
 .selected-print{margin:0;width:87%;padding:4% 4% 3%;background:#f8efdf;transform:rotate(-5deg);box-shadow:0 5px 14px #31272960}
 .selected-print>svg,.printed-scene,.selected-print>.printed-scene,.printed-scene>img,.selected-print>.printed-scene{width:100%}
@@ -445,12 +455,14 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .printed-scene{position:relative;aspect-ratio:1.5;overflow:hidden;background:#c0b9a1}
 .printed-scene .printed-background{height:100%;object-fit:cover;object-position:50% 40%}
 .printed-scene .printed-person{position:absolute;right:20%;bottom:-25%;height:120%;width:auto;object-fit:contain}
-.printed-scene .printed-silhouette{position:absolute;height:80%;bottom:0;right:28%;width:auto;filter:blur(.7px)}
+.printed-scene .printed-silhouette{position:absolute;height:96%;bottom:-10%;right:26%;width:auto;filter:drop-shadow(0 2px 5px #2e202448)}
+.printed-scene.print-6 .printed-silhouette{height:88%;bottom:-4%;right:27%}
 .printed-scene .print-reflected{right:7%;transform:scaleX(-1);opacity:.8}
 .subject-both .printed-silhouette{right:57%;opacity:.85}
 .print-window-frame{position:absolute;left:47%;top:0;bottom:0;width:4px;background:#8a7e70;box-shadow:0 0 0 1px #e0d2ba}
 .print-poster{position:absolute;left:3%;top:5%;width:26%;height:71%;background:#dfd4c3;border:2px solid #8f8075;font-size:clamp(7px,1.6vw,15px);padding-top:12%;text-align:center;color:#504d50}
-.print-bag{position:absolute;right:27%;bottom:6%;width:19%;height:28%;background:#c9aa7c;clip-path:polygon(9% 0,89% 0,100% 100%,0 100%);transform:rotate(8deg)}
+.print-bag{position:absolute;left:34%;bottom:3%;width:15.5%;height:auto;transform:rotate(-3deg);filter:drop-shadow(0 3px 4px #21141755)}
+.print-bag-seats{position:absolute;left:42.5%;bottom:13%;width:15%;height:auto;transform:rotate(3deg);filter:drop-shadow(0 3px 4px #21141755)}
 .print-chairs{position:absolute;inset:10% 0 0;width:100%;height:90%}
 .selected-print>.printed-scene,.selected-print>.printed-scene svg{display:block}
 .selected-print>.printed-scene{aspect-ratio:1.5}
@@ -459,35 +471,41 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .selected-print .supper-art{width:100%;display:block}
 .selected-print .supper-art~img{position:absolute;width:27%;top:0;right:4%}
 .print-sugar{position:absolute;right:7%;top:3%;width:15%;height:18%;border:2px solid #a58f7b;border-radius:8px;background:#ece0c5}
-.print-hand{position:absolute;width:43%;right:0;bottom:2%}
-.hand-foodVlad{transform:rotate(180deg);left:0;top:0;bottom:auto}
+.print-hand{position:absolute;width:54%;right:-2%;bottom:-2%}
+.hand-foodVlad{transform:rotate(180deg);left:-2%;right:auto;top:-2%;bottom:auto}
 .traveller-home-props{position:absolute;bottom:15%;left:4%;width:54%;z-index:3}
 .traveller-home-gift{position:absolute;width:29%;right:0;bottom:0;border:4px solid #f5ebd8;box-shadow:0 4px 4px #251a1950}
 .separate-blankets{display:block;width:95%;height:40px;border-radius:20px;background:linear-gradient(90deg,#b7b0c3 0 45%,transparent 45% 55%,#d1b99e 55%);margin-top:20px}
-.traveller-postcard{position:relative;display:flex;align-items:center;padding:5%;min-height:240px}
+.traveller-postcard{position:relative;display:flex;align-items:center;height:auto;padding:18px 18px 46px;min-height:240px}
 .traveller-postcard .travellers-board{width:100%;filter:drop-shadow(0 8px 10px #2d252a90)}
-.traveller-postcard .feet-by-board{left:53%;bottom:9%;width:27%}
-.future-print{border:9px solid #f9f0de;border-bottom-width:27px;background:#ebe0cf;box-shadow:0 4px 16px #6c474328;aspect-ratio:1.45;max-width:330px;margin:10px auto 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;transform:rotate(-3deg);color:#7c685a;font-family:Georgia,serif}
-.future-print .illustration{width:80px;height:80px}
+.traveller-postcard .feet-by-board{left:auto;right:5%;bottom:24px;width:24%;max-width:126px;padding:4px 4px 12px;background:#fbf3e4;border:1px solid #dbc9b2;border-radius:2px;transform:rotate(5deg);box-shadow:0 5px 12px #2c1d1e55;z-index:2}
+.traveller-postcard .feet-print{position:static;left:auto;bottom:auto;transform:none;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block;border-radius:1px;filter:none}
+.future-print{margin:4px auto 26px;max-width:316px;width:100%;padding:10px 10px 12px;background:#fbf4e6;border:1px solid #e4d3be;border-radius:4px;box-shadow:0 8px 22px #5c3f4224,0 1px 2px #5c3f421a;transform:rotate(-2deg);display:flex;flex-direction:column;gap:9px;color:#6c5750}
+.future-print-window{position:relative;aspect-ratio:16/10;width:100%;border-radius:2px;overflow:hidden;display:grid;place-items:center;background:#5a4b63;box-shadow:inset 0 0 0 1px #fff7e626}
+.future-print-backdrop{position:absolute;inset:0;width:100%;height:100%;display:block}
+.future-print-frame-num{position:absolute;top:11px;left:50%;transform:translateX(-50%);z-index:1;white-space:nowrap;font-size:9.5px;letter-spacing:1.4px;font-weight:700;color:#fff4ddcc;text-shadow:0 1px 3px #281b2588}
+.future-print-caption{text-align:center;font:italic 14px/1.3 Georgia,serif;color:#6c5750;padding:0 4px}
+.future-print .illustration{position:relative;z-index:1;width:78px;height:78px;filter:drop-shadow(0 6px 12px #2b1d2855)}
 .travellers-invitation button{min-height:48px;white-space:normal;overflow-wrap:anywhere}
 .travellers-invitation textarea{min-height:125px}
-@media(max-width:600px){.traveller-props{width:77%;left:1%;bottom:16%}.travellers-stage .character{width:50%;right:-7%}.prints-scene{width:72%}.traveller-status{font-size:.69rem}.traveller-home-props{width:65%;bottom:19%}.future-print{width:85%}.traveller-postcard{min-height:190px}.selected-print figcaption{font-size:8px}}
+@media(max-width:600px){.traveller-props{width:77%;left:1%;bottom:16%}.travellers-stage .character{width:50%;right:-7%}.prints-scene{width:72%}.traveller-status{font-size:.69rem}.traveller-home-props{width:65%;bottom:19%}.future-print{width:88%}.traveller-postcard{min-height:190px;padding:14px 12px 40px}.traveller-postcard .feet-by-board{right:4%;bottom:20px;width:27%;padding:3px 3px 10px}.selected-print figcaption{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.travellers-board *{transition:none;animation:none}}
 /* Keep character faces clear of tabletop objects; use a quiet single column on phones. */
 .travellers-stage .character{left:auto;right:-6%;height:112%;width:55%;bottom:0;transform:none;object-fit:contain;z-index:2}
-.travellers-stage .character:not(.nina){--character-offset-x:0%}
+.travellers-stage .character{--character-offset-x:0%}
 .travellers-invitation .invitation-options{grid-template-columns:1fr}
 .travellers-invitation .invitation-options button{margin:0;min-height:64px;color:#67475d}
 .travellers-invitation .invitation-options button>span{width:100%}
 .travellers-invitation .invitation-options button b{white-space:normal;word-break:normal;overflow-wrap:normal}
 .travellers-stage .choices button:disabled{opacity:.72;border-style:dashed;color:#655b57}
-.traveller-props .photo-envelope{position:absolute;top:-25px;left:3%;width:37%;height:65px;z-index:-1}
+.traveller-props .photo-envelope{position:absolute;top:-34px;left:1%;width:48%;height:auto;z-index:-1;transform:rotate(8deg)}
+.traveller-props.prints-closed .photo-envelope{position:relative;top:auto;left:2%;width:68%;height:auto;z-index:1;transform:rotate(-4deg)}
 .traveller-home-props .photo-envelope{width:40%;height:46px}
-@media(max-width:600px){.travellers-stage .character{right:-9%;width:59%;height:112%;bottom:0}.traveller-props{width:72%;left:1%;bottom:8%}.prints-scene{width:65%;bottom:9%}.travellers-invitation .invitation-options{display:flex;flex-direction:column;gap:10px}.travellers-invitation .invitation-options button{min-height:64px}}
+@media(max-width:600px){.travellers-stage .character{right:-9%;width:59%;height:112%;bottom:0}.traveller-props{width:72%;left:1%;bottom:8%}.prints-scene{width:65%;bottom:9%}.traveller-props.prints-closed .photo-envelope{width:82%}.travellers-invitation .invitation-options{display:flex;flex-direction:column;gap:10px}.travellers-invitation .invitation-options button{min-height:64px}}
 .printed-food{position:relative;overflow:hidden;background:#bc9472}
 .printed-food .printed-gift{position:absolute;width:24%;top:-9%;right:10%;border:2px solid #e7dbc6}
-.food-foodVlad .printed-food>.supper-art{transform:rotate(180deg)}
-.food-boardVlad .supper-art{transform:rotate(180deg)}
+.food-foodVlad .printed-food>.supper-art{transform:rotate(1.5deg) scale(1.02)}
+.food-boardVlad .supper-art{transform:rotate(2deg) scale(1.03)}
 .food-boardHer .supper-art{transform:rotate(-3deg) scale(.96)}
 .print-board-hands{position:absolute;inset:0;width:100%;height:100%}
 .traveller-home-props{inset:0;width:100%;pointer-events:none}
@@ -503,7 +521,21 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .traveller-home-props{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
 .traveller-home-stage .scene-background{object-position:center}
 .traveller-home-stage .character{right:15%}
-.traveller-home-stage.scene-fade .scene-art-clip:after{content:'';position:absolute;inset:0;background:#15121bf5;z-index:20;pointer-events:none}
+.traveller-home-stage.scene-fade .scene-art-clip::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:20;
+  pointer-events:none;
+  background:#100d14;
+  animation:traveller-night-fade .7s ease-in-out both;
+}
+@keyframes traveller-night-fade{from{opacity:0}to{opacity:1}}
+.traveller-morning-stage .scene-art-clip::after{content:'';position:absolute;inset:0;z-index:20;pointer-events:none;background:#100d14;animation:traveller-morning-reveal .95s ease-out both}
+@keyframes traveller-morning-reveal{from{opacity:1}to{opacity:0}}
+.traveller-morning-stage.dance-still .scene-art-clip::after{animation:none;opacity:0}
+@media(prefers-reduced-motion:reduce){.traveller-morning-stage .scene-art-clip::after{animation:none;opacity:0}.traveller-home-stage.scene-fade .scene-art-clip::after{animation:none;opacity:1}}
+.traveller-morning-background{animation:none}
 @media(max-width:600px){.traveller-home-stage .character{right:15%}}
 .traveller-props .feet-by-board{left:0;bottom:-6%;width:20%}
 /* Use the same lower position throughout chapter ten, including morning and farewells. */
@@ -518,7 +550,7 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 }
 .easter-hair.easter-painted .hair-spring{left:calc(var(--egg-x) - 17px);top:calc(var(--egg-y) - 24px);bottom:auto}
 .nina-tea{position:absolute;top:-14px;right:-22px;width:80px;height:80px;animation:postcard-in .35s ease both;pointer-events:none}
-.scene-easter[data-reduced=true] .nina-tea{animation:none}
+.scene-easter[data-reduced=true] .nina-tea,.scene-easter[data-reduced=true] .egg-rise{animation:none}
 .scene-easter[data-egg="hair"] { z-index: 5; }
 .easter-hair.easter-painted .hair-spring.illustration {
   /* The curl starts at (33, 83) in the 100 × 100 viewBox. Keep that point on the hair while it springs. */
@@ -535,9 +567,10 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 .easter-spots7>.season-egg-art,.easter-cafeLamp10>.season-egg-art,.easter-cafeShelf10>.season-egg-art{transform:translate(-50%,-28%)}
 .easter-tv10>.season-egg-art{z-index:3;pointer-events:none}
 @media(max-width:600px){.easter-prop>.season-egg-art{width:clamp(78px,148%,108px)}.easter-bench7>.season-egg-art,.easter-fridge8>.season-egg-art,.easter-tv10>.season-egg-art,.easter-garland9>.season-egg-art,.easter-waterWindow6>.season-egg-art,.easter-morningWindow10>.season-egg-art{width:clamp(94px,175%,124px)}}
-@media(max-width:600px){.easter-fridge8>.season-egg-art,.easter-archChairs9>.season-egg-art{transform:translate(-86%,-50%)}}
+@media(max-width:600px){.easter-fridge8>.season-egg-art,.easter-lamp8>.season-egg-art,.easter-archChairs9>.season-egg-art{transform:translate(-86%,-50%)}}
+.easter-cat>.season-egg-art{position:absolute;left:50%;top:18%;width:clamp(78px,120%,112px);height:auto;transform:translate(-50%,-62%);pointer-events:none;filter:drop-shadow(0 4px 8px #26191455)}
 .easter-cat10{z-index:2}
-.scene-easter-note:is([data-egg=cat10],[data-egg=bench7],[data-egg=sugar8],[data-egg=archChairs9],[data-egg=blankets9],[data-egg=sofaBlanket10]){top:6px;bottom:auto}
+.scene-easter-note:is([data-egg=cat10],[data-egg=envelope10],[data-egg=bench7],[data-egg=sugar8],[data-egg=archChairs9],[data-egg=blankets9],[data-egg=sofaBlanket10],[data-egg=secondBlanket10],[data-egg=glasses10]){top:6px;bottom:auto}
 @media(max-width:380px){
  .scene-easter-note:is([data-egg=bench7],[data-egg=sugar8]){inset-inline:6px;gap:2px;padding:7px 2px 7px 10px;align-items:center}
  .scene-easter-note:is([data-egg=bench7],[data-egg=sugar8]) [role=status]{font-size:14px;line-height:1.35}
@@ -663,7 +696,30 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
   transform: translateX(-50%);
 }
 
+.scene-stage.second-season-gouache.travellers-stage .character.nina {
+  left: auto;
+  right: -6%;
+  width: 55%;
+  transform: none;
+  --character-offset-x: 0%;
+}
+
+@media (max-width: 600px) {
+  .scene-stage.second-season-gouache.travellers-stage .character.nina {
+    right: -9%;
+    width: 59%;
+  }
+}
+
 .scene-stage.cafe-return-stage .character:not(.nina) { left: 56%; }
+
+.travellers-stage.traveller-exterior-stage .character:not(.character-closeup) {
+  left: 50%;
+  right: auto;
+  width: auto;
+  transform: translateX(-50%);
+  --character-offset-x: -50%;
+}
 
 .is-search .scene-stage.first-season-gouache .character:not(.nina) {
   height: 183%;
@@ -791,6 +847,8 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 }
 
 .second-season-palette .story-panel,
+.second-season-palette .postcard,
+.second-season-palette .postcard-art:after,
 .second-season-palette .postcard-copy {
   background: var(--cream);
 }
@@ -805,8 +863,12 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 }
 
 .second-season-palette .travellers-invitation {
-  background: #efe1e5;
-  border-color: #d7bac3;
+  background: transparent;
+}
+
+.second-season-palette .travellers-invitation .invitation-panel {
+  background: #fff9f2;
+  border-color: #dfd0d6;
 }
 
 .scene-stage.second-season-gouache:not(.supper-gouache,.courtyard-stage,.travellers-stage) .character:not(.nina) {
@@ -830,11 +892,6 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
   background: linear-gradient(151deg,#e7d2a8,#af896d);
   border-color: #80614f;
   color: #573f48;
-}
-
-.second-season-palette .photo-envelope {
-  background-color: #d9bb9c;
-  border-color: #9a7567;
 }
 
 .second-season-palette .selected-print {
@@ -1082,3 +1139,90 @@ dialog.devil-secret-modal,html[data-telegram=true] dialog.devil-secret-modal{--s
 @keyframes scene-rain-far { from { transform: rotate(11deg) translate3d(0, 0, 0); } to { transform: rotate(11deg) translate3d(0, 180px, 0); } }
 .scene-stage.dance-still .scene-rain::before, .scene-stage.dance-still .scene-rain::after { animation: none; transform: rotate(11deg); }
 @media (prefers-reduced-motion: reduce) { .scene-rain::before, .scene-rain::after { animation: none; transform: rotate(11deg); } }
+
+/* Chapter ten finale invitation: gouache future-evening polaroid & choice thumbnails. */
+.future-print-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: future-print-develop .32s ease both;
+}
+.future-print.is-chosen .future-print-window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #2b1d285c 0%, transparent 34%, transparent 78%, #2b1d2824 100%);
+  pointer-events: none;
+}
+.future-print.is-chosen .future-print-frame-num {
+  top: 9px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #2f202a78;
+  color: #fff6e6;
+  letter-spacing: 1.5px;
+}
+@keyframes future-print-develop {
+  from { opacity: .28; filter: saturate(.75) brightness(1.06); }
+  to { opacity: 1; filter: none; }
+}
+.travellers-invitation .invitation-options .future-choice.has-thumb {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 14px 10px 10px;
+}
+.travellers-invitation .invitation-options .future-choice-thumb {
+  flex: 0 0 auto;
+  width: 90px;
+  aspect-ratio: 3 / 2;
+  padding: 3px;
+  border-radius: 9px;
+  background: #fbf4e6;
+  border: 1px solid #dfd0bd;
+  box-shadow: 0 2px 7px #4d333d1f;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.travellers-invitation .invitation-options .future-choice-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+}
+.travellers-invitation .invitation-options .future-choice.has-thumb[aria-pressed=true] .future-choice-thumb {
+  border-color: #8f6885;
+  box-shadow: 0 3px 10px #5e3d5233;
+}
+.travellers-invitation .invitation-options .future-choice-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.travellers-invitation .invitation-options .future-choice.is-decline {
+  min-height: 54px;
+}
+@media (max-width: 480px) {
+  .travellers-invitation .invitation-options .future-choice.has-thumb {
+    gap: 11px;
+    padding: 9px 12px 9px 9px;
+  }
+  .travellers-invitation .invitation-options .future-choice-thumb {
+    width: 78px;
+    border-radius: 8px;
+  }
+  .travellers-invitation .invitation-options .future-choice-thumb img {
+    border-radius: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .future-print-photo { animation: none; }
+  .travellers-invitation .invitation-options .future-choice-thumb { transition: none; }
+}

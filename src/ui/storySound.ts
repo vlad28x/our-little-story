@@ -26,13 +26,12 @@ const courtyardShelter=new Set([
   'canopy','arch','warmth','movieTalk','movieChoice','movieDrama','movieWarm','movieMystery',
   'nextCoop','nextOther','nextDate','bet','betChoice','betTogether','betAlone','betSkip',
 ]);
-const riverBackgrounds=new Set(['bg.river.evening','bg.photo6.sun','bg.photo6.shade']);
 
 export function storyCue({nodeId,lineIndex}:Run):SoundEffect|undefined{
   return cues[nodeId]?.[lineIndex];
 }
 
-export function storyAmbience({chapter,nodeId,lineIndex}:Run,background:string,lastLine:boolean):Ambience|null{
+export function storyAmbience({chapter,nodeId,lineIndex}:Run,lastLine:boolean):Ambience|null{
   if(chapter===2){
     if(nodeId==='c2.rain.intro'||nodeId==='c2.rain')return 'rain-open';
     if(nodeId==='c2.rain.shelter'||nodeId==='c2.rain.arcade'||nodeId.startsWith('c2.pause')||nodeId.startsWith('c2.recharge')||nodeId.startsWith('c2.cat.echo'))return 'rain-shelter';
@@ -43,10 +42,8 @@ export function storyAmbience({chapter,nodeId,lineIndex}:Run,background:string,l
     if(scene==='leave')return lineIndex<2?'rain-open':'rain-shelter';
     if(courtyardShelter.has(scene)||scene==='earlyWalk'&&!lastLine)return 'rain-shelter';
   }
-  if((chapter===3&&nodeId!=='c3.stars'||chapter===6)&&riverBackgrounds.has(background))return 'river';
   if(nodeId==='c8.supper.fold'&&lineIndex>=2&&lineIndex<10)return 'kitchen';
   if(nodeId==='c8.supper.open'&&lineIndex>=9&&lineIndex<12)return 'kitchen';
   if(nodeId==='c8.supper.meal'&&lineIndex===11)return 'steam';
-  if(chapter===10&&background==='bg.travellers10.morning')return 'morning';
   return null;
 }

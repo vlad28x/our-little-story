@@ -1,41 +1,56 @@
-<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Четыре открытые запечённые порции: pepper">
-  <ellipse cx="160" cy="166" rx="142" ry="18" fill="#3a2212" opacity=".24"/>
-  <ellipse cx="160" cy="98" rx="144" ry="70" fill="#f3e7cf" stroke="#a58b6b" stroke-width="3"/>
-  <ellipse cx="160" cy="98" rx="124" ry="54" fill="#fff8ea" stroke="#d8c6a8" stroke-width="2"/>
+<svg class="supper-art" data-stage="cooked" viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Четыре открытые запечённые порции: pepper">
+  <defs>
+    <linearGradient id="cooked-open-pepper-rim" x2=".75" y2="1">
+      <stop stop-color="#ecd8cb"/>
+      <stop offset=".55" stop-color="#c8acb9"/>
+      <stop offset="1" stop-color="#a889a0"/>
+    </linearGradient>
+    <linearGradient id="cooked-open-pepper-glaze" x2=".75" y2="1">
+      <stop stop-color="#fff6e6"/>
+      <stop offset=".55" stop-color="#f4e0cb"/>
+      <stop offset="1" stop-color="#e1c5b6"/>
+    </linearGradient>
+    <linearGradient id="cooked-open-pepper-cheese" x2=".75" y2="1">
+      <stop stop-color="#f9e29b"/>
+      <stop offset=".55" stop-color="#e7c477"/>
+      <stop offset="1" stop-color="#cea15b"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="160" cy="166" rx="142" ry="18" fill="#4b3536" opacity=".24"/>
+  <ellipse cx="160" cy="98" rx="144" ry="70" fill="url(#cooked-open-pepper-rim)" stroke="#967689" stroke-width="3"/>
+  <path d="M34 119q11 31 78 44m72-129q72 6 100 40" fill="none" stroke="#f0d7ce" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  <ellipse cx="160" cy="98" rx="124" ry="54" fill="url(#cooked-open-pepper-glaze)" stroke="#bc9da2" stroke-width="2"/>
   <g transform="translate(70 48) rotate(-10 35 26)">
     <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
-    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
-
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="url(#cooked-open-pepper-cheese)" stroke="#d59e3c" stroke-width="1.6"/>
     <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
     <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
-    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#c84c38" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#b45445" stroke-width="4.5" stroke-linecap="round" fill="none"/>
     <path d="M19 16q12-3 24 2M18 27q14-2 28 2" stroke="#eb7c61" stroke-width="1.5" stroke-linecap="round" fill="none"/>
   </g>
   <g transform="translate(170 46) rotate(8 35 26)">
     <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
-    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
-
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="url(#cooked-open-pepper-cheese)" stroke="#d59e3c" stroke-width="1.6"/>
     <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
     <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
-    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#c84c38" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#b45445" stroke-width="4.5" stroke-linecap="round" fill="none"/>
     <path d="M19 16q12-3 24 2M18 27q14-2 28 2" stroke="#eb7c61" stroke-width="1.5" stroke-linecap="round" fill="none"/>
   </g>
   <g transform="translate(164 96) rotate(5 35 26)">
     <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
-    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
-
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="url(#cooked-open-pepper-cheese)" stroke="#d59e3c" stroke-width="1.6"/>
     <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
     <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
-    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#c84c38" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#b45445" stroke-width="4.5" stroke-linecap="round" fill="none"/>
     <path d="M19 16q12-3 24 2M18 27q14-2 28 2" stroke="#eb7c61" stroke-width="1.5" stroke-linecap="round" fill="none"/>
   </g>
   <g transform="translate(76 98) rotate(-7 35 26)">
     <rect x="2" y="4" width="66" height="44" rx="9" fill="#d9a863" stroke="#966434" stroke-width="2.2"/>
-    <rect x="8" y="9" width="54" height="34" rx="6" fill="#f5d472" stroke="#d59e3c" stroke-width="1.6"/>
+    <rect x="8" y="9" width="54" height="34" rx="6" fill="url(#cooked-open-pepper-cheese)" stroke="#d59e3c" stroke-width="1.6"/>
     <path d="M55 9q10 2 11 16q1 14-10 18q4-10 3-17q-1-9-4-17z" fill="#df8e2b" stroke="#9d5816" stroke-width="1.4"/>
     <circle cx="18" cy="14" r="2.2" fill="#d99a32" opacity=".7"/>
     <circle cx="52" cy="37" r="2.6" fill="#d99a32" opacity=".7"/>
-    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#c84c38" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M17 17q16-4 32 3M16 28q18-3 36 3M21 37q13-3 26 2" stroke="#b45445" stroke-width="4.5" stroke-linecap="round" fill="none"/>
     <path d="M19 16q12-3 24 2M18 27q14-2 28 2" stroke="#eb7c61" stroke-width="1.5" stroke-linecap="round" fill="none"/>
   </g>
 </svg>

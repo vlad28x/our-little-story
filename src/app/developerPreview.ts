@@ -23,9 +23,9 @@ export function previewPhotoSix(target:NodeId='c6.photo.entry'){
  if(save.campaign.active?.nodeId!==target)throw Error('Тестовая сцена не найдена');
  return validateSave(JSON.stringify(save));
 }
-export function previewGallery(target:NodeId='c7.gallery.entry'){
+ export function previewGallery(target:NodeId='c7.gallery.entry'){
  let save=previewPhotoSix('c6.photo.touch');
- for(let i=0;i<70&&save.campaign.active;i++){const r=save.campaign.active,n=getChapter(6)!.nodes[r.nodeId];save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:'none',expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});}
+ for(let i=0;i<120&&save.campaign.active;i++){const r=save.campaign.active,n=getChapter(6)!.nodes[r.nodeId];save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:n.id==='c6.photo.touch'?'none':n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});}
  save=reduceSave(save,{type:'unlock',code:chapters.find(c=>c.id===7)!.code!});save=reduceSave(save,{type:'start',chapter:7,attemptId:'developer-gallery-seven'});
  for(let i=0;i<240&&save.campaign.active?.nodeId!==target;i++){const r=save.campaign.active;if(!r)throw Error('Тестовая сцена не найдена');const n=getChapter(7)!.nodes[r.nodeId];save=reduceSave(save,{type:'command',target:'campaign',command:n.kind==='choice'?{kind:'choose',choiceId:n.choices[0].id,expectedTurn:r.turn}:{kind:'advance',expectedTurn:r.turn}});}
  if(save.campaign.active?.nodeId!==target)throw Error('Тестовая сцена не найдена');return validateSave(JSON.stringify(save));

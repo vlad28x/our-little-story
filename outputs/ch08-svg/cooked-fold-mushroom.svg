@@ -1,49 +1,69 @@
-<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Четыре румяных конвертика: mushroom">
-  <ellipse cx="160" cy="166" rx="142" ry="18" fill="#3a2212" opacity=".24"/>
-  <ellipse cx="160" cy="98" rx="144" ry="70" fill="#f3e7cf" stroke="#a58b6b" stroke-width="3"/>
-  <ellipse cx="160" cy="98" rx="124" ry="54" fill="#fff8ea" stroke="#d8c6a8" stroke-width="2"/>
+<svg class="supper-art" data-stage="cooked" viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Четыре румяных конвертика: mushroom">
+  <defs>
+    <linearGradient id="cooked-fold-mushroom-rim" x2=".75" y2="1">
+      <stop stop-color="#ecd8cb"/>
+      <stop offset=".55" stop-color="#c8acb9"/>
+      <stop offset="1" stop-color="#a889a0"/>
+    </linearGradient>
+    <linearGradient id="cooked-fold-mushroom-glaze" x2=".75" y2="1">
+      <stop stop-color="#fff6e6"/>
+      <stop offset=".55" stop-color="#f4e0cb"/>
+      <stop offset="1" stop-color="#e1c5b6"/>
+    </linearGradient>
+    <linearGradient id="cooked-fold-mushroom-crust" x2=".75" y2="1">
+      <stop stop-color="#f2cf90"/>
+      <stop offset=".55" stop-color="#dcb077"/>
+      <stop offset="1" stop-color="#b87e55"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="160" cy="166" rx="142" ry="18" fill="#4b3536" opacity=".24"/>
+  <ellipse cx="160" cy="98" rx="144" ry="70" fill="url(#cooked-fold-mushroom-rim)" stroke="#967689" stroke-width="3"/>
+  <path d="M34 119q11 31 78 44m72-129q72 6 100 40" fill="none" stroke="#f0d7ce" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  <ellipse cx="160" cy="98" rx="124" ry="54" fill="url(#cooked-fold-mushroom-glaze)" stroke="#bc9da2" stroke-width="2"/>
   <g transform="translate(70 48) rotate(-10 35 26)">
-    <rect x="2" y="4" width="66" height="44" rx="8" fill="#dfb372" stroke="#996838" stroke-width="2.2"/>
+    <rect x="2" y="4" width="66" height="44" rx="8" fill="url(#cooked-fold-mushroom-crust)" stroke="#996838" stroke-width="2.2"/>
     <path d="M12 43Q35 49 58 43" stroke="#f5d578" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/><ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
+    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/>
+    <ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
     <path d="M4 6L35 27L66 6" fill="#edd09a" stroke="#a77844" stroke-width="2"/>
     <path d="M4 46L35 26L66 46" fill="none" stroke="#b18049" stroke-width="1.8" opacity=".82"/>
-    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a86832" opacity=".45"/>
-    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a86832" opacity=".4"/>
-    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a86832" opacity=".38"/>
-
+    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a36b4b" opacity=".45"/>
+    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a36b4b" opacity=".4"/>
+    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a36b4b" opacity=".38"/>
   </g>
   <g transform="translate(170 46) rotate(8 35 26)">
-    <rect x="2" y="4" width="66" height="44" rx="8" fill="#dfb372" stroke="#996838" stroke-width="2.2"/>
+    <rect x="2" y="4" width="66" height="44" rx="8" fill="url(#cooked-fold-mushroom-crust)" stroke="#996838" stroke-width="2.2"/>
     <path d="M12 43Q35 49 58 43" stroke="#f5d578" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/><ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
+    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/>
+    <ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
     <path d="M4 6L35 27L66 6" fill="#edd09a" stroke="#a77844" stroke-width="2"/>
     <path d="M4 46L35 26L66 46" fill="none" stroke="#b18049" stroke-width="1.8" opacity=".82"/>
-    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a86832" opacity=".45"/>
-    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a86832" opacity=".4"/>
-    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a86832" opacity=".38"/>
-
+    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a36b4b" opacity=".45"/>
+    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a36b4b" opacity=".4"/>
+    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a36b4b" opacity=".38"/>
   </g>
   <g transform="translate(164 96) rotate(5 35 26)">
-    <rect x="2" y="4" width="66" height="44" rx="8" fill="#dfb372" stroke="#996838" stroke-width="2.2"/>
+    <rect x="2" y="4" width="66" height="44" rx="8" fill="url(#cooked-fold-mushroom-crust)" stroke="#996838" stroke-width="2.2"/>
     <path d="M12 43Q35 49 58 43" stroke="#f5d578" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/><ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
+    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/>
+    <ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
     <path d="M4 6L35 27L66 6" fill="#edd09a" stroke="#a77844" stroke-width="2"/>
     <path d="M4 46L35 26L66 46" fill="none" stroke="#b18049" stroke-width="1.8" opacity=".82"/>
-    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a86832" opacity=".45"/>
-    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a86832" opacity=".4"/>
-    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a86832" opacity=".38"/>
-
+    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a36b4b" opacity=".45"/>
+    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a36b4b" opacity=".4"/>
+    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a36b4b" opacity=".38"/>
   </g>
   <g transform="translate(76 98) rotate(-7 35 26)">
-    <rect x="2" y="4" width="66" height="44" rx="8" fill="#dfb372" stroke="#996838" stroke-width="2.2"/>
+    <rect x="2" y="4" width="66" height="44" rx="8" fill="url(#cooked-fold-mushroom-crust)" stroke="#996838" stroke-width="2.2"/>
     <path d="M12 43Q35 49 58 43" stroke="#f5d578" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/><ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
+    <ellipse cx="28" cy="44" rx="6" ry="3" fill="#7c5b43"/>
+    <ellipse cx="44" cy="44" rx="5.5" ry="2.8" fill="#8b684d"/>
     <path d="M4 6L35 27L66 6" fill="#edd09a" stroke="#a77844" stroke-width="2"/>
     <path d="M4 46L35 26L66 46" fill="none" stroke="#b18049" stroke-width="1.8" opacity=".82"/>
-    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a86832" opacity=".45"/>
-    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a86832" opacity=".4"/>
-    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a86832" opacity=".38"/>
-    <path d="M58 27Q76 25 74 37Q72 47 59 44Z" fill="#e89f36" stroke="#a6621c" stroke-width="1.8"/><circle cx="67" cy="36" r="2.2" fill="#f7d574"/>
+    <ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#a36b4b" opacity=".45"/>
+    <ellipse cx="48" cy="21" rx="7" ry="4" fill="#a36b4b" opacity=".4"/>
+    <ellipse cx="34" cy="36" rx="8" ry="3.5" fill="#a36b4b" opacity=".38"/>
+    <path d="M58 27Q76 25 74 37Q72 47 59 44Z" fill="#e89f36" stroke="#a6621c" stroke-width="1.8"/>
+    <circle cx="67" cy="36" r="2.2" fill="#f7d574"/>
   </g>
 </svg>
