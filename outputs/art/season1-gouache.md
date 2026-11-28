@@ -42,7 +42,7 @@ PNG-исходники оставлены в каталоге результат
 
 ### home-living
 
-- WebP · `public/assets/backgrounds/season1-gouache/home-living.webp`
+- WebP · `outputs/art/previous-assets/backgrounds/season1-gouache/home-living.webp`
 - Исходник ImageGen · `exec-bc065125-198e-4be1-8ffd-f3b2fb563c82.png`
 - Референсы · `public/assets/backgrounds/home-living.webp`, `public/assets/backgrounds/supper8-kitchen-gouache.webp`, `public/assets/backgrounds/chapter1-gouache/cafe-window.webp`
 
@@ -66,17 +66,17 @@ PNG-исходники оставлены в каталоге результат
 
 ### elegant-smile
 
-- WebP · `public/assets/characters/season1-gouache/elegant-smile.webp`
+- WebP · `outputs/art/previous-assets/characters/season1-gouache/elegant-smile.webp`
 - Исходник ImageGen · `exec-3111d8ca-c945-45dd-8ae3-fec534ed1673.png`
-- Референсы · `public/assets/characters/chapter1-gouache/vlad-smile.webp`, `public/assets/characters/vlad/elegant-smile.webp`
+- Референсы · `outputs/art/previous-assets/characters/chapter1-gouache/vlad-smile.webp`, `public/assets/characters/vlad/elegant-smile.webp`
 
 > Use case: identity-preserve, full body transparent sprite for chapter five. Reference 1 is the exact adult 26-year-old Vlad, face, voluminous swept light-brown curls, gray-green eyes, warm soft smile, mature proportions approximately six heads tall, painterly matte digital gouache pencil and warm window light from left. Reference 2 is wardrobe only. Use black relaxed blazer over black turtleneck, dark charcoal trousers and dark shoes. Clean stance, one hand in a trouser pocket, other at side. Preserve hair and face and head scale exactly. No coat, scarf or props. Portrait 2:3 full body from head to both shoes, same feet baseline and scale as reference 1. Clean true alpha cutout with absolutely no background, off-body glow, color cast or ground shadow, no text.
 
 ### home-awkward
 
-- WebP · `public/assets/characters/season1-gouache/home-awkward.webp`
+- WebP · `outputs/art/previous-assets/characters/season1-gouache/home-awkward.webp`
 - Исходник ImageGen · `exec-dece178b-eb64-4d19-94f4-54476dec5105.png`
-- Референсы · `public/assets/characters/vlad/supper8-gouache-smile.webp`
+- Референсы · `outputs/art/previous-assets/characters/vlad/supper8-gouache-smile.webp`
 
 > Use case: identity-preserve expression variation for existing same project. Edit the same full-body adult Vlad in reference 1, change ONLY facial expression to a small awkward uncertain smile and one slightly higher eyebrow. Keep clothing (cream shirt, charcoal pants, socks), exact body, original pose and face framing, volumetric hair, placement and matching 2:3 1024×1536 portrait canvas, absolute foot baseline and head position. Matte hand-painted gouache and subtle pencil. Actual transparent RGBA alpha immediately outside silhouette, no halo/glow, external shadows, extra items, text, or scenery.
 
@@ -84,13 +84,13 @@ PNG-исходники оставлены в каталоге результат
 
 - WebP · `public/assets/characters/season1-gouache/devil-peek.webp`
 - Исходник ImageGen · `exec-05af814c-b16e-488e-80fe-720c86af151c.png`
-- Референсы · `public/assets/characters/advisers/devil-peek-cropped.webp`, `public/assets/characters/chapter1-gouache/vlad-smile.webp`
+- Референсы · `public/assets/characters/advisers/devil-peek-cropped.webp`, `outputs/art/previous-assets/characters/chapter1-gouache/vlad-smile.webp`
 
 > Use case: game sprite. Restyle the small playful devil from reference 1 for the same visual novel world as reference 2. Use reference 1 for exact geometry and silhouette, four-finger hand curled around a completely invisible vertical edge on the image RIGHT, side-peeking lean of the head, warm curls, red horns, burgundy coat and small bat wing. Preserve the proportions of this tiny magical character and friendly mischievous expression, and especially the exact vertical cut line at about 76% of a square canvas with the hand visibly extending a little across it. Keep the same location and scale of the hand and face. Reference 2 is only for warm matte digital gouache color and pencil-soft brush texture. True transparent alpha, no background, no visible door/object/board, no off-body glow. Keep square canvas.
 
 ### elegant-awkward
 
-- WebP · `public/assets/characters/season1-gouache/elegant-awkward.webp`
+- WebP · `outputs/art/previous-assets/characters/season1-gouache/elegant-awkward.webp`
 - Исходник ImageGen · `exec-a1912830-711c-485e-bcd8-3de44782f7b0.png`
 - Референсы · `exec-3111d8ca-c945-45dd-8ae3-fec534ed1673.png`
 
@@ -98,7 +98,7 @@ PNG-исходники оставлены в каталоге результат
 
 ### elegant-laugh
 
-- WebP · `public/assets/characters/season1-gouache/elegant-laugh.webp`
+- WebP · `outputs/art/previous-assets/characters/season1-gouache/elegant-laugh.webp`
 - Исходник ImageGen · `exec-2350a9d0-41b0-4634-80fb-52417c1683a0.png`
 - Референсы · `exec-3111d8ca-c945-45dd-8ae3-fec534ed1673.png`
 
@@ -118,6 +118,6 @@ PNG-исходники оставлены в каталоге результат
 
 У гостиной есть [вариант фона без геймпадов на столе](../../public/assets/backgrounds/season1-gouache/home-living-table.webp). Геймпады с действующим индикатором и стикером выбранного созвездия показаны отдельно, рядом с диалогом. Тарелка печенья и край вязаного пледа нарисованы отдельно. При взятии печенья остаются два, движение пледа запускается от касания.
 
-Источник правки фона · `exec-316b0620-2d95-45c1-8d3a-630b2e6192e2.png`. Референс — [предыдущий фон гостиной](../../public/assets/backgrounds/season1-gouache/home-living.webp).
+Источник правки фона · `exec-316b0620-2d95-45c1-8d3a-630b2e6192e2.png`. Референс — [предыдущий фон гостиной](../../outputs/art/previous-assets/backgrounds/season1-gouache/home-living.webp).
 
 > Precision inpaint of supplied approved 1086 x 1448 portrait gouache visual-novel background. Keep the same exact camera framing and do not repaint the whole scene. Remove ONLY the two dark black video-game controllers sitting next to each other near the front center of the round wood coffee table, along with their own contact shadows. Fill just those two controller footprints with uninterrupted warm wood grain matching the immediately surrounding tabletop. Keep the beige mug at left, two snack bowls at the back, pink teacup, the table edge, knitted beige blanket behind table, sofa, rug, floor, plants, window, evening sky, illuminated lamp, TV and all props unchanged and in the exact same coordinates. Do not replace any mugs or bowls, do not add any text, item, person, or furniture. Keep aspect ratio 3:4 full bleed and identical golden warm digital gouache colors. This is a small local edit in a static background where separate functional SVG game controllers will be rendered later.

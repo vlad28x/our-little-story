@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useGame } from '../app/GameProvider';
 import { continuationOptions,invitationTitle,invitationText,invitationReplies,type MeetingChoice } from '../content/invitation';
+import type { IllustrationKind } from '../content/illustrations';
 import { Illustration } from './Illustration';
-const meetingMotifs:Record<MeetingChoice,string>={game:'controller',movie:'cinema',cafe:'tea-for-two',walk:'promenade',decline:'envelope'};
+const meetingMotifs:Record<MeetingChoice,IllustrationKind>={game:'controller',movie:'cinema',cafe:'tea-for-two',walk:'promenade',decline:'envelope'};
 export function InvitationPanel(){
   const {save,send}=useGame();
   const [message,setMessage]=useState('');

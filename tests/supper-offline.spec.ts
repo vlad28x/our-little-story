@@ -23,17 +23,17 @@ test('four supper paths finish with actual food, independent closeness and hoodi
    const s=await saved(page),run=s.campaign.active!;const command=supperCommand(run,path),node=chapter8.nodes[run.nodeId];
    if(i===0&&run.nodeId==='c8.supper.shapeChoice'){
     await expect(page.locator('.supper-scene svg')).toHaveAttribute('data-stage','torn');
-    await page.screenshot({path:'work/SUPPER8_SHAPE_320.png',animations:'disabled'});
+    await page.screenshot({path:'test-results/screenshots/SUPPER8_SHAPE_320.png',animations:'disabled'});
    }
    if(i===1&&run.nodeId==='c8.supper.meal'&&run.lineIndex===0){
     await expect(page.locator('.supper-gift')).toHaveCount(0);
-    await page.screenshot({path:'work/SUPPER8_MEAL_320.png',animations:'disabled'});
+    await page.screenshot({path:'test-results/screenshots/SUPPER8_MEAL_320.png',animations:'disabled'});
    }
-   if(i===1&&run.nodeId==='c8.supper.lead'&&run.lineIndex===0)await page.screenshot({path:'work/SUPPER8_DANCE_320.png',animations:'disabled'});
+   if(i===1&&run.nodeId==='c8.supper.lead'&&run.lineIndex===0)await page.screenshot({path:'test-results/screenshots/SUPPER8_DANCE_320.png',animations:'disabled'});
    if(command.kind==='choose'&&node.kind==='choice'){
     const choice=node.choices.find(c=>c.id===command.choiceId)!;
     await page.locator('.choices button').filter({hasText:choice.text}).click();
-   }else await page.getByRole('button',{name:'Дальше',exact:false}).click();
+   }else await page.locator('.dialogue-content .next-button').click();
    await expect.poll(async()=>{const next=await saved(page);return next.campaign.active?.turn??-1;}).not.toBe(run.turn);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    if(++turns>160)throw Error('Supper did not finish');
@@ -42,7 +42,7 @@ test('four supper paths finish with actual food, independent closeness and hoodi
   expect(done.campaign.records[8]!.story).toMatchObject({c8LipKiss:path.kiss?'yes':'no',c8Film:'nine'});
   await expect(page.getByRole('heading',{name:'Половина кухни',exact:true})).toBeVisible();
   await expect(page.getByText('Следующая встреча в кинодворике ещё готовится.',{exact:true})).toHaveCount(0);
-  if(i===0)await page.screenshot({path:'work/SUPPER8_RESULT_320.png',animations:'disabled'});
+  if(i===0)await page.screenshot({path:'test-results/screenshots/SUPPER8_RESULT_320.png',animations:'disabled'});
   for(const id of [9,10]){await openOffline(page,done,`/play/${id}`);await expect(page.locator('[data-node]')).toHaveCount(0);}
  }
  expect(errors).toEqual([]);
@@ -55,8 +55,8 @@ test('selected gift is canonical, no gift stays absent; keyboard chooses the new
   await expect(page.locator('.supper-gift')).toHaveCount(gift==='none'?0:1);
   if(gift!=='none')await expect(page.locator('.supper-gift')).toHaveAttribute('alt',`Подаренная открытка «${gift==='chip'?'Скол':'Просвет'}»`);
   const next=page.getByRole('button',{name:'Дальше',exact:false});
-  for(let i=0;i<(gift==='none'?3:4);i++)await next.click();
-  await expect(page.locator('.dialogue-text')).toContainText('план был такой');
+  for(let i=0;i<(gift==='none'?3:5);i++)await next.click();
+  await expect(page.locator('.dialogue-text')).toContainText('план на вечер такой');
   await expect(page.locator('.supper-gift')).toBeHidden();
   for(let i=0;i<3;i++)await next.click();
   await expect(page.locator('[data-node="c8.supper.filling"]')).toBeVisible();
@@ -83,7 +83,7 @@ test('the gallery postcard sits on the kitchen table at four widths',async({page
   expect(location.x).toBeGreaterThan(.13);expect(location.x).toBeLessThan(.39);
   expect(location.y).toBeGreaterThan(.60);expect(location.y).toBeLessThan(.70);
   expect(location.edge).toBeLessThan(location.width*.48);
-  await page.locator('.scene-stage').screenshot({path:`work/nov22/gift-${width}.png`,animations:'disabled'});
+  await page.locator('.scene-stage').screenshot({path:`test-results/screenshots/nov22/gift-${width}.png`,animations:'disabled'});
  }
 });
 
@@ -96,7 +96,7 @@ test('apron, reduced-motion dance and supper fit short phone, landscape and desk
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await page.setViewportSize({width:390,height:844});
- await openOffline(page,supperAt('c8.supper.entry'),'/play/8');await page.screenshot({path:'work/SUPPER8_APRON_390.png',animations:'disabled'});
+ await openOffline(page,supperAt('c8.supper.entry'),'/play/8');await page.screenshot({path:'test-results/screenshots/SUPPER8_APRON_390.png',animations:'disabled'});
 });
 
 test('the cooking stages and archive postcard fit the phone and desktop',async({page})=>{
@@ -118,8 +118,8 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
   }
   async function shot(name:string,drawing=art){
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-   await expect(drawing.locator('image')).toHaveAttribute('opacity','1');
-   await page.screenshot({path:`work/nov23/supper-${name}-${width}.png`,animations:'disabled',scale:'css'});
+   await expect(drawing.locator('image')).toHaveAttribute('href',/supper8\/(preparation|serving)\.webp$/);
+   await page.screenshot({path:`test-results/screenshots/nov23/supper-${name}-${width}.png`,animations:'disabled',scale:'css'});
   }
   await loadScene('c8.supper.filling');
   await expect(art).toHaveCount(0);
@@ -136,7 +136,7 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
   for(const [caption,image] of fillings){
    const button=fillingButtons.filter({hasText:caption});
    await expect(button.getByRole('img',{name:image,exact:true})).toHaveAttribute('data-stage','ingredients');
-   await expect(button.locator('svg image')).toHaveAttribute('opacity','1');
+   await expect(button.locator('svg image')).toHaveAttribute('href',/supper8\/preparation\.webp$/);
    const [card,drawing,label]=await Promise.all([
     button.boundingBox(),
     button.getByRole('img',{name:image,exact:true}).boundingBox(),
@@ -150,7 +150,7 @@ test('the cooking stages and archive postcard fit the phone and desktop',async({
   }
   await expect(page.locator('.supper-choices')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.locator('.supper-choices').screenshot({path:`work/nov23/supper-centered-choices-${width}.png`,animations:'disabled',scale:'css'});
+  await page.locator('.supper-choices').screenshot({path:`test-results/screenshots/nov23/supper-centered-choices-${width}.png`,animations:'disabled',scale:'css'});
   await loadScene('c8.supper.mix');
   await expect(art).toHaveAttribute('data-stage','ingredients');
   await shot('ingredients');

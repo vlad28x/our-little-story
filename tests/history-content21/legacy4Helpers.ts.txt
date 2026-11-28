@@ -1,0 +1,34 @@
+import {chapter4} from '../src/legacy/season1/ch04';
+import {startRun,step} from '../src/engine/step';
+import {cardFromStory} from '../src/legacy/order20/cards';
+import {parseSave} from '../src/persistence/validateSave';
+import {finishThree} from './chapter3Helpers';
+import {order20Input} from './legacySave';
+import {finishSky,startSky,skyCommand} from './sky3Helpers';
+import type {Command,ConstellationResult,Run,StoryState} from '../src/engine/types';
+export const fourthCode='NEBO-4L8N';
+export type FourthPath={bench:NonNullable<StoryState['bench']>;result:ConstellationResult;bond:NonNullable<StoryState['bond']>;wish:NonNullable<StoryState['wish']>;goodbye?:'accept'|'her'|'none'};
+export const defaultFourth:FourthPath={bench:'space',result:{kind:'constellation',outcome:'teapot',usedPreset:false},bond:'friendly',wish:'calm'};
+export const startFour=startSky;
+export const command4=skyCommand;
+// Build an authentic completed historic event, then use the real importer.
+// Historic graphs are not reachable from the current application registry.
+export function finishFour(base=finishThree(),p=defaultFourth,trial=false,_check=false){
+ if(trial)return finishSky(base,p,true);
+ const old=order20Input(base),prior=old.campaign.records[3]!.story;
+ let run:Run=startRun(chapter4,prior);
+ for(let i=0;i<180;i++){
+  const n=chapter4.nodes[run.nodeId];let command:Command;
+  if(n.kind==='dialogue')command={kind:'advance',expectedTurn:run.turn};
+  else if(n.kind==='minigame')command={kind:'game-result',expectedTurn:run.turn,result:p.result};
+  else if(n.kind==='choice')command={kind:'choose',expectedTurn:run.turn,choiceId:n.id==='c4.distance'?p.bench:n.id==='c4.bond'?p.bond:n.id==='c4.goodbye'?p.goodbye??'none':p.wish};
+  else throw Error('Hidden old node');
+  const result=step(chapter4,run,command);if(result.kind==='rejected')throw Error(result.reason);run=result.run;
+  if(result.kind==='complete'){
+   old.campaign.records[4]={endingId:result.endingId,cardId:result.cardId,story:run.story,results:run.results};old.campaign.startStates[4]=structuredClone(prior);old.campaign.completed=[1,2,3,4];old.campaign.active=null;
+   const card=cardFromStory(run.story,4,run.results);old.collection.cards=[...old.collection.cards.filter(c=>c.chapter!==4),card];old.collection.achievements=[...new Set([...old.collection.achievements,...run.earned])];old.lastResult={chapter:4,cardId:card.id,source:'campaign'};
+   return parseSave(JSON.stringify(old));
+  }
+ }
+ throw Error('Old graph loop');
+}

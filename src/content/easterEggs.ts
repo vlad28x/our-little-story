@@ -63,7 +63,7 @@ export const seasonScenery:Partial<Record<string,Scenery>>={
   'bg.gallery7.outside':{poster7:[.17,.27,.17,.17],noPhoto7:[.28,.44,.055,.05],handle7:[.32,.49,.07,.06]},
   'bg.gallery7.hall':{spots7:[.49,.055,.15,.08],bench7:[.89,.56,.12,.12],window7:[.35,.18,.13,.10]},
   'bg.supper8.kitchen':{utensils8:[.19,.25,.08,.08],kettle8:[.24,.33,.07,.08],sugar8:[.374,.59,.06,.07],fridge8:[.848,.46,.07,.1],lamp8:[.907,.255,.08,.10]},
-  'bg.courtyard9.open':{blankets9:[.135,.60,.10,.12],garland9:[.48,.27,.15,.07],archChairs9:[.916,.54,.09,.11]},
+  'bg.courtyard9.open':{blankets9:[.135,.60,.10,.12],garland9:[.70,.265,.15,.07],archChairs9:[.916,.54,.09,.11]},
   'bg.courtyard9.canopy':{blankets9:[.087,.72,.12,.15],garland9:[.61,.12,.18,.08]},
   'bg.courtyard9.arch':{blankets9:[.11,.78,.12,.14],archChairs9:[.86,.73,.13,.17]},
   'bg.courtyard9.books':bakery,

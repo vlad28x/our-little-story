@@ -1,6 +1,6 @@
 # Глава 9 · «С крышей разберёмся»
 
-Сценарное зеркало редакции content26. [Исходник главы](../src/content/chapters/ch09.ts) · [Сценарное ядро](NARRATIVE_CORE.md).
+Сценарное зеркало редакции content27. [Исходник главы](../src/content/chapters/ch09.ts) · [Сценарное ядро](NARRATIVE_CORE.md).
 
 Вход: `c9.courtyard.entry`. Узлов: 51. Основных реплик: 155.
 

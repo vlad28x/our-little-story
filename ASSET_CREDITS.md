@@ -6,7 +6,7 @@
 
 Секрет пятого финала (19 октября2026): `characters/advisers/devil-peek.webp` (420×420) и `devil-lean.webp` (640×427) созданы встроенным imagegen по одобренному советчику и концепту, alpha сохранён. Позы: выглядывает из-за вертикального края / опирается на рамку с конвертом. Исходные фото не использованы. Промпты и происхождение — [outputs/FINALE_SECRET_ART.md](outputs/FINALE_SECRET_ART.md). Generated, integrated locally; не опубликовано.
 
-Глава6 (19 октября2026): `public/assets/characters/advisers/angel.webp`, `devil.webp`, `public/assets/backgrounds/shop-window-evening.webp` созданы встроенным Imagegen по уже одобренным city-smile/river-evening. Без исходных фото; alpha советчиков сохранён. Точные промпты, размеры и происхождение — [outputs/CHAPTER_06_ART.md](outputs/CHAPTER_06_ART.md). Карта маршрута/искры — оригинальная векторная графика проекта. Статус: Generated, integrated; автор одобрил визуальный результат и публикацию после увеличения советчиков.
+Глава6 (19 октября2026): `public/assets/characters/advisers/angel.webp`, `devil.webp`, `outputs/art/previous-assets/backgrounds/shop-window-evening.webp` созданы встроенным Imagegen по уже одобренным city-smile/river-evening. Без исходных фото; alpha советчиков сохранён. Точные промпты, размеры и происхождение — [outputs/CHAPTER_06_ART.md](outputs/CHAPTER_06_ART.md). Карта маршрута/искры — оригинальная векторная графика проекта. Статус: Generated, integrated; автор одобрил визуальный результат и публикацию после увеличения советчиков.
 
 Обложка Telegram Mini App (18 октября 2026): `outputs/TELEGRAM_COVER_MASTER.png` и экспорт `outputs/TELEGRAM_COVER_640x360.png`. Создана встроенным Imagegen по художественным референсам city-smile и cafe-window, без исходных фотографий. Промпт и параметры экспорта — `outputs/TELEGRAM_COVER_PROMPT.md`. Это отдельный локальный файл для загрузки в BotFather, не runtime-ресурс игры; статус Generated, ready for owner upload.
 
@@ -47,15 +47,15 @@
 
 ## Глава7 — галерея
 
-`public/assets/backgrounds/gallery-evening.webp` — встроенный imagegen,19 октября2026. Оригинальная иллюстрация без персонажей и частных фото;1400×933, WebP397422байта. Точный промпт, исходник и экспорт — outputs/CHAPTER_07_ART.md. Фон подключён только к локальной главе7, публикация не выполнялась.
+`outputs/art/previous-assets/backgrounds/gallery-evening.webp` — встроенный imagegen,19 октября2026. Оригинальная иллюстрация без персонажей и частных фото;1400×933, WebP397422байта. Точный промпт, исходник и экспорт — outputs/CHAPTER_07_ART.md. Фон подключён только к локальной главе7, публикация не выполнялась.
 
 ## Заключительные главы8–10
 
-Три оригинальных фона встроенного imagegen,19октября2026: public/assets/backgrounds/s2-kitchen-evening.webp (162368байт), s2-cinema-courtyard.webp (398730байт), s2-cafe-terrace.webp (299170байт); все1400×933. Без частных фотографий. Точные промпты/PNG-источники и экспорт — outputs/SEASON_02_FINAL_ARC_ART.md. DessertArt/LampArt/BookmarkArt/SilentFilmArt — оригинальная векторная графика проекта, без чужих фильмов/музыки. Assets подключены в локальной сборке; публикация не выполнялась.
+Три оригинальных фона встроенного imagegen,19октября2026: outputs/art/previous-assets/backgrounds/s2-kitchen-evening.webp (162368байт), s2-cinema-courtyard.webp (398730байт), s2-cafe-terrace.webp (299170байт); все1400×933. Без частных фотографий. Точные промпты/PNG-источники и экспорт — outputs/SEASON_02_FINAL_ARC_ART.md. DessertArt/LampArt/BookmarkArt/SilentFilmArt — оригинальная векторная графика проекта, без чужих фильмов/музыки. Assets подключены в локальной сборке; публикация не выполнялась.
 
 ## R2 — утро после десятой встречи
 
-`public/assets/backgrounds/s2-kitchen-morning.webp` — встроенный imagegen,20октября2026, утренняя вариация утверждённой кухни;1400×933,199304байта. Без людей, частных фотографий, текста и музыки. Точный промпт, PNG-источник и экспорт — [SEASON_02_R2_ART.md](outputs/SEASON_02_R2_ART.md). Подключён локально к утренней сцене и открытке «До утра»; публикация не выполнялась.
+`outputs/art/previous-assets/backgrounds/s2-kitchen-morning.webp` — встроенный imagegen,20октября2026, утренняя вариация утверждённой кухни;1400×933,199304байта. Без людей, частных фотографий, текста и музыки. Точный промпт, PNG-источник и экспорт — [SEASON_02_R2_ART.md](outputs/SEASON_02_R2_ART.md). Подключён локально к утренней сцене и открытке «До утра»; публикация не выполнялась.
 
 
 ## R3: утверждённый боковой ангел
@@ -64,7 +64,7 @@
 
 ## Глава 8 · рисовка «Гуашь»
 
-Отдельный фон кухни и три прозрачных спрайта Влада созданы встроенным imagegen по первому пробному кадру с 26-летним Владом. В меню восьмой главы этот набор можно включить поверх текущего прохождения. [Источник, параметры и промпты](outputs/art/supper8-gouache.md)
+Отдельный фон кухни и три прозрачных спрайта Влада созданы встроенным imagegen по первому пробному кадру с 26-летним Владом. Гуашевая кухня используется в текущем прохождении. [Источник, параметры и промпты](outputs/art/supper8-gouache.md)
 
 ## Первый сезон · цифровая гуашь
 

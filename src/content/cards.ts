@@ -1,3 +1,4 @@
+import type { IllustrationKind } from './illustrations';
 import type { CardId, ChapterId, StoryState } from '../engine/types';
 import type { CardRecord } from '../state/types';
 import { teamNames } from '../minigames/kitchenModel';
@@ -5,7 +6,7 @@ import { constellationNames, skyShapes } from '../minigames/constellationModel';
 import { effectiveVenue } from './season2';
 import type { Run } from '../engine/types';
 import { firstSeasonBackground, firstSeasonCat, firstSeasonVlad } from './firstSeasonArt';
-export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:string;background:string}> = {
+export const cards: Record<CardId,{chapter:ChapterId;title:string;caption:string;quote:string;motif:IllustrationKind;background:string}> = {
   'c10.travellers':{chapter:10,title:'Два путешественника',caption:'Дошли оба. В следующий раз поменяемся фигурками.',quote:'',motif:'token',background:'bg.cafe.window'},
   'c6.photo.walk':{chapter:6,title:'Пока светло',caption:'Девять ещё впереди.',quote:'',motif:'camera',background:'bg.photo6.shade'},
   'c9.courtyard':{chapter:9,title:'С крышей разберёмся',caption:'Её дворик и ваш вечер под неожиданным дождём.',quote:'',motif:'cinema',background:'bg.courtyard9.open'},

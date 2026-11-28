@@ -1,6 +1,6 @@
 # Глава 7 · «На шаг левее»
 
-Сценарное зеркало редакции content26. [Исходник главы](../src/content/chapters/ch07.ts) · [Сценарное ядро](NARRATIVE_CORE.md).
+Сценарное зеркало редакции content27. [Исходник главы](../src/content/chapters/ch07.ts) · [Сценарное ядро](NARRATIVE_CORE.md).
 
 Вход: `c7.gallery.entry`. Узлов: 26. Основных реплик: 128.
 

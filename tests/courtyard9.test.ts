@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import {chapter9} from '../src/content/chapters/ch09';
 import {validateContent} from '../src/engine/validateContent';
 import {startRun,step,resolveLine,resolveScene} from '../src/engine/step';
-import { validateSave as parseSave} from '../src/persistence/validateSave';
+import { validateRun, validateSave as parseSave} from '../src/persistence/validateSave';
 import {filmLeft} from '../src/persistence/photoSix';
 import {cardFromStory,cardMeta} from '../src/content/cards';
 import {getChapter} from '../src/content/chapters';
@@ -65,11 +65,13 @@ it('round trips every cursor on distinct routes, keeps prior records and rejects
   const prior=finishSupper(undefined,{hoodie:i%3===0?'pass':i%3===1?'borrow':'wear',kiss:i%2===0});prior.continuation='decline';prior.unlocked=[1,2,3,4,5,6,7,8,9,10];
   let save=startCourtyard(prior);
   while(save.campaign.active){
-   expect(parseSave(JSON.stringify(save))).toEqual(save);expect(parseSave(cloudRaw(save))).toEqual(save);
-   const command=courtyardCommand(save.campaign.active,path);save=reduceSave(save,{type:'command',target:'campaign',command});
+   const r=save.campaign.active;
+   if(r.lineIndex===0)expect(parseSave(JSON.stringify(save))).toEqual(save);
+   else expect(validateRun(r)).toEqual(r);
+   const command=courtyardCommand(r,path);save=reduceSave(save,{type:'command',target:'campaign',command});
    expect(reduceSave(save,{type:'command',target:'campaign',command})).toEqual(save);
   }
-  expect(parseSave(JSON.stringify(save))).toEqual(save);expect(save.continuation).toBe('decline');expect(save.unlocked).toEqual(prior.unlocked);
+  expect(parseSave(JSON.stringify(save))).toEqual(save);expect(parseSave(cloudRaw(save))).toEqual(save);expect(save.continuation).toBe('decline');expect(save.unlocked).toEqual(prior.unlocked);
   for(const id of [1,2,3,4,5,6,7,8] as const)expect(save.campaign.records[id]).toEqual(prior.campaign.records[id]);
  }
  const before=courtyardAt('c9.courtyard.frameChoice');

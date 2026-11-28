@@ -7,7 +7,7 @@ import {completeSave} from './helpers';
 import { skyCode as fourthCode,startSky as startFour,skyCommand as command4,finishSky as finishFour } from './sky3Helpers';
 import { reduceSave } from '../src/state/reducer';
 const key='five-meetings:/:save';
-async function until(page:Page,id:string){for(let i=0;i<150;i++){if(await page.locator(`[data-node="${id}"]`).count())return;await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error('Not reached '+id);}
+async function until(page:Page,id:string){for(let i=0;i<150;i++){if(await page.locator(`[data-node="${id}"]`).count())return;if(await page.locator('[data-node="c3.trust"]').count())await page.locator('.choices button').first().click();else await page.getByRole('button',{name:'Дальше',exact:false}).click();}throw Error('Not reached '+id);}
 async function finishGoodbye(page:Page){
   const trial=await page.evaluate(()=>location.hash.includes('mode=trial'));
   for(let i=0;i<20;i++){
@@ -19,13 +19,13 @@ async function finishGoodbye(page:Page){
   await expect(page.locator('.postcard')).toBeVisible();
 }
 async function wishAndEnd(page:Page,wish:'calm'|'adventure'='calm'){
-  await until(page,'c3.wish');await page.getByRole('button',{name:wish==='calm'?'Больше спокойных вечеров':'Больше маленьких приключений'}).click();await until(page,'c3.goodbye');await page.getByRole('button',{name:'Давай сегодня без объятий. До завтра',exact:false}).click();await finishGoodbye(page);
+  await until(page,'c3.wish');await page.getByRole('button',{name:wish==='calm'?'Больше спокойных вечеров':'Больше маленьких приключений'}).click();await until(page,'c3.goodbye');await page.getByRole('button',{name:'Давай сегодня без объятий. До встречи',exact:false}).click();await finishGoodbye(page);
 }
 test('author code, inherited callbacks, custom sky, friendship, result and trial work without any network',async({page})=>{
   const base=completeTwo(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await openOffline(page,base);await expect(page.getByLabel('Код',{exact:true})).toBeVisible();await page.getByLabel('Код',{exact:true}).fill('ZVEZDY');await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await expect(page.getByRole('status')).toContainText('Код не подошёл');
   await page.getByLabel('Код',{exact:true}).fill(fourthCode.toLowerCase());await page.getByRole('button',{name:'Открыть встречу',exact:true}).click();await page.locator('.chapter-list li').nth(2).getByRole('button',{name:'Начать встречу'}).click();await expect(page.locator('[data-node="c3.walk"]')).toBeVisible();
-  await until(page,'c3.distance');await page.getByRole('button',{name:'Мне удобнее с этого края'}).click();await expect(page.locator('.scene-stage')).toHaveClass(/bench-space/);await page.screenshot({path:'test-results/screenshots/CHAPTER_03_RIVER_PREVIEW.png',fullPage:true,animations:'disabled'});
+  await until(page,'c3.distance');await page.getByRole('button',{name:'Мне удобнее с этого края'}).click();await expect(page.locator('[data-node="c3.distance.space"]')).toBeVisible();await page.screenshot({path:'test-results/screenshots/CHAPTER_03_RIVER_PREVIEW.png',fullPage:true,animations:'disabled'});
   await until(page,'c3.stars');await page.getByRole('button',{name:'Геймпад',exact:true}).click();for(const id of [1,2,3])await page.getByRole('button',{name:`Звезда ${id}`,exact:true}).click();await page.getByRole('button',{name:'Отменить последнюю звезду'}).click();await expect(page.getByText('2 / 12',{exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Оставить наше созвездие',exact:false})).toBeDisabled();for(let id=3;id<=12;id++)await page.getByRole('button',{name:`Звезда ${id}`,exact:true}).click();await page.screenshot({path:'test-results/screenshots/CHAPTER_03_STARS_PREVIEW.png',fullPage:true,animations:'disabled'});await page.getByRole('button',{name:'Оставить наше созвездие',exact:false}).click();
   await until(page,'c3.wish');await expect(page.getByRole('button',{name:'Мне хорошо дружить с тобой'})).toHaveCount(0);await wishAndEnd(page);
@@ -44,7 +44,7 @@ test('a direct fourth-chapter link cannot bypass the code or third-chapter compl
 });
 
 test('all goodbye options work after friendship and choosing space, survive reload and keep trial isolated',async({context})=>{
-  for(const trial of [false,true])for(const [choice,label] of [['accept','Можно. Иди сюда'],['her','Я сама'],['none','Давай сегодня без объятий. До завтра']] as const){
+  for(const trial of [false,true])for(const [choice,label] of [['accept','Можно. Иди сюда'],['her','Я сама'],['none','Давай сегодня без объятий. До встречи']] as const){
     const base=trial?finishFour():completeTwo();let save=startFour(base,trial);
     for(let i=0;i<180;i++){
       const run=(trial?save.trial?.run:save.campaign.active)!;if(run.nodeId==='c3.goodbye')break;
@@ -55,12 +55,12 @@ test('all goodbye options work after friendship and choosing space, survive relo
     await expect(page.getByRole('heading',{name:'Как попрощаемся?',exact:true})).toBeVisible();
     await expect(page.locator('.choices button')).toHaveCount(3);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-    await page.screenshot({path:'work/CHAPTER4_GOODBYE_CHOICES.png',fullPage:true,animations:'disabled'});
+    await page.screenshot({path:'test-results/screenshots/CHAPTER4_GOODBYE_CHOICES.png',fullPage:true,animations:'disabled'});
     await page.getByRole('button',{name:label,exact:false}).click();
     await expect(page.locator('[data-node="c3.goodbye.'+choice+'"]').first()).toBeVisible();
     const raw=JSON.parse(await page.evaluate(k=>localStorage.getItem(k)!,key));await openOffline(page,raw,route);
     await expect(page.locator('[data-node="c3.goodbye.'+choice+'"]').first()).toBeVisible();
-    if(choice==='none')await expect(page.getByText('Давай сегодня без объятий. До завтра.',{exact:true})).toBeVisible();
+    if(choice==='none')await expect(page.getByText('Давай сегодня без объятий. До встречи.',{exact:true})).toBeVisible();
     await finishGoodbye(page);
     await expect(page.getByRole('heading',{name:'Созвездие передышки',exact:true})).toBeVisible();
     const after=JSON.parse(await page.evaluate(k=>localStorage.getItem(k)!,key));

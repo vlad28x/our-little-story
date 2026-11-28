@@ -3,7 +3,7 @@ import { useGame } from '../app/GameProvider';
 import { go } from '../app/router';
 import { assetUrl } from '../content/assetManifest';
 import { checkCode } from '../content/chapters/manifest';
-import { canStart } from '../state/reducer';
+import { chapterAction, canOpenChapter } from '../state/chapterAccess';
 import { Modal } from './Modal';
 
 export function AfterCreditsTeaser(){
@@ -23,8 +23,10 @@ function SecretConversation({onClose}:{onClose:()=>void}){
   const {save,send,recovery,conflict,cloudBlocked}=useGame();
   const [step,setStep]=useState<'intro'|'code'>('intro'),[code,setCode]=useState(''),[error,setError]=useState('');
   const input=useRef<HTMLInputElement>(null);
-  const unlocked=save.unlocked.includes(6),completed=save.campaign.completed.includes(6),active=save.campaign.active?.chapter===6;
-  const ready=completed||active||canStart(save,6)&&!save.campaign.active&&!save.trial;
+  const unlocked=save.unlocked.includes(6);
+  const action=chapterAction(save,6);
+  const completed=action==='result',active=action==='resume';
+  const ready=canOpenChapter(action)&&(action!=='start'||!save.trial);
   const blocked=recovery||conflict||cloudBlocked;
   useEffect(()=>{if(step==='code'&&!unlocked)input.current?.focus();},[step,unlocked]);
   function submit(){

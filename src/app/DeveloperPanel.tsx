@@ -25,6 +25,7 @@ export function DeveloperPanel(){
     if(id.startsWith('c5.'))story={approach:'help',searchResult:'skipped',catNoticed:false,pace:'quiet',plan:'tea',rainRoute:'shelter',catApproach:'wait',umbrella:'patched',eveningMood:'quiet',controllerReaction:'help',teamName:'calm',kitchenStyle:'planner',kitchenResult:'skipped',gameAftercare:'team',bench:'space',constellation:'teapot',wish:'calm'};
     if(['c5.drink.recommend','c5.album','c5.letter','c5.close'].includes(id))story.c5FirstTaste='compare';
     if(['c5.album','c5.letter','c5.close'].includes(id))story.c5Recommendation='fresh';
+    if(id==='c5.close')story.c5Feeling='continue';
     send({type:'dev-jump',nodeId:id,story});go(`/play/${id[1]}`);
   }}>{id}</button>)}</details>;
 }

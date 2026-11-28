@@ -10,7 +10,7 @@ test('served eighth reloads food and shutter without overwriting the first seven
  const save=supperAt('c8.supper.foodClick',{filling:'mushroom',shape:'open',frame:'foodHer'}),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});
  await page.goto('./#/play/8');await expect(page.locator('.photo-camera strong')).toHaveText('6');
- for(let i=0;i<2;i++)await page.getByRole('button',{name:'Дальше',exact:false}).click();
+ for(let i=0;i<2;i++)await page.locator('.dialogue-content .next-button').click();
  await page.reload();await expect(page.locator('.photo-camera strong')).toHaveText('5');
  const stored=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(stored.campaign.active?.story).toMatchObject({c8Filling:'mushroom',c8Shape:'open',c8Film:'key'});expect(stored.campaign.records).toEqual(save.campaign.records);
  await expect.poll(()=>page.locator('.scene-background').evaluate((im:HTMLImageElement)=>im.naturalWidth>0)).toBe(true);
@@ -35,5 +35,5 @@ for(const kiss of [false,true])test(`served eighth goodbye preserves actual kiss
  await page.goto('./#/play/8');await page.reload();
  await expect(page.locator('.dialogue-text')).toContainText(kiss?'Влад ещё раз притягивает тебя к себе':'У порога Влад придерживает дверь');
  expect(parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!).campaign.active?.story.c8LipKiss).toBe(kiss?'yes':'no');
- if(kiss)await page.screenshot({path:'work/nov14/goodbye-kiss-390.png',animations:'disabled'});
+ if(kiss)await page.screenshot({path:'test-results/screenshots/goodbye-kiss-390.png',animations:'disabled'});
 });

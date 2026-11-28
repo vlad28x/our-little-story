@@ -13,7 +13,7 @@ function command(run:Run):Command {
  const node=playableChapters[run.chapter]!.nodes[run.nodeId];
  if(node.kind==='dialogue')return {kind:'advance',expectedTurn:run.turn};
  if(node.kind==='choice'){
-  const home:Record<string,string>={'c10.travellers.arrivedChoice':'home','c10.travellers.homeChoice':'kiss','c10.travellers.lateChoice':'private'};
+  const home:Record<string,string>={'c10.travellers.arrivedChoice':'home','c10.travellers.homeChoice':'kiss','c10.travellers.lateChoice':'sleep'};
   return {kind:'choose',choiceId:home[node.id]??node.choices.find(c=>matches(run.story,c.when,run))!.id,expectedTurn:run.turn};
  }
  if(node.kind==='minigame'){
@@ -43,7 +43,7 @@ test('long authored dialogue in every chapter remains readable and resumes exact
   await page.setViewportSize({width,height:900});await openOffline(page,snapshot.save,`/play/${snapshot.save.campaign.active!.chapter}`);
   await expect(page.locator('.dialogue-text')).toHaveText(snapshot.text);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   const next=page.getByRole('button',{name:/^Дальше/});await next.scrollIntoViewIfNeeded();await expect(next).toBeInViewport();
-  if(width===390&&[1,6,10].includes(snapshot.save.campaign.active!.chapter))await page.screenshot({path:`work/polish23/chapter-${snapshot.save.campaign.active!.chapter}-390.png`,fullPage:true,animations:'disabled'});
+  if(width===390&&[1,6,10].includes(snapshot.save.campaign.active!.chapter))await page.screenshot({path:`test-results/screenshots/polish23/chapter-${snapshot.save.campaign.active!.chapter}-390.png`,fullPage:true,animations:'disabled'});
   const expected=reduceSave(snapshot.save,{type:'command',target:'campaign',command:command(snapshot.save.campaign.active!)});
   await next.click();const raw=await page.evaluate(k=>localStorage.getItem(k)!,key),save=parseSave(raw);expect(save.campaign).toEqual(expected.campaign);
   await openOffline(page,save,`/play/${snapshot.save.campaign.active!.chapter}`);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).campaign,key)).toEqual(save.campaign);
@@ -52,7 +52,7 @@ test('long authored dialogue in every chapter remains readable and resumes exact
 });
 
 test('old progress restarts at one while code rights survive and both invitation answers clear',async({page})=>{
- const old={...completed,contentVersion:CONTENT_VERSION-1,continuation:'cafe',continuation10:'movie'} as unknown as SaveV1;
+ const old={...completed,contentVersion:23,continuation:'cafe',continuation10:'movie'} as unknown as SaveV1;
  await openOffline(page,old,'/chapters');await expect(page.locator('.code-entry')).toBeVisible();await expect(page.getByRole('button',{name:/Встретиться вживую/})).toHaveCount(0);
  const reset=parseSave(JSON.stringify(old));expect(reset.unlocked).toEqual(old.unlocked);expect(reset.campaign.completed).toEqual([]);expect(reset.continuation).toBeNull();expect(reset.continuation10).toBeNull();
  await page.getByRole('button',{name:'Пять встреч',exact:true}).click();await page.locator('.chapter-list>li').first().getByRole('button',{name:/Начать встречу/}).click();

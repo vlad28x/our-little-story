@@ -1,12 +1,14 @@
 # Арт новой шестой «Пока светло»
 
+> Материал прежней редакции. Параметры экспорта и описание сборки относятся к моменту создания иллюстраций. Файлы текущей игры перечислены в [реестре изображений](../src/content/assetManifest.ts).
+
 Три новых фона созданы встроенным `image_gen`, по существующему рисованному `public/assets/backgrounds/river-evening.webp`. CLI/API fallback не использовался. Исходный ночной фон и модель Влада не заменены. Работающий аппарат/счётчик — кодовая SVG-иллюстрация в `src/ui/PhotoCamera.tsx`, без марки и экрана; отдельной растровой камеры и превью фотографий нет.
 
 | Asset ID | Рабочий файл | Размер | Байты |
 |---|---|---|---|
-| bg.photo6.sun | public/assets/backgrounds/photo6-lower-sun.webp | 1000×1333 |339964|
-| bg.photo6.shade | public/assets/backgrounds/photo6-lower-shade.webp |1000×1333|294206|
-| bg.photo6.upper | public/assets/backgrounds/photo6-upper.webp |1000×1333|314946|
+| bg.photo6.sun | outputs/art/previous-assets/backgrounds/photo6-lower-sun.webp | 1000×1333 |339964|
+| bg.photo6.shade | outputs/art/previous-assets/backgrounds/photo6-lower-shade.webp |1000×1333|294206|
+| bg.photo6.upper | outputs/art/previous-assets/backgrounds/photo6-upper.webp |1000×1333|314946|
 
 Все зарегистрированы до экспорта assetManifest. Фон sun используется на входе, в дружеской ветке и до исчезновения отражения. Shade — после покупки, водная ветка и возвращение к киоску; upper — только выбранный верхний участок. Подпись локации меняется вместе с фоном. Геометрия sun/shade одинакова; тень убирает золотой прямоугольник, не лестницу. У карты направления и результатов нет выдуманного лица героини.
 

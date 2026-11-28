@@ -1,8 +1,9 @@
+import type { IllustrationKind } from './illustrations';
 import type { Line,StoryState } from '../engine/types';
 import { teamNames } from '../minigames/kitchenModel';
 import { constellationNames } from '../minigames/constellationModel';
 export type MemoryId='meeting'|'game'|'sky';
-export type Memory={id:MemoryId;title:string;motif:string;lines:Line[]};
+export type Memory={id:MemoryId;title:string;motif:IllustrationKind;lines:Line[]};
 const V=(text:string):Line=>({speaker:'vlad',text});
 const N=(text:string):Line=>({speaker:'narrator',text});
 export function memoriesFor(story:StoryState):Memory[]{

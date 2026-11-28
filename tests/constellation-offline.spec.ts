@@ -23,7 +23,7 @@ for(const shape of skyShapes)test(`approved ${shape} drawing works on a 320px ph
   await page.locator('.star-board').scrollIntoViewIfNeeded();await page.screenshot({path:`test-results/screenshots/CONSTELLATION_GAME_${shape.toUpperCase()}_320.png`,fullPage:false,animations:'disabled'});
   await page.getByRole('button',{name:'Отменить последнюю звезду',exact:true}).click();await expect(finish).toBeDisabled();await expect(page.locator('.star-board .sky-details')).toHaveCount(0);await page.getByRole('button',{name:`Звезда ${stars.length}`,exact:true}).click();
   await finish.click();const after=JSON.parse((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(after.campaign.active.results.constellation).toEqual({kind:'constellation',outcome:shape,usedPreset:false});expect(after.campaign.active.turn).toBe(save.campaign.active!.turn+1);
-  const postcard=await context.newPage();await openOffline(postcard,finishFour(undefined,{...defaultFourth,result:{kind:'constellation',outcome:shape,usedPreset:false}}),'/result/3');expect(await postcard.locator('.postcard .sky-lines').innerHTML()).toBe(fullLines);await expect(postcard.getByText(constellationDrawings[shape].name,{exact:true})).toBeVisible();expect(errors).toEqual([]);
+  const postcard=await context.newPage();await openOffline(postcard,finishFour(undefined,{...defaultFourth,result:{kind:'constellation',outcome:shape,usedPreset:false}}),'/result/3');expect(await postcard.locator('.postcard-art .sky-lines').innerHTML()).toBe(fullLines);await expect(postcard.getByText(constellationDrawings[shape].name,{exact:true})).toBeVisible();expect(errors).toEqual([]);
 });
 
 test('changing a sketch resets only the local drawing and keyboard completion focuses the explicit finish',async({page})=>{

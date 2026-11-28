@@ -51,19 +51,19 @@ No characters or cats, no extra objects, no vignette, no UI or watermarks. No ne
 | --- | --- | --- |
 | Базовый кадр Влада | Референс выражений | `exec-7a021d03-239e-42d6-9914-84551e4d07c2.png` |
 | Нина | [nina.webp](../../public/assets/characters/chapter1-gouache/nina.webp) | `exec-156fae7e-a20f-40ee-9f09-be62841c5a51.png` |
-| Пончик | [cat.webp](../../public/assets/characters/chapter1-gouache/cat.webp) | `exec-9c3357c1-84d6-414b-8667-81f2ad9d2034.png` |
-| Влад · нейтральное выражение | [vlad-neutral.webp](../../public/assets/characters/chapter1-gouache/vlad-neutral.webp) | `exec-48d5c7a3-f811-4c57-85d5-2454ceca2fca.png` |
-| Влад · улыбка | [vlad-smile.webp](../../public/assets/characters/chapter1-gouache/vlad-smile.webp) | `exec-23efe10d-4027-4696-b8f4-c4ab1375990f.png` |
-| Влад · неловкость | [vlad-awkward.webp](../../public/assets/characters/chapter1-gouache/vlad-awkward.webp) | `exec-0ab1d027-d689-49f8-a4b7-f4f0c740a7a6.png` |
-| Влад · задумался | [vlad-thinking.webp](../../public/assets/characters/chapter1-gouache/vlad-thinking.webp) | `exec-25940943-cf18-47bb-b9c0-780760e51829.png` |
-| Влад · смех | [vlad-laugh.webp](../../public/assets/characters/chapter1-gouache/vlad-laugh.webp) | `exec-f7bca2f0-fa9a-4796-9324-7a4e2093e89b.png` |
-| Влад · удивление | [vlad-surprised.webp](../../public/assets/characters/chapter1-gouache/vlad-surprised.webp) | `exec-578ee667-476b-4455-96b2-d222f7e86c29.png` |
+| Пончик | [cat.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/cat.webp) | `exec-9c3357c1-84d6-414b-8667-81f2ad9d2034.png` |
+| Влад · нейтральное выражение | [vlad-neutral.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-neutral.webp) | `exec-48d5c7a3-f811-4c57-85d5-2454ceca2fca.png` |
+| Влад · улыбка | [vlad-smile.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-smile.webp) | `exec-23efe10d-4027-4696-b8f4-c4ab1375990f.png` |
+| Влад · неловкость | [vlad-awkward.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-awkward.webp) | `exec-0ab1d027-d689-49f8-a4b7-f4f0c740a7a6.png` |
+| Влад · задумался | [vlad-thinking.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-thinking.webp) | `exec-25940943-cf18-47bb-b9c0-780760e51829.png` |
+| Влад · смех | [vlad-laugh.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-laugh.webp) | `exec-f7bca2f0-fa9a-4796-9324-7a4e2093e89b.png` |
+| Влад · удивление | [vlad-surprised.webp](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-surprised.webp) | `exec-578ee667-476b-4455-96b2-d222f7e86c29.png` |
 
 Сумку, коврик, листок, стакан, зонтик, жетон, шарф, чашку и анимацию завитка перерисовали как [SVG-компонент первой встречи](../../src/ui/Illustration.tsx). Нашивка и остальные общие предметы других глав берутся из их существующих иллюстраций.
 
 ### Промпты базовых персонажей
 
-Общий референс света — [новый вход в кафе](../../public/assets/backgrounds/chapter1-gouache/cafe-entry.webp). Референсы Влада — [гуашевый Влад из восьмой](../../public/assets/characters/vlad/supper8-gouache-smile.webp) и [прежний городской костюм](../../public/assets/characters/vlad/city-smile.webp). Для Нины и Пончика приложены [прежняя Нина](../../public/assets/characters/nina.webp) и [прежний Пончик](../../public/assets/characters/cat.webp) соответственно.
+Общий референс света — [новый вход в кафе](../../public/assets/backgrounds/chapter1-gouache/cafe-entry.webp). Референсы Влада — [гуашевый Влад из восьмой](../../outputs/art/previous-assets/characters/vlad/supper8-gouache-smile.webp) и [прежний городской костюм](../../public/assets/characters/vlad/city-smile.webp). Для Нины и Пончика приложены [прежняя Нина](../../public/assets/characters/nina.webp) и [прежний Пончик](../../public/assets/characters/cat.webp) соответственно.
 
 **Влад · нейтральное выражение.**
 
@@ -98,9 +98,9 @@ Use case: identity-preserve and precision alpha cleanup for an existing visual n
 
 ## Пончик в новом ракурсе
 
-У Пончика новый низкий силуэт в три четверти. Голова развёрнута к героям, одна передняя лапа вытянута, хвост лежит отдельной дугой. Сохранены полосы, кремовая грудка и загнутое ухо. Версия используется в первой главе, поиске жетонов и её открытках. [Новый рисунок WebP](../../public/assets/characters/chapter1-gouache/cat-resting.webp) · [Предыдущая гуашевая версия](../../public/assets/characters/chapter1-gouache/cat.webp)
+У Пончика новый низкий силуэт в три четверти. Голова развёрнута к героям, одна передняя лапа вытянута, хвост лежит отдельной дугой. Сохранены полосы, кремовая грудка и загнутое ухо. Версия используется в первой главе, поиске жетонов и её открытках. [Новый рисунок WebP](../../public/assets/characters/chapter1-gouache/cat-resting.webp) · [Предыдущая гуашевая версия](../../outputs/art/previous-assets/characters/chapter1-gouache/cat.webp)
 
-Встроенный ImageGen. PNG `exec-ba5bf34f-a0fe-47bd-86b0-0e36b60290c9.png`. Референсы — предыдущий Пончик для отметин, [гуашевый Влад](../../public/assets/characters/chapter1-gouache/vlad-smile.webp) для фактуры и [вход в кафе](../../public/assets/backgrounds/chapter1-gouache/cafe-entry.webp) для света.
+Встроенный ImageGen. PNG `exec-ba5bf34f-a0fe-47bd-86b0-0e36b60290c9.png`. Референсы — предыдущий Пончик для отметин, [гуашевый Влад](../../outputs/art/previous-assets/characters/chapter1-gouache/vlad-smile.webp) для фактуры и [вход в кафе](../../public/assets/backgrounds/chapter1-gouache/cafe-entry.webp) для света.
 
 ```text
 Use case: illustration-story, redesigned transparent 2D game character sprite for a young adult visual novel. Create a genuinely new pose and silhouette for the existing cat Ponchik, using reference 1 ONLY for his recognizable ginger and cream banded coat, white-cream bib and paws, and unique folded ear tip. Reference 2 is for the exact matte painterly gouache-over-pencil finish with irregular soft colored edges and layered broad dry brushwork. Reference 3 is for late afternoon honey light from the viewer's left with restrained cool mauve shadows. Draw one adult cat resting low on one hip in a side-on three-quarter view, his longer body stretching across the left two thirds of the sprite, his head at the RIGHT, turned slightly up and toward the center-right as though calmly watching someone talking. One forepaw extends forward, the other rests tucked in, and the visible striped tail lies in a graceful S along the foreground of the body. Show a clearly folded tip on the far ear and one erect near ear. Soft real feline proportions, smallish natural head with sleepy curious olive eyes, no human smile, softly uneven cream chest with longer dry-brushed fur and muted tawny stripes with umber shadows. Prefer a distinctly asymmetrical low S-shaped silhouette, naturalistic weight, and an expressive gaze. There should be a noticeable difference from the frontal loaf pose in reference 1. True transparent RGBA cutout all around, no background, no checkerboard, no off-body glow, no external shadow, no floor or other objects. Square 1:1 image, fill at least 88% of its width and leave narrow safe margins around ears, tail and paws.

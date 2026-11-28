@@ -1,16 +1,18 @@
 # Арт седьмой «На шаг левее» · 4 ноября2026
 
+> Материал прежней редакции. Параметры экспорта и описание сборки относятся к моменту создания иллюстраций. Файлы текущей игры перечислены в [реестре изображений](../src/content/assetManifest.ts).
+
 Локальная реализация. Навык: `C:/Users/User/.codex/skills/.system/imagegen/SKILL.md`. Использован встроенный image_gen; CLI/API и внешние фотографии не использовались. Оригинальные вымышленные фотоработы созданы для этой игры.
 
 ## Файлы в проекте
 
 Все пути относительно `C:/Users/User/Desktop/our-little-story/`:
 
-- `public/assets/gallery7/row.webp` — «Ряд», пять светлых кромок ступеней.
-- `public/assets/gallery7/chip.webp` — «Скол», отсутствующий треугольник и зубец тени на нижней кромке.
-- `public/assets/gallery7/blue.webp` — «Просвет», синяя дверь, щель справа, порог внизу.
-- `public/assets/backgrounds/gallery7-hall.webp` — зал с тремя перегородками, работами слева направо и скамейкой.
-- `public/assets/backgrounds/gallery7-outside.webp` — та же дверь снаружи: афиша, запрет камеры, ручка, козырёк, ступенька и отражение фасада.
+- `outputs/art/previous-assets/gallery7/row.webp` — «Ряд», пять светлых кромок ступеней.
+- `outputs/art/previous-assets/gallery7/chip.webp` — «Скол», отсутствующий треугольник и зубец тени на нижней кромке.
+- `outputs/art/previous-assets/gallery7/blue.webp` — «Просвет», синяя дверь, щель справа, порог внизу.
+- `outputs/art/previous-assets/backgrounds/gallery7-hall.webp` — зал с тремя перегородками, работами слева направо и скамейкой.
+- `outputs/art/previous-assets/backgrounds/gallery7-outside.webp` — та же дверь снаружи: афиша, запрет камеры, ручка, козырёк, ступенька и отражение фасада.
 
 Все финальные WebP —1000×1333, RGB, quality90/method6. Уменьшение и кодирование Pillow; изменения содержания выполнялись image_gen. Исходники оставлены на месте.
 

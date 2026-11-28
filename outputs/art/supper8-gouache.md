@@ -5,9 +5,9 @@
 | Слой | Файл игры | PNG из imagegen |
 | --- | --- | --- |
 | Кухня | [supper8-kitchen-gouache.webp](../../public/assets/backgrounds/supper8-kitchen-gouache.webp) | `exec-303dda93-0daf-4eba-a525-d2477c60550e.png` |
-| Влад в футболке | [supper8-gouache-smile.webp](../../public/assets/characters/vlad/supper8-gouache-smile.webp) | `exec-953dc743-de9d-42f5-bbeb-415209fd39c8.png` |
-| Влад в фартуке | [supper8-gouache-apron.webp](../../public/assets/characters/vlad/supper8-gouache-apron.webp) | `exec-0493eb95-6695-4760-97ba-1d13bb4cdd09.png` |
-| Смех | [supper8-gouache-laugh.webp](../../public/assets/characters/vlad/supper8-gouache-laugh.webp) | `exec-fe3ff568-f4d8-4dbc-a31c-523c2e565b0d.png` |
+| Влад в футболке | [supper8-gouache-smile.webp](../../outputs/art/previous-assets/characters/vlad/supper8-gouache-smile.webp) | `exec-953dc743-de9d-42f5-bbeb-415209fd39c8.png` |
+| Влад в фартуке | [supper8-gouache-apron.webp](../../outputs/art/previous-assets/characters/vlad/supper8-gouache-apron.webp) | `exec-0493eb95-6695-4760-97ba-1d13bb4cdd09.png` |
+| Смех | [supper8-gouache-laugh.webp](../../outputs/art/previous-assets/characters/vlad/supper8-gouache-laugh.webp) | `exec-fe3ff568-f4d8-4dbc-a31c-523c2e565b0d.png` |
 
 PNG лежат в каталоге Codex `generated_images/01a20a2a-0089-7da3-b652-901def941b1f/`. Пробный референс — `exec-e9997d85-ae94-4ea9-b0db-42fea0889dd2.png`. В игру перенесены WebP в исходном размере с прозрачностью спрайтов.
 

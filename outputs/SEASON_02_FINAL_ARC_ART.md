@@ -1,10 +1,12 @@
 # Арт заключительной арки второго сезона
 
+> Материал прежней редакции. Параметры экспорта и описание сборки относятся к моменту создания иллюстраций. Файлы текущей игры перечислены в [реестре изображений](../src/content/assetManifest.ts).
+
 19 октября 2026. Три новых фона созданы встроенным imagegen; CLI/API не использовался. Частные фотографии не передавались. Визуальная проверка выполнена перед подключением; временных ассетов нет. Одобренные chibi-спрайты Влада и крупные советчики переиспользованы.
 
 ## bg.s2.kitchen.evening
 
-Финал: `public/assets/backgrounds/s2-kitchen-evening.webp`, 1400×933, 162368 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
+Финал: `outputs/art/previous-assets/backgrounds/s2-kitchen-evening.webp`, 1400×933, 162368 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
 
 Исходник: `C:/Users/User/.codex/generated_images/01a147e4-8334-7380-99c4-febc35c62edb/exec-14f6de02-29ad-4510-a153-879cbeeec59c.png`.
 
@@ -14,7 +16,7 @@
 
 ## bg.s2.cinema.courtyard
 
-Финал: `public/assets/backgrounds/s2-cinema-courtyard.webp`, 1400×933, 398730 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
+Финал: `outputs/art/previous-assets/backgrounds/s2-cinema-courtyard.webp`, 1400×933, 398730 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
 
 Исходник: `C:/Users/User/.codex/generated_images/01a147e4-8334-7380-99c4-febc35c62edb/exec-0d692b39-55ef-4607-93e5-cf1a0b640a26.png`.
 
@@ -24,7 +26,7 @@
 
 ## bg.s2.cafe.terrace
 
-Финал: `public/assets/backgrounds/s2-cafe-terrace.webp`, 1400×933, 299170 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
+Финал: `outputs/art/previous-assets/backgrounds/s2-cafe-terrace.webp`, 1400×933, 299170 байт, WebP quality86. Экспорт только уменьшает исходник и меняет формат, содержание не редактировалось. Файл включён в manifest со статусом generated и в локальный dist.
 
 Исходник: `C:/Users/User/.codex/generated_images/01a147e4-8334-7380-99c4-febc35c62edb/exec-0fe3d908-b34b-45ff-a226-036d5c78fd5a.png`.
 

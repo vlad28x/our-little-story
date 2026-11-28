@@ -1,0 +1,34 @@
+import {test,expect,type Page} from '@playwright/test';
+import fs from 'node:fs';
+import {parseSave} from '../src/persistence/validateSave';
+import {finishSky,defaultSky} from './sky3Helpers';
+import {completeTwo} from './chapter3Helpers';
+const states=JSON.parse(fs.readFileSync('tests/fixtures/order20/states.json','utf8')).fixtures;
+const key=`five-meetings:${process.env.VITE_BASE_PATH||'/'}:save`;
+async function seed(page:Page,save:unknown){await page.addInitScript(({key,save})=>{if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(save));},{key,save});}
+async function read(page:Page){return page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);}
+
+test('an unfinished old pair reopens new third, keeps its earned game postcard and reloads without another reset',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await seed(page,states.three);await page.goto('./#/chapters');
+ await expect(page.locator('.chapter-list h2').nth(2)).toHaveText('Разговор под звёздами');await expect(page.locator('.chapter-list h2').nth(3)).toHaveText('Игровой вечер');
+ await page.locator('.chapter-list li').nth(2).getByRole('button',{name:'Начать встречу',exact:false}).click();await expect(page.locator('[data-node="c3.walk"]')).toBeVisible();
+ await page.getByRole('button',{name:'Дальше',exact:false}).click();const saved=await read(page);expect(saved.contentVersion).toBe(21);expect(saved.campaign.completed).toEqual([1,2]);expect(saved.collection.cards.some((c:{id:string;chapter:number})=>c.id==='c3.dinner'&&c.chapter===4)).toBe(true);
+ await page.reload();await expect(page.locator('[data-node="c3.walk"]')).toBeVisible();expect((await read(page)).campaign.active).toEqual(saved.campaign.active);
+ await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await page.getByRole('button',{name:'Альбом и секреты',exact:true}).click();
+ const game=page.locator('.album-chapter').filter({has:page.getByRole('heading',{name:'Игровой вечер',exact:true})});await expect(game).toContainText('ВСТРЕЧА 4');await game.getByRole('button',{name:'Ужин по обстоятельствам',exact:false}).click();await expect(page.locator('.postcard-number')).toHaveText('04 / 05');expect(errors).toEqual([]);
+});
+
+test('a completed pair appears in the right album order and keeps the active tenth and both real answers',async({page})=>{
+ const old=structuredClone(states.tenActive);old.continuation='walk';await seed(page,old);await page.goto('./#/play/10');const expected=parseSave(JSON.stringify(old));await expect(page.locator(`[data-node="${expected.campaign.active!.nodeId}"]`)).toBeVisible();
+ await page.reload();await expect(page.locator(`[data-node="${expected.campaign.active!.nodeId}"]`)).toBeVisible();await page.getByRole('button',{name:'Открыть меню',exact:true}).click();await page.getByRole('button',{name:'Альбом и секреты',exact:true}).click();
+ await expect(page.locator('.album-chapter-heading h3').nth(2)).toHaveText('Разговор под звёздами');await expect(page.locator('.album-chapter-heading h3').nth(3)).toHaveText('Игровой вечер');
+ await page.getByRole('button',{name:'Созвездие передышки',exact:false}).click();await expect(page.locator('.postcard .sky-lines')).toBeVisible();await expect(page.locator('.postcard-number')).toHaveText('03 / 05');await expect(page.getByRole('button',{name:'К четвёртой встрече',exact:false})).toBeVisible();
+ const saved=parseSave(JSON.stringify(await read(page)));expect(saved.campaign).toEqual(expected.campaign);expect(saved.continuation).toBe('walk');expect(saved.continuation10).toBe(old.continuation10);
+});
+
+test('new third has no future-game callbacks and grants only the sky card and secret',async({page})=>{
+ const save=finishSky(completeTwo(),{...defaultSky,result:{kind:'constellation',outcome:'cat',usedPreset:false},goodbye:'her'});await seed(page,save);await page.goto('./#/result/3');
+ await expect(page.locator('.postcard-number')).toHaveText('03 / 05');await expect(page.getByText('Своё небо · рисунок из звёзд', {exact:false})).toBeVisible();await expect(page.getByText('Стол на всех · девять подач вместе',{exact:false})).toHaveCount(0);
+ await page.getByRole('button',{name:'К четвёртой встрече',exact:false}).click();await expect(page.locator('.chapter-list li').nth(3)).toContainText('Игровой вечер');
+ expect((await read(page)).campaign.completed).toEqual([1,2,3]);expect((await read(page)).collection.cards.some((c:{chapter:number})=>c.chapter===4)).toBe(false);
+});

@@ -21,7 +21,7 @@ for(const firstTaste of ['vanilla','sweet','compare'] as const)test(`first opini
   await expect(page.locator(`[data-node="c5.drink.first.${firstTaste}"]`)).toBeVisible();await until(page,'c5.drink.recommend');
   const menu=await state(page);await openOffline(page,menu,'/play/5');await expect(page.getByRole('heading',{name:'Что предложим Нине после сравнения?',exact:true})).toBeVisible();
   for(const button of await page.locator('.choices button').all()){const box=(await button.boundingBox())!;expect(box.height).toBeGreaterThanOrEqual(48);}
-  if(firstTaste==='sweet')await page.screenshot({path:`work/DRINK_MENU_${[320,390,960][index]}.png`,fullPage:true,animations:'disabled'});
+  if(firstTaste==='sweet')await page.screenshot({path:`test-results/screenshots/DRINK_MENU_${[320,390,960][index]}.png`,fullPage:true,animations:'disabled'});
   await page.getByRole('button',{name:recommendations[recommendation],exact:false}).click();await openOffline(page,await state(page),'/play/5');
   await expect(page.locator(`[data-node="c5.drink.reason.${firstTaste}.${recommendation}"]`)).toBeVisible();
   await until(page,`c5.drink.echo.${recommendation}`);await expect(page.locator('.final-conversation')).toHaveCount(0);await until(page,'c5.exit');await finish(page);
@@ -43,7 +43,7 @@ test('the floating devil card fits browser and Telegram safe areas with round co
   const portrait=(await dialog.locator('.secret-portrait').boundingBox())!,card=(await surface.boundingBox())!,close=(await dialog.getByRole('button',{name:'Закрыть',exact:true}).boundingBox())!;
   expect(portrait.y).toBeGreaterThanOrEqual(sizes.top+sizes.content);expect(card.y+card.height).toBeLessThanOrEqual(height-sizes.bottom-10);expect(portrait.x+portrait.width).toBeLessThanOrEqual(close.x);
   expect(close.height).toBeGreaterThanOrEqual(48);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  if(height>=568)await page.screenshot({path:`work/DEVIL_CARD_${telegram?'TELEGRAM':'BROWSER'}_${width}.png`,animations:'disabled'});
+  if(height>=568)await page.screenshot({path:`test-results/screenshots/DEVIL_CARD_${telegram?'TELEGRAM':'BROWSER'}_${width}.png`,animations:'disabled'});
   await page.getByRole('button',{name:'И какие же?',exact:true}).click();const input=page.getByLabel('Код от Влада',{exact:true});await expect(input).toBeFocused();await input.fill('wrong');await input.press('Enter');await expect(input).toHaveAttribute('aria-invalid','true');
   await page.getByRole('button',{name:'Пока оставим интригу',exact:true}).scrollIntoViewIfNeeded();await dialog.getByRole('button',{name:'Закрыть',exact:true}).click();await expect(dialog).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Псс… Маленький секрет',exact:true})).toBeFocused();await page.close();

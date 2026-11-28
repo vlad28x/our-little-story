@@ -1,0 +1,107 @@
+import {it,expect} from 'vitest';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {parseSave} from '../src/persistence/validateSave';
+import {reduceSave,canStart} from '../src/state/reducer';
+import {getChapter} from '../src/content/chapters';
+import {cardMeta,cards} from '../src/content/cards';
+import {TelegramCloud} from '../src/telegram/cloud';
+import {startRun,step,resolveLine} from '../src/engine/step';
+import {chapter3} from '../src/content/chapters/ch03';
+import {chapter4} from '../src/content/chapters/ch04';
+import {validateContent} from '../src/engine/validateContent';
+import {finishSky,defaultSky,skyCommand} from './sky3Helpers';
+import {finishThree,defaultThird,command3} from './chapter3Helpers';
+import {chapters} from '../src/content/chapters/manifest';
+import type {SaveV1} from '../src/state/types';
+import type {CloudAPI} from '../src/telegram/bridge';
+
+const input=JSON.parse(fs.readFileSync('tests/fixtures/order20/states.json','utf8')) as {fixtures:Record<string,SaveV1>;cursors:Record<'three'|'four'|'five',SaveV1[]>};
+const read=(s:SaveV1)=>parseSave(JSON.stringify(s));
+
+it('has one playable order and no dialogue that recalls a future game',()=>{
+ expect(validateContent(chapter3)).toEqual([]);expect(validateContent(chapter4)).toEqual([]);
+ expect(chapters[2]).toMatchObject({id:3,title:'Разговор под звёздами',code:'NEBO-4L8N'});
+ expect(chapters[3]).toMatchObject({id:4,title:'Игровой вечер',code:'DIVAN-9R2K'});
+ expect(getChapter(3,{})).toBe(chapter3);expect(getChapter(4,{})).toBe(chapter4);
+ const text=Object.values(chapter3.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]).join(' ');
+ expect(text).not.toMatch(/вчерашний кухонный|вчера мы|реванш|Пельмень и партнёры|хотя бы не разрядится|виртуального ужина/);
+ expect(text).toContain('приходи ко мне на игровой вечер');
+});
+
+it('preserves both completed events and every later record, answer, right and cursor',()=>{
+ for(const name of ['four','five','ten','tenActive','trialFive','trialTen']){
+  const old=structuredClone(input.fixtures[name]);if(name==='ten'){old.continuation='walk';old.continuation10='decline';}
+  const before=JSON.stringify(old),save=read(old);
+  expect(JSON.stringify(old)).toBe(before);expect(save.contentVersion).toBe(21);
+  expect(save.campaign.completed).toEqual(old.campaign.completed);
+  expect(save.campaign.records[3]!.results).toEqual(old.campaign.records[4]!.results);
+  expect(save.campaign.records[4]!.results).toEqual(old.campaign.records[3]!.results);
+  expect(save.campaign.records[3]!.story.constellation).toBe(old.campaign.records[4]!.story.constellation);
+  expect(save.campaign.records[3]!.story.teamName).toBeUndefined();
+  expect(save.campaign.records[4]!.story.teamName).toBe(old.campaign.records[3]!.story.teamName);
+  for(const id of [1,2,5,6,7,8,9,10] as const)expect(save.campaign.records[id]).toEqual(old.campaign.records[id]);
+  expect(save.campaign.active).toEqual(old.campaign.active);expect(save.trial).toEqual(old.trial);
+  expect(save.continuation).toBe(old.continuation);expect(save.continuation10).toBe(old.continuation10);expect(save.settings).toEqual(old.settings);
+  expect(save.collection.achievements).toEqual(old.collection.achievements);
+  expect(save.collection.cards.map(c=>c.id)).toEqual(old.collection.cards.map(c=>c.id));
+  expect(save.collection.cards.find(c=>c.id==='c3.dinner')?.chapter).toBe(4);
+  expect(save.collection.cards.find(c=>c.id.startsWith('c4.'))?.chapter).toBe(3);
+  expect(read(save)).toEqual(save);
+ }
+});
+
+it('resets only the unfinished pair at every old game and sky cursor, keeping earned collections',()=>{
+ for(const old of [input.fixtures.three,...input.cursors.three,...input.cursors.four]){
+  const save=read(old);
+  expect(save.campaign.completed).toEqual([1,2]);expect(save.campaign.active).toBeNull();expect(save.lastResult).toBeNull();
+  expect(save.campaign.records[1]).toEqual(old.campaign.records[1]);expect(save.campaign.records[2]).toEqual(old.campaign.records[2]);
+  expect(Object.keys(save.campaign.records)).toEqual(['1','2']);expect(save.campaign.startStates[3]).toBeUndefined();
+  expect(save.unlocked).toContain(3);expect(save.unlocked).toContain(4);expect(canStart(save,3)).toBe(true);expect(canStart(save,4)).toBe(false);
+  expect(save.collection.cards.map(c=>c.id)).toEqual(old.collection.cards.map(c=>c.id));expect(save.collection.achievements).toEqual(old.collection.achievements);
+  const next=reduceSave(save,{type:'start',chapter:3});expect(next.campaign.active?.nodeId).toBe('c3.walk');expect(read(next)).toEqual(next);expect(read(save)).toEqual(save);
+ }
+});
+
+it('closes obsolete trials only, retains every fifth cursor, and maps canonical result by event',()=>{
+ for(const name of ['trialThree','trialFour']){const old=input.fixtures[name],s=read(old);expect(s.trial).toBeNull();expect(s.campaign.completed).toEqual(old.campaign.completed);expect(s.collection.achievements).toEqual(old.collection.achievements);}
+ for(const old of input.cursors.five){const s=read(old);expect(s.campaign.active).toEqual(old.campaign.active);expect(read(s)).toEqual(s);}
+ const s=read(input.fixtures.four);expect(s.lastResult).toMatchObject({chapter:3,cardId:input.fixtures.four.lastResult!.cardId});
+ expect(cards['c3.dinner'].chapter).toBe(4);expect(cards['c4.calm'].chapter).toBe(3);
+ expect(cardMeta(s.collection.cards.find(c=>c.id==='c3.dinner')!).title).toBe('Ужин по обстоятельствам');
+});
+
+it('plays all 48 sky routes and all 288 game routes with exact cursor reload and no invented inherited choices',()=>{
+ const prior=read(input.fixtures.two);
+ for(const bench of ['near','space'] as const)for(const result of [{kind:'constellation',outcome:'cat',usedPreset:false},{kind:'constellation',outcome:'controllers',usedPreset:false},{kind:'constellation',outcome:'teapot',usedPreset:false},{kind:'constellation',outcome:'teapot',usedPreset:true}] as const)for(const wish of ['adventure','calm'] as const)for(const goodbye of ['accept','her','none'] as const){
+  const s=finishSky(prior,{...defaultSky,bench,result,wish,goodbye},false,true);
+  expect(s.campaign.records[3]!.story).toMatchObject({bench,constellation:result.outcome,wish,c4Goodbye:goodbye});expect(s.campaign.records[3]!.story.teamName).toBeUndefined();
+ }
+ for(const mood of ['quiet','playful'] as const)for(const reaction of ['tease','help','absurd'] as const)for(const team of ['dumpling','calm','accident'] as const)for(const style of ['planner','improv'] as const)for(const outcome of ['feast','snack','chaos','skipped'] as const)for(const after of ['team','rematch'] as const){
+  const base=finishSky({...prior,campaign:{...prior.campaign,records:{...prior.campaign.records,2:{...prior.campaign.records[2]!,story:{...prior.campaign.records[2]!.story,eveningMood:mood}}}}});
+  const s=finishThree(base,{...defaultThird,reaction,team,style,result:{kind:'kitchen',outcome,served:outcome==='feast'?9:outcome==='snack'?4:0,mode:'calm'},after});
+  expect(s.campaign.completed).toEqual([1,2,3,4]);expect(s.campaign.records[4]!.story).toMatchObject({controllerReaction:reaction,teamName:team,kitchenStyle:style,kitchenResult:outcome,gameAftercare:after});
+ }
+},120000);
+
+it('rejects forged prefixes, incomplete choices, results and stale commands after the swap',()=>{
+ const base=finishSky();const run=startRun(chapter4,base.campaign.records[3]!.story);
+ expect(step(chapter4,run,{...command3(run),expectedTurn:run.turn-1}).kind).toBe('rejected');
+ let s=reduceSave(reduceSave(base,{type:'unlock',code:chapters[3].code!}),{type:'start',chapter:4});
+ while(s.campaign.active?.nodeId!=='c4.kitchen'){const r=s.campaign.active!;s=reduceSave(s,{type:'command',target:'campaign',command:command3(r)});}
+ for(const change of [{teamName:'invented'},{wish:'adventure'},{kitchenResult:'feast'}]){const bad=structuredClone(s);Object.assign(bad.campaign.active!.story,change);expect(()=>read(bad)).toThrow();}
+ const old=structuredClone(input.fixtures.four);old.campaign.records[4]!.story.teamName='accident';expect(()=>read(old)).toThrow();
+ let sky=reduceSave(read(input.fixtures.two),{type:'unlock',code:chapters[2].code!});sky=reduceSave(sky,{type:'start',chapter:3});
+ const bad=structuredClone(sky);bad.campaign.active!.story.wish='adventure';expect(()=>read(bad)).toThrow();
+ const r=sky.campaign.active!,node=chapter3.nodes[r.nodeId];expect(resolveLine(node.kind==='dialogue'?node.lines[0]:{speaker:'narrator',text:''},r.story).text).not.toContain('команд');
+ expect(skyCommand(r).kind).toBe('advance');
+});
+
+it('migrates an actual old mock Telegram bank and writes the new format without repeating the reset',async()=>{
+ const old=input.fixtures.ten,raw=JSON.stringify(old),data=new Map<string,string>();const chunks=raw.match(/[\s\S]{1,3000}/g)!;
+ chunks.forEach((v,i)=>data.set(`five_meetings_v1_a_${i}`,v));const hash=createHash('sha256').update(raw).digest('hex');
+ const head=JSON.stringify({version:1,current:{slot:'a',count:chunks.length,length:raw.length,hash},previous:null});data.set('five_meetings_v1_head',head);
+ const api:CloudAPI={getItem:(k,done)=>{done(null,data.get(k)??'');},getItems:(ks,done)=>{done(null,Object.fromEntries(ks.map(k=>[k,data.get(k)??''])));},setItem:(k,v,done)=>{data.set(k,v);done(null,true);}};
+ const cloud=new TelegramCloud(api),loaded=(await cloud.read()).save!;expect(loaded.campaign.completed).toHaveLength(10);expect(loaded.contentVersion).toBe(21);
+ await cloud.write(loaded,head);expect((await new TelegramCloud(api).read()).save).toEqual(loaded);
+});

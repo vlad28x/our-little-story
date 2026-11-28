@@ -1,5 +1,6 @@
 
 import {expect,test,type Locator,type Page} from '@playwright/test';
+import {sceneSecretId} from '../src/content/achievements';
 import {easterEggs,type EasterEggId} from '../src/content/easterEggs';
 import {chapter10} from '../src/content/chapters/ch10';
 import {reduceSave} from '../src/state/reducer';
@@ -36,7 +37,7 @@ async function reactTo(page:Page,id:EasterEggId,keyboard=false){
  const button=page.getByRole('button',{name:easterEggs[id].label,exact:true});
  const hint=button.locator('.easter-spark');
  await expect(hint).toBeVisible();
- const raw=await stored(page);
+ const before=JSON.parse((await stored(page))!) as SaveV1;
  if(keyboard){await button.focus();await page.keyboard.press('Enter');}
  else await tapProp(page,button);
  const note=page.locator(`.scene-easter-note[data-egg="${id}"]`);
@@ -47,7 +48,12 @@ async function reactTo(page:Page,id:EasterEggId,keyboard=false){
   expect(comment.y+comment.height).toBeLessThanOrEqual(art.y);
  }
  await expect(hint).toHaveCount(0);
- expect(await stored(page)).toBe(raw);
+ const after=JSON.parse((await stored(page))!) as SaveV1;
+ const secret=sceneSecretId(id,before.campaign.active!.chapter);
+ expect(after.campaign).toEqual(before.campaign);
+ expect(after.trial).toEqual(before.trial);
+ if(secret)expect(after.collection.secrets).toContain(secret);
+ else expect(after.collection.secrets).toEqual(before.collection.secrets);
  await page.getByRole('button',{name:'Скрыть маленькую реакцию',exact:true}).click();
  await expect(button).toBeFocused();
 }
@@ -60,7 +66,7 @@ async function checkLayout(page:Page){
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 }
 async function capture(page:Page,width:number,name:string){
- if(width!==320)await page.locator('.scene-stage').screenshot({path:`work/nov22/eggs-${name}-${width}.png`,animations:'disabled'});
+ if(width!==320)await page.locator('.scene-stage').screenshot({path:`test-results/screenshots/eggs-${name}-${width}.png`,animations:'disabled'});
 }
 
 for(const width of [320,390,785]){
@@ -183,7 +189,9 @@ for(const width of [320,390,785]){
    let ending=travellersAt('c10.travellers.sleep',{continuation:'home',finale:'sleep'});
    const scene=chapter10.nodes['c10.travellers.sleep'];
    if(scene.kind!=='dialogue')throw Error('Missing sleep dialogue');
-   while(ending.campaign.active!.lineIndex<scene.lines.length-1){
+   const fadeIndex=scene.lines.findIndex(line=>line.sceneFade);
+   expect(fadeIndex).toBeGreaterThan(0);
+   while(ending.campaign.active!.lineIndex<fadeIndex){
     ending=reduceSave(ending,{type:'command',target:'campaign',command:travellersCommand(ending.campaign.active!)});
    }
    await load(page,ending);

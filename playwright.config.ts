@@ -1,3 +1,23 @@
-import { defineConfig,devices } from '@playwright/test';
-const base=process.env.VITE_BASE_PATH||'/';
-export default defineConfig({outputDir:'test-results/served',testDir:'tests',testMatch:['travellers10-flow.spec.ts','courtyard9-flow.spec.ts','supper-flow.spec.ts','drink-flow.spec.ts','finale-secret-flow.spec.ts','flow.spec.ts','chapter2-flow.spec.ts','scene-assets.spec.ts','chapter3-flow.spec.ts','gallery7-flow.spec.ts'],timeout:90000,expect:{timeout:7000},fullyParallel:false,workers:1,reporter:'list',use:{baseURL:`http://127.0.0.1:4173${base}`,trace:'retain-on-failure'},projects:[{name:'mobile-chromium',use:{...devices['Pixel 7']}}],webServer:{command:'node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173 --strictPort',url:`http://127.0.0.1:4173${base}`,reuseExistingServer:!process.env.CI,timeout:30000}});
+import { defineConfig, devices } from '@playwright/test';
+
+const base = process.env.VITE_BASE_PATH || '/';
+const baseURL = `http://127.0.0.1:4173${base}`;
+
+export default defineConfig({
+  testDir: 'tests',
+  testMatch: ['**/*flow.spec.ts', 'scene-assets.spec.ts', 'smoke.spec.ts'],
+  testIgnore: 'dev-recovery-flow.spec.ts',
+  outputDir: 'test-results/served',
+  timeout: 90_000,
+  expect: { timeout: 7_000 },
+  workers: 1,
+  reporter: 'list',
+  use: { baseURL, trace: 'retain-on-failure' },
+  projects: [{ name: 'mobile-chromium', use: devices['Pixel 7'] }],
+  webServer: {
+    command: 'node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173 --strictPort',
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+    timeout: 30_000,
+  },
+});

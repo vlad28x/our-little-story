@@ -1,10 +1,9 @@
+import { canStart, chapterAction } from './chapterAccess';
 import {parseSave} from '../persistence/validateSave';
-import {completedCourtyard} from '../persistence/travellers';
-import {completedWalk,completedGallery,completedSupper} from '../persistence/photoSix';
 import { replayFirstSeason } from '../persistence/replayFirstSeason';
 import { getChapter } from '../content/chapters';
 import { CONTENT_VERSION } from '../content/version';
-import { checkCode,chapters } from '../content/chapters/manifest';
+import { checkCode } from '../content/chapters/manifest';
 import { cardFromStory } from '../content/cards';
 import { sceneSecretId,type SceneSecretId } from '../content/achievements';
 import { startRun, step } from '../engine/step';
@@ -25,14 +24,14 @@ export type Action =
   | {type:'continuation';value:SaveV1['continuation']}
   | {type:'replace';save:SaveV1}
   | {type:'dev-jump';nodeId:NodeId;story:StoryState};
-export function canStart(save:SaveV1,id:ChapterId){return !!getChapter(id)&&chapters.some(c=>c.id===id&&c.available)&&!(id===7&&!completedWalk(save.campaign.records[6]?.story))&&!(id===8&&!completedGallery(save.campaign.records[7]?.story))&&!(id===9&&!completedSupper(save.campaign.records[8]?.story))&&!(id===10&&!completedCourtyard(save.campaign.records[9]?.story))&&save.unlocked.includes(id)&&Array.from({length:id-1},(_,i)=>i+1).every(n=>save.campaign.completed.includes(n as ChapterId));}
+export { canStart } from './chapterAccess';
 export function reduceSave(current:SaveV1,action:Action):SaveV1 {
   if(current.contentVersion!==CONTENT_VERSION)return reduceSave(parseSave(JSON.stringify(current)),action);
   let s=structuredClone(current);
   switch(action.type){
     case 'start':{
       const id=action.chapter??1;const chapter=getChapter(id);
-      if(!chapter||!canStart(s,id)||s.campaign.active||s.campaign.completed.includes(id))return current;
+      if(!chapter||chapterAction(s,id)!=='start')return current;
       const previous=s.campaign.records[(id-1) as ChapterId];const prior=id===1?{}:previous?episodeStart(id,previous.story,previous.results):undefined;
       if(!prior)return current;
       if((id>=6)&&!action.attemptId)return current;

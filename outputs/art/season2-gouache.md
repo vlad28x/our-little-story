@@ -31,7 +31,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/photo6-upper.webp`
 - Исходник · `exec-db4ddc78-c759-438b-bde6-2995eae7126c.png`
-- Референсы · `public/assets/backgrounds/photo6-upper.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/photo6-upper.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Upper pedestrian overlook; preserve left old kiosk, black lamp, stone balustrade, bright ochre leafy canopy and right steps at their identical normalized positions. Portrait 3:4. Clear late-afternoon apricot light. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -39,7 +39,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/photo6-sun.webp`
 - Исходник · `exec-4e66327d-077c-4ed8-9802-c4eb91284109.png`
-- Референсы · `public/assets/backgrounds/photo6-lower-sun.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/photo6-lower-sun.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Lower river promenade, amber sunlight on water. Preserve exact alignment of river rail and water reflection on left and wide masonry stairs at right, and foreground space. Portrait 3:4. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -47,7 +47,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/photo6-shade.webp`
 - Исходник · `exec-d0bb8018-430d-4b27-ae66-54fad84bd759.png`
-- Референсы · `public/assets/backgrounds/photo6-lower-shade.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/photo6-lower-shade.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Same lower river promenade and camera axis as supplied source. Cobblestones in cool muted lavender shade, clear afternoon sun on the far roofline and golden old trees. Preserve exact rail, water reflection and right hand stairs. Portrait 3:4. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -55,7 +55,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/gallery7-outside.webp`
 - Исходник · `exec-6a65ee71-9703-4b99-93ea-f92057f97a23.png`
-- Референсы · `public/assets/backgrounds/gallery7-outside.webp`, `public/assets/backgrounds/season1-gouache/cafe-exterior-evening.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/gallery7-outside.webp`, `public/assets/backgrounds/season1-gouache/cafe-exterior-evening.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Gallery doorway, awning, glass reflection and poster anchor relative to their very precise positions in original; preserve an unlettered framed exhibition poster, actual door handle and crisp outline of entrance in dappled warm light. Portrait 3:4. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -63,7 +63,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/gallery7-hall.webp`
 - Исходник · `exec-495ca1f9-9b61-4000-a675-909760683f52.png`
-- Референсы · `public/assets/backgrounds/gallery7-hall-light-notch.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/gallery7-hall-light-notch.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Gallery with exactly the three artworks already in source, same locations, mounting sizes and contents. Left frame is diagonal stone steps; center is chipped cream masonry with a dark diagonal shadow containing the little light triangular notch; right is a deep blue door. Preserve overhead arch, herringbone floor, window light, bench and spots. Quiet painted daylight. Portrait 3:4. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -71,7 +71,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-open.webp`
 - Исходник · `exec-d88cd98e-a68b-466d-9a21-cd260ffda672.png`
-- Референсы · `public/assets/backgrounds/courtyard9-open-v2.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/courtyard9-open-v2.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Outdoor courtyard right before rain, wide landscape 3:2 exactly like supplied source. Precise framing, rectangular cream projection screen still blank and centered, same rows of chairs, brick windows and canopy at left and archway at right. Keep garland and wet-cobble space clear for separate interactive layers. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -79,7 +79,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-canopy.webp`
 - Исходник · `exec-cf64d2e4-d4fb-4e07-a02b-185a90b2e09f.png`
-- Референсы · `public/assets/backgrounds/courtyard9-canopy.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/courtyard9-canopy.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Same courtyard during rain under the canopy, landscape 3:2. Keep canopy line, stacked blankets on the left, small round side table, garland and rectangular blank film screen at their original positions and size. Reflected warm light on wet stone, muted slate shadows. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -87,7 +87,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-arch.webp`
 - Исходник · `exec-113663c8-1710-4aa7-9d9d-14b38f1625bc.png`
-- Референсы · `public/assets/backgrounds/courtyard9-arch.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/courtyard9-arch.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Edit the first supplied original game scene into the matte hand-painted digital gouache style shown by the second image. First image is the exact layout/camera reference; second image is brushwork only, not a location or scene to import. Maintain same aspect ratio and edge-to-edge composition. Use opaque matte masses, subtly dry-brushed paper grain localized to surfaces, softened outlines, quiet warm/cool light, and clean readable object silhouettes. Do not make photorealistic, shiny, anime-cel flat or overly blurry. Preserve scale and normalized coordinates of objects and boundaries because game interaction hotspots are fixed. Same courtyard during rain seen from under the broad brick arch, landscape 3:2. Preserve the absent foreground people, right foreground folded chairs, distant blank rectangular film screen, arch spring line, lamp and windows. Water rings and small, local reflected lights. No puddle in the dry foreground original. No people, text, lettering, UI, frame, watermark, or externally mounted props.
 
@@ -95,7 +95,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-books.webp`
 - Исходник · `exec-5b82de68-203b-446d-b0de-0f379c8b5746.png`
-- Референсы · `public/assets/backgrounds/courtyard9-books.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/courtyard9-books.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Landscape 3:2. Preserve exact camera, left open wooden book cupboard with books exposed and clearly defined doors, canopy, bakery window, left wall lamp and blue wet pavement at right. The cupboard and glass reflections drive interactions. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -103,7 +103,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-lab.webp`
 - Исходник · `exec-6e15cf8c-2902-411d-883b-7088c21da510.png`
-- Референсы · `public/assets/backgrounds/courtyard9-lab.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/courtyard9-lab.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Landscape 3:2. Preserve the left side brick storefront door, lit window, the metal drop box on its wall, right distant crossing traffic signal, leaves and street geometry. Green lamp is a tiny dot on the dark traffic signal at its original position. Deep indigo balanced with amber lit window. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -111,7 +111,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/travellers10-cafe.webp`
 - Исходник · `exec-11bf3298-a438-494d-bb44-fc5dca735cb6.png`
-- Референсы · `public/assets/backgrounds/travellers10-cafe-night.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/travellers10-cafe-night.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Portrait 3:4 of the same familiar cafe at night. Maintain window, table edge, chairs, sill, plinth, one shelf and little amber lamp at exactly the same coordinates. Outside is indigo, inside muted rose and brushed terracotta with warm lights. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -119,7 +119,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/travellers10-home.webp`
 - Исходник · `exec-b3272d46-a7e9-462d-9e38-d929a64b35a9.png`
-- Референсы · `public/assets/backgrounds/travellers10-home-night.webp`, `public/assets/backgrounds/season1-gouache/home-living.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/travellers10-home-night.webp`, `outputs/art/previous-assets/backgrounds/season1-gouache/home-living.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Portrait 3:4 of the exact living room at night, with amber torchiere, fabric blanket on the left, tray with precisely two water glasses on table, TV and shelf. Preserve both glasses, lamp, TV and blankets at same coordinates. Deep blue through window. Use the second image's paint style, not its set dressing. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -127,7 +127,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/travellers10-morning.webp`
 - Исходник · `exec-539dbcd8-449b-47eb-a15d-38fe4e7130ea.png`
-- Референсы · `public/assets/backgrounds/travellers10-morning-tea.webp`, `public/assets/backgrounds/supper8-kitchen-gouache.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/travellers10-morning-tea.webp`, `public/assets/backgrounds/supper8-kitchen-gouache.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Landscape 3:2 of the same kitchen with fresh early daylight, two empty glasses on the table, no plates. Preserve glass position, window, orange trees, plum checked tablecloth, shelf and worktop. Pale cream, soft gold and rose. Keep same camera and place no people. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -135,7 +135,7 @@
 
 - WebP · `public/assets/gallery7/season2-gouache/row.webp`
 - Исходник · `exec-84353e69-447f-4b45-8983-7d4ece86d341.png`
-- Референсы · `public/assets/gallery7/row.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/gallery7/row.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Portrait print 3:4. Detail of exactly the depicted stone stair tread edges with the same direction, count, angle, light strip and crop. No actual picture frame or label. Stone texture rendered as dry matte brushwork and faint pencil grain. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -143,7 +143,7 @@
 
 - WebP · `public/assets/gallery7/season2-gouache/chip.webp`
 - Исходник · `exec-e3393488-f83a-403a-8a5f-b06f1f3a6933.png`
-- Референсы · `public/assets/gallery7/chip-light-notch.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/gallery7/chip-light-notch.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Portrait print 3:4. The original local chipped horizontal/diagonal ledge and lower triangular LIGHT notch interrupting the diagonal dark band of shadow are central narrative details. Copy chip contours and relative positions closely, retain light warm stone and the orange-ish glints, maintain same shadow angle. No new notches or shadows. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -151,7 +151,7 @@
 
 - WebP · `public/assets/gallery7/season2-gouache/blue.webp`
 - Исходник · `exec-ab4b809e-eb59-4076-8faf-67353ffafee2.png`
-- Референсы · `public/assets/gallery7/blue.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
+- Референсы · `outputs/art/previous-assets/gallery7/blue.webp`, `public/assets/backgrounds/season1-gouache/river-evening.webp`
 
 > Edit original first image into the same stylized digital gouache visual novel collection as second image. The first is the exact layout and crop; the second is only technique. Keep landmarks and objects at the same normalized coordinates and frame edges, with edge-to-edge picture. Use blocked matte highlights, quiet brushed transitions, dry painted grain and gentle colored pencil only in the small details. Respect local color and light as described. Portrait print 3:4 of the old deep blue door, same crop, frame seams, chipped indigo paint, low amber daylight and thin light line at the threshold as original. Matte brush marks follow grain. No added knob, artwork frame or text. No people, UI, watermark, lettering, outline frame or external props.
 
@@ -175,7 +175,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/courtyard9-books-closed.webp`
 - Исходник · `exec-168daa7f-2b6a-469f-9333-4e9eff1d29d0.png`
-- Референсы · `exec-5b82de68-203b-446d-b0de-0f379c8b5746.png`, `public/assets/backgrounds/courtyard9-books-closed.webp`
+- Референсы · `exec-5b82de68-203b-446d-b0de-0f379c8b5746.png`, `outputs/art/previous-assets/backgrounds/courtyard9-books-closed.webp`
 
 > Edit the first image, the exact already approved digital gouache game scene seen in play. Remain absolutely unchanged pixel-for-pixel outside the wooden book cupboard in the lower left. Flip its partly open glass door so the door is now properly closed flat across the two shelves, no new detail, books still dimly visible through that glass. Use the second previous asset only as a reference for the closed door function. Preserve first image's canvas dimensions 1536x1024 landscape and exact perspective, paint, crop, brightness, lights, window, leaves, tree, architecture. Local inpainting only. The golden lawn of reflected light and dark blues remain exactly the same. No people or text.
 
@@ -183,7 +183,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/legacy-gallery.webp`
 - Исходник · `exec-3d6ac0b4-bd05-4674-8d9e-5d687c08f482.png`
-- Референсы · `public/assets/backgrounds/gallery-evening.webp`, `public/assets/backgrounds/gallery7-hall-light-notch.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/gallery-evening.webp`, `outputs/art/previous-assets/backgrounds/gallery7-hall-light-notch.webp`
 
 > Repaint the first original visual novel scene with matte digital gouache and very subtle dry brush localized to materials. Use second reference for colors and brushwork only, first for extremely strict composition: Quiet older gallery at evening with the same arrangement of walls, pictures, and passage, untouched composition. The first frame's exact aspect ratio is required. Warm local lamps versus blue and dusty plum, retain each original prop, weak natural highlights, preserve old story atmosphere. No added people, text, graphics or borders.
 
@@ -191,7 +191,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/legacy-terrace.webp`
 - Исходник · `exec-74c96839-f603-4c99-bd11-9f00cd387541.png`
-- Референсы · `public/assets/backgrounds/s2-cafe-terrace.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/s2-cafe-terrace.webp`, `public/assets/backgrounds/season1-gouache/cafe-sunset.webp`
 
 > Repaint the first original visual novel scene with matte digital gouache and very subtle dry brush localized to materials. Use second reference for colors and brushwork only, first for extremely strict composition: Retain outdoor café terrace as an outdoor space, chairs, café glazing, railing and small lights at original locations. The first frame's exact aspect ratio is required. Warm local lamps versus blue and dusty plum, retain each original prop, weak natural highlights, preserve old story atmosphere. No added people, text, graphics or borders.
 
@@ -199,7 +199,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/legacy-courtyard.webp`
 - Исходник · `exec-b81141d5-14ba-4b5c-97c1-08699cb9ac35.png`
-- Референсы · `public/assets/backgrounds/s2-cinema-courtyard.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/s2-cinema-courtyard.webp`, `public/assets/backgrounds/season1-gouache/rain-arcade.webp`
 
 > Repaint the first original visual novel scene with matte digital gouache and very subtle dry brush localized to materials. Use second reference for colors and brushwork only, first for extremely strict composition: The older open movie courtyard with its original screen, chairs, canopy and beams, all at the exact same coordinates. The first frame's exact aspect ratio is required. Warm local lamps versus blue and dusty plum, retain each original prop, weak natural highlights, preserve old story atmosphere. No added people, text, graphics or borders.
 
@@ -207,7 +207,7 @@
 
 - WebP · `public/assets/backgrounds/season2-gouache/legacy-window.webp`
 - Исходник · `exec-c000fd14-58e7-4fd3-add0-313bcfcd8460.png`
-- Референсы · `public/assets/backgrounds/shop-window-evening.webp`, `public/assets/backgrounds/season1-gouache/cafe-exterior-evening.webp`
+- Референсы · `outputs/art/previous-assets/backgrounds/shop-window-evening.webp`, `public/assets/backgrounds/season1-gouache/cafe-exterior-evening.webp`
 
 > Repaint the first original visual novel scene with matte digital gouache and very subtle dry brush localized to materials. Use second reference for colors and brushwork only, first for extremely strict composition: Window and small traditional sign must stay at the proportions and coordinates of the original painting. Original portrait 3:4. The first frame's exact aspect ratio is required. Warm local lamps versus blue and dusty plum, retain each original prop, weak natural highlights, preserve old story atmosphere. No added people, text, graphics or borders.
 

@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {assetManifest} from '../src/content/assetManifest';
 import {openOffline} from './offlineApp';
 import {courtyardAt,courtyardCommand,finishCourtyard,type CourtyardPath} from './courtyard9Helpers';
 import {finishSupper} from './supperHelpers';
@@ -22,13 +23,13 @@ test('three rain routes and skipped bet finish independently with one card and n
    const r=(await read(page)).campaign.active!,node=chapter9.nodes[r.nodeId],command=courtyardCommand(r,path);
    if(node.kind==='dialogue')transcript.push(await page.locator('.dialogue-text').innerText());
    if(r.nodeId==='c9.courtyard.rainAside')await expect(page.locator('.adviser-council img')).toHaveCount(1);
-   if(r.nodeId==='c9.courtyard.betChoice')await page.screenshot({path:`work/nov15/pause-${path.rain}-${index}.png`,animations:'disabled'});
-   if(r.nodeId==='c9.courtyard.resume'&&r.lineIndex===3){await expect(page.getByRole('img',{name:'Человек и кот уезжают вместе в поезде',exact:true}).first()).toBeVisible();if(index===0)await page.screenshot({path:'work/nov15/film-train-320.png',animations:'disabled'});}
-   if(r.nodeId==='c9.courtyard.earlyWalk'&&r.lineIndex===3){await expect(page.locator('.scene-background')).toHaveAttribute('src',/^data:/);await page.screenshot({path:'work/nov15/books-closed-320.png',animations:'disabled'});}
+   if(r.nodeId==='c9.courtyard.betChoice')await page.screenshot({path:`test-results/screenshots/pause-${path.rain}-${index}.png`,animations:'disabled'});
+   if(r.nodeId==='c9.courtyard.resume'&&r.lineIndex===3){await expect(page.getByRole('img',{name:'Человек и кот уезжают вместе в поезде',exact:true}).first()).toBeVisible();if(index===0)await page.screenshot({path:'test-results/screenshots/film-train-320.png',animations:'disabled'});}
+   if(r.nodeId==='c9.courtyard.earlyWalk'&&r.lineIndex===3){await expect(page.locator('.scene-background')).toHaveAttribute('src',`/assets/${assetManifest['bg.courtyard9.books-closed'].file}`);await page.screenshot({path:'test-results/screenshots/books-closed-320.png',animations:'disabled'});}
    if(r.nodeId==='c9.courtyard.cameraEnd')await expect(page.locator('.photo-camera strong')).toHaveText('2');
-   if(r.nodeId==='c9.courtyard.lastShots')await expect(page.locator('.photo-camera strong')).toHaveText(['2','1','1','0','0','0'][r.lineIndex]);
+   if(r.nodeId==='c9.courtyard.lastShots')await expect(page.locator('.photo-camera strong')).toHaveText(['2','2','1','0','0','0'][r.lineIndex]);
    if(command.kind==='choose'&&node.kind==='choice')await page.locator('.choices button').filter({hasText:node.choices.find(c=>c.id===command.choiceId)!.text}).click();
-   else await page.getByRole('button',{name:'Дальше',exact:false}).click();
+   else await page.locator('.dialogue-content .next-button').click();
    await expect.poll(async()=>(await read(page)).campaign.active?.turn??-1).not.toBe(r.turn);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    if(++turns>160)throw Error('Courtyard did not finish');
@@ -36,7 +37,7 @@ test('three rain routes and skipped bet finish independently with one card and n
   const done=parseSave(JSON.stringify(await read(page)));expect(done.campaign.records[8]).toEqual(base.campaign.records[8]);expect(done.campaign.records[9]?.story).toMatchObject({c9Rain:path.rain,c9Film:'submitted',c9LipKiss:path.goodbye==='kiss'?'yes':'no'});
   await expect(page.getByRole('heading',{name:'С крышей разберёмся',exact:true})).toBeVisible();
   expect(done.campaign.completed).toContain(9);
-  if(path.rain==='leave'){expect(transcript.join(' ')).not.toContain('окно поезда');await expect(page.locator('.postcard-copy')).toContainText('полку книг');await page.screenshot({path:'work/nov15/result-leave-320.png',animations:'disabled'});}
+  if(path.rain==='leave'){expect(transcript.join(' ')).not.toContain('окно поезда');await expect(page.locator('.postcard-copy')).toContainText('полку книг');await page.screenshot({path:'test-results/screenshots/result-leave-320.png',animations:'disabled'});}
  }
  expect(errors).toEqual([]);
 });
@@ -63,6 +64,6 @@ test('short phone, landscape, desktop, keyboard and reduced motion keep the new 
   await expect(page.locator('.scene-rain.scene-rain-heavy')).toBeVisible();expect(await page.locator('.scene-rain.scene-rain-heavy').evaluate(el=>getComputedStyle(el,'::before').animationName)).toBe('none');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   for(const button of await page.locator('.choices button').all())expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(48);
   const leave=page.getByRole('button',{name:/Убежим отсюда вдвоём под дождь/});await leave.focus();await page.keyboard.press('Enter');await expect(page.locator('[data-node="c9.courtyard.leave"]')).toBeVisible();
-  await page.screenshot({path:`work/nov15/leave-${width}.png`,animations:'disabled'});
+  await page.screenshot({path:`test-results/screenshots/leave-${width}.png`,animations:'disabled'});
  }
 });

@@ -61,13 +61,13 @@ test('an expression failure does not stick when the scene moves to another image
   await expect(page.locator('.art-error')).toHaveCount(0);
 });
 
-test('a failed background preserves the character and cat and can recover',async({page})=>{
+test('a failed background preserves the cover character and can recover',async({page})=>{
   let unavailable=true;
   await page.route(coverImage,route=>unavailable?route.abort('failed'):route.continue());
   await page.goto('./');
   await expect(page.getByRole('button',{name:'Повторить загрузку'})).toBeVisible();
   await expectLoaded(page.locator('.character'));
-  await expectLoaded(page.locator('.scene-cat'));
+  await expect(page.locator('.scene-cat')).toHaveCount(0);
   unavailable=false;
   await page.getByRole('button',{name:'Повторить загрузку'}).click();
   await expectLoaded(page.locator('.scene-background'));

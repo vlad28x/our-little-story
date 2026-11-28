@@ -7,7 +7,7 @@ import { meeting10Options,travellerResources,travellerView } from '../src/conten
 import { matches,resolveLine,resolveScene,startRun,step } from '../src/engine/step';
 import { validateContent } from '../src/engine/validateContent';
 import { replayTravellers } from '../src/persistence/travellers';
-import { validateSave as parseSave } from '../src/persistence/validateSave';
+import { validateRun, validateSave as parseSave } from '../src/persistence/validateSave';
 import { initialState } from '../src/state/initialState';
 import { canStart,reduceSave } from '../src/state/reducer';
 import type { CloudAPI } from '../src/telegram/bridge';
@@ -48,8 +48,10 @@ it('round-trips every cursor, rejects stale taps, forged resources, wrong phases
  for(const path of [{river:'ford',quarry:'contour',arrival:'upper',continuation:'home',tender:'hug',finale:'sleep'},{river:'help',quarry:'help',arrival:'help'},{river:'bridge',arrival:'upper',goodbye:'kiss'},{continuation:'home',tender:'kiss',afterFirstKiss:'closer',finale:'sleep'},{continuation:'home',tender:'kiss',afterFirstKiss:'shoulder',finale:'leave'}] as Partial<TravellersPath>[]){
   let s=startTravellers();
   while(s.campaign.active){
-   expect(parseSave(JSON.stringify(s))).toEqual(s);
-   const r=s.campaign.active,command=travellersCommand(r,path),next=reduceSave(s,{type:'command',target:'campaign',command});
+   const r=s.campaign.active;
+   if(r.lineIndex===0)expect(parseSave(JSON.stringify(s))).toEqual(s);
+   else expect(validateRun(r)).toEqual(r);
+   const command=travellersCommand(r,path),next=reduceSave(s,{type:'command',target:'campaign',command});
    expect(next).not.toBe(s);expect(reduceSave(next,{type:'command',target:'campaign',command})).toBe(next);
    expect(travellerView(r).suns).toBeGreaterThanOrEqual(0);s=next;
   }

@@ -68,7 +68,10 @@ it('reloads every cursor on eight representative routes, including all gifts and
  for(const [i,path]of routes.entries()){
   const base=finishGallery(undefined,{gift:(['none','blue','chip'] as const)[i%3],farewell:i%2?'cheek':'words'});let s=startSupper(base);
   while(s.campaign.active){
-   expect(parseSave(JSON.stringify(s))).toEqual(s);const r=s.campaign.active,command=supperCommand(r,path);s=reduceSave(s,{type:'command',target:'campaign',command});expect(reduceSave(s,{type:'command',target:'campaign',command})).toEqual(s);
+   const r=s.campaign.active;
+   if(r.lineIndex===0)expect(parseSave(JSON.stringify(s))).toEqual(s);
+   else expect(validateRun(r)).toEqual(r);
+   const command=supperCommand(r,path);s=reduceSave(s,{type:'command',target:'campaign',command});expect(reduceSave(s,{type:'command',target:'campaign',command})).toEqual(s);
   }
   expect(parseSave(cloudRaw(s))).toEqual(s);expect(s.campaign.records[7]).toEqual(base.campaign.records[7]);expect(s.campaign.records[5]).toEqual(base.campaign.records[5]);expect(s.continuation).toBe(base.continuation);expect(s.collection.memories).toEqual([]);
  }

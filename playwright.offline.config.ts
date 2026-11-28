@@ -1,2 +1,11 @@
-import { defineConfig,devices } from '@playwright/test';
-export default defineConfig({outputDir:'test-results/offline',testDir:'tests',testMatch:['polish23-offline.spec.ts','travellers10-offline.spec.ts','courtyard9-offline.spec.ts','supper-offline.spec.ts','drink-offline.spec.ts','start-map-offline.spec.ts','finale-secret-offline.spec.ts','chapter-code-offline.spec.ts','chapter4-offline.spec.ts','walk-gallery-offline.spec.ts','telegram-offline.spec.ts','easter-eggs-offline.spec.ts','season2-easter-eggs-offline.spec.ts','fullscreen-offline.spec.ts','constellation-offline.spec.ts'],timeout:60000,workers:1,reporter:'list',use:{...devices['Pixel 7'],trace:'retain-on-failure'}});
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: 'tests',
+  testMatch: '**/*-offline.spec.ts',
+  outputDir: 'test-results/offline',
+  timeout: 60_000,
+  workers: 1,
+  reporter: 'list',
+  use: { ...devices['Pixel 7'], trace: 'retain-on-failure' },
+});

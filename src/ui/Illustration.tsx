@@ -1,6 +1,6 @@
 import { useId, type ReactElement } from 'react';
 
-type IllustrationKind = 'bag' | 'mat' | 'paper' | 'cup' | 'umbrella' | 'token' | 'scarf' | 'tea' | 'hair' | 'button-piece' | 'triangle-piece' | 'ribbon-piece' | 'leaf' | 'spoon' | 'cloud' | 'umbrella-case' | 'star' | 'controller' | 'envelope' | 'cafe' | 'tea-for-two' | 'promenade' | 'cinema' | 'camera' | 'gallery' | 'evening-lamp' | 'box';
+import type { IllustrationKind } from '../content/illustrations';
 
 const seasonPaint = {
   ceramic: ['#fff3dd', '#e4cab6', '#ae8c88'],
@@ -26,7 +26,7 @@ function MiniSpark({ x, y, size = 8, light }: { x: number; y: number; size?: num
   </g>;
 }
 
-export function Illustration({ kind, className = '', viewBox = '0 0 100 100' }: { kind: string; className?: string; viewBox?: string }) {
+export function Illustration({ kind, className = '', viewBox = '0 0 100 100' }: { kind: IllustrationKind; className?: string; viewBox?: string }) {
   const id = useId().replace(/:/g, '');
   const paint = (name: PaintKey) => `url(#${id}-${name})`;
   const knit = `url(#${id}-knit)`;
@@ -436,8 +436,6 @@ export function Illustration({ kind, className = '', viewBox = '0 0 100 100' }: 
     </>,
   } satisfies Record<IllustrationKind, () => ReactElement>;
 
-  const selected = Object.hasOwn(art, kind) ? kind as IllustrationKind : 'token';
-
   return <svg className={`illustration ${className}`} viewBox={viewBox} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <defs>
       <radialGradient id={`${id}-shade`}><stop stopColor="#48363b" stopOpacity=".34" /><stop offset="1" stopColor="#48363b" stopOpacity="0" /></radialGradient>
@@ -454,7 +452,7 @@ export function Illustration({ kind, className = '', viewBox = '0 0 100 100' }: 
         <path d="M1 2.2q.4 2.1 2.2 3.2" fill="none" stroke="#594350" strokeWidth=".75" opacity=".38" />
       </pattern>
     </defs>
-    {selected !== 'hair' && <ellipse cx="50" cy={selected === 'scarf' ? 89 : 84} rx="40" ry="8.5" fill={`url(#${id}-shade)`} />}
-    {art[selected]()}
+    {kind !== 'hair' && <ellipse cx="50" cy={kind === 'scarf' ? 89 : 84} rx="40" ry="8.5" fill={`url(#${id}-shade)`} />}
+    {art[kind]()}
   </svg>;
 }

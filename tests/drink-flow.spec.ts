@@ -16,5 +16,5 @@ test('the two drink menus and their changed opinion survive actual production re
  await expect(page.locator('.postcard')).toBeVisible();await page.reload();await expect(page.locator('.vlad-quote')).toContainText('чай с характером. компания тоже.');
  const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(saved.campaign.records[5].story).toMatchObject({c5Edition:3,c5FirstTaste:'sweet',c5Recommendation:'vanilla'});expect(saved.campaign.records[5].story.ending).toBeUndefined();expect(errors).toEqual([]);
  await page.getByRole('button',{name:'Псс… Маленький секрет',exact:true}).click();await expect(page.locator('.modal-surface')).toHaveCSS('border-bottom-left-radius','24px');
- await page.screenshot({path:'work/DRINK_PRODUCTION_SECRET.png',animations:'disabled'});
+ await page.screenshot({path:'test-results/screenshots/DRINK_PRODUCTION_SECRET.png',animations:'disabled'});
 });

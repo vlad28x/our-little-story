@@ -1,5 +1,7 @@
 # Десятая «Два путешественника» — арт и постановка
 
+> Материал прежней редакции. Параметры экспорта и описание сборки относятся к моменту создания иллюстраций. Файлы текущей игры перечислены в [реестре изображений](../src/content/assetManifest.ts).
+
 18 ноября 2026. Локально, без коммита и публикации.
 
 Использован встроенный image_gen по `C:/Users/User/.codex/skills/.system/imagegen/SKILL.md`. Исходники не перезаписаны. PNG оставлены в каталоге generated_images; новые копии WebP размещены в проекте. Pillow применён только для кодирования WebP (quality 90), без художественного редактирования.
@@ -7,7 +9,7 @@
 ## Вечерний стол у окна
 
 Вход: `public/assets/backgrounds/cafe-window.webp`, предварительно просмотрен.
-Результат: `public/assets/backgrounds/travellers10-cafe-night.webp` → `bg.travellers10.cafe`.
+Результат: `outputs/art/previous-assets/backgrounds/travellers10-cafe-night.webp` → `bg.travellers10.cafe`.
 Исходный результат: `C:/Users/User/.codex/generated_images/01a1eb80-3182-7bf1-b27a-117a26d6e476/exec-d76e2a74-0f8b-4273-99c4-94e73819e541.png`.
 
 Точный промпт:
@@ -17,7 +19,7 @@
 ## Домашний вечер
 
 Вход: `public/assets/backgrounds/home-living.webp`, предварительно просмотрен.
-Результат: `public/assets/backgrounds/travellers10-home-night.webp` → `bg.travellers10.home`.
+Результат: `outputs/art/previous-assets/backgrounds/travellers10-home-night.webp` → `bg.travellers10.home`.
 Исходный результат: `C:/Users/User/.codex/generated_images/01a1eb80-3182-7bf1-b27a-117a26d6e476/exec-f1da981a-cf47-4cd7-8f69-da8d91a7671d.png`.
 
 Точный промпт:
@@ -36,8 +38,8 @@
 
 ## SHA-256
 
-- `public/assets/backgrounds/travellers10-cafe-night.webp`: `673e3832c73d223916dbb22d8fa9a91a5ee1c842762b27a958bc11c26105e4b3`
-- `public/assets/backgrounds/travellers10-home-night.webp`: `fc464f181560415763d4314f8c5aaa9aaa3b86fe9e4dab3187a2f4465b1e278d`
+- `outputs/art/previous-assets/backgrounds/travellers10-cafe-night.webp`: `673e3832c73d223916dbb22d8fa9a91a5ee1c842762b27a958bc11c26105e4b3`
+- `outputs/art/previous-assets/backgrounds/travellers10-home-night.webp`: `fc464f181560415763d4314f8c5aaa9aaa3b86fe9e4dab3187a2f4465b1e278d`
 
 ## Проверенные превью
 
@@ -52,9 +54,9 @@
 
 ## Финальная сверка утра и предметов
 
-Визуальная проверка выявила готовый завтрак в старом утреннем фоне и плавающую открытку поверх персонажа. Для десятой создан отдельный `public/assets/backgrounds/travellers10-morning-tea.webp` → `bg.travellers10.morning`: стол без еды, только два стакана. Фон других глав не изменён. Домашние предметы теперь имеют координаты исходного арта в SVG с таким же cover-crop; открытка стоит рядом с монитором, персонаж сдвинут от неё. Утром домашние предметы не отображаются; приватное затемнение закрывает сцену тёмным слоем.
+Визуальная проверка выявила готовый завтрак в старом утреннем фоне и плавающую открытку поверх персонажа. Для десятой создан отдельный `outputs/art/previous-assets/backgrounds/travellers10-morning-tea.webp` → `bg.travellers10.morning`: стол без еды, только два стакана. Фон других глав не изменён. Домашние предметы теперь имеют координаты исходного арта в SVG с таким же cover-crop; открытка стоит рядом с монитором, персонаж сдвинут от неё. Утром домашние предметы не отображаются; приватное затемнение закрывает сцену тёмным слоем.
 
-Вход: `public/assets/backgrounds/s2-kitchen-morning.webp` (предварительно просмотрен).
+Вход: `outputs/art/previous-assets/backgrounds/s2-kitchen-morning.webp` (предварительно просмотрен).
 Исходный результат: `C:/Users/User/.codex/generated_images/01a1eb80-3182-7bf1-b27a-117a26d6e476/exec-23803d0b-fc91-406b-9665-6ee64c41bdbd.png`.
 
 Точный промпт:

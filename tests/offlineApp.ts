@@ -1,3 +1,4 @@
+import { assetManifest } from '../src/content/assetManifest';
 import { build } from 'esbuild';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -6,7 +7,7 @@ import type { SaveV1 } from '../src/state/types';
 // The harness serves only allow-listed workspace images in memory and blocks other requests.
 const appOrigin = 'http://offline-assets.invalid';
 const assetPrefix = '/assets/';
-const files = new Set([...fs.readFileSync('src/content/assetManifest.ts','utf8').matchAll(/file:'([^']+)'/g)].map(match => match[1]));
+const files = new Set(Object.values(assetManifest).map(asset => asset.file));
 const routedPages = new WeakSet<Page>();
 const appHtml = `<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${fs.readFileSync('src/styles/game.css','utf8')}</style></head><body><div id="root"></div></body></html>`;
 let script:Promise<string>|undefined;

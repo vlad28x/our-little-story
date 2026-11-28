@@ -14,7 +14,13 @@ import type { Chapter } from '../src/engine/types';
 import { chapters,checkCode } from '../src/content/chapters/manifest';
 it('contains precisely all 33 nodes from the approved script',()=>{const source=fs.readFileSync('outputs/CHAPTER_01_SCRIPT.md','utf8');const graph=source.match(/```mermaid([\s\S]*?)```/)![1];const ids=[...new Set(graph.match(/c1\.[a-z.]+/g))].sort();expect(Object.keys(chapter1.nodes).sort()).toEqual(ids);expect(ids).toHaveLength(33);expect(validateContent(chapter1)).toEqual([]);});
 it('preserves every authored dialogue line',()=>{const source=fs.readFileSync('outputs/CHAPTER_01_SCRIPT.md','utf8');const lines=source.split(/\r?\n/).filter(l=>/^\d+\. \*\*(Описание|Влад|Ты|Нина)/.test(l)).map(l=>l.replace(/^\d+\. \*\*(Описание|Влад|Ты|Нина)[^:]*:\s*(?:\*\*)?\s*/,''));const actual=Object.values(chapter1.nodes).flatMap(n=>n.kind==='dialogue'?n.lines.map(l=>l.text):[]);expect(actual).toEqual(lines);expect(actual).toHaveLength(143);});
-it('all runtime assets exist and no source photographs are shipped',()=>{for(const asset of Object.values(assetManifest)){expect(asset.file.startsWith('/')).toBe(false);expect(fs.existsSync(`public/assets/${asset.file}`)).toBe(true);}expect(fs.readdirSync('public',{recursive:true}).some(p=>String(p).includes('clipboard'))).toBe(false);});
+it('ships exactly the registered game artwork', () => {
+  const registered = [...new Set(Object.values(assetManifest).map(asset => asset.file))].sort();
+  const shipped = fs.readdirSync('public/assets', { recursive: true, encoding: 'utf8' })
+    .filter(file => file.endsWith('.webp')).map(file => file.replaceAll('\\', '/')).sort();
+  expect(shipped).toEqual(registered);
+  expect(fs.readdirSync('public', { recursive: true }).some(file => String(file).includes('clipboard'))).toBe(false);
+});
 it('resolves every chapter-three home expression before any scene is rendered',()=>{
   for(const emotion of ['neutral','smile','warm','awkward','thinking','surprised','laugh']){
     const id=`vlad.casual.${emotion}`;expect(assetManifest[id]).toBeDefined();expect(()=>assetUrl(id)).not.toThrow();expect(fs.existsSync(`public/assets/${assetManifest[id].file}`)).toBe(true);

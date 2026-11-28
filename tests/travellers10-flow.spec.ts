@@ -1,3 +1,4 @@
+import { assetManifest } from '../src/content/assetManifest';
 import {test,expect} from '@playwright/test';
 import {travellersAt,finishTravellers} from './travellers10Helpers';
 import {parseSave} from '../src/persistence/validateSave';
@@ -10,7 +11,7 @@ test('Pages base loads night art and reloads a committed crossing exactly once',
  await page.getByRole('button',{name:/^Дальше/}).click();await expect(page.locator('.traveller-status')).toContainText('3 / 5');
  await page.reload();await expect(page.locator('[data-node="c10.travellers.ford"]')).toBeVisible();await expect(page.locator('.traveller-status')).toContainText('3 / 5');
  await expect.poll(()=>page.locator('.scene-background').evaluate((im:HTMLImageElement)=>im.naturalWidth>0)).toBe(true);
- await expect(page.locator('.scene-background')).toHaveAttribute('src',`${process.env.VITE_BASE_PATH||'/'}assets/backgrounds/travellers10-cafe-night.webp`);
+ await expect(page.locator('.scene-background')).toHaveAttribute('src',`${process.env.VITE_BASE_PATH||'/'}assets/${assetManifest['bg.travellers10.cafe'].file}`);
  const stored=parseSave((await page.evaluate(k=>localStorage.getItem(k),key))!);expect(stored.campaign.active?.story.c10River).toBe('ford');expect(stored.campaign.records).toEqual(save.campaign.records);
  expect(errors).toEqual([]);
 });
